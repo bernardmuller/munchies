@@ -1,1 +1,5 @@
-# bullshit
+# Boilerplate
+- Grapgql, apollo
+- prisma
+- postgresSQL
+- TypeScript
