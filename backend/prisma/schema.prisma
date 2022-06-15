@@ -1,0 +1,25 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+}
+
+generator zod {
+  provider = "zod-prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model untitled_table {
+  id Int @id @default(autoincrement())
+}
+
+model users {
+  id           String    @id @db.Uuid
+  emailAddress String    @unique
+  firstName    String?
+  lastName     String?
+  dateOfBirth  DateTime?
+}
