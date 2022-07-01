@@ -16,5 +16,5 @@ export const dropAllTables = async () => {
 }
 
 export const migrateLatest = async () => {
-  await shell.exec('npx prisma migrate dev')
+  shell.exec('npx prisma migrate dev')
 }

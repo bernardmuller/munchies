@@ -16,10 +16,115 @@ model untitled_table {
   id Int @id @default(autoincrement())
 }
 
-model users {
+model User {
   id           String    @id @db.Uuid
   emailAddress String    @unique
+  password     String
   firstName    String?
   lastName     String?
   dateOfBirth  DateTime?
+  role         String?
+  bio          String?
+  image        String?
+  status       String?
+  session      Session[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+}
+
+model Session {
+  id     String @id @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
+}
+
+model Menu {
+  id        String    @id @db.Uuid
+  name      String?   @default("New Menu")
+  startDate DateTime?
+  endDate   DateTime?
+  createdAt DateTime  @default(now()) @db.Timestamptz()
+
+  grocerylist Grocerylist?
+  meals       MenuMeals[]
+}
+
+model Meal {
+  id         String   @id @db.Uuid
+  name       String?  @default("New Meal")
+  seasons    String?
+  directions String?
+  cuiseine   String?
+  image      String?
+  URL        String?
+  prepTime   String?
+  cooktime   String?
+  readyIn    String?
+  rating     String?
+  notes      String?
+  createdAt  DateTime @default(now()) @db.Timestamptz()
+
+  menu        MenuMeals?
+  ingredients MealIngredient[]
+}
+
+model MenuMeals {
+  id String @id @db.Uuid
+
+  menuId String @unique @db.Uuid
+  menu   Menu   @relation(fields: [menuId], references: [id])
+
+  mealId String @unique @db.Uuid
+  meal   Meal   @relation(fields: [mealId], references: [id])
+}
+
+model Ingredient {
+  id        String   @id @db.Uuid
+  name      String
+  createdAt DateTime @default(now()) @db.Timestamptz()
+
+  meal   MealIngredient[]
+  mealId String?          @db.Uuid
+
+  item Item[]
+}
+
+model MealIngredient {
+  id String @id @db.Uuid
+
+  mealId String @unique @db.Uuid
+  meal   Meal   @relation(fields: [mealId], references: [id])
+
+  ingredientId String     @unique @db.Uuid
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+}
+
+model Grocerylist {
+  id        String           @id @db.Uuid
+  createdAt DateTime         @default(now()) @db.Timestamptz()
+  menuId    String           @unique @db.Uuid
+  menu      Menu             @relation(fields: [menuId], references: [id])
+  items     GrocerylistItem?
+}
+
+model Item {
+  id     String  @id @db.Uuid
+  check  Boolean @default(false)
+  typeId Int
+
+  grocerylist GrocerylistItem[]
+
+  ingredientId String     @unique @db.Uuid
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+}
+
+model GrocerylistItem {
+  id String @id @db.Uuid
+
+  grocerylistId String      @unique @db.Uuid
+  grocerylist   Grocerylist @relation(fields: [grocerylistId], references: [id])
+
+  itemId String @unique @db.Uuid
+  item   Item   @relation(fields: [itemId], references: [id])
 }

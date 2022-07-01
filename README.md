@@ -1,5 +1,6 @@
-# Boilerplate
-- Grapgql, apollo
-- prisma
-- postgresSQL
-- TypeScript
+# Munchies
+
+-   Grapgql, apollo
+-   prisma
+-   postgresSQL
+-   TypeScript
