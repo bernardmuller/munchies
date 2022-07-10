@@ -1,7 +1,7 @@
 # Munchies
 
 -   nextjs
--   Grapgql, apollo
+-   Express
 -   prisma
 -   postgresSQL
 -   TypeScript
