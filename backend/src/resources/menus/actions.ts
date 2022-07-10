@@ -52,6 +52,6 @@ export const deleteMenu = async (id: string) => {
   })
 }
 
-export const deleteMenus = async () => {
+export const deleteAllMenus = async () => {
   await db.menu.deleteMany()
 }

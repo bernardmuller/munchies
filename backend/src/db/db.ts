@@ -1,6 +1,6 @@
 import {PrismaClient} from '@prisma/client'
 import shell from 'shelljs'
-import {requireEnvVar} from '../shared/utils'
+import {requireEnvVar} from './utils'
 
 export const DATABASE_URL = requireEnvVar('DATABASE_URL')
 

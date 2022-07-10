@@ -1,4 +1,4 @@
-const path = require('path')
+import path from 'path'
 
 module.exports = {
   env: {
@@ -6,20 +6,20 @@ module.exports = {
     node: true,
   },
   extends: [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'airbnb-base',
     'airbnb-typescript/base',
-    "plugin:prettier/recommended",
-    "prettier",
+    'plugin:prettier/recommended',
+    'prettier',
   ],
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     project: path.join(__dirname, './tsconfig.eslint.json'),
     ecmaVersion: 2018,
-    sourceType: "module",
+    sourceType: 'module',
   },
-  plugins: ["@typescript-eslint", "prettier"],
+  plugins: ['@typescript-eslint', 'prettier'],
   settings: {
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
@@ -31,6 +31,7 @@ module.exports = {
     },
   },
   rules: {
-    "import/prefer-default-export": "off",
+    'import/prefer-default-export': 'off',
+    'import/no-cycle': 'off',
   },
 }

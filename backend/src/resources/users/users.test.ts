@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import test from 'ava'
-import {createUser, deleteAllUsers, getUsers, updateUser} from './actions'
+import {
+  createUser,
+  deleteAllUsers,
+  getUsers,
+  updateUser,
+  deleteUser,
+} from './actions'
 
 test('createUser creates user', async (t) => {
   await deleteAllUsers()

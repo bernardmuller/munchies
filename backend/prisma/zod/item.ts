@@ -4,7 +4,7 @@ import { CompleteGrocerylistItem, RelatedGrocerylistItemModel, CompleteIngredien
 export const ItemModel = z.object({
   id: z.string(),
   check: z.boolean(),
-  grocerylistId: z.string(),
+  typeId: z.number().int(),
   ingredientId: z.string(),
 })
 
