@@ -21,15 +21,15 @@ import { Request, Response } from 'express';
 //   },
 // })
 
-import { getUsers } from './actions';
+import { createMenu } from './actions';
 
 const endpoints = [
   {
-    method: 'GET',
-    path: '/users',
+    method: 'POST',
+    path: '/menus',
     handler: async (req: Request, res: Response) => {
-      const users = await getUsers();
-      return res.send(users);
+      const menu = await createMenu({});
+      return res.send(menu);
     },
     authenticate: true,
   },

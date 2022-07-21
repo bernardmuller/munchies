@@ -9,7 +9,6 @@ export const login = async (data: {
   emailAddress: string;
   password: string;
 }) => {
-  console.log(data);
   const user = await db.user.findUnique({
     where: {
       emailAddress: data.emailAddress,
@@ -21,16 +20,16 @@ export const login = async (data: {
   const isPasswordValid = await compare(data.password, user.password);
   if (!isPasswordValid) throw new Error('Invalid email and/or password');
 
-  const session = await db.session.create({
-    data: {
-      id: getUuid(),
-      userId: user.id,
-    },
-  });
+  // const session = await db.session.create({
+  //   data: {
+  //     id: getUuid(),
+  //     userId: user.id,
+  //   },
+  // });
 
   const token = createJwtToken({
     userId: user.id,
-    sessionId: session.id,
+    // sessionId: session.id,
   });
 
   return { token };

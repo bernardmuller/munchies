@@ -53,6 +53,7 @@ export const deleteUser = async (id: string) => {
       id,
     },
   });
+  return { message: 'User deleted successfully' };
 };
 
 export const deleteAllUsers = async () => {

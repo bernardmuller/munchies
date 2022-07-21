@@ -5,6 +5,14 @@ import { getUsers } from '../resources/users/actions';
 import { requireEnvVar } from '../db/utils';
 import { z } from 'zod';
 import { AuthenticationError } from './errors';
+import { NextFunction, Request } from 'express';
+import { router } from '../http/routes';
+
+declare namespace Express {
+  export interface Request {
+    currentUser?: string;
+  }
+}
 
 export const getUuid = () => {
   return uuid();
@@ -20,26 +28,24 @@ export const isValidPassword = (str: string) => {
 
 export const createJwtToken = ({
   userId,
-  sessionId,
-}: {
+}: // sessionId,
+{
   userId: string;
-  sessionId: string;
+  // sessionId: string;
 }) => {
-  return jwt.sign({ userId, sessionId }, requireEnvVar('JWT_SECRET'), {
-    expiresIn: '60 minutes',
-  });
+  return jwt.sign(
+    {
+      userId,
+      // sessionId,
+    },
+    requireEnvVar('JWT_SECRET'),
+    {
+      expiresIn: '60 minutes',
+    },
+  );
 };
 
-// const decodeObject = z.object({
-//   userId: z.string(),
-//   sessionId: z.string(),
-//   iat: z.number().optional(),
-//   exp: z.number().optional(),
-// })
-
-// type DecodedToken = z.infer<typeof decodeObject>
-
-export const decodeToken = (token: string) => {
+export const decodeToken = function (token: string): any {
   return jwt.verify(token, requireEnvVar('JWT_SECRET'), (err, decoded) => {
     if (err) throw new AuthenticationError(`Error decoding token: ${err}`);
     // const decodedToken = decodeObject.parse(decoded)
@@ -51,13 +57,20 @@ export const decodeToken = (token: string) => {
 export const tradeTokenForUser = async (authToken: string) => {
   const decoded = decodeToken(authToken);
   const user = await getUsers({ filters: { id: decoded.userId } });
-  return user;
+  if (!user) throw new Error('User not found');
+  return decoded.userId;
 };
 
-export const authenticateUser = async (req, res, next) => {
-  const token = req.headers['Authorization'];
-  if (token) throw new AuthenticationError('no authorization token provided');
+export const authenticateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const token = req.headers['authorization']!;
+  if (!token) throw new AuthenticationError('no authorization token provided');
 
-  const user = tradeTokenForUser(token);
+  const user = await tradeTokenForUser(token.split(' ')[1]);
   if (!user) throw new Error('User not found');
+
+  next();
 };
