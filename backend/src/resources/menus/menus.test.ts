@@ -1,22 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import test from 'ava'
-import {createMenu, getMenus, updateMenu, deleteAllMenus} from './actions'
+import { Grocerylist, Menu } from '@prisma/client';
+import test from 'ava';
+import { getGrocerylists } from '../grocerylists/actions';
+import {
+  createMenu,
+  getMenus,
+  updateMenu,
+  deleteAllMenus,
+  deleteMenu,
+} from './actions';
 
-test('createMenu creates menu', async (t) => {
-  await deleteAllMenus()
-  const menu = await createMenu({})
-  t.truthy(menu.id)
-  t.is(menu.name, 'New Menu')
-})
+test('createMenu creates menu and creates grocerylist', async (t) => {
+  await deleteAllMenus();
+  const menu = await createMenu({});
+  t.truthy(menu.id);
+  t.is(menu.name, 'New Menu');
+});
 
-// test('getUsers gets users', async (t) => {
-//   await deleteAllMenus()
-//   const newUser = await createMenu({
-//     emailAddress: 'j@r.com',
-//   })
-//   const user = await getUsers({filters: {id: newUser.id}})
-//   t.truthy(user)
-// })
+// test('getMenus >  gets menus', async (t) => {
+//   await deleteAllMenus();
+//   const newMenu = await createMenu({});
+//   const [menus] = await getMenus();
+//   t.truthy(menus);
+//   // t.is(menus.name, 'New Menu');
+// });
 
 // test('updateUser updates user', async (t) => {
 //   await deleteAllMenus()
@@ -33,15 +40,22 @@ test('createMenu creates menu', async (t) => {
 //   t.is(updatedUser.id, user.id)
 // })
 
-// test('deleteUser deletes user', async (t) => {
-//   const user = await createMenu({
-//     emailAddress: 'b@m.com',
-//     firstName: 'Archie',
-//     password: 'Tester@123',
-//   })
-//   t.truthy(user.id)
-//   t.is(user.emailAddress, 'b@m.com')
+// test('deleteMenu deletes menu and deletes grocerylist linked to it', async (t) => {
+//   const menu = await createMenu({});
+//   t.truthy(menu.id);
+//   t.is(menu.name, 'New Menu');
 
-//   const deletedUser = await deleteUser(user.id)
-//   t.falsy(deletedUser)
-// })
+//   const grocerylist = await getGrocerylists({
+//     filters: { menuId: menu.id },
+//   });
+//   t.truthy(grocerylist);
+
+//   const deletedMenu = await deleteMenu(menu.id);
+//   t.truthy(deletedMenu.message);
+//   t.is(deletedMenu.message, 'Menu deleted successfully');
+
+//   // const deletedGrocerylist = await getGrocerylists({
+//   //   filters: { id: grocerylist.id },
+//   // });
+//   // t.falsy(deletedGrocerylist);
+// });
