@@ -2,13 +2,11 @@ import { db } from '../../db/db';
 import { getUuid } from '../../shared/utils';
 import { GrocerylistModel } from '../../../prisma/zod';
 
-export const createGrocerylist = async (data: {
-  id?: string;
-  menuId?: string;
-}) => {
-  const grocerylistData = { ...data, id: data?.id || getUuid() };
+export const createGrocerylist = async (data: { menuId?: string }) => {
+  const grocerylistData = { ...data, id: getUuid() };
 
   const res = await db.grocerylist.create({ data: grocerylistData });
+
   const newGrocerylist = GrocerylistModel.parse(res);
   return newGrocerylist;
 };

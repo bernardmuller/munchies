@@ -13,8 +13,13 @@ import {
 test('createMenu creates menu and creates grocerylist', async (t) => {
   await deleteAllMenus();
   const menu = await createMenu({});
-  t.truthy(menu.id);
-  t.is(menu.name, 'New Menu');
+  // t.truthy(menu.id);
+  // t.is(menu.name, 'New Menu');
+
+  const grocerylist = await getGrocerylists({
+    filters: { menuId: menu.id },
+  });
+  t.truthy(grocerylist);
 });
 
 // test('getMenus >  gets menus', async (t) => {
