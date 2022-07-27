@@ -40,7 +40,7 @@ export const createJwtToken = ({
     },
     requireEnvVar('JWT_SECRET'),
     {
-      expiresIn: '60 minutes',
+      expiresIn: 60 * 60 * 24 * 7,
     },
   );
 };
@@ -73,4 +73,12 @@ export const authenticateUser = async (
   if (!user) throw new Error('User not found');
 
   next();
+};
+
+export const createSuccessMessage = () => {
+  return { message: 'Action completed successfully.' };
+};
+
+export const createNotFoundMessage = () => {
+  return { message: 'Not found.' };
 };

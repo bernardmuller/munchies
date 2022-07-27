@@ -1,82 +1,84 @@
 import { Request, Response } from 'express';
 import {
-  addMealtoMenu,
-  createMenu,
-  deleteMenu,
-  getMenus,
-  removeMealfromMenu,
-  updateMenu,
+  checkItem,
+  createItem,
+  deleteItem,
+  getItems,
+  unCheckItem,
+  updateItem,
 } from './actions';
 
 const endpoints = [
   {
     method: 'POST',
-    path: '/menus',
+    path: '/items',
     handler: async (req: Request, res: Response) => {
-      const menu = await createMenu({});
-      return res.send(menu);
+      const { ingredientId, grocerylistId } = req.body;
+      const item = await createItem({ ingredientId, grocerylistId });
+      return res.send(item);
     },
     authenticate: true,
   },
   {
     method: 'GET',
-    path: '/menus',
+    path: '/items',
     handler: async (req: Request, res: Response) => {
-      const menus = await getMenus();
-      return res.send(menus);
+      const items = await getItems();
+      return res.send(items);
     },
     authenticate: true,
   },
   {
     method: 'GET',
-    path: '/menus/:id',
+    path: '/items/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
-      const menu = await getMenus({ filters: { id } });
-      return res.send(menu);
+      const item = await getItems({ filters: { id } });
+      return res.send(item);
     },
     authenticate: true,
   },
   {
     method: 'PUT',
-    path: '/menus/:id',
+    path: '/items/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
-      const menu = await updateMenu(id, req.body);
-      return res.send(menu);
+      const params = {
+        ingredientId: req.body.ingredientId,
+        typeId: req.body.typeId,
+      };
+      const item = await updateItem(id, params);
+      return res.send(item);
     },
     authenticate: true,
   },
   {
     method: 'DELETE',
-    path: '/menus/:id',
+    path: '/items/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
-      const menu = await deleteMenu(id);
-      return res.send(menu);
+      const item = await deleteItem(id);
+      return res.send(item);
     },
     authenticate: true,
   },
   {
     method: 'POST',
-    path: '/menus/:id/meals/add',
+    path: '/items/:id/check',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
-      const menu = await addMealtoMenu({ menuId: id, mealId: req.body.mealId });
-      return res.send(menu);
+      const item = await checkItem(id);
+      return res.send(item);
     },
     authenticate: true,
   },
   {
     method: 'POST',
-    path: '/menus/:id/meals/remove',
+    path: '/items/:id/unCheck',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
-      const menu = await removeMealfromMenu({
-        menuId: id,
-        mealId: req.body.mealId,
-      });
-      return res.send(menu);
+      const item = await unCheckItem(id);
+      return res.send(item);
     },
     authenticate: true,
   },

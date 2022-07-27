@@ -1,11 +1,4 @@
 /* eslint-disable max-classes-per-file */
-export class NotFoundError extends Error {
-  constructor(message: string) {
-    super();
-    this.message = message;
-  }
-}
-
 export class InvalidRequestError extends Error {
   constructor(message: string) {
     super();
@@ -31,5 +24,11 @@ export class AuthorizationError extends Error {
   constructor(message?: string) {
     super();
     this.message = message || 'Authorization required';
+  }
+}
+export class NotFoundError extends Error {
+  constructor(message?: string) {
+    super();
+    this.message = message || 'Not Found.';
   }
 }

@@ -46,7 +46,7 @@ export const updateGrocerylist = async (
 
   const updatedGrocerylistData = await db.grocerylist.update({
     where: { id },
-    data,
+    data: { ...data },
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -69,3 +69,13 @@ export const deleteGrocerylist = async (id: string) => {
 export const deleteGrocerylists = async () => {
   await db.grocerylist.deleteMany();
 };
+
+// export const addExtraItem = async ({
+//   grocerylistId,
+//   description,
+// }: {
+//   grocerylistId: string;
+//   description: string;
+// }) => {
+// await .create({data : {}})
+// };

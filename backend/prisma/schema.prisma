@@ -55,12 +55,12 @@ model Meal {
   name       String?  @default("New Meal")
   seasons    String?
   directions String?
-  cuiseine   String?
+  cuisine    String?
   image      String?
   URL        String?
-  prepTime   String?
-  cooktime   String?
-  readyIn    String?
+  prepTime   Int?
+  cookTime   Int?
+  readyIn    Int?
   rating     String?
   notes      String?
   createdAt  DateTime @default(now()) @db.Timestamptz()
@@ -72,10 +72,10 @@ model Meal {
 model MenuMeals {
   id String @id @db.Uuid
 
-  menuId String @unique @db.Uuid
+  menuId String @db.Uuid
   menu   Menu   @relation(fields: [menuId], references: [id])
 
-  mealId String @unique @db.Uuid
+  mealId String @db.Uuid
   meal   Meal   @relation(fields: [mealId], references: [id])
 }
 
@@ -93,38 +93,30 @@ model Ingredient {
 model MealIngredient {
   id String @id @db.Uuid
 
-  mealId String @unique @db.Uuid
+  mealId String @db.Uuid
   meal   Meal   @relation(fields: [mealId], references: [id])
 
-  ingredientId String     @unique @db.Uuid
+  ingredientId String     @db.Uuid
   ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
 }
 
 model Grocerylist {
-  id        String           @id @db.Uuid
-  createdAt DateTime         @default(now()) @db.Timestamptz()
-  menuId    String           @unique @db.Uuid
-  menu      Menu             @relation(fields: [menuId], references: [id])
-  items     GrocerylistItem?
+  id        String   @id @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  menuId    String   @unique @db.Uuid
+  menu      Menu     @relation(fields: [menuId], references: [id])
+  Item      Item[]
 }
 
 model Item {
-  id     String  @id @db.Uuid
-  check  Boolean @default(false)
-  typeId Int
+  id          String  @id @db.Uuid
+  check       Boolean @default(false)
+  typeId      Int
+  description String?
 
-  grocerylist GrocerylistItem[]
+  groceryListId String      @unique @db.Uuid
+  groceryList   Grocerylist @relation(fields: [groceryListId], references: [id], onDelete: SetNull)
 
-  ingredientId String     @unique @db.Uuid
-  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
-}
-
-model GrocerylistItem {
-  id String @id @db.Uuid
-
-  grocerylistId String      @unique @db.Uuid
-  grocerylist   Grocerylist @relation(fields: [grocerylistId], references: [id])
-
-  itemId String @unique @db.Uuid
-  item   Item   @relation(fields: [itemId], references: [id])
+  ingredientId String?     @unique @db.Uuid
+  ingredient   Ingredient? @relation(fields: [ingredientId], references: [id], onDelete: SetNull)
 }

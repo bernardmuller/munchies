@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { application } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import { router } from './routes';
