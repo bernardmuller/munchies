@@ -53,8 +53,6 @@ export const updateMenu = async (
     throw new Error('Menu not found');
   }
 
-  console.log(menu);
-
   const updatedMenuData = await db.menu.update({
     where: { id },
     data: { name: data.name, startDate: data.startDate, endDate: data.endDate },
