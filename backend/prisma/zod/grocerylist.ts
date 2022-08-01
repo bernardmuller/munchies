@@ -4,11 +4,11 @@ import { CompleteMenu, RelatedMenuModel, CompleteItem, RelatedItemModel } from "
 export const GrocerylistModel = z.object({
   id: z.string(),
   createdAt: z.date(),
-  menuId: z.string(),
+  menuId: z.string().nullish(),
 })
 
 export interface CompleteGrocerylist extends z.infer<typeof GrocerylistModel> {
-  menu: CompleteMenu
+  menu?: CompleteMenu | null
   Item: CompleteItem[]
 }
 
@@ -18,6 +18,6 @@ export interface CompleteGrocerylist extends z.infer<typeof GrocerylistModel> {
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
 export const RelatedGrocerylistModel: z.ZodSchema<CompleteGrocerylist> = z.lazy(() => GrocerylistModel.extend({
-  menu: RelatedMenuModel,
+  menu: RelatedMenuModel.nullish(),
   Item: RelatedItemModel.array(),
 }))
