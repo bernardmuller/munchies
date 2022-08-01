@@ -1,11 +1,11 @@
 import { v4 as uuid } from 'uuid';
 import isStrongPassword from 'validator/lib/isStrongPassword';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { getUsers } from '../resources/users/actions';
 import { requireEnvVar } from '../db/utils';
 import { z } from 'zod';
 import { AuthenticationError } from './errors';
-import { NextFunction, Request } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { router } from '../http/routes';
 
 declare namespace Express {
@@ -45,20 +45,26 @@ export const createJwtToken = ({
   );
 };
 
-export const decodeToken = function (token: string): any {
-  return jwt.verify(token, requireEnvVar('JWT_SECRET'), (err, decoded) => {
-    if (err) throw new AuthenticationError(`Error decoding token: ${err}`);
-    // const decodedToken = decodeObject.parse(decoded)
-    // return {userId: decoded?.userId, sessionId: decoded?.sessionId}
-    return decoded;
+export const decodeToken = (token: string) => {
+  const promise = new Promise<JwtPayload>((resolve, reject) => {
+    jwt.verify(token, requireEnvVar('JWT_SECRET'), (err, decoded) => {
+      if (err) {
+        reject(`Error decoding token: ${err}`);
+      }
+      // const decodedToken = decodeObject.parse(decoded)
+      // return {userId: decoded?.userId, sessionId: decoded?.sessionId}
+      resolve(decoded as JwtPayload);
+    });
   });
+
+  return promise;
 };
 
 export const tradeTokenForUser = async (authToken: string) => {
-  const decoded = decodeToken(authToken);
-  const user = await getUsers({ filters: { id: decoded.userId } });
+  const decoded = await decodeToken(authToken);
+  const user = await getUsers({ filters: { id: decoded?.userId } });
   if (!user) throw new Error('User not found');
-  return decoded.userId;
+  return decoded?.userId;
 };
 
 export const authenticateUser = async (

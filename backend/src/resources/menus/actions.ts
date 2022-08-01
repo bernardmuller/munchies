@@ -26,6 +26,7 @@ export const getMenus = async (params?: { filters?: { id?: string } }) => {
     const menuMeals = await db.menuMeals.findMany({
       where: { menuId: uniqueMenu?.id },
     });
+
     let temp: any[] = [];
     for (const menuMeal of menuMeals) {
       const dbMeal = await getMeals({ filters: { id: menuMeal.mealId } });
@@ -34,6 +35,18 @@ export const getMenus = async (params?: { filters?: { id?: string } }) => {
       }
       temp.push(dbMeal);
     }
+
+    // Replace map with https://www.npmjs.com/package/p-map
+    const meals = await Promise.all(
+      menuMeals.map(async (menuMeal) => {
+        const dbMeal = await getMeals({ filters: { id: menuMeal.mealId } });
+        if (!dbMeal) {
+          throw new NotFoundError();
+        }
+        return dbMeal;
+      }),
+    );
+
     return {
       ...uniqueMenu,
       meals: temp,
