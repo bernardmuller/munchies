@@ -50,7 +50,7 @@ export const updateMeal = async (
     prepTime?: number;
     cookTime?: number;
     readyIn?: number;
-    rating?: number;
+    rating?: string;
     notes?: string;
   },
 ) => {

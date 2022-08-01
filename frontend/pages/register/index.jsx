@@ -74,7 +74,7 @@ function Register() {
       headers.append('Content-Type', 'application/json');
       headers.append('Accept', 'application/json');
       const res = await fetch(`${apiEndpoint}auth/register`, {
-        method: 'POST',
+        method: 'post',
         mode: 'cors',
         redirect: 'follow',
         credentials: 'include',

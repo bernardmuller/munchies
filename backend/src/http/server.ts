@@ -3,6 +3,9 @@ import helmet from 'helmet';
 import cors from 'cors';
 import { router } from './routes';
 import { errorHandler } from './errors';
+import { createSplashScreen } from './routes';
+import path from 'path';
+import { getSourceFolderfromCurrentDirectory } from './utils';
 
 export const createApp = () => {
   const app = express();
@@ -17,6 +20,14 @@ export const createApp = () => {
 
   app.use(express.json());
   app.use('/api', router);
+  // createSplashScreen(router);
+  app.get('/api', (req, res) => {
+    res.sendFile(
+      path.join(
+        getSourceFolderfromCurrentDirectory(__dirname) + '/views/home.html',
+      ),
+    );
+  });
   app.use(errorHandler);
 
   return app;

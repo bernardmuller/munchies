@@ -10,7 +10,7 @@ import {
 
 const endpoints = [
   {
-    method: 'POST',
+    method: 'post',
     path: '/menus',
     handler: async (req: Request, res: Response) => {
       const menu = await createMenu({});
@@ -19,7 +19,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'GET',
+    method: 'get',
     path: '/menus',
     handler: async (req: Request, res: Response) => {
       const menus = await getMenus();
@@ -28,7 +28,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'GET',
+    method: 'get',
     path: '/menus/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
@@ -38,7 +38,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'PUT',
+    method: 'put',
     path: '/menus/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
@@ -48,7 +48,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'DELETE',
+    method: 'delete',
     path: '/menus/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
@@ -58,7 +58,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'POST',
+    method: 'post',
     path: '/menus/:id/meals/add',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
@@ -68,7 +68,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'POST',
+    method: 'post',
     path: '/menus/:id/meals/remove',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;

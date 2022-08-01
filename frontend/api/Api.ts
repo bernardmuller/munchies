@@ -45,7 +45,7 @@ export class Api {
     return this.sendRequest(
       url,
       {
-        method: 'POST',
+        method: 'post',
         body: data,
       },
       token

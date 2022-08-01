@@ -1,5 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { authenticateUser } from '../shared/utils';
+import path from 'path';
+import { router } from './routes';
 
 type Endpoint = {
   method: 'get' | 'post' | 'put' | 'delete';
@@ -24,4 +26,9 @@ export const createEndpoint = (router: Router, endpoint: Endpoint) => {
     ...routeMiddleware,
     catchAsync(endpoint.handler),
   );
+};
+
+export const getSourceFolderfromCurrentDirectory = (dir: string) => {
+  const [backendDir] = dir.split('/src');
+  return `${backendDir}/src`;
 };

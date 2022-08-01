@@ -8,7 +8,7 @@ import {
 
 const endpoints = [
   {
-    method: 'POST',
+    method: 'post',
     path: '/ingredients',
     handler: async (req: Request, res: Response) => {
       const ingredient = await createIngredient({ ...req.body });
@@ -17,7 +17,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'GET',
+    method: 'get',
     path: '/ingredients',
     handler: async (req: Request, res: Response) => {
       const ingredients = await getIngredients();
@@ -26,7 +26,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'GET',
+    method: 'get',
     path: '/ingredients/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
@@ -36,7 +36,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'PUT',
+    method: 'put',
     path: '/ingredients/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
@@ -50,7 +50,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'DELETE',
+    method: 'delete',
     path: '/ingredients/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;

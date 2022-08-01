@@ -3,7 +3,7 @@ import { login, register } from './actions';
 
 const endpoints = [
   {
-    method: 'POST',
+    method: 'post',
     path: '/auth/login',
     handler: async (req: Request, res: Response) => {
       const { emailAddress, password } = req.body;
@@ -16,7 +16,7 @@ const endpoints = [
     authenticate: false,
   },
   {
-    method: 'POST',
+    method: 'post',
     path: '/auth/register',
     handler: async (req: Request, res: Response) => {
       const { emailAddress, password } = req.body;
