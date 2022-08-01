@@ -10,7 +10,7 @@ import {
 
 const endpoints = [
   {
-    method: 'POST',
+    method: 'post',
     path: '/items',
     handler: async (req: Request, res: Response) => {
       const { ingredientId, grocerylistId } = req.body;
@@ -20,7 +20,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'GET',
+    method: 'get',
     path: '/items',
     handler: async (req: Request, res: Response) => {
       const items = await getItems();
@@ -29,7 +29,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'GET',
+    method: 'get',
     path: '/items/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
@@ -39,7 +39,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'PUT',
+    method: 'put',
     path: '/items/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
@@ -53,7 +53,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'DELETE',
+    method: 'delete',
     path: '/items/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
@@ -63,7 +63,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'POST',
+    method: 'post',
     path: '/items/:id/check',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
@@ -73,7 +73,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'POST',
+    method: 'post',
     path: '/items/:id/unCheck',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;

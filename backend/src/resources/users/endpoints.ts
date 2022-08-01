@@ -3,7 +3,7 @@ import { getUsers } from './actions';
 
 const endpoints = [
   {
-    method: 'GET',
+    method: 'get',
     path: '/users',
     handler: async (req: Request, res: Response) => {
       const users = await getUsers();
@@ -12,7 +12,7 @@ const endpoints = [
     authenticate: true,
   },
   {
-    method: 'GET',
+    method: 'get',
     path: '/users/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
