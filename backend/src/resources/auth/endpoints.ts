@@ -7,6 +7,8 @@ const endpoints = [
     path: '/auth/login',
     handler: async (req: Request, res: Response) => {
       const { emailAddress, password } = req.body;
+      if (!emailAddress || !password)
+        throw new Error("'emailAddress' and 'password' required");
       const token = await login({
         emailAddress,
         password,
