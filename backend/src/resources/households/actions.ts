@@ -1,8 +1,7 @@
 import { db } from '../../db/db';
 import { getUuid } from '../../shared/utils';
 import { HouseholdModel } from '../../../prisma/zod';
-import { getUser, getUsers, updateUser } from '../users/actions';
-import { Household, User } from '@prisma/client';
+import { getUser, updateUser } from '../users/actions';
 import { NotFoundError } from '../../shared/errors';
 
 export const createHousehold = async ({ userId }: { userId: string }) => {
@@ -103,7 +102,20 @@ export const inviteUserToHousehold = async ({
         createdBy: currentUser,
       },
     });
-    console.log(newInvite);
     return newInvite;
   }
+};
+
+export const acceptHouseholdInvite = async (id: string) => {
+  const invite = await db.householdInvite.findUnique({
+    where: { id },
+  });
+  if (invite) {
+    const updatedUser = await updateUser(invite?.userId, {
+      householdId: invite?.householdId,
+    });
+    const deletedInvite = await db.householdInvite.delete({ where: { id } });
+    return deletedInvite;
+  }
+  throw new NotFoundError();
 };
