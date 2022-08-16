@@ -17,8 +17,8 @@ model untitled_table {
 }
 
 model User {
-  id           String    @id @db.Uuid
-  emailAddress String    @unique
+  id           String     @id @db.Uuid
+  emailAddress String     @unique
   password     String
   firstName    String?
   lastName     String?
@@ -28,9 +28,12 @@ model User {
   image        String?
   status       String?
   session      Session[]
+  household    Household? @relation(fields: [householdId], references: [id])
 
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt @db.Timestamptz()
+  createdAt       DateTime          @default(now()) @db.Timestamptz()
+  updatedAt       DateTime          @updatedAt @db.Timestamptz()
+  householdId     String?           @db.Uuid
+  HouseholdInvite HouseholdInvite[]
 }
 
 model Session {
@@ -40,11 +43,13 @@ model Session {
 }
 
 model Menu {
-  id        String    @id @db.Uuid
-  name      String?   @default("New Menu")
-  startDate DateTime?
-  endDate   DateTime?
-  createdAt DateTime  @default(now()) @db.Timestamptz()
+  id          String     @id @db.Uuid
+  name        String?    @default("New Menu")
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime   @default(now()) @db.Timestamptz()
+  householdId String?    @db.Uuid
+  Household   Household? @relation(fields: [householdId], references: [id])
 
   grocerylist Grocerylist?
   meals       MenuMeals[]
@@ -64,6 +69,7 @@ model Meal {
   rating     String?
   notes      String?
   createdAt  DateTime @default(now()) @db.Timestamptz()
+  createdBy  String?  @db.Uuid
 
   menu        MenuMeals?
   ingredients MealIngredient[]
@@ -119,4 +125,27 @@ model Item {
 
   ingredientId String?     @unique @db.Uuid
   ingredient   Ingredient? @relation(fields: [ingredientId], references: [id], onDelete: SetNull)
+}
+
+model Household {
+  id        String @id @db.Uuid
+  createdBy String @db.Uuid
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+
+  users           User[]
+  menus           Menu[]
+  HouseholdInvite HouseholdInvite[]
+}
+
+model HouseholdInvite {
+  id        String   @id @db.Uuid
+  createdBy String   @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz()
+
+  householdId String    @db.Uuid
+  household   Household @relation(fields: [householdId], references: [id], onDelete: SetNull)
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: SetNull)
 }

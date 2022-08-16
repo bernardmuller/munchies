@@ -15,6 +15,7 @@ export const MealModel = z.object({
   rating: z.string().nullish(),
   notes: z.string().nullish(),
   createdAt: z.date(),
+  createdBy: z.string().nullish(),
 })
 
 export interface CompleteMeal extends z.infer<typeof MealModel> {

@@ -1,5 +1,5 @@
 import * as z from "zod"
-import { CompleteSession, RelatedSessionModel } from "./index"
+import { CompleteSession, RelatedSessionModel, CompleteHousehold, RelatedHouseholdModel, CompleteHouseholdInvite, RelatedHouseholdInviteModel } from "./index"
 
 export const UserModel = z.object({
   id: z.string(),
@@ -14,10 +14,13 @@ export const UserModel = z.object({
   status: z.string().nullish(),
   createdAt: z.date(),
   updatedAt: z.date(),
+  householdId: z.string().nullish(),
 })
 
 export interface CompleteUser extends z.infer<typeof UserModel> {
   session: CompleteSession[]
+  household?: CompleteHousehold | null
+  HouseholdInvite: CompleteHouseholdInvite[]
 }
 
 /**
@@ -27,4 +30,6 @@ export interface CompleteUser extends z.infer<typeof UserModel> {
  */
 export const RelatedUserModel: z.ZodSchema<CompleteUser> = z.lazy(() => UserModel.extend({
   session: RelatedSessionModel.array(),
+  household: RelatedHouseholdModel.nullish(),
+  HouseholdInvite: RelatedHouseholdInviteModel.array(),
 }))

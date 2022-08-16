@@ -76,7 +76,13 @@ export const authenticateUser = async (
   if (!token) throw new AuthenticationError('no authorization token provided');
 
   const user = await tradeTokenForUser(token.split(' ')[1]);
-  if (!user) throw new Error('User not found');
+  const dbUser = await getUsers({ filters: { id: user.id } });
+  if (!dbUser) throw new Error('User not found');
+  if (dbUser) {
+    console.log(dbUser);
+  }
+
+  res.locals.userId = user;
 
   next();
 };

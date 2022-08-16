@@ -7,8 +7,15 @@ import { createItem } from '../items/actions';
 import { Meal } from '@prisma/client';
 import { NotFoundError } from '../../shared/errors';
 
-export const createMenu = async (data: { id?: string }) => {
-  const menuData = { name: 'New Menu', id: data?.id || getUuid() };
+export const createMenu = async (data: {
+  id?: string;
+  houseHoldId: string;
+}) => {
+  const menuData = {
+    name: 'New Menu',
+    houseHoldId: data.houseHoldId,
+    id: data?.id || getUuid(),
+  };
 
   const res = await db.menu.create({ data: menuData });
 
