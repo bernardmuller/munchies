@@ -1,6 +1,6 @@
 export const appVersion = 'v1.0.2';
 
-export const apiEndpoint = 'https://munchies-api-xp8sb.ondigitalocean.app/';
+export const apiEndpoint = 'https://lobster-app-a6dag.ondigitalocean.app/api/';
 
 export const colors = {
   primary: '#68BF50',

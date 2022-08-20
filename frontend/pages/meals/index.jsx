@@ -2,12 +2,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
 import { getCookie } from 'cookies-next';
-import { MealCardList, Text, Header, Button } from 'common/components';
-import { createMeal, getMeals } from 'api';
-import { colors, FontSizes, PrivateContainer } from 'common';
 import { IoAdd } from 'react-icons/io5';
 import { useRouter } from 'next/router';
-import { ActiveViewContext } from 'contexts/ActiveViewContext';
+import { createMeal, getMeals } from '../../api';
+import { colors, FontSizes, PrivateContainer } from '../../common';
+import { MealCardList, Text, Header, Button } from '../../common/components';
+import { ActiveViewContext } from '../../contexts/ActiveViewContext';
 
 const MealsContainer = styled.div`
   display: flex;
@@ -29,7 +29,7 @@ const Container = styled.div`
   height: 100%;
 `;
 
-function Meals({ data }) {
+function Meals() {
   const token = getCookie('token');
   const [creating, setCreating] = useState(false);
   const router = useRouter();

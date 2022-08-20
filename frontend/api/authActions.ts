@@ -1,28 +1,13 @@
-import { apiEndpoint } from 'common/constants';
+import { apiEndpoint } from '../common/constants';
 import { Api } from './Api';
 import { resolveResponse, resolveRejected } from './apiUtils';
 
-export const login = async (email: String, password: String) => {
+export const login = async (emailAddress: String, password: String) => {
+  const url = `${apiEndpoint}auth/login`;
   try {
-    if (!email) {
-      return {
-        ok: false,
-        message: 'Please provide a valid email',
-        data: null,
-      };
-    }
-
-    if (!password) {
-      return {
-        ok: false,
-        message: 'Please provide a valid password',
-        data: null,
-      };
-    }
-
-    const ret = await Api.post(apiEndpoint, { email, password }, '');
-
-    return resolveResponse(ret);
+    const ret = await Api.post(apiEndpoint, { emailAddress, password }, '');
+    return await ret.json();
+    // return resolveResponse(ret);
   } catch (ex: any) {
     const ret = resolveRejected(ex);
     if (ex && ex.response && ex.response.status === 401) {

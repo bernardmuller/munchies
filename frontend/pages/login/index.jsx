@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { colors, DataStore } from 'common';
-import { apiEndpoint } from 'common/constants';
 import { getCookie, setCookies } from 'cookies-next';
-import { login, checkAuth } from 'api';
 import { useForm } from 'react-hook-form';
 import {
   Button,
@@ -21,20 +18,10 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import Link from 'next/link';
-import { PublicContainer } from 'common/hocs';
-
-const Background = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  background-color: #080d08;
-  opacity: 0.9;
-
-  @media (max-width: 767px) {
-    display: none;
-  }
-`;
+import { login, checkAuth } from '../../api';
+import { colors, DataStore } from '../../common';
+import { apiEndpoint } from '../../common/constants';
+import { PublicContainer } from '../../common/hocs';
 
 function Login() {
   const {
@@ -62,10 +49,7 @@ function Login() {
     return () => {};
   }, []);
 
-  const [requestError, setRequestError] = useState({
-    email: '',
-    password: '',
-  });
+  const [requestError, setRequestError] = useState('');
 
   async function onSubmit(data) {
     try {
@@ -80,23 +64,23 @@ function Login() {
         credentials: 'include',
         headers,
         body: JSON.stringify({
-          email: data.email,
+          emailAddress: data.email,
           password: data.password,
         }),
       });
 
       const response = await res.json();
 
-      if (response.errors) {
-        setRequestError(response.errors.email);
-        setRequestError(response.errors.password);
+      if (response.error) {
+        setRequestError(response.error.message);
+        return;
       }
       await DataStore.set('MUNCHIES_USER', response.user);
 
       setCookies('token', response.token);
       setCookies('user', response.user);
 
-      if (response.user) {
+      if (response.token) {
         router.push('/meals');
       }
 
@@ -176,6 +160,7 @@ function Login() {
                 </Flex>
               </InputGroup>
             </FormControl>
+
             <Button
               type="submit"
               variant="solid"
