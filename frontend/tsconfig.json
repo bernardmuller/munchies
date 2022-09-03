@@ -23,7 +23,7 @@
     "src",
     "components/loader/Loader.jsx",
     "components/card/index.js",
-    "pages/meals/index.jsx",
+    "pages/meals/index.tsx",
     "pages/index.tsx",
     "common/utils.js",
     "components/Navbar/components/NavOption.jsx",

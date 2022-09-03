@@ -1,5 +1,8 @@
+import { getCookie } from "cookies-next";
+
 export class Api {
-  static setHeaders = (token: String) => {
+  static setHeaders = () => {
+    const token = getCookie('token')
     if (token) {
       return {
         authorization: `Bearer ${token}`,
@@ -14,8 +17,8 @@ export class Api {
     };
   };
 
-  static sendRequest = async (url: any, params: any, token: String) => {
-    const headers = this.setHeaders(token);
+  static sendRequest = async (url: any, params: any) => {
+    const headers = this.setHeaders();
     const data = params.body;
     delete params.body;
 
@@ -31,24 +34,22 @@ export class Api {
     return response;
   };
 
-  static get(url: String, token: String) {
+  static get(url: String) {
     return this.sendRequest(
       url,
       {
         method: 'GET',
       },
-      token
     );
   }
 
-  static post(url: any, data: Object, token: String) {
+  static post(url: any, data: Object) {
     return this.sendRequest(
       url,
       {
         method: 'post',
         body: data,
       },
-      token
     );
   }
 
@@ -59,7 +60,6 @@ export class Api {
         method: 'PUT',
         body: data,
       },
-      token
     );
   }
 
@@ -70,7 +70,6 @@ export class Api {
         method: 'DELETE',
         body: {},
       },
-      token
     );
   }
 }

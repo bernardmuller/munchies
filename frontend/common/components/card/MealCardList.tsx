@@ -75,15 +75,21 @@ const Tags = styled.div`
   gap: 0.5rem;
 `;
 
-export function MealCardList({ onClick, image, secondary, seasons, name }) {
-  const [hover, setHover] = useState(false);
-
+export function MealCardList({
+  onClick,
+  image,
+  secondary,
+  seasons,
+  name,
+}: {
+  onClick: () => void;
+  image: string;
+  secondary: boolean;
+  seasons: object;
+  name: string;
+}) {
   return (
-    <Container
-      onClick={() => onClick()}
-      // onMouseEnter={() => setHover(true)}
-      // onMouseLeave={() => setHover(false)}
-    >
+    <Container onClick={() => onClick()}>
       <ImageContainer>
         {image ? (
           <Image src={image} alt="meal image" layout="fill" />
@@ -94,9 +100,9 @@ export function MealCardList({ onClick, image, secondary, seasons, name }) {
         )}
       </ImageContainer>
 
-      <Info hover={hover} secondary={secondary}>
+      <Info secondary={secondary}>
         <Wrapper>
-          <Text color="white" margin="0" fontSize={FontSizes.Regular}>
+          <Text color="white" fontSize={FontSizes.Regular}>
             {name}
           </Text>
 
@@ -104,16 +110,15 @@ export function MealCardList({ onClick, image, secondary, seasons, name }) {
         </Wrapper>
 
         <Tags>
-          {seasons &&
-            seasons.map(item => (
-              <Text
-                color={colors.primary}
-                fontSize={FontSizes.Smaller}
-                key={item}
-              >
-                {item}
-              </Text>
-            ))}
+          {seasons?.map(item => (
+            <Text
+              color={colors.primary}
+              fontSize={FontSizes.Smaller}
+              key={item}
+            >
+              {item}
+            </Text>
+          ))}
         </Tags>
       </Info>
     </Container>

@@ -34,7 +34,7 @@ export const getMeals = async (token: String) => {
   const url = `${apiEndpoint}meals`;
 
   try {
-    const response = await Api.get(url, token);
+    const response = await Api.get(url);
     return response;
   } catch (ex: any) {
     const ret = resolveRejected(ex);
