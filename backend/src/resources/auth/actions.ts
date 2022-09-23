@@ -5,13 +5,10 @@ import { db } from '../../db/db';
 import { UserModel } from '../../../prisma/zod';
 import { createUser } from '../users/actions';
 
-export const login = async (data: {
-  emailAddress: string;
-  password: string;
-}) => {
+export const login = async (data: { email: string; password: string }) => {
   const user = await db.user.findUnique({
     where: {
-      emailAddress: data.emailAddress,
+      email: data.email,
     },
   });
 
@@ -43,13 +40,10 @@ const registerSchema = z.object({
 type Schema = z.infer<typeof registerSchema>;
 type User = z.infer<typeof UserModel>;
 
-export const register = async (data: {
-  emailAddress: string;
-  password: string;
-}) => {
+export const register = async (data: { email: string; password: string }) => {
   const existingUser = await db.user.findUnique({
     where: {
-      emailAddress: data.emailAddress,
+      email: data.email,
     },
   });
 
@@ -62,7 +56,7 @@ export const register = async (data: {
   const passwordHash = await hash(data.password, salt);
 
   const userData: Schema = registerSchema.parse({
-    emailAddress: data.emailAddress,
+    email: data.email,
     password: passwordHash,
   });
 

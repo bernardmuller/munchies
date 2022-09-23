@@ -6,11 +6,11 @@ const endpoints = [
     method: 'post',
     path: '/auth/login',
     handler: async (req: Request, res: Response) => {
-      const { emailAddress, password } = req.body;
-      if (!emailAddress || !password)
+      const { email, password } = req.body;
+      if (!email || !password)
         throw new Error("'emailAddress' and 'password' required");
       const token = await login({
-        emailAddress,
+        email,
         password,
       });
       return res.send(token);
@@ -21,11 +21,11 @@ const endpoints = [
     method: 'post',
     path: '/auth/register',
     handler: async (req: Request, res: Response) => {
-      const { emailAddress, password } = req.body;
-      if (!emailAddress || !password)
-        throw new Error("'emailAddress' and 'password' required");
+      const { email, password } = req.body;
+      if (!email || !password)
+        throw new Error("'email' and 'password' required");
       const response = await register({
-        emailAddress,
+        email,
         password,
       });
       return res.send(response);
