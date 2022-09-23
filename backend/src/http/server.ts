@@ -14,7 +14,7 @@ export const createApp = () => {
   app.use(
     cors({
       credentials: true,
-      origin: 'https://munchiesapp.co.za/',
+      origin: 'https://munchiesapp.co.za',
     }),
   );
 
