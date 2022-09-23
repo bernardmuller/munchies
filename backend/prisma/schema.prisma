@@ -17,18 +17,18 @@ model untitled_table {
 }
 
 model User {
-  id           String     @id @db.Uuid
-  emailAddress String     @unique
-  password     String
-  firstName    String?
-  lastName     String?
-  dateOfBirth  DateTime?
-  role         String?
-  bio          String?
-  image        String?
-  status       String?
-  session      Session[]
-  household    Household? @relation(fields: [householdId], references: [id])
+  id          String     @id @db.Uuid
+  email       String     @unique
+  password    String
+  firstName   String?
+  lastName    String?
+  dateOfBirth DateTime?
+  role        String?
+  bio         String?
+  image       String?
+  status      String?
+  session     Session[]
+  household   Household? @relation(fields: [householdId], references: [id])
 
   createdAt       DateTime          @default(now()) @db.Timestamptz()
   updatedAt       DateTime          @updatedAt @db.Timestamptz()

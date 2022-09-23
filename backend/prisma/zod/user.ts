@@ -3,7 +3,7 @@ import { CompleteSession, RelatedSessionModel, CompleteHousehold, RelatedHouseho
 
 export const UserModel = z.object({
   id: z.string(),
-  emailAddress: z.string(),
+  email: z.string(),
   password: z.string(),
   firstName: z.string().nullish(),
   lastName: z.string().nullish(),
