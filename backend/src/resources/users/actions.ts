@@ -5,7 +5,7 @@ import { NotFoundError } from '../../shared/errors';
 
 export const createUser = async (data: {
   id?: string;
-  emailAddress: string;
+  email: string;
   firstName?: string;
   password: string;
 }) => {

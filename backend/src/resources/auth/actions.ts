@@ -33,7 +33,7 @@ export const login = async (data: { email: string; password: string }) => {
 };
 
 const registerSchema = z.object({
-  emailAddress: z.string().email(),
+  email: z.string().email(),
   password: z.string(),
 });
 

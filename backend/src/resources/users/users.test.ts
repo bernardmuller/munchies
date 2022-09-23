@@ -11,29 +11,29 @@ import {
 test('createUser > creates user', async (t) => {
   await deleteAllUsers();
   const user = await createUser({
-    emailAddress: 'george@cat.com',
+    email: 'george@cat.com',
     firstName: 'George',
     password: 'Tester@123',
   });
   t.truthy(user.id);
-  t.is(user.emailAddress, 'george@cat.com');
+  t.is(user.email, 'george@cat.com');
 });
 
 test('getUsers > gets users', async (t) => {
   await deleteAllUsers();
   const newUser = await createUser({
-    emailAddress: 'peanut@cat.com',
+    email: 'peanut@cat.com',
     firstName: 'peanut',
     password: 'Tester@123',
   });
-  const user = await getUsers({ filters: { id: newUser.id } });
+  const user = await getUsers();
   t.truthy(user);
 });
 
 test('updateUser > updates user', async (t) => {
   await deleteAllUsers();
   const user = await createUser({
-    emailAddress: 'j@r.com',
+    email: 'j@r.com',
     firstName: 'George',
     password: 'Tester@123',
   });
@@ -47,12 +47,12 @@ test('updateUser > updates user', async (t) => {
 
 test('deleteUser > deletes user', async (t) => {
   const user = await createUser({
-    emailAddress: 'b@m.com',
+    email: 'b@m.com',
     firstName: 'Archie',
     password: 'Tester@123',
   });
   t.truthy(user.id);
-  t.is(user.emailAddress, 'b@m.com');
+  t.is(user.email, 'b@m.com');
 
   const deletedUser = await deleteUser(user.id);
   t.truthy(deletedUser.message);
