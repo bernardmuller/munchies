@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { compare, hash, genSalt } from 'bcrypt';
+import { compare, hash, genSalt } from 'bcryptjs';
 import { isValidPassword, createJwtToken, getUuid } from '../../shared/utils';
 import { db } from '../../db/db';
 import { UserModel } from '../../../prisma/zod';

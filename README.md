@@ -8,6 +8,8 @@ Munchies is a grocerylist manager that creates grocerylists based on meals a use
 
 To get started and run the project, please follow the instructions below:
 
+#### Prerequisites
+
 1. Install backend dependencies
 
 ```sh
@@ -15,29 +17,35 @@ To get started and run the project, please follow the instructions below:
     yarn install
 ```
 
- - Configure environment variables for backend by creating a new .env file and copy the contents from "example.env" into it.
+2. Configure environment variables for backend by creating a new .env file and copy the contents from "example.env" into it.
 
-
-2.  Install frontend dependencies
+3. Install frontend dependencies
 
 ```sh
     cd frontend
     yarn install
 ```
 
-3. Install dev dependencies
+4. Install dev dependencies
 
 ```sh
     yarn install
 ```
 
-4. Start the local PostgreSQL server
+5. Start the local PostgreSQL server
 
 ```sh
     docker-compose up
 ```
 
-5. Run the project
+5. Migrate the database
+
+```sh
+    cd backend
+    npx primsa migrate dev
+```
+
+7. Run the project
 
 ```sh
     yarn start
@@ -50,5 +58,3 @@ To get started and run the project, please follow the instructions below:
 [Munchies Excalidraw](https://excalidraw.com/#json=SW7AkPSuMpKeYJgiYuiNY,eSI40X03fBybz0p_4ZTiQw "Munchies Excalidraw")
 
 [Munchies Designs](https://www.figma.com/file/bVzBBkR9jTt2w1SlU1xf47/Untitled?node-id=0%3A1 "Munchies Designs")
-
-

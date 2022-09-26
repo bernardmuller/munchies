@@ -1,10 +1,31 @@
 version: "3.9"
 
 services:
-  postgres:
-    image: postgres:14
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    ports:
-      - "5432:5432"
+    database:
+        image: postgres:14
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password
+        ports:
+            - "5432:5432"
+
+    backend:
+        depends_on:
+            - "database"
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        environment:
+            DATABASE_URL: postgres://postgres:password@localhost:5432/munchies
+            JWT_SECRET: 56ea05c2-4d49-4d89-9575-fac5d48da902
+        ports:
+            - "8080:8080"
+        restart: always
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+
+        ports:
+            - "3000:3000"
+        restart: always
