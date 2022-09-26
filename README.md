@@ -15,6 +15,9 @@ To get started and run the project, please follow the instructions below:
     yarn install
 ```
 
+ - Configure environment variables for backend by creating a new .env file and copy the contents from "example.env" into it.
+
+
 2.  Install frontend dependencies
 
 ```sh
@@ -28,28 +31,24 @@ To get started and run the project, please follow the instructions below:
     yarn install
 ```
 
-3. Configure environment variables for backend
-
-```sh
-    cd backend
-```
-
-Create a new .env file and copy the contents from "example.env" into it.
-
-5. Start the local PostgreSQL server
+4. Start the local PostgreSQL server
 
 ```sh
     docker-compose up
 ```
 
-6. Run the project
+5. Run the project
 
 ```sh
     yarn start
 ```
 
-Note
-
 # Project Background
 
-To be added..
+## Resources
+
+[Munchies Excalidraw](https://excalidraw.com/#json=SW7AkPSuMpKeYJgiYuiNY,eSI40X03fBybz0p_4ZTiQw "Munchies Excalidraw")
+
+[Munchies Designs](https://www.figma.com/file/bVzBBkR9jTt2w1SlU1xf47/Untitled?node-id=0%3A1 "Munchies Designs")
+
+
