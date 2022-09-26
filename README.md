@@ -48,8 +48,6 @@ Create a new .env file and copy the contents from "example.env" into it.
     yarn start
 ```
 
-Note
-
 # Project Background
 
 To be added..
