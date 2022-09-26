@@ -45,4 +45,6 @@ To get started and run the project, please follow the instructions below:
 
 # Project Background
 
-To be added..
+## Excalidraw link
+(https://excalidraw.com/#json=SW7AkPSuMpKeYJgiYuiNY,eSI40X03fBybz0p_4ZTiQw "Munchies Excalidraw")
+
