@@ -1,0 +1,22 @@
+{
+  "name": "munchies",
+  "version": "1.0.0",
+  "description": "A comprehensive grocerylist manager.",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"cd frontend && yarn dev\" \"cd backend && npm run start\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bernardmuller/munchies.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bernardmuller/munchies/issues"
+  },
+  "homepage": "https://github.com/bernardmuller/munchies#readme",
+  "dependencies": {
+    "concurrently": "^7.4.0"
+  }
+}
