@@ -45,7 +45,10 @@ To get started and run the project, please follow the instructions below:
 
 # Project Background
 
-## Excalidraw link
+## Resources
 
 [Munchies Excalidraw](https://excalidraw.com/#json=SW7AkPSuMpKeYJgiYuiNY,eSI40X03fBybz0p_4ZTiQw "Munchies Excalidraw")
+
+[Munchies Designs](https://www.figma.com/file/bVzBBkR9jTt2w1SlU1xf47/Untitled?node-id=0%3A1 "Munchies Designs")
+
 
