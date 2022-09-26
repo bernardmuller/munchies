@@ -5,7 +5,7 @@
 
 read ref name remote_ref remote_name
 
-if test "$ref" = refs/heads/main; then
+if test "$ref" = refs/heads/master; then
     echo ---------------------------------------------------
     echo ERROR: Not allowed to push directly to main branch.>&2
     echo ---------------------------------------------------
