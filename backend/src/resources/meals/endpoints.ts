@@ -43,6 +43,7 @@ const endpoints = [
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
       const params = req.body;
+      console.log(params);
       const meal = await updateMeal(id, params);
       return res.send(meal);
     },

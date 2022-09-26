@@ -30,7 +30,7 @@ export const getMeals = async (params?: { filters?: { id?: string } }) => {
       ingredients: [],
     };
     ingredientRows.forEach((ing) => {
-      return mealObj.ingredients.push(ing.ingredient);
+      return mealObj.ingredients.push(ing?.ingredient);
     });
     return mealObj;
   }
