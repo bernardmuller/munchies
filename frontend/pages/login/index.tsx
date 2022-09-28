@@ -1,75 +1,40 @@
-import { useMutation } from "@tanstack/react-query";
-import router from "next/router";
-import { SubmitHandler, useForm } from "react-hook-form";
-import Button from "../../components/buttons/button/Button";
-import { login } from "../api/auth";
+import { Alert, AlertTitle } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import { Toast } from 'components/alerts/toast-alert/Toast';
+import Form from 'components/forms/react-hook-form-wrapper/Form';
+import TextField from 'components/inputs/textfield/TextField';
+import { useState } from 'react';
+import Button from '../../components/buttons/button/Button';
+import { login } from '../api/auth';
 
-type Inputs = {
-	email: string;
-	password: string;
-};
-
-const useLogin = () => {
-	return useMutation((loginInput) => {
-		return login(loginInput);
-	});
-};
+// TODO : reffactor to use React Query and elogin funcitonality to custom hooks
 
 const Login = () => {
-	const {
-		register,
-		handleSubmit,
-		// formState: { errors },
-	} = useForm<Inputs>();
-	const login = useLogin();
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-	const onSubmit: SubmitHandler<Inputs> = async (data) => {
-		login.mutate(data, {
-			onSuccess: () => {
-				router.push("/meals");
-			},
-			onError: (error) => {
-				alert(error);
-			},
-		});
-	};
+  const onSubmit = async (data: any) => {
+    setLoading(true);
+    const loginRes = await login(data);
+    setLoading(false);
+    if (!loginRes?.ok) {
+      setError(loginRes?.message);
+    }
+  };
 
-	return (
-		<div className="w-full h-screen bg-secondary prose p-4 pt-8">
-			<h1 className="text-white text-center">Munchies</h1>
-			<h2 className="ml-4">Login</h2>
-			<form
-				onSubmit={handleSubmit(onSubmit)}
-				className="px-4 flex flex-col gap-4"
-			>
-				<div className="form-control w-full">
-					<label className="label">
-						<span className="label-text">Email</span>
-					</label>
-					<input
-						type="text"
-						value="me@bernardmuller.dev"
-						placeholder="me@email.com"
-						className="input input-bordered input-lg w-full"
-						{...register("email", { required: true })}
-					/>
-				</div>
-				<div className="form-control w-full mb-8">
-					<label className="label">
-						<span className="label-text">Password</span>
-					</label>
-					<input
-						type="password"
-						value="Tester@123"
-						placeholder="**********"
-						className="input input-bordered input-lg w-full"
-						{...register("password", { required: true })}
-					/>
-				</div>
-				<Button type="submit" label="Login" />
-			</form>
-		</div>
-	);
+  return (
+    <div className="w-full h-screen bg-secondary prose p-4 pt-8">
+      <h1 className="text-white text-center">Munchies</h1>
+      <h2 className="ml-4">Login</h2>
+      {error && <Toast variant="filled" severity="error" message={error} />}
+      <Form onSubmit={onSubmit} className="px-4 flex flex-col gap-6 ">
+        <TextField name="email" label="Email" type="text" placeholder="me@email.com" />
+        <TextField name="password" label="Password" type="password" placeholder="**********" />
+        <Button type="submit" label="Login" isLoading={loading} />
+      </Form>
+    </div>
+  );
 };
 
 export default Login;

@@ -4,15 +4,10 @@ export interface IButton {
   onClick?: () => any;
   secondary?: boolean;
   disabled?: boolean;
+  isLoading?: boolean;
 }
 
-const Button: React.FC<IButton> = ({
-  type,
-  label,
-  onClick,
-  secondary,
-  disabled,
-}) => {
+const Button: React.FC<IButton> = ({ type, label, onClick, secondary, disabled, isLoading }) => {
   if (!label) {
     throw new Error('Button required label.');
   }
@@ -30,7 +25,7 @@ const Button: React.FC<IButton> = ({
           : 'bg-primary shadow-idle transition-all hover:shadow-primary hover:bg-primary_l active:bg-primary_d active:shadow-idle active:scale-95'
       }`}
     >
-      {label}
+      {isLoading ? 'loading...' : label}
     </button>
   );
 };
