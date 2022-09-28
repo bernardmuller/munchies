@@ -28,6 +28,9 @@ const Login = () => {
 			onSuccess: () => {
 				router.push("/meals");
 			},
+			onError: (error) => {
+				alert(error);
+			},
 		});
 	};
 

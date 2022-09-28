@@ -1,0 +1,1 @@
+{"c":["pages/_app","webpack"],"r":["pages/meals"],"m":["./components/badges/Badge.tsx","./components/cards/meal-card/MealCard.tsx","./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?absolutePagePath=%2FUsers%2Fbernardmuller%2Fdev%2Fp%2Fmunchies%2Ffrontend%2Fpages%2Fmeals.tsx&page=%2Fmeals!","./pages/meals.tsx"]}

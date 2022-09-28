@@ -2,6 +2,9 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/menus": "pages/menus.js",
+  "/settings": "pages/settings.js",
   "/household": "pages/household.js",
+  "/ingredients": "pages/ingredients.js",
   "/meals": "pages/meals.js"
 }

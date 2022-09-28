@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ActiveViewProvider } from 'contexts/activeViewContext';
 import type { AppProps } from 'next/app';
 import '../styles/globals.css';
 import { NextPageWithLayout } from './page';
@@ -11,12 +12,12 @@ interface AppPropsWithLayout extends AppProps {
 }
 
 const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
-  const getLayout = Component.getLayout || ((page) => page);
+  const getLayout = Component.getLayout || (page => page);
 
   return getLayout(
     <QueryClientProvider client={queryClient}>
       <Component {...pageProps} />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 };
 
