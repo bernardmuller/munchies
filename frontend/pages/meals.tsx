@@ -35,11 +35,11 @@ const Meals: NextPageWithLayout = () => {
           addMeal.mutate();
         }}
       />
-      <section className="px-8 flex flex-col gap-4">
+      <section className="px-8 flex flex-col gap-4 pt-4">
         <input
           className="input"
           placeholder="Search meal..."
-          onChange={(e) => setSearchText(e.target.value)}
+          onChange={e => setSearchText(e.target.value)}
         />
         <div className=" grid grid-cols-2 gap-4 overflow-scroll pb-28">
           {data &&
@@ -65,7 +65,7 @@ const Meals: NextPageWithLayout = () => {
 
 export default Meals;
 
-Meals.getLayout = (page) => {
+Meals.getLayout = page => {
   return (
     <PrimaryLayout>
       {page}

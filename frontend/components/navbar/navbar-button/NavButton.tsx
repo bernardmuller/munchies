@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
-import { IoCalendar, IoFastFood, IoHome, IoList, IoSettingsSharp } from 'react-icons/io5';
+import { IoCalendar, IoFastFood, IoHomeSharp, IoBuild } from 'react-icons/io5';
+import { IoMdList } from 'react-icons/io';
 import { colors } from '../../../shared/colors';
 
 export interface INavButton {
@@ -17,11 +18,11 @@ const NavButton: React.FC<INavButton> = ({ variant, path, active }) => {
           active ? 'bg-primary shadow-idle' : 'bg-secondary_l'
         }`}
       >
-        {variant === 'household' && <IoHome color={colors.white} size={25} />}
+        {variant === 'household' && <IoHomeSharp color={colors.white} size={25} />}
         {variant === 'menus' && <IoCalendar color={colors.white} size={25} />}
         {variant === 'meals' && <IoFastFood color={colors.white} size={25} />}
-        {variant === 'settings' && <IoSettingsSharp color={colors.white} size={25} />}
-        {variant === 'ingredients' && <IoList color={colors.white} size={25} />}
+        {variant === 'settings' && <IoBuild color={colors.white} size={25} />}
+        {variant === 'ingredients' && <IoMdList color={colors.white} size={25} />}
       </div>
     </button>
   );
