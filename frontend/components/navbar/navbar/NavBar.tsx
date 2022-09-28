@@ -14,7 +14,7 @@ const navOptions: INavButton[] = [
 const NavBar: React.FC<INavBar> = () => {
   const activeView = useActiveView();
   return (
-    <div className="flex items-center h-20 z-50 bg-secondary_d w-full fixed bottom-0">
+    <div className="flex items-center h-20 z-50 bg-secondary_l w-full fixed bottom-0 shadow-double_">
       <ul className="list-none flex w-full justify-evenly">
         {navOptions.map((nav, index) => (
           <li key={nav.variant}>

@@ -1,11 +1,5 @@
 import { useRouter } from 'next/router';
-import {
-  IoCalendar,
-  IoFastFood,
-  IoHome,
-  IoList,
-  IoSettingsSharp,
-} from 'react-icons/io5';
+import { IoCalendar, IoFastFood, IoHome, IoList, IoSettingsSharp } from 'react-icons/io5';
 import { colors } from '../../../shared/colors';
 
 export interface INavButton {
@@ -17,21 +11,16 @@ export interface INavButton {
 const NavButton: React.FC<INavButton> = ({ variant, path, active }) => {
   const router = useRouter();
   return (
-    <button
-      className=" bg-none border-none cursor-pointer "
-      onClick={() => router.push(path)}
-    >
+    <button className=" bg-none border-none cursor-pointer " onClick={() => router.push(path)}>
       <div
-        className={`p-4 flex align-center justify-center rounded-xl ${
+        className={`p-4 flex align-center justify-center rounded-full ${
           active ? 'bg-primary shadow-idle' : 'bg-secondary_l'
         }`}
       >
         {variant === 'household' && <IoHome color={colors.white} size={25} />}
         {variant === 'menus' && <IoCalendar color={colors.white} size={25} />}
         {variant === 'meals' && <IoFastFood color={colors.white} size={25} />}
-        {variant === 'settings' && (
-          <IoSettingsSharp color={colors.white} size={25} />
-        )}
+        {variant === 'settings' && <IoSettingsSharp color={colors.white} size={25} />}
         {variant === 'ingredients' && <IoList color={colors.white} size={25} />}
       </div>
     </button>
