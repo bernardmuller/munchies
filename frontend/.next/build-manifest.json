@@ -25,25 +25,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/household": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/household.js"
-    ],
-    "/ingredients": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/ingredients.js"
-    ],
     "/meals": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/meals.js"
     ],
-    "/menus": [
+    "/meals/[id]": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/menus.js"
+      "static/chunks/pages/meals/[id].js"
     ],
     "/settings": [
       "static/chunks/webpack.js",
