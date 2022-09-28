@@ -8,7 +8,7 @@ Munchies is a grocerylist manager that creates grocerylists based on meals a use
 
 To get started and run the project, please follow the instructions below:
 
-#### Prerequisites
+### Prerequisites
 
 1. Install backend dependencies
 
@@ -51,9 +51,9 @@ To get started and run the project, please follow the instructions below:
     yarn start
 ```
 
-# Project Background
+## Project Background
 
-## Resources
+### Resources
 
 [Munchies Excalidraw](https://excalidraw.com/#room=e998cabfbf01faf8acab,mWa_eAFRChdOhvC0aXwrWA "Munchies Excalidraw")
 
