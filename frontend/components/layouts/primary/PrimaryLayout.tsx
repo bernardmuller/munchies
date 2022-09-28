@@ -5,7 +5,7 @@ export interface IPrimaryLayout {
 }
 
 const PrimaryLayout: React.FC<IPrimaryLayout> = ({ children }) => {
-  return <div className=" w-screen bg-secondary_d pt-16">{children}</div>;
+  return <div className=" w-screen bg-secondary_d pt-20">{children}</div>;
 };
 
 export default PrimaryLayout;
