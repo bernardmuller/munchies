@@ -6,7 +6,7 @@ export async function createMeal() {
     method: 'POST',
     url: `${requireBaseURL()}/meals`,
     headers: requireHeaders(),
-  }).then((response) => response.data);
+  }).then(response => response.data);
 }
 
 export async function fetchMeals() {
@@ -14,7 +14,7 @@ export async function fetchMeals() {
     method: 'GET',
     url: `${requireBaseURL()}/meals`,
     headers: requireHeaders(),
-  }).then((response) => response.data);
+  }).then(response => response.data);
 }
 
 export async function fetchMeal(id: string) {
@@ -22,7 +22,7 @@ export async function fetchMeal(id: string) {
     method: 'GET',
     url: `${requireBaseURL()}/meals/${id}`,
     headers: requireHeaders(),
-  }).then((response) => response.data);
+  }).then(response => response.data);
 }
 
 export async function updateMeal({ id, data }: { id: string; data: any }) {
@@ -31,5 +31,20 @@ export async function updateMeal({ id, data }: { id: string; data: any }) {
     url: `${requireBaseURL()}/meals/${id}`,
     headers: requireHeaders(),
     data: data,
-  }).then((response) => response.data);
+  }).then(response => response.data);
+}
+
+export async function addIngredientToMeal({
+  mealId,
+  ingredientId,
+}: {
+  mealId: string;
+  ingredientId: string;
+}) {
+  return await axios({
+    method: 'POST',
+    url: `${requireBaseURL()}/meals/${mealId}/ingredients/add`,
+    headers: requireHeaders(),
+    data: { ingredientId: ingredientId },
+  }).then(response => response.data);
 }

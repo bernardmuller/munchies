@@ -21,7 +21,10 @@ const endpoints = [
     path: '/ingredients',
     handler: async (req: Request, res: Response) => {
       const limit = parseInt(req.query.limit as string);
-      const offset = parseInt(req.query.page as string) * limit - limit;
+      const offset =
+        parseInt(req.query.page as string) > 0
+          ? parseInt(req.query.page as string) * limit - limit
+          : 0;
       const ingredients = await getIngredients({
         offset: offset,
         limit: limit,

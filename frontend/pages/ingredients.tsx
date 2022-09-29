@@ -23,6 +23,7 @@ const Ingredients: NextPageWithLayout = () => {
 
   const onSubmit = (data: { name: string }) => {
     addIngredient.mutate(data as any);
+    setAdd(false);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -30,9 +31,10 @@ const Ingredients: NextPageWithLayout = () => {
   return (
     <section>
       <div className=" grid grid-cols-1 gap-4 overflow-scroll pb-28">
-        {data &&
-          data.map((ingredient: IIngredient) => <p key={ingredient.id}>{ingredient.name}</p>)}
-        {!add ? (
+        {data?.map((ingredient: IIngredient) => (
+          <p key={ingredient.id}>{ingredient.name}</p>
+        ))}
+        {/* {!add ? (
           <Button secondary type="button" label="+ Add Ingredient" onClick={() => setAdd(true)} />
         ) : (
           <Form onSubmit={onSubmit} className="flex w-full justify-between items-center gap-2 ">
@@ -46,7 +48,7 @@ const Ingredients: NextPageWithLayout = () => {
             <UtilityButton variant="save" type="submit" />
             <UtilityButton variant="close" type="button" onClick={() => setAdd(false)} />
           </Form>
-        )}
+        )} */}
       </div>
     </section>
   );

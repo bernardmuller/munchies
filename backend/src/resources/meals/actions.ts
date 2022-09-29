@@ -96,6 +96,8 @@ export const addIngredientToMeal = async ({
   mealId: string;
   ingredientId: string;
 }) => {
+  console.log(mealId);
+  console.log(ingredientId);
   const meal = await getMeals({ filters: { id: mealId } });
   if (!meal) throw new NotFoundError('Meal not found.');
 

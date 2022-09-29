@@ -22,7 +22,7 @@ const MealDetail: NextPageWithLayout = () => {
       />
       <div className="px-6">
         <MealInfo meal={mealData.data} />
-        <MealDirections meal={{}} />
+        <MealDirections meal={mealData.data} />
       </div>
     </section>
   );
@@ -30,7 +30,7 @@ const MealDetail: NextPageWithLayout = () => {
 
 export default MealDetail;
 
-MealDetail.getLayout = (page) => {
+MealDetail.getLayout = page => {
   return (
     <PrimaryLayout>
       {page}

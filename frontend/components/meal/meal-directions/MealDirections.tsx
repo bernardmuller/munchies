@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // import 'react-widgets/styles.css';
 import styled from 'styled-components';
 // import DropdownList from 'react-widgets/DropdownList';
@@ -9,6 +9,12 @@ import { useForm } from 'react-hook-form';
 import Button from 'components/buttons/button/Button';
 import UtilityButton from 'components/buttons/utility-button/UtilityButton';
 import { colors } from 'shared/colors';
+import AsyncSelect from 'react-select/async';
+import { fetchIngredients } from 'pages/api/ingredients';
+import { debounce } from 'lodash';
+import ReactSelect from 'react-select';
+import { useAddIngredientToMeal } from 'hooks/ingredientsHooks';
+import { useQueryClient } from '@tanstack/react-query';
 // import { Grid } from '@chakra-ui/react';
 
 const Wrapper = styled.div`
@@ -101,14 +107,15 @@ const Item = ({ data, onDelete }: { data: any; onDelete: any }) => {
     return (
       <ItemContainerForm onSubmit={() => {}}>
         <input
-          className="input"
+          className=""
           value={value}
           {...register('name')}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={e => setValue(e.target.value)}
         />
         <UtilityWrapper>
-          <UtilityButton variant="save" onClick={() => {}} />
+          <UtilityButton type="button" variant="save" onClick={() => {}} />
           <UtilityButton
+            type="button"
             variant="close"
             onClick={() => {
               setEdit(false);
@@ -129,8 +136,9 @@ const Item = ({ data, onDelete }: { data: any; onDelete: any }) => {
 
       {hover && !edit && (
         <UtilityWrapper>
-          <UtilityButton variant="save" onClick={() => {}} />
+          <UtilityButton type="button" variant="save" onClick={() => {}} />
           <UtilityButton
+            type="button"
             variant="close"
             onClick={() => {
               onDelete();
@@ -142,36 +150,76 @@ const Item = ({ data, onDelete }: { data: any; onDelete: any }) => {
   );
 };
 
-const AddItem = () => {
+const AddItem = ({ meal }: { meal: any }) => {
   const [add, setAdd] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const addIngredient = useAddIngredientToMeal();
+  const queryClient = useQueryClient();
+
+  const getIngredients = async () => {
+    setLoading(true);
+    const ingredients = await fetchIngredients({
+      searchTerm: searchTerm.toLowerCase() || '',
+      page: '1',
+    });
+
+    let dropDownOptions = ingredients.map((item: any) => {
+      return { value: item.id, label: item.name };
+    });
+    setLoading(false);
+    return dropDownOptions;
+  };
+
+  useEffect(() => {
+    getIngredients().then(res => setItems(res));
+  }, [searchTerm]);
+
+  const updateSearchTerm = (inputValue: string) => setSearchTerm(inputValue);
+
+  const debounceOnChange = debounce(updateSearchTerm, 300);
 
   return (
     <Wrapper>
       {!add ? (
-        <Button
-          type="button"
-          secondary
-          label="+ Add ingredient"
-          onClick={() => setAdd(true)}
-        />
+        <Button type="button" secondary label="+ Add ingredient" onClick={() => setAdd(true)} />
       ) : (
         <Form onSubmit={() => {}}>
-          {/* <DropdownList
-            placeholder="Search for ingredient"
-            data={ingredients}
-            dataKey="_id"
-            textField="name"
-            onChange={(val) => setSelectedIngredient(val)}
-          /> */}
-          <UtilityWrapper>
-            <UtilityButton variant="save" onClick={() => {}} />
+          <div className="flex w-full">
+            <div className="w-full">
+              <ReactSelect
+                name="ingredient"
+                placeholder="Search ingredients..."
+                options={items}
+                isLoading={loading}
+                onInputChange={val => debounceOnChange(val)}
+                onChange={val => {
+                  if (val) {
+                    addIngredient.mutate(
+                      {
+                        mealId: meal.id,
+                        ingredientId: val?.value,
+                      },
+                      {
+                        onSuccess: () => {
+                          queryClient.invalidateQueries([`meal-${meal.id}`]);
+                        },
+                      },
+                    );
+                  }
+                }}
+              />
+            </div>
+            <UtilityButton type="button" variant="save" onClick={() => {}} />
             <UtilityButton
+              type="button"
               variant="close"
               onClick={() => {
                 setAdd(false);
               }}
             />
-          </UtilityWrapper>
+          </div>
         </Form>
       )}
     </Wrapper>
@@ -185,7 +233,7 @@ export const MealDirections = ({ meal }: { meal: any }) => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [directions, setDirections] = useState(meal.directions);
+  const [directions, setDirections] = useState(meal?.directions);
   const [addStep, setAddStep] = useState(false);
   const [newStep, setNewStep] = useState('');
 
@@ -198,16 +246,12 @@ export const MealDirections = ({ meal }: { meal: any }) => {
         <div className="flex flex-col gap-4">
           {
             //   ingredients &&
-            [{ id: '1', name: 'ingredient' }].map((ingredient: any) => (
-              <Item
-                key={`ingredient-${ingredient.id}`}
-                data={ingredient}
-                onDelete={() => {}}
-              />
+            meal.ingredients.map((ingredient: any) => (
+              <Item key={`ingredient-${ingredient.id}`} data={ingredient} onDelete={() => {}} />
             ))
           }
 
-          <AddItem />
+          <AddItem meal={meal} />
         </div>
       </SubContainer>
 
@@ -225,8 +269,9 @@ export const MealDirections = ({ meal }: { meal: any }) => {
                       <span>{step}</span>
                       {!edit && (
                         <>
-                          <UtilityButton variant="save" onClick={() => {}} />
+                          <UtilityButton type="button" variant="save" onClick={() => {}} />
                           <UtilityButton
+                            type="button"
                             variant="close"
                             onClick={() => {
                               setEdit(false);
@@ -241,14 +286,15 @@ export const MealDirections = ({ meal }: { meal: any }) => {
                         type="textarea"
                         value={''}
                         {...register('directions', {
-                          onChange: (e) => {
+                          onChange: e => {
                             setDirections(e.target.value);
                           },
                         })}
                       />
                       <UtilityWrapper>
-                        <UtilityButton variant="save" onClick={() => {}} />
+                        <UtilityButton type="button" variant="save" onClick={() => {}} />
                         <UtilityButton
+                          type="button"
                           variant="close"
                           onClick={() => {
                             setEdit(false);
@@ -261,23 +307,19 @@ export const MealDirections = ({ meal }: { meal: any }) => {
               ))}
           </Steps>
           {!addStep ? (
-            <Button
-              type="button"
-              secondary
-              onClick={() => setAddStep(true)}
-              label="Add Step"
-            />
+            <Button type="button" secondary onClick={() => setAddStep(true)} label="Add Step" />
           ) : (
             <Form>
               <input
                 type="textarea"
                 placeholder="Step directions"
-                onChange={(e) => setNewStep(e.target.value)}
+                onChange={e => setNewStep(e.target.value)}
               />
 
               <UtilityWrapper>
-                <UtilityButton variant="save" onClick={() => {}} />
+                <UtilityButton type="button" variant="save" onClick={() => {}} />
                 <UtilityButton
+                  type="button"
                   variant="close"
                   onClick={() => {
                     setAddStep(false);
