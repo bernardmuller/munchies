@@ -25,6 +25,7 @@ const endpoints = [
       const ingredients = await getIngredients({
         offset: offset,
         limit: limit,
+        searchTerm: req.query.searchTerm as string,
       });
       return res.send(ingredients);
     },

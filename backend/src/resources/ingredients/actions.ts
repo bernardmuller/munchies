@@ -2,6 +2,19 @@ import { db } from '../../db/db';
 import { getUuid } from '../../shared/utils';
 import { IngredientModel } from '../../../prisma/zod';
 
+interface IOptions {
+  skip: number;
+  take: number;
+  orderBy: {
+    name: string;
+  };
+  where?: {
+    name: {
+      contains: string;
+    };
+  };
+}
+
 export const createIngredient = async (data: { id?: string; name: string }) => {
   const IngredientData = { ...data, id: data.id || getUuid() };
 
@@ -14,6 +27,7 @@ export const getIngredients = async (params?: {
   filters?: { id?: string };
   offset?: number;
   limit?: number;
+  searchTerm?: string;
 }) => {
   if (params?.filters?.id) {
     const row = await db.ingredient.findUnique({
@@ -23,13 +37,27 @@ export const getIngredients = async (params?: {
     const Ingredient = IngredientModel.parse(row);
     return Ingredient;
   }
-  const rows = await db.ingredient.findMany({
+
+  let options: any = {
     skip: params?.offset || 0,
     take: params?.limit || 10,
     orderBy: {
       name: 'asc',
     },
-  });
+  };
+
+  if (params?.searchTerm && params?.searchTerm !== '') {
+    options = {
+      ...options,
+      where: {
+        name: {
+          contains: params?.searchTerm,
+        },
+      },
+    };
+  }
+
+  const rows = await db.ingredient.findMany({ ...options });
   const Ingredients = rows.map((row) => IngredientModel.parse(row));
   return Ingredients;
 };
