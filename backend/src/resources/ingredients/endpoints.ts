@@ -20,7 +20,12 @@ const endpoints = [
     method: 'get',
     path: '/ingredients',
     handler: async (req: Request, res: Response) => {
-      const ingredients = await getIngredients();
+      const limit = parseInt(req.query.limit as string);
+      const offset = parseInt(req.query.page as string) * limit - limit;
+      const ingredients = await getIngredients({
+        offset: offset,
+        limit: limit,
+      });
       return res.send(ingredients);
     },
     authenticate: true,

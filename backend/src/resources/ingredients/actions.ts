@@ -12,6 +12,8 @@ export const createIngredient = async (data: { id?: string; name: string }) => {
 
 export const getIngredients = async (params?: {
   filters?: { id?: string };
+  offset?: number;
+  limit?: number;
 }) => {
   if (params?.filters?.id) {
     const row = await db.ingredient.findUnique({
@@ -21,7 +23,13 @@ export const getIngredients = async (params?: {
     const Ingredient = IngredientModel.parse(row);
     return Ingredient;
   }
-  const rows = await db.ingredient.findMany();
+  const rows = await db.ingredient.findMany({
+    skip: params?.offset || 0,
+    take: params?.limit || 10,
+    orderBy: {
+      name: 'asc',
+    },
+  });
   const Ingredients = rows.map((row) => IngredientModel.parse(row));
   return Ingredients;
 };
