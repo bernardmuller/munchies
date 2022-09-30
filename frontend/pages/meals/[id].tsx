@@ -1,4 +1,4 @@
-import PageHeader from 'components/headers/page-header/PageHeader';
+import PageHeader from 'components/headers/list-header/ListHeader';
 import PrimaryLayout from 'components/layouts/primary/PrimaryLayout';
 import { MealDirections } from 'components/meal/meal-directions/MealDirections';
 import { MealInfo } from 'components/meal/meal-info/MealInfo';
@@ -14,12 +14,7 @@ const MealDetail: NextPageWithLayout = () => {
 
   return (
     <section className=" pb-96">
-      <PageHeader
-        heading="Meals"
-        leftButton
-        leftButtonVariant="back"
-        onLeftButtonClick={() => router.back()}
-      />
+      <PageHeader heading="Meals" onButtonClick={() => {}} buttonVariant="plus" />
       <div className="px-6">
         <MealInfo meal={mealData.data} />
         <MealDirections meal={mealData.data} />
