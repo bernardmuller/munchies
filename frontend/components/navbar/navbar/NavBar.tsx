@@ -14,18 +14,21 @@ const navOptions: INavButton[] = [
 const NavBar: React.FC<INavBar> = () => {
   const activeView = useActiveView();
   return (
-    <div className="flex items-center h-20 z-50 bg-secondary_l w-full fixed bottom-0 shadow-double_">
-      <ul className="list-none flex w-full justify-evenly">
-        {navOptions.map((nav, index) => (
-          <li key={nav.variant}>
-            <NavButton
-              variant={nav.variant}
-              path={nav.path}
-              active={nav.path.split('/')[1] === activeView}
-            />
-          </li>
-        ))}
-      </ul>
+    <div className="flex flex-col fixed bottom-0 w-full gap-1.5">
+      <div className=" h-[3px] bg-secondary_700" />
+      <div className="flex items-center h-20 z-50 bg-secondary_700  ">
+        <ul className="list-none flex w-full justify-evenly">
+          {navOptions.map((nav, index) => (
+            <li key={nav.variant}>
+              <NavButton
+                variant={nav.variant}
+                path={nav.path}
+                active={nav.path.split('/')[1] === activeView}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

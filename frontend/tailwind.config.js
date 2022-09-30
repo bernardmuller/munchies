@@ -22,7 +22,7 @@ module.exports = {
         secondary_400: '#EF89C4',
         secondary_500: '#DB78AC',
         secondary_600: '#FFCE00',
-        secondary_700: '#FFCE00',
+        secondary_700: '#2C302C',
         secondary_800: '#FFCE00',
         secondary_900: '#FFCE00',
         primary: '#68BF50',
