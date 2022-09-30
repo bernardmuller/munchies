@@ -165,7 +165,7 @@ const AddItem = ({ meal }: { meal: any }) => {
       page: '1',
     });
 
-    let dropDownOptions = ingredients.map((item: any) => {
+    let dropDownOptions = ingredients?.map((item: any) => {
       return { value: item.id, label: item.name };
     });
     setLoading(false);
@@ -246,7 +246,7 @@ export const MealDirections = ({ meal }: { meal: any }) => {
         <div className="flex flex-col gap-4">
           {
             //   ingredients &&
-            meal.ingredients.map((ingredient: any) => (
+            meal?.ingredients?.map((ingredient: any) => (
               <Item key={`ingredient-${ingredient.id}`} data={ingredient} onDelete={() => {}} />
             ))
           }
