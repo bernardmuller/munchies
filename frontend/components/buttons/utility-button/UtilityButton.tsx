@@ -12,7 +12,7 @@ import {
   FiX,
 } from 'react-icons/fi';
 
-import { IoArrowBack } from 'react-icons/io5';
+import { TiPlus, TiChevronLeft } from 'react-icons/ti';
 
 export interface IUtilityButton {
   type: 'button' | 'submit';
@@ -35,12 +35,7 @@ export interface IUtilityButton {
 
 const ICON_SIZE = 25;
 
-const UtilityButton: React.FC<IUtilityButton> = ({
-  type,
-  variant,
-  onClick,
-  border,
-}) => {
+const UtilityButton: React.FC<IUtilityButton> = ({ type, variant, onClick, border }) => {
   if (!variant) {
     throw new Error('UtilityButton required variant.');
   }
@@ -48,7 +43,7 @@ const UtilityButton: React.FC<IUtilityButton> = ({
     <button
       type={type}
       onClick={onClick}
-      className={`h-12 w-12 flex items-center justify-center rounded-lg active:bg-stone-700 ${
+      className={`h-12 w-12 flex items-center justify-center rounded-full active:bg-stone-700 ${
         border && 'border-2'
       } `}
     >
@@ -56,22 +51,14 @@ const UtilityButton: React.FC<IUtilityButton> = ({
       {variant === 'delete' && <FiTrash color="white" size={ICON_SIZE} />}
       {variant === 'edit' && <FiEdit2 color="white" size={ICON_SIZE} />}
       {variant === 'share' && <FiShare2 color="white" size={ICON_SIZE} />}
-      {variant === 'arrowDown' && (
-        <FiChevronDown color="white" size={ICON_SIZE} />
-      )}
+      {variant === 'arrowDown' && <FiChevronDown color="white" size={ICON_SIZE} />}
       {variant === 'arrowUp' && <FiChevronUp color="white" size={ICON_SIZE} />}
-      {variant === 'arrowLeft' && (
-        <FiChevronLeft color="white" size={ICON_SIZE} />
-      )}
-      {variant === 'arrowRight' && (
-        <FiChevronRight color="white" size={ICON_SIZE} />
-      )}
+      {variant === 'arrowLeft' && <FiChevronLeft color="white" size={ICON_SIZE} />}
+      {variant === 'arrowRight' && <FiChevronRight color="white" size={ICON_SIZE} />}
       {variant === 'close' && <FiX color="white" size={ICON_SIZE} />}
-      {variant === 'menu' && (
-        <FiMoreHorizontal color="white" size={ICON_SIZE} />
-      )}
-      {variant === 'plus' && <FiPlus color="white" size={ICON_SIZE} />}
-      {variant === 'back' && <IoArrowBack color="white" size={ICON_SIZE} />}
+      {variant === 'menu' && <FiMoreHorizontal color="white" size={ICON_SIZE} />}
+      {variant === 'plus' && <TiPlus color="white" size={ICON_SIZE} />}
+      {variant === 'back' && <TiChevronLeft color="white" size={ICON_SIZE} />}
     </button>
   );
 };
