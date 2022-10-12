@@ -19,6 +19,9 @@ export const createApp = () => {
   );
 
   app.use(express.json());
+  app.get('/', (req, res) => {
+    res.send('Munchies api');
+  });
   app.use('/api', router);
   // createSplashScreen(router);
   app.get('/api', (req, res) => {

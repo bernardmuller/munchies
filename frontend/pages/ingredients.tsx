@@ -4,7 +4,7 @@ import Form from 'components/forms/react-hook-form-wrapper/Form';
 import TextField from 'components/inputs/textfield/TextField';
 import { useAddIngredient, useIngredientsData } from 'hooks/ingredientsHooks';
 import { useState } from 'react';
-import PageHeader from '../components/headers/page-header/PageHeader';
+import PageHeader from '../components/headers/list-header/ListHeader';
 import PrimaryLayout from '../components/layouts/primary/PrimaryLayout';
 import NavBar from '../components/navbar/navbar/NavBar';
 import { NextPageWithLayout } from './page';
@@ -59,7 +59,7 @@ export default Ingredients;
 Ingredients.getLayout = page => {
   return (
     <PrimaryLayout>
-      <PageHeader heading="Ingredients" />
+      <PageHeader heading="Ingredients" onButtonClick={() => {}} buttonVariant="plus" />
       <div className="px-6">{page}</div>
       <NavBar />
     </PrimaryLayout>

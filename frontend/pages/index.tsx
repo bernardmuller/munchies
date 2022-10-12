@@ -1,4 +1,4 @@
-import PageHeader from '../components/headers/page-header/PageHeader';
+import PageHeader from '../components/headers/list-header/ListHeader';
 import PrimaryLayout from '../components/layouts/primary/PrimaryLayout';
 import NavBar from '../components/navbar/navbar/NavBar';
 import BaseTemplate from '../components/templates/BaseTemplate';
@@ -14,10 +14,10 @@ const Home: NextPageWithLayout = () => {
 
 export default Home;
 
-Home.getLayout = (page) => {
+Home.getLayout = page => {
   return (
     <PrimaryLayout>
-      <PageHeader heading="Heading" />
+      <PageHeader heading="Heading" onButtonClick={() => {}} buttonVariant="plus" />
       <div className="px-4">{page}</div>
       <NavBar />
     </PrimaryLayout>

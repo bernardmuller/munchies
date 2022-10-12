@@ -1,6 +1,6 @@
-import { IPageHeader } from './PageHeader';
+import { IListHeader } from './ListHeader';
 
-const left: IPageHeader = {
+const left: IListHeader = {
   loading: false,
   heading: 'Heading',
   onRightButtonClick: () => {},
@@ -10,7 +10,7 @@ const left: IPageHeader = {
   leftButtonVariant: 'plus',
 };
 
-const right: IPageHeader = {
+const right: IListHeader = {
   loading: false,
   heading: 'Heading',
   onRightButtonClick: () => {},
@@ -20,7 +20,7 @@ const right: IPageHeader = {
   leftButton: false,
 };
 
-const loading: IPageHeader = {
+const loading: IListHeader = {
   loading: true,
   heading: 'Heading',
   onRightButtonClick: () => {},
@@ -30,7 +30,7 @@ const loading: IPageHeader = {
   leftButton: false,
 };
 
-export const mockPageHeaderProps = {
+export const mockListHeaderProps = {
   left,
   right,
   loading,
