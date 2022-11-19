@@ -25,6 +25,7 @@ module.exports = {
         secondary_700: '#2C302C',
         secondary_800: '#FFCE00',
         secondary_900: '#FFCE00',
+        gradient_t: '#4F4A46',
         primary: '#68BF50',
         primary_l: '#7BC766',
         primary_d: '#5EAB49',
