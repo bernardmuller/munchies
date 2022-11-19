@@ -2,7 +2,7 @@ import { getCookie } from 'cookies-next';
 
 export const requireBaseURL = () => {
   return process.env.ENV_NODE === 'development'
-    ? 'http://localhost:8080/api'
+    ? 'http://localhost:5000/api'
     : process.env.MUNCHIES_API_URL;
 };
 

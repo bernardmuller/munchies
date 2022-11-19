@@ -4,7 +4,7 @@ import NavButton, { INavButton } from '../navbar-button/NavButton';
 export interface INavBar {}
 
 const navOptions: INavButton[] = [
-  { variant: 'household', path: '/household' },
+  { variant: 'household', path: '/home' },
   { variant: 'menus', path: '/menus' },
   { variant: 'meals', path: '/meals' },
   { variant: 'ingredients', path: '/ingredients' },
@@ -14,9 +14,9 @@ const navOptions: INavButton[] = [
 const NavBar: React.FC<INavBar> = () => {
   const activeView = useActiveView();
   return (
-    <div className="flex flex-col fixed bottom-0 w-full gap-1.5">
+    <div className="flex flex-col fixed bottom-0 z-50 w-full gap-1.5">
       <div className=" h-[3px] bg-secondary_700" />
-      <div className="flex items-center h-20 z-50 bg-secondary_700  ">
+      <div className="flex items-center h-20 z-[50] bg-secondary_700  ">
         <ul className="list-none flex w-full justify-evenly">
           {navOptions.map((nav, index) => (
             <li key={nav.variant}>

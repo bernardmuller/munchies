@@ -2,10 +2,10 @@ import MealCard from 'components/cards/meal-card/MealCard';
 import { useAddMeal, useMealsData } from 'hooks/mealsHooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import PageHeader from '../components/headers/list-header/ListHeader';
-import PrimaryLayout from '../components/layouts/primary/PrimaryLayout';
-import NavBar from '../components/navbar/navbar/NavBar';
-import { NextPageWithLayout } from './page';
+import PageHeader from '../../components/headers/list-header/ListHeader';
+import PrimaryLayout from '../../components/layouts/primary/PrimaryLayout';
+import NavBar from '../../components/navbar/navbar/NavBar';
+import { NextPageWithLayout } from '../page';
 
 interface IMeal {
   name: string;
