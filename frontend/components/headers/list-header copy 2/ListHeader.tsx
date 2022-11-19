@@ -14,7 +14,7 @@ type TButtonVariant =
   | 'plus'
   | 'back';
 
-export interface IPageHeader {
+export interface IListHeader {
   loading?: boolean;
   heading: string;
   onRightButtonClick?: () => void;
@@ -25,8 +25,7 @@ export interface IPageHeader {
   rightButtonVariant?: TButtonVariant;
 }
 
-const PageHeader = ({
-  loading,
+const ListHeader = ({
   heading,
   onRightButtonClick,
   onLeftButtonClick,
@@ -34,36 +33,29 @@ const PageHeader = ({
   rightButtonVariant,
   leftButton,
   leftButtonVariant,
-}: IPageHeader) => {
+}: IListHeader) => {
   if ((leftButton && !leftButtonVariant) || (leftButtonVariant && !leftButton))
     throw new Error('Left button needs variant');
-  if (
-    (rightButton && !rightButtonVariant) ||
-    (!rightButton && rightButtonVariant)
-  )
+  if ((rightButton && !rightButtonVariant) || (!rightButton && rightButtonVariant))
     throw new Error('Right button needs variant');
   return (
-    <div className="h-16 flex items-center w-full justify-between z-10 bg-secondary_d px-2 fixed top-0">
-      <div className="flex items-center justify-center w-14">
-        {leftButton && onLeftButtonClick && leftButtonVariant && (
+    <div className="h-16 flex items-center w-full justify-between z-10 bg-secondary_d px-2">
+      {leftButton && onLeftButtonClick && leftButtonVariant && (
+        <div className="flex items-center justify-center w-14">
           <UtilityButton
+            type="button"
             variant={leftButtonVariant}
             onClick={() => {
               onLeftButtonClick();
             }}
           />
-        )}
-      </div>
-      <h2 className="text-white">
-        {/* {loading ? (
-          <Loader spinnerColor={colors.white} size="22px" />
-        ) : ( */}
-        {heading}
-        {/* )} */}
-      </h2>
+        </div>
+      )}
+      {heading && <h2 className="text-white">{heading}</h2>}
       <div className="flex items-center justify-center w-14">
         {rightButton && onRightButtonClick && rightButtonVariant && (
           <UtilityButton
+            type="button"
             variant={rightButtonVariant}
             onClick={() => {
               onRightButtonClick();
@@ -75,4 +67,4 @@ const PageHeader = ({
   );
 };
 
-export default PageHeader;
+export default ListHeader;
