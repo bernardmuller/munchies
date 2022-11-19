@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { authenticateUser } from '../shared/utils';
+import { authenticateUser, extractRequestOrigin } from '../shared/utils';
 import path from 'path';
 import { router } from './routes';
 
@@ -19,7 +19,9 @@ export const catchAsync = (
 };
 
 export const createEndpoint = (router: Router, endpoint: Endpoint) => {
-  let middleware = endpoint.authenticate ? [authenticateUser] : [];
+  let middleware = endpoint.authenticate
+    ? [authenticateUser, extractRequestOrigin]
+    : [];
   const routeMiddleware = middleware.map((ware) => catchAsync(ware));
   router[endpoint.method](
     endpoint.path,
@@ -29,6 +31,7 @@ export const createEndpoint = (router: Router, endpoint: Endpoint) => {
 };
 
 export const getSourceFolderfromCurrentDirectory = (dir: string) => {
-  const [backendDir] = dir.split('/src');
+  const [backendDir] = dir.split('\\src');
+  console.log(backendDir);
   return `${backendDir}/src`;
 };

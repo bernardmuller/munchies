@@ -94,3 +94,14 @@ export const createSuccessMessage = () => {
 export const createNotFoundMessage = () => {
   return { message: 'Not found.' };
 };
+
+export const extractRequestOrigin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const origin = req.headers.origin;
+  console.log(origin);
+
+  next();
+};

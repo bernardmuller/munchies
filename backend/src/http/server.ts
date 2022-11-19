@@ -22,11 +22,15 @@ export const createApp = () => {
   app.use('/api', router);
   // createSplashScreen(router);
   app.get('/api', (req, res) => {
-    res.sendFile(
-      path.join(
-        getSourceFolderfromCurrentDirectory(__dirname) + '/views/home.html',
-      ),
-    );
+    try {
+      res.sendFile(
+        path.join(
+          getSourceFolderfromCurrentDirectory(__dirname) + '/views/home.html',
+        ),
+      );
+    } catch (error) {
+      res.send('munchies api');
+    }
   });
   app.use(errorHandler);
 
