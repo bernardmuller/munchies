@@ -13,7 +13,7 @@
     "start": "next start",
     "lint": "next lint",
     "prettier": "prettier --write .",
-    "prepare": "husky install",
+    "prepare": "",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
@@ -21,6 +21,8 @@
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@formkit/auto-animate": "^1.0.0-beta.3",
+    "@headlessui/react": "^1.7.4",
+    "@heroicons/react": "^2.0.13",
     "@mui/material": "^5.10.3",
     "@tanstack/react-query": "^4.5.0",
     "axios": "^0.27.2",

@@ -1,3 +1,5 @@
+'use client';
+
 import Button from '../../../components/buttons/button/Button';
 import Image from 'next/image';
 import ph from '../../../assets/images/food_ph.png';

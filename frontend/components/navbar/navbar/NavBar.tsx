@@ -1,3 +1,5 @@
+'use client';
+
 import { useActiveView } from 'hooks/useActiveView';
 import NavButton, { INavButton } from '../navbar-button/NavButton';
 
@@ -8,14 +10,15 @@ const navOptions: INavButton[] = [
   { variant: 'menus', path: '/menus' },
   { variant: 'meals', path: '/meals' },
   { variant: 'ingredients', path: '/ingredients' },
-  { variant: 'settings', path: '/settings' },
+  { variant: 'settings', path: '/hello' },
 ];
 
 const NavBar: React.FC<INavBar> = () => {
   const activeView = useActiveView();
+
+  console.log(activeView);
   return (
     <div className="flex flex-col fixed bottom-0 z-50 w-full gap-1.5">
-      <div className=" h-[3px] bg-secondary_700" />
       <div className="flex items-center h-20 z-[50] bg-secondary_700  ">
         <ul className="list-none flex w-full justify-evenly">
           {navOptions.map((nav, index) => (

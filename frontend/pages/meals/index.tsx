@@ -34,13 +34,13 @@ const Meals: NextPageWithLayout = () => {
           addMeal.mutate();
         }}
       />
-      <section className="px-8 flex flex-col gap-4 pt-4">
+      <section className="px-4 flex flex-col gap-4 pt-4">
         <input
           className="input"
           placeholder="Search meal..."
           onChange={e => setSearchText(e.target.value)}
         />
-        <div className=" grid grid-cols-2 gap-4 overflow-scroll pb-28">
+        <div className=" grid grid-cols-2 gap-4 overflow-scroll pb-4">
           {data &&
             data
               .filter((meal: IMeal) => meal.name.includes(searchText))
@@ -50,7 +50,9 @@ const Meals: NextPageWithLayout = () => {
                   title={meal.name}
                   active={false}
                   seasons={meal.seasons}
-                  image={meal?.image}
+                  image={
+                    'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=781&q=80'
+                  }
                   onClick={() => {
                     router.push(`meals/${meal.id}`);
                   }}

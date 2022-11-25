@@ -1,10 +1,12 @@
+'use client';
+
 export interface IBadge {
   title: string;
 }
 
 const Badge: React.FC<IBadge> = ({ title }) => {
   return (
-    <span className=" bg-orange-400 bg-opacity-40 text-orange-500 px-4 py-1.5 rounded-2xl text-sm z-20 mb-4">
+    <span className=" bg-slate-400 bg-opacity-80 text-slate-100 backdrop-blur-lg px-3 py-1 rounded-lg text-xs z-20 mb-4">
       {title}
     </span>
   );

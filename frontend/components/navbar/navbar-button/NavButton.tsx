@@ -1,8 +1,11 @@
-import { useRouter } from 'next/router';
+'use client';
+
+import { usePathname } from 'next/navigation';
 import { IoCalendar, IoFastFood, IoHomeSharp, IoBuild } from 'react-icons/io5';
 import { TiSpanner, TiHome, TiCalendarOutline, TiZoom } from 'react-icons/ti';
 import { IoMdList } from 'react-icons/io';
 import { colors } from '../../../shared/colors';
+import Link from 'next/link';
 
 export interface INavButton {
   variant: 'meals' | 'menus' | 'settings' | 'household' | 'ingredients';
@@ -11,9 +14,8 @@ export interface INavButton {
 }
 
 const NavButton: React.FC<INavButton> = ({ variant, path, active }) => {
-  const router = useRouter();
   return (
-    <button className=" bg-none border-none cursor-pointer " onClick={() => router.push(path)}>
+    <Link className=" bg-none border-none cursor-pointer " href={path}>
       <div
         className={`p-4 flex align-center justify-center rounded-full ${
           active ? 'bg-primary shadow-idle' : 'bg-secondary_700'
@@ -25,7 +27,7 @@ const NavButton: React.FC<INavButton> = ({ variant, path, active }) => {
         {variant === 'settings' && <TiSpanner color={colors.white} size={30} />}
         {variant === 'ingredients' && <TiZoom color={colors.white} size={30} />}
       </div>
-    </button>
+    </Link>
   );
 };
 

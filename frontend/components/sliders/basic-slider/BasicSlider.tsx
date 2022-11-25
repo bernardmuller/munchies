@@ -1,3 +1,5 @@
+'use client';
+
 import Button from '../../buttons/button/Button';
 import Image from 'next/image';
 import ph from '../../../assets/images/food_ph.png';
@@ -16,8 +18,8 @@ const BasicSlider: React.FC<IHeroCard> = () => {
         <Link href="#">View more</Link>
       </div>
       <div className="h-auto flex gap-4 overflow-x-scroll pb-4">
-        {[1, 2, 3, 4].map(() => (
-          <MealCard active={false} title="test" seasons="autumn" onClick={() => {}} />
+        {[1, 2, 3, 4].map((item, index) => (
+          <MealCard active={false} title="test" seasons="autumn" onClick={() => {}} key={index} />
         ))}
       </div>
     </div>
