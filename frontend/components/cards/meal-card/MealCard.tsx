@@ -1,5 +1,6 @@
 'use client';
 
+import { H4, P } from 'components/typography';
 import Image from 'next/image';
 import ph from '../../../assets/images/food_ph.png';
 import Badge from '../../badges/Badge';
@@ -40,9 +41,9 @@ const MealCard: React.FC<IMealCard> = ({ onClick, active, image, title, seasons 
           </div>
         )}
       </div>
-      <div className=" h-[35%] w-full z-10 bg-primary_800 p-3 px-3 flex flex-col justify-between">
-        <h4 className="text-white z-10">{title}</h4>
-        <p className="text-slate-300 text-[10px] z-10">25 minutes | 25 ingredients</p>
+      <div className=" h-[35%] w-full z-10 bg-secondary_600 p-3 px-3 flex flex-col justify-between">
+        <H4>{title}</H4>
+        <P className="text-secondary_200 text-[10px]">25 minutes | 25 ingredients</P>
       </div>
     </div>
   );

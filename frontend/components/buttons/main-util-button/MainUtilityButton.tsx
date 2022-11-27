@@ -8,7 +8,7 @@ const ICON_SIZE = 25;
 
 // export default MainUtilityButton;
 
-export default function Example() {
+export default function MainUtiltityButton() {
   return (
     <div className="fixed bottom-28 right-8 w-56 text-right z-[200]">
       <Menu as="div" className="relative inline-block text-left">
