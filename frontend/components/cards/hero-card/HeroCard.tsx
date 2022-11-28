@@ -1,20 +1,9 @@
-'use client';
-
-import Button from '../../../components/buttons/button/Button';
 import Image from 'next/image';
-import ph from '../../../assets/images/food_ph.png';
-import Badge from '../../badges/Badge';
+
 import Link from 'next/link';
 import { H3, H4, P } from 'components/typography';
 
-export interface IHeroCard {}
-
-//TODO: replace typography with standarised typography
-const HeroCard: React.FC<IHeroCard> = ({
-  heading,
-  onClick,
-  menu,
-}: {
+export interface IHeroCard {
   heading: string;
   onClick: () => void;
   menu: {
@@ -25,12 +14,15 @@ const HeroCard: React.FC<IHeroCard> = ({
     ingredients: number;
     meals: number;
   };
-}) => {
+}
+
+//TODO: replace typography with standarised typography
+const HeroCard: React.FC<IHeroCard> = ({ heading, onClick, menu }) => {
   return (
     <div className=" flex flex-col gap-3">
       <div className="flex justify-between">
         <H3 className="text-xl text-slate-50">{heading}</H3>
-        <Link href="#" className="text-primary_400 text-sm font-light">
+        <Link href="#" className="text-primary_400 text-md font-light">
           call to action
         </Link>
       </div>

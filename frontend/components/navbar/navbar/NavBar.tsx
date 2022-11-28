@@ -16,7 +16,6 @@ const navOptions: INavButton[] = [
 const NavBar: React.FC<INavBar> = () => {
   const activeView = useActiveView();
 
-  console.log(activeView);
   return (
     <div className="flex flex-col fixed bottom-0 z-50 w-full gap-1.5">
       <div className="flex items-center h-20 z-[50] bg-secondary_700  ">
