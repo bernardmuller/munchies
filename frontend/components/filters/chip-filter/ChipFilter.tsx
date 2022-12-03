@@ -5,6 +5,7 @@ import FilterChip from '../../chips/filter-chip/FilterChip';
 import Link from 'next/link';
 import MealCard from 'components/cards/meal-card/MealCard';
 import { totalmem } from 'os';
+import { useState } from 'react';
 
 export interface IChipFilter {
   title?: string;
@@ -12,6 +13,7 @@ export interface IChipFilter {
 
 //TODO: replace typography with standarised typography
 const ChipFilters: React.FC<IChipFilter> = ({ title }) => {
+  const [active, setActive] = useState(0);
   return (
     <div className=" flex flex-col gap-3">
       {title && (
@@ -21,7 +23,7 @@ const ChipFilters: React.FC<IChipFilter> = ({ title }) => {
       )}
       <div className="h-auto flex gap-2 overflow-x-scroll pb-2">
         {['summer', 'autumn', 'winter', 'spring'].map((item, index) => (
-          <FilterChip title={item} active={index === 0} />
+          <FilterChip title={item} active={index === active} onClick={() => setActive(index)} />
         ))}
       </div>
     </div>

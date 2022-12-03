@@ -1,9 +1,15 @@
 import { z } from 'zod';
 import { compare, hash, genSalt } from 'bcryptjs';
-import { isValidPassword, createJwtToken, getUuid } from '../../shared/utils';
+import {
+  isValidPassword,
+  createJwtToken,
+  getUuid,
+  tradeTokenForUser,
+} from '../../shared/utils';
 import { db } from '../../db/db';
 import { UserModel } from '../../../prisma/zod';
-import { createUser } from '../users/actions';
+import { createUser, getUser, getUsers } from '../users/actions';
+import { AuthenticationError } from 'shared/errors';
 
 export const login = async (data: { email: string; password: string }) => {
   const user = await db.user.findUnique({
@@ -62,4 +68,17 @@ export const register = async (data: { email: string; password: string }) => {
 
   const newUser: User = await createUser(userData);
   return newUser;
+};
+
+export const swapTokenForUser = async (token: string) => {
+  if (!token) throw new AuthenticationError('no authorization token provided');
+
+  const user = await tradeTokenForUser(token.split(' ')[1]);
+  const dbUser = await getUser(user.id);
+  if (!dbUser) throw new Error('User not found');
+  if (dbUser) {
+    console.log(dbUser);
+  }
+
+  return dbUser;
 };

@@ -14,12 +14,16 @@ const Home: NextPageWithLayout = () => {
 
 export default Home;
 
+const authenticateUser = () => {};
+
 Home.getLayout = page => {
+  const currentUserAuthenticated = authenticateUser();
+
   return (
     <PrimaryLayout>
-      <PageHeader heading="Heading" onButtonClick={() => {}} buttonVariant="plus" />
+      {/* <PageHeader heading="Heading" onButtonClick={() => {}} buttonVariant="plus" /> */}
       <div className="px-4">{page}</div>
-      <NavBar />
+      {/* <NavBar /> */}
     </PrimaryLayout>
   );
 };

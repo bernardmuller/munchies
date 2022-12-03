@@ -1,4 +1,6 @@
 import MealCard from 'components/cards/meal-card/MealCard';
+import ChipFilters from 'components/filters/chip-filter/ChipFilter';
+import SearchField from 'components/inputs/search-field/SearchField';
 import { useAddMeal, useMealsData } from 'hooks/mealsHooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -34,12 +36,9 @@ const Meals: NextPageWithLayout = () => {
           addMeal.mutate();
         }}
       />
-      <section className="px-4 flex flex-col gap-4 pt-4">
-        <input
-          className="input"
-          placeholder="Search meal..."
-          onChange={e => setSearchText(e.target.value)}
-        />
+      <section className="flex flex-col gap-4 pt-4">
+        <SearchField />
+        <ChipFilters />
         <div className=" grid grid-cols-2 gap-4 overflow-scroll pb-4">
           {data &&
             data
@@ -69,7 +68,7 @@ export default Meals;
 Meals.getLayout = page => {
   return (
     <PrimaryLayout>
-      {page}
+      <div className="px-4">{page}</div>
       <NavBar />
     </PrimaryLayout>
   );

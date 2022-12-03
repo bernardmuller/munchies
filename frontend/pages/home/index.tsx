@@ -23,7 +23,7 @@ const Home: NextPageWithLayout = () => {
       />
 
       <HeroCard
-        heading="Your menus"
+        heading="Your current menu"
         onClick={() => {}}
         menu={{
           image:
