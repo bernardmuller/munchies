@@ -1,6 +1,8 @@
+import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Input from '@mui/material/TextField';
-import { FieldError, RegisterOptions, UseFormRegister } from 'react-hook-form';
+import { useState } from 'react';
+import { IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5';
 
 const theme = createTheme({
   palette: {
@@ -21,6 +23,7 @@ export interface ITextField {
   value?: string;
   placeholder: string;
   register?: any;
+  onChange?: any;
 }
 
 const TextField: React.FC<ITextField> = ({
@@ -36,9 +39,41 @@ const TextField: React.FC<ITextField> = ({
   value,
   placeholder,
   register,
+  onChange,
   ...rest
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
   if (!label) throw new Error(`TextField requires a label`);
+  if (type === 'password') {
+    return (
+      <ThemeProvider theme={theme}>
+        <FormControl variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-password"
+            type={showPassword ? 'text' : 'password'}
+            value={value}
+            placeholder={placeholder}
+            {...register(name)}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <IoEyeOffOutline size={30} /> : <IoEyeOutline size={30} />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Password"
+            onChange={onChange}
+          />
+        </FormControl>
+      </ThemeProvider>
+    );
+  }
   return (
     <ThemeProvider theme={theme}>
       <Input
@@ -55,6 +90,7 @@ const TextField: React.FC<ITextField> = ({
         required={required}
         fullWidth={fullWidth}
         placeholder={placeholder}
+        onChange={onChange}
         {...register(name)}
         {...rest}
       />

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { login, register } from './actions';
+import { authenticate, login, register } from './actions';
 
 const endpoints = [
   {
@@ -29,6 +29,18 @@ const endpoints = [
         password,
       });
       return res.send(response);
+    },
+    authenticate: false,
+  },
+  {
+    method: 'post',
+    path: '/auth/authenticate',
+    handler: async (req: Request, res: Response) => {
+      const { token } = req.body;
+      if (!token)
+        throw new Error('No token provided, please login to get a token.');
+      const response = await authenticate(token);
+      return res.status(200).send({ message: response });
     },
     authenticate: false,
   },

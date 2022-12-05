@@ -18,7 +18,18 @@ export async function login(loginInputs: { email: string; password: string }) {
       setCookie('token', response.data.token);
       router.push('/meals');
     }
-  } catch (err) {
+  } catch (err: any) {
+    return processAxiosErrorResponse(err.response);
+  }
+}
+
+export async function authenticate(inputs: { token: string }) {
+  try {
+    const response = await axios.post(`${requireBaseURL()}/auth/authenticate`, inputs);
+    if (response) {
+      console.log('authenticate: ', response.data);
+    }
+  } catch (err: any) {
     return processAxiosErrorResponse(err.response);
   }
 }
