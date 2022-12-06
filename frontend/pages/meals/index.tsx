@@ -29,16 +29,16 @@ const Meals: NextPageWithLayout = () => {
 
   return (
     <>
-      <ListHeader
-        heading="Meals"
-        buttonVariant="plus"
-        onButtonClick={() => {
-          addMeal.mutate();
-        }}
-      />
-      <section className="flex flex-col gap-4 pt-4">
+      <section className="flex flex-col gap-4">
+        <ListHeader
+          heading="Meals"
+          buttonVariant="plus"
+          onButtonClick={() => {
+            addMeal.mutate();
+          }}
+        />
         <SearchField />
-        <ChipFilters />
+        <ChipFilters options={['summer', 'autumn', 'winter', 'spring']} />
         <div className=" grid grid-cols-2 gap-4 overflow-scroll pb-4">
           {data &&
             data

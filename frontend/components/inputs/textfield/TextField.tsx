@@ -58,13 +58,15 @@ const TextField: React.FC<ITextField> = ({
             {...register(name)}
             endAdornment={
               <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
-                  {showPassword ? <IoEyeOffOutline size={30} /> : <IoEyeOutline size={30} />}
-                </IconButton>
+                <div className="pr-1">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <IoEyeOffOutline size={30} /> : <IoEyeOutline size={30} />}
+                  </IconButton>
+                </div>
               </InputAdornment>
             }
             label="Password"

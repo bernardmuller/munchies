@@ -9,7 +9,7 @@ const navOptions: INavButton[] = [
   { variant: 'household', path: '/home' },
   { variant: 'menus', path: '/menus' },
   { variant: 'meals', path: '/meals' },
-  { variant: 'ingredients', path: '/ingredients' },
+  { variant: 'explore', path: '/explore' },
   { variant: 'settings', path: '/hello' },
 ];
 

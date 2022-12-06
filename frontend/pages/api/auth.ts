@@ -16,7 +16,7 @@ export async function login(loginInputs: { email: string; password: string }) {
     const response = await axios.post(`${requireBaseURL()}/auth/login`, loginInputs);
     if (response.data.token) {
       setCookie('token', response.data.token);
-      router.push('/meals');
+      router.push('/home');
     }
   } catch (err: any) {
     return processAxiosErrorResponse(err.response);

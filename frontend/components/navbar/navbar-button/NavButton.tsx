@@ -1,15 +1,11 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import { IoCalendar, IoFastFood, IoHomeSharp, IoBuild } from 'react-icons/io5';
-import { TiSpanner, TiHome, TiCalendarOutline, TiZoom } from 'react-icons/ti';
-import { IoMdList } from 'react-icons/io';
-import { colors } from '../../../shared/colors';
 import Link from 'next/link';
 import { Icon } from 'shared/Icons';
+import { colors } from '../../../shared/colors';
 
 export interface INavButton {
-  variant: 'meals' | 'menus' | 'settings' | 'household' | 'ingredients';
+  variant: 'meals' | 'menus' | 'settings' | 'household' | 'explore';
   path: string;
   active?: boolean;
 }
@@ -26,7 +22,7 @@ const NavButton: React.FC<INavButton> = ({ variant, path, active }) => {
         {variant === 'menus' && <Icon variant="menus" color={colors.white} size={30} />}
         {variant === 'meals' && <Icon variant="meals" color={colors.white} size={25} />}
         {variant === 'settings' && <Icon variant="settings" color={colors.white} size={30} />}
-        {variant === 'ingredients' && <Icon variant="explore" color={colors.white} size={30} />}
+        {variant === 'explore' && <Icon variant="explore" color={colors.white} size={30} />}
       </div>
     </Link>
   );

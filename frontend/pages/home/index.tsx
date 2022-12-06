@@ -1,12 +1,11 @@
+import MainUtiltityButton from 'components/buttons/main-util-button/MainUtilityButton';
+import { useMealsData } from 'hooks/mealsHooks';
+import HeroCard from '../../components/cards/hero-card/HeroCard';
 import PageHeader from '../../components/headers/page-header/PageHeader';
 import PrimaryLayout from '../../components/layouts/primary/PrimaryLayout';
 import NavBar from '../../components/navbar/navbar/NavBar';
-import HeroCard from '../../components/cards/hero-card/HeroCard';
-import { NextPageWithLayout } from '../page';
 import BasicMealSlider from '../../components/sliders/basic-slider/BasicSlider';
-import ChipFilter from 'components/filters/chip-filter/ChipFilter';
-import MainUtiltityButton from 'components/buttons/main-util-button/MainUtilityButton';
-import { useMealsData } from 'hooks/mealsHooks';
+import { NextPageWithLayout } from '../page';
 
 const Home: NextPageWithLayout = () => {
   const { data, isLoading } = useMealsData();
@@ -36,8 +35,6 @@ const Home: NextPageWithLayout = () => {
       />
 
       <BasicMealSlider meals={data} heading="Your Meals" onMealClicked={() => {}} />
-      <ChipFilter />
-      <MainUtiltityButton />
     </section>
   );
 };
@@ -48,6 +45,7 @@ Home.getLayout = page => {
   return (
     <PrimaryLayout>
       <div className="px-4">{page}</div>
+      <MainUtiltityButton />
       <NavBar />
     </PrimaryLayout>
   );
