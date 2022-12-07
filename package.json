@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/bernardmuller/munchies#readme",
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.45.1",
     "concurrently": "^7.4.0"
   }
 }

@@ -10,7 +10,7 @@ const navOptions: INavButton[] = [
   { variant: 'menus', path: '/menus' },
   { variant: 'meals', path: '/meals' },
   { variant: 'explore', path: '/explore' },
-  { variant: 'settings', path: '/hello' },
+  { variant: 'settings', path: '/settings' },
 ];
 
 const NavBar: React.FC<INavBar> = () => {

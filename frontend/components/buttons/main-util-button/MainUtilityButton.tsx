@@ -30,7 +30,7 @@ export default function FloatingMenu() {
     <div className="fixed bottom-28 right-8 w-56 text-right z-[200]">
       <Menu as="div" className="relative inline-block text-left ">
         <div>
-          <Menu.Button className=" h-16 w-16 flex items-center justify-center rounded-full bg-primary shadow-idle text-white">
+          <Menu.Button className=" h-16 w-16 flex items-center justify-center rounded-full bg-primary shadow-idle shadow-secondary_800 drop-shadow-2xl text-white">
             <Icon variant="plus" color="white" size={35} />
           </Menu.Button>
         </div>

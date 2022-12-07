@@ -9,7 +9,6 @@ import { NextPageWithLayout } from '../page';
 
 const Home: NextPageWithLayout = () => {
   const { data, isLoading } = useMealsData();
-  console.log(data);
   if (isLoading) return <div>Loading...</div>;
   return (
     <section className="flex flex-col gap-8 overflow-hidden">
@@ -24,13 +23,12 @@ const Home: NextPageWithLayout = () => {
       <HeroCard
         heading="Your current menu"
         onClick={() => {}}
-        menu={{
+        data={{
           image:
             'https://images.unsplash.com/photo-1482049016688-2d3e1b311543?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=710&q=80',
           author: 'Firstname Lastname',
           name: '01 - 07 October Menu',
-          ingredients: 180,
-          meals: 16,
+          description: '6 Ingredients - 06 December 2022',
         }}
       />
 

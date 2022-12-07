@@ -12,6 +12,7 @@ export interface ISearchField {
   value?: string;
   placeholder: string;
   register?: any;
+  onChange: (val: string) => void
 }
 
 const SearchField: React.FC<ISearchField> = ({
@@ -24,6 +25,7 @@ const SearchField: React.FC<ISearchField> = ({
   value,
   placeholder,
   register,
+  onChange,
   ...rest
 }) => {
   return (
@@ -37,6 +39,7 @@ const SearchField: React.FC<ISearchField> = ({
           placeholder={placeholder || 'Search...'}
           className="input border-none bg-secondary_200 placeholder-secondary_600 text-secondary_700 w-full"
           value={value}
+          onChange={(e) => onChange(e.target.value)}
         />
       </div>
     </div>

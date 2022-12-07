@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import isStrongPassword from 'validator/lib/isStrongPassword';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { getUsers } from '../resources/users/actions';
+import { getUser, getUsers } from '../resources/users/actions';
 import { requireEnvVar } from '../db/utils';
 import { z } from 'zod';
 import { AuthenticationError } from './errors';
@@ -76,7 +76,7 @@ export const authenticateUser = async (
   if (!token) throw new AuthenticationError('no authorization token provided');
 
   const user = await tradeTokenForUser(token.split(' ')[1]);
-  const dbUser = await getUsers({ filters: { id: user.id } });
+  const dbUser = await getUser(user.id);
   if (!dbUser) throw new Error('User not found');
   if (dbUser) {
     console.log(dbUser);

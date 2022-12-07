@@ -19,8 +19,8 @@ type TButtonVariant =
 export interface IListHeader {
   loading?: boolean;
   heading: string;
-  onButtonClick: () => void;
-  buttonVariant: TButtonVariant;
+  onButtonClick?: () => void;
+  buttonVariant?: TButtonVariant;
 }
 
 const ListHeader = ({ heading, onButtonClick, buttonVariant }: IListHeader) => {

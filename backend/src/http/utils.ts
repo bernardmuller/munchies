@@ -21,7 +21,7 @@ export const catchAsync = (
 export const createEndpoint = (router: Router, endpoint: Endpoint) => {
   let middleware = endpoint.authenticate
     ? [authenticateUser, extractRequestOrigin]
-    : [];
+    : [extractRequestOrigin];
   const routeMiddleware = middleware.map((ware) => catchAsync(ware));
   router[endpoint.method](
     endpoint.path,
@@ -32,6 +32,5 @@ export const createEndpoint = (router: Router, endpoint: Endpoint) => {
 
 export const getSourceFolderfromCurrentDirectory = (dir: string) => {
   const [backendDir] = dir.split('\\src');
-  console.log(backendDir);
   return `${backendDir}/src`;
 };

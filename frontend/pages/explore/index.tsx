@@ -1,5 +1,6 @@
 import FloatingMenu from 'components/buttons/main-util-button/MainUtilityButton';
 import MealCard from 'components/cards/meal-card/MealCard';
+import PageContainer from 'components/containers/page-container/PageContainer';
 import ChipFilters from 'components/filters/chip-filter/ChipFilter';
 import { default as ListHeader } from 'components/headers/list-header/ListHeader';
 import SearchField from 'components/inputs/search-field/SearchField';
@@ -20,19 +21,8 @@ interface IMeal {
 }
 
 const Ingredients: NextPageWithLayout = () => {
-  const [add, setAdd] = useState(false);
-  const { data, isLoading } = useIngredientsData();
-  const addIngredient = useAddIngredient();
-
-  const onSubmit = (data: { name: string }) => {
-    addIngredient.mutate(data as any);
-    setAdd(false);
-  };
-
-  if (isLoading) return <div>Loading...</div>;
-
   return (
-    <section className="flex flex-col gap-4">
+    <PageContainer>
       <ListHeader heading="Explore" />
       <FloatingMenu />
       <SearchField />
@@ -48,10 +38,11 @@ const Ingredients: NextPageWithLayout = () => {
               'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=781&q=80'
             }
             onClick={() => {}}
+            ingredients={['ingredient 1', 'ingredient 2', 'ingredient 3'].length}
           />
         ))}
       </div>
-    </section>
+    </PageContainer>
   );
 };
 

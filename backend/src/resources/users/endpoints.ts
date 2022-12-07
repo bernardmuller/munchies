@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getUsers } from './actions';
+import { getUser, getUsers } from './actions';
 
 const endpoints = [
   {
@@ -16,7 +16,7 @@ const endpoints = [
     path: '/users/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
-      const user = await getUsers({ filters: { id } });
+      const user = await getUser(id);
       return res.send(user);
     },
     authenticate: true,

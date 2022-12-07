@@ -16,7 +16,7 @@ export async function login(loginInputs: { email: string; password: string }) {
     const response = await axios.post(`${requireBaseURL()}/auth/login`, loginInputs);
     if (response.data.token) {
       setCookie('token', response.data.token);
-      router.push('/home');
+      await router.push('/home');
     }
   } catch (err: any) {
     return processAxiosErrorResponse(err.response);
@@ -29,6 +29,7 @@ export async function authenticate(inputs: { token: string }) {
     if (response) {
       console.log('authenticate: ', response.data);
     }
+    return response.data;
   } catch (err: any) {
     return processAxiosErrorResponse(err.response);
   }

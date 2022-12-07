@@ -25,6 +25,7 @@
     "@heroicons/react": "^2.0.13",
     "@mui/material": "^5.10.3",
     "@tanstack/react-query": "^4.5.0",
+    "@typescript-eslint/eslint-plugin": "5.45.1",
     "axios": "^0.27.2",
     "cookies-next": "^2.1.1",
     "daisyui": "^2.27.0",

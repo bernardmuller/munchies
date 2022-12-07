@@ -5,14 +5,7 @@ import {
   IoFastFood,
   IoSettingsOutline,
 } from 'react-icons/io5';
-import {
-  TiPlus,
-  TiChevronLeft,
-  TiCalendarOutline,
-  TiHome,
-  TiZoom,
-  TiSpanner,
-} from 'react-icons/ti';
+import { TiArrowRight, TiHome, TiPlus } from 'react-icons/ti';
 
 interface IconProps {
   variant:
@@ -81,7 +74,12 @@ export const Icon = ({ variant, size, color, className, props }: IconProps) => {
 
     case 'arrowRight':
       return (
-        <TiPlus size={size ? size : ICON_SIZE} color={color} {...props} className={className} />
+        <TiArrowRight
+          size={size ? size : ICON_SIZE}
+          color={color}
+          {...props}
+          className={className}
+        />
       );
 
     case 'close':

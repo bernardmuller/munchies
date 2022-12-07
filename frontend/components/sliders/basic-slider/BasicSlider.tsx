@@ -1,14 +1,19 @@
 import Link from 'next/link';
-import MealCard from 'components/cards/meal-card/MealCard';
+import MealCard, { IMealCard } from 'components/cards/meal-card/MealCard';
 import { H3, P } from 'components/typography';
 
+export interface Meal {
+  image?: string;
+  title: string;
+  seasons: any;
+  ingredients: any;
+}
 export interface IHeroCard {
   heading: string;
-  meals: any;
+  meals: Meal[];
   onMealClicked: () => void;
 }
 
-//TODO: replace typography with standarised typography
 const BasicMealSlider: React.FC<IHeroCard> = ({ heading, meals, onMealClicked }) => {
   return (
     <div className=" flex flex-col gap-2">
@@ -19,26 +24,22 @@ const BasicMealSlider: React.FC<IHeroCard> = ({ heading, meals, onMealClicked })
         </Link>
       </div>
       <div className="h-auto flex gap-4 overflow-x-scroll pb-4">
-        {meals && meals.length > 0 ? (
+        {meals && meals.length > 0 && (
           <>
-            {meals.map((meal: any, index: any) => (
+            {meals.map((meal: Meal, index: number) => (
               <MealCard
                 active={false}
-                title={meal.name}
+                title={meal.title}
                 image={
                   'https://images.unsplash.com/photo-1482049016688-2d3e1b311543?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=710&q=80'
                 }
-                seasons={meal.season}
+                seasons={meal.seasons}
                 ingredients={meal?.ingredients?.length}
                 onClick={onMealClicked}
                 key={index}
               />
             ))}
           </>
-        ) : (
-          <div className="flex items-center w-full text-center pt-2">
-            <P className="text-secondary_300">You don't have any meals in your collection yet.</P>
-          </div>
         )}
       </div>
     </div>

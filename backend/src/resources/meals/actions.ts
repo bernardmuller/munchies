@@ -35,8 +35,7 @@ export const getMeals = async (params?: { filters?: { id?: string } }) => {
     return mealObj;
   }
   const rows = await db.meal.findMany();
-  const meals = rows.map((row) => MealModel.parse(row));
-  return meals;
+  return rows.map((row) => MealModel.parse(row));
 };
 
 export const updateMeal = async (

@@ -1,3 +1,4 @@
+import FloatingMenu from 'components/buttons/main-util-button/MainUtilityButton';
 import MealCard from 'components/cards/meal-card/MealCard';
 import ChipFilters from 'components/filters/chip-filter/ChipFilter';
 import SearchField from 'components/inputs/search-field/SearchField';
@@ -37,7 +38,8 @@ const Meals: NextPageWithLayout = () => {
             addMeal.mutate();
           }}
         />
-        <SearchField />
+        <FloatingMenu />
+        <SearchField name='Search' label="Search" placeholder='Search...' onChange={(val) => setSearchText(val)} />
         <ChipFilters options={['summer', 'autumn', 'winter', 'spring']} />
         <div className=" grid grid-cols-2 gap-4 overflow-scroll pb-4">
           {data &&
@@ -48,7 +50,8 @@ const Meals: NextPageWithLayout = () => {
                   key={meal.id}
                   title={meal.name}
                   active={false}
-                  seasons={meal.seasons}
+                  seasons={['summer']}
+                  ingredients={12}
                   image={
                     'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=781&q=80'
                   }
