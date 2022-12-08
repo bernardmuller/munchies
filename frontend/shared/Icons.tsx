@@ -1,4 +1,4 @@
-import { IoIosSearch } from 'react-icons/io';
+import { IoIosSearch, IoLogoGithub } from 'react-icons/io';
 import {
   IoAddCircleOutline,
   IoCalendarClearOutline,
@@ -26,7 +26,8 @@ interface IconProps {
     | 'menus'
     | 'explore'
     | 'settings'
-    | 'home';
+    | 'home'
+    | 'github';
   size: number;
   color?: string;
   className?: string;
@@ -140,6 +141,16 @@ export const Icon = ({ variant, size, color, className, props }: IconProps) => {
     case 'plusOutline':
       return (
         <IoAddCircleOutline
+          size={size ? size : ICON_SIZE}
+          color={color}
+          {...props}
+          className={className}
+        />
+      );
+
+    case 'github':
+      return (
+        <IoLogoGithub
           size={size ? size : ICON_SIZE}
           color={color}
           {...props}

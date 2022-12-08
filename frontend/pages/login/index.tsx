@@ -4,10 +4,13 @@ import TextField from 'components/inputs/textfield/TextField';
 import { useState } from 'react';
 import Button from '../../components/buttons/button/Button';
 import { login } from '../api/auth';
+import PrimaryLayout from '../../components/layouts/primary/PrimaryLayout';
+import Home from '../index';
+import { NextPageWithLayout } from '../page';
 
 // TODO : reffactor to use React Query and elogin funcitonality to custom hooks
 
-const Login = () => {
+const Login: NextPageWithLayout = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +24,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full h-screen bg-secondary prose p-4 pt-8">
+    <div className="min-w-full prose flex flex-col px-[15%] pt-8">
       <h1 className="text-white text-center">Munchies</h1>
       <h2 className="ml-4">Login</h2>
       {error && <Toast variant="filled" severity="error" message={error} />}
@@ -47,3 +50,11 @@ const Login = () => {
 };
 
 export default Login;
+
+Login.getLayout = page => {
+  return (
+    <PrimaryLayout>
+      <div className="px-4">{page}</div>
+    </PrimaryLayout>
+  );
+};
