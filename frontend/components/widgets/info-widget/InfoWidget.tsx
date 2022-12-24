@@ -1,10 +1,7 @@
-import { useState } from 'react';
-import UtilityButton from '../../buttons/utility-button/UtilityButton';
-
 const Stat = ({ label, value }: { label: string; value: string }) => {
   return (
     <div className="flex flex-col text-center gap-2">
-      <span className="text-white  text-lg" onClick={() => setEdit(true)}>
+      <span className="text-white  text-lg" onClick={() => {}}>
         {value}
       </span>
       <span className=" text-sm">{label}</span>

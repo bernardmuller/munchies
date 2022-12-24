@@ -33,12 +33,13 @@ const Home: NextPageWithLayout = () => {
           <div className="h-[30rem] w-[30rem] rounded-full bg-[#FFB572]/30 blur-[10rem] absolute left-[60%] top-[-24rem]" />
           <HomeParticles />
         </div>
-        <div className="w-1/2 prose z-10 flex flex-col gap-8">
-          <H2 className="text-[4rem] leading-[4rem] pt-5">The all-in-one grocery list manager.</H2>
-          <p className="text-[1.8rem] leading-[2.4rem] text-slate-400">
-            Never worry about writing out grocery lists manually again.{' '}
-            <strong className="text-primary_300">Munchies</strong> generates grocery lists based on
-            the ingredients in your favourite recipes.
+        <div className="w-3/8 prose py-4 z-10 flex flex-col justify-evenly">
+          <H2 className="text-[4rem] leading-[5rem] pt-5">The all-in-one grocery list manager.</H2>
+          <p className="text-[1.4rem] leading-[2.4rem] text-slate-400">
+            Say goodbye to messy, disorganized grocery lists! <br />{' '}
+            <strong className="text-primary_300">Munchies</strong> creates and manages them for you.
+            Not only will you save time and effort with, but you'll also never forget an item at the
+            store again.
           </p>
         </div>
         <div className="flex drop-shadow-2xl z-10">

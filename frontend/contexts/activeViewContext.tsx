@@ -1,4 +1,4 @@
-import React, { useReducer, createContext, useContext, PropsWithChildren, Reducer } from 'react';
+import { createContext, PropsWithChildren, Reducer, useContext, useReducer } from 'react';
 
 type TActive = 'HOUSEHOLD' | 'MENUS' | 'MEALS' | 'INGREDIENTS' | 'SETTINGS';
 type TState = Record<'active', TActive> | undefined;
@@ -31,5 +31,5 @@ export const useActiveContext = () => {
 export const ActiveViewProvider = (props: PropsWithChildren<{}>) => {
   const [state, dispatch] = useReducer(activeViewReducer, initialViewState);
   console.log(state);
-  return <ActiveViewContext.Provider value={{ state, dispatch }} {...props} />;
+  return <ActiveViewContext.Provider value={{ state, dispatch }} {...(props as any)} />;
 };

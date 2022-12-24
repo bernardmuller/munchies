@@ -8,7 +8,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import food from 'assets/images/food_ph.png';
 import UtilityButton from 'components/buttons/utility-button/UtilityButton';
 import { useUpdateMeal } from 'hooks/mealsHooks';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 // import { Confirmation } from './Confirmation';
 
 const Wrapper = styled.div`
@@ -54,7 +54,7 @@ const Name = ({ meal }: { meal: any }) => {
   const updateMeal = useUpdateMeal();
   const queryClient = useQueryClient();
 
-  const onSubmit: SubmitHandler<{ name: string }> = async (data) => {
+  const onSubmit = async (data: any) => {
     updateMeal.mutate(
       { id: meal?.id, data: data },
       {
@@ -63,7 +63,7 @@ const Name = ({ meal }: { meal: any }) => {
           setEdit(false);
           return queryClient.invalidateQueries([`meal-${meal?.id}`]);
         },
-      }
+      },
     );
   };
 
@@ -74,28 +74,21 @@ const Name = ({ meal }: { meal: any }) => {
           {meal?.name}
         </h2>
       ) : (
-        <form
-          className="flex w-full justify-between pt-4"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form className="flex w-full justify-between pt-4" onSubmit={handleSubmit(onSubmit)}>
           <input
             type="text"
             placeholder="Meal name"
             value={mealName}
             className="input w-full text-black"
             {...register('name', {
-              onChange: (e) => {
+              onChange: e => {
                 setMealName(e.target.value);
               },
             })}
           />
           <div className="flex">
             <UtilityButton type="submit" variant="save" onClick={() => {}} />
-            <UtilityButton
-              type="button"
-              variant="close"
-              onClick={() => setEdit(false)}
-            />
+            <UtilityButton type="button" variant="close" onClick={() => setEdit(false)} />
           </div>
         </form>
       )}
@@ -115,25 +108,13 @@ const Tags = ({ tags }: { tags: any }) => {
   );
 };
 
-const Stat = ({
-  label,
-  value,
-  meal,
-}: {
-  label: string;
-  value: string;
-  meal: any;
-}) => {
+const Stat = ({ label, value, meal }: { label: string; value: string; meal: any }) => {
   const [edit, setEdit] = useState(false);
   return (
     <div className="flex flex-col text-center gap-2">
       {edit ? (
         <form className="flex items-center">
-          <input
-            type="number"
-            className="text-black input input-sm max-w-[5rem]"
-            autoFocus
-          />
+          <input type="number" className="text-black input input-sm max-w-[5rem]" autoFocus />
           <UtilityButton variant="save" type="submit" />
         </form>
       ) : (
@@ -163,7 +144,7 @@ const MealStats = ({ meal }: { meal: any }) => {
   ];
   return (
     <div className="flex border-slate-400 border-2 rounded-xl p-4 justify-around items-center h-28">
-      {stats.map((stat) => (
+      {stats.map(stat => (
         <Stat key={stat.key} label={stat.key} value={stat.value} meal={meal} />
       ))}
     </div>
@@ -195,12 +176,7 @@ export const MealInfo = ({ meal }: { meal: any }) => {
     <div className="w-full flex flex-col">
       <div className="w-full h-64 overflow-hidden rounded-xl relative bg-slate-300 flex items-center justify-center p-32 self-center">
         {meal?.image ? (
-          <Image
-            src={meal.image}
-            layout="fill"
-            objectFit="cover"
-            alt="meal image"
-          />
+          <Image src={meal.image} layout="fill" objectFit="cover" alt="meal image" />
         ) : (
           <Placeholder>
             <Image src={food} alt="meal" />

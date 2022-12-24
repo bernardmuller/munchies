@@ -3,10 +3,10 @@ export interface IMealLink {
   sampleTextProp: string;
 }
 
-const MealLink = ({ name, path }: { label: string; path: string }) => {
+const MealLink = ({ label, path }: { label: string; path: string }) => {
   return (
     <Link href={path} passHref>
-      <a>{name}</a>
+      <a>{label}</a>
     </Link>
   );
 };

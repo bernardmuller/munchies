@@ -1,5 +1,5 @@
-import React, { ReactComponentElement, ReactNode } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 
 export default function Form({
   children,
@@ -7,7 +7,7 @@ export default function Form({
   className,
 }: {
   children: any;
-  onSubmit: SubmitHandler;
+  onSubmit: any;
   className: string;
 }) {
   const methods = useForm();

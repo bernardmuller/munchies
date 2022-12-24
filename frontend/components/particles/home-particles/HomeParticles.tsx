@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import type { Container, Engine } from 'tsparticles-engine';
 import Particles from 'react-tsparticles';
 import { loadFull } from 'tsparticles';
+import type { Container, Engine } from 'tsparticles-engine';
 import options from './options.json';
 
 export const HomeParticles = () => {
@@ -18,6 +18,11 @@ export const HomeParticles = () => {
     await console.log(container);
   }, []);
   return (
-    <Particles id="tsparticles" init={particlesInit} loaded={particlesLoaded} options={options} />
+    <Particles
+      id="tsparticles"
+      init={particlesInit}
+      loaded={particlesLoaded}
+      options={options as any}
+    />
   );
 };

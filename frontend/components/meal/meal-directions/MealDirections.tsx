@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // import 'react-widgets/styles.css';
 import styled from 'styled-components';
 // import DropdownList from 'react-widgets/DropdownList';
@@ -6,15 +6,14 @@ import styled from 'styled-components';
 // import { FontSizes, colors } from 'common';
 import { useForm } from 'react-hook-form';
 
+import { useQueryClient } from '@tanstack/react-query';
 import Button from 'components/buttons/button/Button';
 import UtilityButton from 'components/buttons/utility-button/UtilityButton';
-import { colors } from 'shared/colors';
-import AsyncSelect from 'react-select/async';
-import { fetchIngredients } from 'pages/api/ingredients';
-import { debounce } from 'lodash';
-import ReactSelect from 'react-select';
 import { useAddIngredientToMeal } from 'hooks/ingredientsHooks';
-import { useQueryClient } from '@tanstack/react-query';
+import { debounce } from 'lodash';
+import { fetchIngredients } from 'pages/api/ingredients';
+import ReactSelect from 'react-select';
+import { colors } from 'shared/colors';
 // import { Grid } from '@chakra-ui/react';
 
 const Wrapper = styled.div`
@@ -78,7 +77,7 @@ const ItemContainer = styled.div`
   align-items: center;
   height: 2.5rem;
   padding: 0 0 0 1rem;
-  background-color: ${colors.secondary_light};
+  background-color: ${colors.secondary_l};
   border-radius: 0.25rem;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 `;
@@ -194,12 +193,12 @@ const AddItem = ({ meal }: { meal: any }) => {
                 options={items}
                 isLoading={loading}
                 onInputChange={val => debounceOnChange(val)}
-                onChange={val => {
+                onChange={(val: any) => {
                   if (val) {
                     addIngredient.mutate(
                       {
                         mealId: meal.id,
-                        ingredientId: val?.value,
+                        ingredientId: val.value,
                       },
                       {
                         onSuccess: () => {

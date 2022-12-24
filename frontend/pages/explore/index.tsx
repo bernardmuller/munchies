@@ -6,9 +6,7 @@ import { default as ListHeader } from 'components/headers/list-header/ListHeader
 import SearchField from 'components/inputs/search-field/SearchField';
 import PrimaryLayout from 'components/layouts/primary/PrimaryLayout';
 import NavBar from 'components/navbar/navbar/NavBar';
-import { useAddIngredient, useIngredientsData } from 'hooks/ingredientsHooks';
 import { NextPageWithLayout } from 'pages/page';
-import { useState } from 'react';
 // import { NextPageWithLayout } from './page';
 
 interface IMeal {
@@ -25,7 +23,7 @@ const Ingredients: NextPageWithLayout = () => {
     <PageContainer>
       <ListHeader heading="Explore" />
       <FloatingMenu />
-      <SearchField />
+      <SearchField name="Search..." label="Search" placeholder="Search..." onChange={() => {}} />
       <ChipFilters options={['summer', 'autumn', 'winter', 'spring']} />
       <div className=" grid grid-cols-2 gap-4 overflow-scroll pb-4">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((index: number) => (

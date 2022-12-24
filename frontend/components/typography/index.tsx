@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const H1 = ({ children, className }: { children: string; className?: string }) => {
   return <h1 className={`text-xl text-white text-bold ${className}`}>{children}</h1>;
 };
@@ -16,6 +14,6 @@ export const H4 = ({ children, className }: { children: string; className?: stri
   return <h4 className={`text-sm text-white text-bold leading-4 ${className}`}>{children}</h4>;
 };
 
-export const P = ({ children, className }: { children: string; className?: string }) => {
+export const P = ({ children, className }: { children: any; className?: string }) => {
   return <p className={`text-sm text-white text-bold leading-4 ${className}`}>{children}</p>;
 };
