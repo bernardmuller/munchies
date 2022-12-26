@@ -1,30 +1,27 @@
-import PageHeader from '../components/headers/list-header/ListHeader';
-import PrimaryLayout from '../components/layouts/primary/PrimaryLayout';
-import NavBar from '../components/navbar/navbar/NavBar';
-import BaseTemplate from '../components/templates/BaseTemplate';
-import { NextPageWithLayout } from './page';
-import Link from 'next/link';
-import { H1, H2, P } from '../components/typography';
-import Image from 'next/image';
+import arrow from 'assets/images/arrow.gif';
 import preview from 'assets/images/munchies_preview.png';
 import phone_preview from 'assets/images/phone.png';
-import background from 'assets/images/background.png';
-import { Icon } from '../shared/Icons';
-import { colors } from '../shared/colors';
+import Image from 'next/image';
+import Link from 'next/link';
+import PrimaryLayout from '../components/layouts/primary/PrimaryLayout';
 import { HomeParticles } from '../components/particles/home-particles/HomeParticles';
-import arrow from 'assets/images/arrow.gif';
+import { H1, H2, P } from '../components/typography';
+import { colors } from '../shared/colors';
+import { Icon } from '../shared/Icons';
+import { NextPageWithLayout } from './page';
 
 const Home: NextPageWithLayout = () => {
   return (
     <>
       <div className="pt-4 flex justify-between items-center px-[17.5%] prose min-w-full z-50">
         <H1 className="text-2xl mb-0 z-10">Munchies</H1>
-        <Link
+        {/* <Link
           href="/login"
           className="btn bg-primary_400 text-white border-none shadow-idle z-10 px-8 hover:bg-primary_300 shadow-primary"
         >
           Login
-        </Link>
+        </Link> */}
+        <P className="text-white">Coming soon</P>
       </div>
       <div className="w-full min-w-full px-[17.5%] flex mt-36 flex justify-between">
         <div className="bg-[#1C2534] w-full h-[30rem] absolute top-0 left-0 overflow-hidden">
