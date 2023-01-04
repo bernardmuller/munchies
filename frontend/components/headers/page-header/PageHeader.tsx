@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import UtilityButton from '../../buttons/utility-button/UtilityButton';
 
 type TButtonVariant =
   | 'save'
@@ -29,11 +28,11 @@ const PageHeader = ({ heading, onProfileClick, image }: IListHeader) => {
 
   return (
     <div className="flex items-center w-full justify-between z-10 pt-8 pb-8">
-      <h2 className="text-white prose prose-2xl">{heading}</h2>
+      <h2 className="text-secondary_600 prose prose-2xl">{heading}</h2>
       <div className="flex items-center justify-center w-14">
         <button onClick={onProfileClick}>
           <Image
-            className=" rounded-full ring-2 ring-white"
+            className=" rounded-full ring-2 ring-black"
             src={image}
             alt=""
             width={35}

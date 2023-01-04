@@ -6,8 +6,8 @@ import { requireBaseURL } from '../../shared/utils';
 const processAxiosErrorResponse = (res: any) => {
   return {
     ok: res.status < 300,
-    status: res.status,
-    message: res.data.error.message,
+    status: res?.status,
+    message: res?.data?.error?.message || 'No resopones.',
   };
 };
 

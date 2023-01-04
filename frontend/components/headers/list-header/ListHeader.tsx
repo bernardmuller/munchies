@@ -28,7 +28,7 @@ const ListHeader = ({ heading, onButtonClick, buttonVariant }: IListHeader) => {
 
   return (
     <div className="flex items-center w-full justify-between z-10 pt-8 pb-6">
-      <h2 className="text-white prose prose-2xl">{heading}</h2>
+      <h2 className="text-black prose prose-2xl">{heading}</h2>
       {onButtonClick && buttonVariant && (
         <div className="flex items-center justify-center w-14">
           <UtilityButton

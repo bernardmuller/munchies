@@ -13,17 +13,17 @@ import { NextPageWithLayout } from './page';
 const Home: NextPageWithLayout = () => {
   return (
     <>
-      <div className="pt-4 flex justify-between items-center px-[17.5%] prose min-w-full z-50">
+      <div className="pt-4 flex justify-between w-full items-center px-[17.5%] prose min-w-full z-50">
         <H1 className="text-2xl mb-0 z-10">Munchies</H1>
         {/* <Link
           href="/login"
-          className="btn bg-primary_400 text-white border-none shadow-idle z-10 px-8 hover:bg-primary_300 shadow-primary"
+          className="btn disabled bg-primary_400 text-white border-none shadow-idle z-10 px-8 hover:bg-primary_300 shadow-primary"
         >
           Login
         </Link> */}
-        <P className="text-white">Coming soon</P>
+        <P className="text-white z-10">Coming soon...</P>
       </div>
-      <div className="w-full min-w-full px-[17.5%] flex mt-36 flex justify-between">
+      <div className="w-full min-w-full px-[17.5%] flex mt-36 justify-between ">
         <div className="bg-[#1C2534] w-full h-[30rem] absolute top-0 left-0 overflow-hidden">
           <div className="h-[30rem] w-[30rem] rounded-full bg-primary_300/30 blur-[6rem] absolute left-[-14rem] top-[-14rem]" />
           <div className="h-[30rem] w-[30rem] rounded-full bg-primary_200/60 blur-[8rem] absolute right-[-20rem] bottom-[-20rem]" />
@@ -41,7 +41,7 @@ const Home: NextPageWithLayout = () => {
         </div>
         <div className="flex drop-shadow-2xl z-10">
           <div className="w-full relative rounded-3xl drop-shadow-2xl">
-            <div className="max-h-[540px] w-[250px] w-full overflow-scroll rounded-3xl scrollbar-hide ">
+            <div className="max-h-[540px] w-[250px] overflow-scroll rounded-3xl scrollbar-hide ">
               <Image src={preview} alt={'preview'} className="w-full" />
             </div>
             <div className="w-full max-w-[350px]">

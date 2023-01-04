@@ -24,7 +24,7 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({ children }) => {
     router.push('/login');
   }
 
-  return <div className="w-screen bg-[#F5F7FA]">{children}</div>;
+  return <div className="w-screen bg-[#F5F7FA] text-black">{children}</div>;
 };
 
 export default PrimaryLayout;

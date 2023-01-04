@@ -34,7 +34,7 @@ module.exports = {
         secondary_l: '#1C1F1C',
         secondary_d: '#121412',
         white: '#FFFFFF',
-        white_d: '#e3e3e3',
+        white_d: '#F5F7FA',
         grey: '#ADB0AC',
         grey_l: '#B7BCB5',
         grey_d: '#9E9F9E',
