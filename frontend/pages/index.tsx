@@ -1,10 +1,10 @@
 import arrow from 'assets/images/arrow.gif';
 import preview from 'assets/images/munchies_preview.png';
 import phone_preview from 'assets/images/phone.png';
+import BlueHero from 'components/hero/hero/BlueHero';
 import Image from 'next/image';
 import Link from 'next/link';
 import PrimaryLayout from '../components/layouts/primary/PrimaryLayout';
-import { HomeParticles } from '../components/particles/home-particles/HomeParticles';
 import { H1, H2, P } from '../components/typography';
 import { colors } from '../shared/colors';
 import { Icon } from '../shared/Icons';
@@ -24,12 +24,7 @@ const Home: NextPageWithLayout = () => {
         <P className="text-white z-10">Coming soon...</P>
       </div>
       <div className="w-full min-w-full px-[17.5%] flex mt-36 justify-between ">
-        <div className="bg-[#1C2534] w-full h-[30rem] absolute top-0 left-0 overflow-hidden">
-          <div className="h-[30rem] w-[30rem] rounded-full bg-primary_300/30 blur-[6rem] absolute left-[-14rem] top-[-14rem]" />
-          <div className="h-[30rem] w-[30rem] rounded-full bg-primary_200/60 blur-[8rem] absolute right-[-20rem] bottom-[-20rem]" />
-          <div className="h-[30rem] w-[30rem] rounded-full bg-[#FFB572]/30 blur-[10rem] absolute left-[60%] top-[-24rem]" />
-          <HomeParticles />
-        </div>
+        <BlueHero glow particles size="lg" />
         <div className="w-3/8 prose py-4 z-10 flex flex-col justify-evenly">
           <H2 className="text-[4rem] leading-[5rem] pt-5">The all-in-one grocery list manager.</H2>
           <p className="text-[1.4rem] leading-[2.4rem] text-slate-400">

@@ -9,11 +9,11 @@ import { NextPageWithLayout } from './page';
 
 const Menus: NextPageWithLayout = () => {
   return (
-    <section className="flex flex-col overflow-hidden">
+    <section className="flex flex-col ">
       <PageHeader heading="My Menus" buttonVariant="plus" onButtonClick={() => {}} />
       <ChipFilters options={['active', 'completed', 'archive']} />
 
-      <div className="pt-4 flex flex-col gap-8">
+      <div className="pt-4 flex flex-col gap-8 pb-[20rem]">
         {[1, 2, 3, 4, 5].map((item, index) => (
           <MenuCard
             heading="Your current menu"

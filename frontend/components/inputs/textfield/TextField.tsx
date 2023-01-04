@@ -6,7 +6,7 @@ import { IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5';
 
 const theme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: 'light',
   },
 });
 

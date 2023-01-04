@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
-import Link from 'next/link';
 import { H3, H4, P } from 'components/typography';
+import Link from 'next/link';
 
 export interface IHeroCard {
   heading: string;
@@ -17,17 +17,17 @@ export interface IHeroCard {
 
 const HeroCard: React.FC<IHeroCard> = ({ heading, onClick, data }) => {
   return (
-    <div className=" flex flex-col gap-3">
+    <div className=" flex flex-col gap-3 z-10">
       <div className="flex justify-between">
         <H3 className="text-xl text-slate-50">{heading}</H3>
         <Link href="#" className="text-primary_400 text-md font-light">
           call to action
         </Link>
       </div>
-      <div className="w-full relative h-48 rounded-xl bg-slate-400 object-cover overflow-clip">
+      <div className="w-full relative h-72 rounded-xl bg-slate-400 object-cover overflow-clip">
         <Image src={data.image} alt="not found" layout="fill" objectFit="cover" />
         <div className="absolute bottom-0 w-full h-full bg-gradient-to-b from-transparent to-secondary_900 via-transparent" />
-        {data.authorImage && (
+        {!data.authorImage && (
           <Image
             className="absolute rounded-full ring-2 ring-white bottom-3 left-3"
             src={
@@ -45,8 +45,8 @@ const HeroCard: React.FC<IHeroCard> = ({ heading, onClick, data }) => {
         )}
       </div>
       <div>
-        <H3 className="text-2xl font-bold text-slate-100 mb-2">{data.name}</H3>
-        <P className="text-sm text-slate-300 font-light">{data.description}</P>
+        <H3 className="text-2xl font-bold text-black mb-2">{data.name}</H3>
+        <P className="text-sm text-slate-400 font-light">{data.description}</P>
       </div>
     </div>
   );

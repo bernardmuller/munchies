@@ -28,7 +28,7 @@ const PageHeader = ({ heading, onProfileClick, image }: IListHeader) => {
 
   return (
     <div className="flex items-center w-full justify-between z-10 pt-8 pb-8">
-      <h2 className="text-secondary_600 prose prose-2xl">{heading}</h2>
+      <h2 className="text-white prose prose-2xl">{heading}</h2>
       <div className="flex items-center justify-center w-14">
         <button onClick={onProfileClick}>
           <Image

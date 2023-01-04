@@ -1,10 +1,5 @@
 import { IoIosSearch, IoLogoGithub } from 'react-icons/io';
-import {
-  IoAddCircleOutline,
-  IoCalendarClearOutline,
-  IoFastFood,
-  IoSettingsOutline,
-} from 'react-icons/io5';
+import { IoAddCircleOutline, IoCalendar, IoFastFood, IoSettingsOutline } from 'react-icons/io5';
 import { TiArrowRight, TiHome, TiPlus } from 'react-icons/ti';
 
 interface IconProps {
@@ -112,12 +107,7 @@ export const Icon = ({ variant, size, color, className, props }: IconProps) => {
       );
     case 'menus':
       return (
-        <IoCalendarClearOutline
-          size={size ? size : ICON_SIZE}
-          color={color}
-          {...props}
-          className={className}
-        />
+        <IoCalendar size={size ? size : ICON_SIZE} color={color} {...props} className={className} />
       );
     case 'explore':
       return (

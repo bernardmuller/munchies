@@ -30,8 +30,8 @@ export default function FloatingMenu() {
     <div className="fixed bottom-28 right-8 w-56 text-right z-[200]">
       <Menu as="div" className="relative inline-block text-left ">
         <div>
-          <Menu.Button className=" h-16 w-16 flex items-center justify-center rounded-full bg-primary shadow-idle shadow-secondary_800 drop-shadow-2xl text-white">
-            <Icon variant="plus" color="white" size={35} />
+          <Menu.Button className=" h-14 w-14 flex items-center justify-center rounded-full bg-primary shadow-idle shadow-gray drop-shadow-2xl text-white">
+            <Icon variant="plus" color="white" size={30} />
           </Menu.Button>
         </div>
         <Transition
@@ -43,7 +43,7 @@ export default function FloatingMenu() {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute bottom-14 right-0 mb-5 w-72 origin-bottom-right rounded-lg bg-secondary_200 shadow-black drop-shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none ">
+          <Menu.Items className="absolute bottom-12 right-0 mb-5 w-72 origin-bottom-right rounded-lg bg-secondary_200 shadow-black drop-shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none ">
             <div className="px-1 py-1 ">
               {menuOptions.map(item => (
                 <Menu.Item>

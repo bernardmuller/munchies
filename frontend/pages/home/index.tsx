@@ -1,4 +1,5 @@
 import MainUtiltityButton from 'components/buttons/main-util-button/MainUtilityButton';
+import BlueHero from 'components/hero/hero/BlueHero';
 import { useMealsData } from 'hooks/mealsHooks';
 import HeroCard from '../../components/cards/hero-card/HeroCard';
 import PageHeader from '../../components/headers/page-header/PageHeader';
@@ -12,6 +13,7 @@ const Home: NextPageWithLayout = () => {
   if (isLoading) return <div>Loading...</div>;
   return (
     <section className="flex flex-col gap-8 overflow-hidden">
+      <BlueHero size="sm" />
       <PageHeader
         heading="Hey User"
         image={

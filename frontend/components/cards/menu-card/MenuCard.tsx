@@ -18,7 +18,10 @@ export interface IHeroCard {
 //TODO: replace typography with standarised typography
 const MenuCard: React.FC<IHeroCard> = ({ onClick, data }) => {
   return (
-    <div className=" flex flex-col gap-3" onClick={() => alert('menu clicked')}>
+    <div
+      className=" flex flex-col gap-3 drop-shadow-sm p-4 shadow-xl rounded-lg"
+      onClick={() => alert('menu clicked')}
+    >
       <div className="w-full relative h-48 rounded-xl bg-slate-400 object-cover overflow-clip">
         <Image src={data.image} alt="not found" layout="fill" objectFit="cover" />
         <div className="absolute bottom-0 w-full h-full bg-gradient-to-b from-transparent to-secondary_900 via-transparent" />
@@ -36,8 +39,8 @@ const MenuCard: React.FC<IHeroCard> = ({ onClick, data }) => {
         </H4>
       </div>
       <div>
-        <H3 className="text-2xl font-bold text-slate-100 mb-2">{data.name}</H3>
-        <P className="text-sm text-slate-300 font-light">
+        <H3 className="text-2xl font-bold text-black mb-2">{data.name}</H3>
+        <P className="text-sm text-slate-400 font-light">
           {`${data.meals} meals - ${data.ingredients} ingreedients`}
         </P>
       </div>
