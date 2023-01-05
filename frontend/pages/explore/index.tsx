@@ -21,7 +21,7 @@ interface IMeal {
 const Ingredients: NextPageWithLayout = () => {
   return (
     <PageContainer>
-      <ListHeader heading="Explore" />
+      <ListHeader heading="Explore" theme="light" />
       <FloatingMenu />
       <SearchField name="Search..." label="Search" placeholder="Search..." onChange={() => {}} />
       <ChipFilters options={['summer', 'autumn', 'winter', 'spring']} />

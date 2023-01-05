@@ -32,12 +32,13 @@ export interface IUtilityButton {
     | 'back';
   onClick?: () => any;
   border?: boolean;
+  theme: 'light' | 'dark';
 }
 
 const ICON_SIZE = 25;
-const ICON_COLOR = 'black';
+const ICON_COLOR = 'white';
 
-const UtilityButton: React.FC<IUtilityButton> = ({ type, variant, onClick, border }) => {
+const UtilityButton: React.FC<IUtilityButton> = ({ type, variant, onClick, border, theme }) => {
   if (!variant) {
     throw new Error('UtilityButton required variant.');
   }
@@ -45,22 +46,44 @@ const UtilityButton: React.FC<IUtilityButton> = ({ type, variant, onClick, borde
     <button
       type={type}
       onClick={onClick}
-      className={`h-12 w-12 flex items-center justify-center rounded-full active:bg-stone-700 ${
+      className={`h-12 w-12 flex items-center justify-center rounded-full active:bg-secondary_500 ${
         border && 'border-2'
       } `}
     >
-      {variant === 'save' && <FiCheck color={ICON_COLOR} size={ICON_SIZE} />}
-      {variant === 'delete' && <FiTrash color={ICON_COLOR} size={ICON_SIZE} />}
-      {variant === 'edit' && <FiEdit2 color={ICON_COLOR} size={ICON_SIZE} />}
-      {variant === 'share' && <FiShare2 color={ICON_COLOR} size={ICON_SIZE} />}
-      {variant === 'arrowDown' && <FiChevronDown color={ICON_COLOR} size={ICON_SIZE} />}
-      {variant === 'arrowUp' && <FiChevronUp color={ICON_COLOR} size={ICON_SIZE} />}
-      {variant === 'arrowLeft' && <FiChevronLeft color={ICON_COLOR} size={ICON_SIZE} />}
-      {variant === 'arrowRight' && <FiChevronRight color={ICON_COLOR} size={ICON_SIZE} />}
-      {variant === 'close' && <FiX color={ICON_COLOR} size={ICON_SIZE} />}
-      {variant === 'menu' && <FiMoreHorizontal color={ICON_COLOR} size={ICON_SIZE} />}
-      {variant === 'plus' && <TiPlus color={ICON_COLOR} size={ICON_SIZE} />}
-      {variant === 'back' && <TiChevronLeft color={ICON_COLOR} size={ICON_SIZE} />}
+      {variant === 'save' && (
+        <FiCheck color={theme === 'dark' ? 'white' : 'black'} size={ICON_SIZE} />
+      )}
+      {variant === 'delete' && (
+        <FiTrash color={theme === 'dark' ? 'white' : 'black'} size={ICON_SIZE} />
+      )}
+      {variant === 'edit' && (
+        <FiEdit2 color={theme === 'dark' ? 'white' : 'black'} size={ICON_SIZE} />
+      )}
+      {variant === 'share' && (
+        <FiShare2 color={theme === 'dark' ? 'white' : 'black'} size={ICON_SIZE} />
+      )}
+      {variant === 'arrowDown' && (
+        <FiChevronDown color={theme === 'dark' ? 'white' : 'black'} size={ICON_SIZE} />
+      )}
+      {variant === 'arrowUp' && (
+        <FiChevronUp color={theme === 'dark' ? 'white' : 'black'} size={ICON_SIZE} />
+      )}
+      {variant === 'arrowLeft' && (
+        <FiChevronLeft color={theme === 'dark' ? 'white' : 'black'} size={ICON_SIZE} />
+      )}
+      {variant === 'arrowRight' && (
+        <FiChevronRight color={theme === 'dark' ? 'white' : 'black'} size={ICON_SIZE} />
+      )}
+      {variant === 'close' && <FiX color={theme === 'dark' ? 'white' : 'black'} size={ICON_SIZE} />}
+      {variant === 'menu' && (
+        <FiMoreHorizontal color={theme === 'dark' ? 'white' : 'black'} size={ICON_SIZE} />
+      )}
+      {variant === 'plus' && (
+        <TiPlus color={theme === 'dark' ? 'white' : 'black'} size={ICON_SIZE} />
+      )}
+      {variant === 'back' && (
+        <TiChevronLeft color={theme === 'dark' ? 'white' : 'black'} size={ICON_SIZE} />
+      )}
     </button>
   );
 };

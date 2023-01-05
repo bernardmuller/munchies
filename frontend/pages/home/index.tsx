@@ -34,7 +34,7 @@ const Home: NextPageWithLayout = () => {
         }}
       />
 
-      <BasicMealSlider meals={data} heading="Your Meals" onMealClicked={() => {}} />
+      <BasicMealSlider meals={data} heading="Your Meals" onMealClicked={() => {}} theme="light" />
     </section>
   );
 };
@@ -44,7 +44,7 @@ export default Home;
 Home.getLayout = page => {
   return (
     <PrimaryLayout>
-      <div className="px-4">{page}</div>
+      <div className="px-4 scrollbar-hide">{page}</div>
       <MainUtiltityButton />
       <NavBar />
     </PrimaryLayout>

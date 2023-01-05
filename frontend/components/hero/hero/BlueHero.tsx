@@ -12,8 +12,8 @@ const BlueHero = ({
   return (
     <div
       className={`bg-[#1C2534] w-full ${
-        size === 'lg' ? 'h-[30rem]' : 'h-[25rem]'
-      } absolute top-0 left-0 overflow-hidden `}
+        size === 'lg' ? 'h-[50vh]' : 'h-[25rem]'
+      } absolute top-0 left-0 overflow-hidden z-0`}
     >
       {glow && (
         <>

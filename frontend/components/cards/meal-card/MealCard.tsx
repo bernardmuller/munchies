@@ -25,7 +25,7 @@ const MealCard: React.FC<IMealCard> = ({ onClick, active, image, title, seasons,
       onClick={onClick}
     >
       <div className="absolute top-2 left-2 z-10">
-        {seasons && seasons.map(season => <Badge title={season} />)}
+        {seasons && seasons.map(season => <Badge title={season} size="sm" />)}
       </div>
       <div className="w-full h-[65%] flex flex-col justify-end items-center -z-10 ">
         {image ? (

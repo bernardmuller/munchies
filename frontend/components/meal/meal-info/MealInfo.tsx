@@ -1,15 +1,12 @@
-import Image from 'next/image';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-// import { FontSizes, colors } from 'common';
-// import Multiselect from 'react-widgets/Multiselect';
 import { useQueryClient } from '@tanstack/react-query';
-import food from 'assets/images/food_ph.png';
 import UtilityButton from 'components/buttons/utility-button/UtilityButton';
+import MealHeroCard from 'components/cards/meal-detail-hero-card/MealDetailHeroCard';
 import { useUpdateMeal } from 'hooks/mealsHooks';
 import { useForm } from 'react-hook-form';
-// import { Confirmation } from './Confirmation';
+import DetailHeader from 'components/headers/detail-header/DetailHeader';
 
 const Wrapper = styled.div`
   display: flex;
@@ -27,18 +24,6 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-`;
-
-const Placeholder = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  img {
-    width: 170px;
-  }
 `;
 
 const SeasonForm = styled.form`
@@ -87,8 +72,13 @@ const Name = ({ meal }: { meal: any }) => {
             })}
           />
           <div className="flex">
-            <UtilityButton type="submit" variant="save" onClick={() => {}} />
-            <UtilityButton type="button" variant="close" onClick={() => setEdit(false)} />
+            <UtilityButton type="submit" variant="save" onClick={() => {}} theme="light" />
+            <UtilityButton
+              type="button"
+              variant="close"
+              onClick={() => setEdit(false)}
+              theme="light"
+            />
           </div>
         </form>
       )}
@@ -115,7 +105,7 @@ const Stat = ({ label, value, meal }: { label: string; value: string; meal: any 
       {edit ? (
         <form className="flex items-center">
           <input type="number" className="text-black input input-sm max-w-[5rem]" autoFocus />
-          <UtilityButton variant="save" type="submit" />
+          <UtilityButton variant="save" type="submit" theme="light" />
         </form>
       ) : (
         <span className="text-white  text-lg" onClick={() => setEdit(true)}>
@@ -127,7 +117,7 @@ const Stat = ({ label, value, meal }: { label: string; value: string; meal: any 
   );
 };
 
-const MealStats = ({ meal }: { meal: any }) => {
+export const MealStats = ({ meal }: { meal: any }) => {
   const stats = [
     {
       key: 'Prep Time',
@@ -174,25 +164,7 @@ export const MealInfo = ({ meal }: { meal: any }) => {
   console.log(meal);
   return (
     <div className="w-full flex flex-col">
-      <div className="w-full h-64 overflow-hidden rounded-xl relative bg-slate-300 flex items-center justify-center p-32 self-center">
-        {meal?.image ? (
-          <Image src={meal.image} layout="fill" objectFit="cover" alt="meal image" />
-        ) : (
-          <Placeholder>
-            <Image src={food} alt="meal" />
-          </Placeholder>
-        )}
-      </div>
-
-      <div className="prose flex flex-col gap-2">
-        <Name meal={meal} />
-
-        <span>Creator: User Name</span>
-
-        <MealStats meal={meal} />
-
-        <Seasons />
-      </div>
+      {/* <DetailHeader onLeftButtonClick={() => {}} leftButtonVariant="back" theme="dark" /> */}
     </div>
   );
 };

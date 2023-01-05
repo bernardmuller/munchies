@@ -1,10 +1,10 @@
+import MealCard from 'components/cards/meal-card/MealCard';
+import { H3 } from 'components/typography';
 import Link from 'next/link';
-import MealCard, { IMealCard } from 'components/cards/meal-card/MealCard';
-import { H3, P } from 'components/typography';
 
 export interface Meal {
   image?: string;
-  title: string;
+  name: string;
   seasons: any;
   ingredients: any;
 }
@@ -12,13 +12,16 @@ export interface IHeroCard {
   heading: string;
   meals: Meal[];
   onMealClicked: () => void;
+  theme: 'light' | 'dark';
 }
 
-const BasicMealSlider: React.FC<IHeroCard> = ({ heading, meals, onMealClicked }) => {
+const BasicMealSlider: React.FC<IHeroCard> = ({ heading, meals, onMealClicked, theme }) => {
   return (
     <div className=" flex flex-col gap-2">
       <div className="flex justify-between">
-        <H3 className="text-xl text-slate-50">{heading}</H3>
+        <H3 className={`text-xl ${theme === 'dark' ? 'text-slate-50' : 'text-black'}`}>
+          {heading}
+        </H3>
         <Link href="#" className="text-primary_400 text-md font-light">
           View all
         </Link>
@@ -29,7 +32,7 @@ const BasicMealSlider: React.FC<IHeroCard> = ({ heading, meals, onMealClicked })
             {meals.map((meal: Meal, index: number) => (
               <MealCard
                 active={false}
-                title={meal.title}
+                title={meal.name}
                 image={
                   'https://images.unsplash.com/photo-1482049016688-2d3e1b311543?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=710&q=80'
                 }

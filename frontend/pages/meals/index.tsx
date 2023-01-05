@@ -37,9 +37,15 @@ const Meals: NextPageWithLayout = () => {
           onButtonClick={() => {
             addMeal.mutate();
           }}
+          theme="light"
         />
         <FloatingMenu />
-        <SearchField name='Search' label="Search" placeholder='Search...' onChange={(val) => setSearchText(val)} />
+        <SearchField
+          name="Search"
+          label="Search"
+          placeholder="Search..."
+          onChange={val => setSearchText(val)}
+        />
         <ChipFilters options={['summer', 'autumn', 'winter', 'spring']} />
         <div className=" grid grid-cols-2 gap-4 overflow-scroll pb-4">
           {data &&

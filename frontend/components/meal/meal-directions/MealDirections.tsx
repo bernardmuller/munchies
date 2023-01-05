@@ -112,13 +112,14 @@ const Item = ({ data, onDelete }: { data: any; onDelete: any }) => {
           onChange={e => setValue(e.target.value)}
         />
         <UtilityWrapper>
-          <UtilityButton type="button" variant="save" onClick={() => {}} />
+          <UtilityButton type="button" variant="save" onClick={() => {}} theme="light" />
           <UtilityButton
             type="button"
             variant="close"
             onClick={() => {
               setEdit(false);
             }}
+            theme="light"
           />
         </UtilityWrapper>
       </ItemContainerForm>
@@ -135,13 +136,15 @@ const Item = ({ data, onDelete }: { data: any; onDelete: any }) => {
 
       {hover && !edit && (
         <UtilityWrapper>
-          <UtilityButton type="button" variant="save" onClick={() => {}} />
+          <UtilityButton type="button" variant="save" onClick={() => {}} theme="light" />
+
           <UtilityButton
             type="button"
             variant="close"
             onClick={() => {
               onDelete();
             }}
+            theme="light"
           />
         </UtilityWrapper>
       )}
@@ -210,13 +213,14 @@ const AddItem = ({ meal }: { meal: any }) => {
                 }}
               />
             </div>
-            <UtilityButton type="button" variant="save" onClick={() => {}} />
+            <UtilityButton type="button" variant="save" onClick={() => {}} theme="light" />
             <UtilityButton
               type="button"
               variant="close"
               onClick={() => {
                 setAdd(false);
               }}
+              theme="light"
             />
           </div>
         </Form>
@@ -268,13 +272,19 @@ export const MealDirections = ({ meal }: { meal: any }) => {
                       <span>{step}</span>
                       {!edit && (
                         <>
-                          <UtilityButton type="button" variant="save" onClick={() => {}} />
+                          <UtilityButton
+                            type="button"
+                            variant="save"
+                            onClick={() => {}}
+                            theme="light"
+                          />
                           <UtilityButton
                             type="button"
                             variant="close"
                             onClick={() => {
                               setEdit(false);
                             }}
+                            theme="light"
                           />
                         </>
                       )}
@@ -291,13 +301,19 @@ export const MealDirections = ({ meal }: { meal: any }) => {
                         })}
                       />
                       <UtilityWrapper>
-                        <UtilityButton type="button" variant="save" onClick={() => {}} />
+                        <UtilityButton
+                          type="button"
+                          variant="save"
+                          onClick={() => {}}
+                          theme="light"
+                        />
                         <UtilityButton
                           type="button"
                           variant="close"
                           onClick={() => {
                             setEdit(false);
                           }}
+                          theme="light"
                         />
                       </UtilityWrapper>
                     </DirectionsForm>
@@ -316,13 +332,14 @@ export const MealDirections = ({ meal }: { meal: any }) => {
               />
 
               <UtilityWrapper>
-                <UtilityButton type="button" variant="save" onClick={() => {}} />
+                <UtilityButton type="button" variant="save" onClick={() => {}} theme="light" />
                 <UtilityButton
                   type="button"
                   variant="close"
                   onClick={() => {
                     setAddStep(false);
                   }}
+                  theme="light"
                 />
               </UtilityWrapper>
             </Form>

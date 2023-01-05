@@ -5,7 +5,7 @@ import BlueHero from 'components/hero/hero/BlueHero';
 import Image from 'next/image';
 import Link from 'next/link';
 import PrimaryLayout from '../components/layouts/primary/PrimaryLayout';
-import { H1, H2, P } from '../components/typography';
+import { H1, H2 } from '../components/typography';
 import { colors } from '../shared/colors';
 import { Icon } from '../shared/Icons';
 import { NextPageWithLayout } from './page';
@@ -15,18 +15,17 @@ const Home: NextPageWithLayout = () => {
     <>
       <div className="pt-4 flex justify-between w-full items-center px-[17.5%] prose min-w-full z-50">
         <H1 className="text-2xl mb-0 z-10">Munchies</H1>
-        {/* <Link
+        <Link
           href="/login"
           className="btn disabled bg-primary_400 text-white border-none shadow-idle z-10 px-8 hover:bg-primary_300 shadow-primary"
         >
           Login
-        </Link> */}
-        <P className="text-white z-10">Coming soon...</P>
+        </Link>
       </div>
       <div className="w-full min-w-full px-[17.5%] flex mt-36 justify-between ">
         <BlueHero glow particles size="lg" />
         <div className="w-3/8 prose py-4 z-10 flex flex-col justify-evenly">
-          <H2 className="text-[4rem] leading-[5rem] pt-5">The all-in-one grocery list manager.</H2>
+          <H2 className="text-[50px] leading-[5rem] pt-5">The all-in-one grocery list manager.</H2>
           <p className="text-[1.4rem] leading-[2.4rem] text-slate-400">
             Say goodbye to messy, disorganized grocery lists! <br />{' '}
             <strong className="text-primary_300">Munchies</strong> creates and manages them for you.
