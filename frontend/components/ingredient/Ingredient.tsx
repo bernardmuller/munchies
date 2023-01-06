@@ -28,17 +28,14 @@ const DeleteWrapper = ({
       height={80}
       transitionDuration={250}
       deleteWidth={75}
-      deleteColor="rgba(252, 58, 48, 0.5)"
+      deleteColor="linear-gradient(to left, rgb(255, 107, 99), rgb(186, 69, 63))"
       deleteText="Delete"
       id="swiper-1"
       className="my-swiper rounded-lg"
-      onDeleteConfirm={(onSuccess: any, onCancel: any) => {
+      onDeleteConfirm={(onSuccess: any) => {
         // not default - default is null
-        if (window.confirm('Do you really want to delete this item ?')) {
-          onSuccess();
-        } else {
-          onCancel();
-        }
+        onSuccess();
+        handleDelete();
       }}
     >
       {children}
@@ -47,10 +44,26 @@ const DeleteWrapper = ({
 };
 
 export const Ingredient = ({ ingredient, mealId }: { ingredient: any; mealId: string }) => {
-  const data = useRemoveIngredientFromMeal({ ingredientId: ingredient?.id, mealId: mealId });
+  const queryClient = useQueryClient();
+  const removeIngredient = useRemoveIngredientFromMeal();
+
   return (
-    <DeleteWrapper handleDelete={() => alert('delete ingredient')}>
-      <div className="flex justify-between min-h-[4rem] px-4 py-3 bg-secondary_400 rounded-lg items-center">
+    <DeleteWrapper
+      handleDelete={() => {
+        removeIngredient.mutate(
+          {
+            ingredientId: ingredient?.id,
+            mealId: mealId,
+          },
+          {
+            onSuccess: () => {
+              queryClient.invalidateQueries([`meal-${mealId}`]);
+            },
+          },
+        );
+      }}
+    >
+      <div className="flex justify-between min-h-[4rem] px-4 py-3 bg-secondary_200 rounded-lg items-center drop-shadow-sm shadow-sm">
         <div className="flex items-center gap-4">
           <div className="h-14 w-14 min-w-14 bg-white rounded-lg flex items-center justify-center">
             <FaUtensils size={25} />

@@ -17,7 +17,7 @@ module.exports = {
         primary_900: '#11220C',
         secondary_50: '#C8CDC8',
         secondary_100: '#BDC3BD',
-        secondary_200: '#A8B0A8',
+        secondary_200: '#CFD9E7',
         secondary_300: '#929C92',
         secondary_400: '#A5BAD3',
         secondary_500: '#7494BA',

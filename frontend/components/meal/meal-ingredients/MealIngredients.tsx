@@ -5,11 +5,12 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 const MealIngredients = ({ meal, isLoading }: { meal: any; isLoading: boolean }) => {
   const [loadingIngredients, setLoadingIngredients] = React.useState(false);
-  const ref = useRef();
   const [listRef] = useAutoAnimate<HTMLDivElement>();
+
   useEffect(() => {
     if (isLoading) setLoadingIngredients(true);
   }, [isLoading, loadingIngredients]);
+
   return (
     <div className="w-full prose flex flex-col gap-4">
       <div className="w-full flex justify-between items-center py-4">
@@ -19,7 +20,7 @@ const MealIngredients = ({ meal, isLoading }: { meal: any; isLoading: boolean })
       <div className="grid gap-1 w-full" ref={listRef}>
         {meal.ingredients &&
           meal.ingredients.map((ingredient: any, index: number) => (
-            <Ingredient key={index} ingredient={ingredient} />
+            <Ingredient key={index} ingredient={ingredient} mealId={meal.id} />
           ))}
         {isLoading && (
           <div className="flex w-full justify-center">

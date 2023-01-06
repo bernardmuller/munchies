@@ -20,20 +20,7 @@ export const useAddIngredientToMeal = () => {
   return useMutation(addIngredientToMeal, {});
 };
 
-export const useRemoveIngredientFromMeal = ({
-  mealId,
-  ingredientId,
-}: {
-  mealId: string;
-  ingredientId: string;
-}) => {
+export const useRemoveIngredientFromMeal = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    () => removeIngredientFromMeal({ mealId: mealId, ingredientId: ingredientId }),
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries([`meal-${mealId}`]);
-      },
-    },
-  );
+  return useMutation(removeIngredientFromMeal, {});
 };
