@@ -14,14 +14,28 @@ export interface IHeroCard {
     description?: string;
   };
   variant?: 'menu' | 'recipe';
+  ingredients?: number;
+  cookTimes?: number;
+  minutes?: number;
 }
 
-const MealHeroCard: React.FC<IHeroCard> = ({ heading, onClick, data, variant }) => {
+const MealHeroCard: React.FC<IHeroCard> = ({
+  heading,
+  onClick,
+  data,
+  variant,
+  ingredients,
+  cookTimes,
+  minutes,
+}) => {
   return (
     <div className=" flex flex-col gap-3 z-10">
       <div className="grid gap-3">
         <H3 className="text-2xl leading-7 text-white h-16">{heading}</H3>
-        <P className=" text-[12px] text-slate-400">25 minutes | 25 ingredients | cooked 2 times</P>
+        <P className=" text-[12px] text-slate-400">
+          {minutes && `${minutes} minutes | `} {ingredients} ingredients | cooked {cookTimes || '0'}{' '}
+          times
+        </P>
       </div>
       <div className="w-full relative h-80  bg-slate-400 rounded-3xl overflow-clip">
         <div className="w-full h-full object-cover  rounded-3xl">
@@ -38,7 +52,7 @@ const MealHeroCard: React.FC<IHeroCard> = ({ heading, onClick, data, variant }) 
         <div className="absolute bottom-0 w-full h-full bg-gradient-to-b from-transparent to-secondary_900 via-transparent" />
       </div>
       <div className="relative -top-8 w-full flex justify-center">
-        <div className="flex justify-center gap-4 w-full">
+        <div className="flex justify-center gap-3 w-full">
           {['tag', 'tag', 'tag', 'tag', 'tag', 'tag']
             .map(tag => <Badge title={tag} size="lg" />)
             .slice(0, 3)}

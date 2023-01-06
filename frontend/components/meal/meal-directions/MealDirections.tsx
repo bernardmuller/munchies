@@ -241,66 +241,20 @@ export const MealDirections = ({ meal }: { meal: any }) => {
   const [newStep, setNewStep] = useState('');
 
   return (
-    <div className="prose">
-      <SubContainer>
-        <Header>
-          <h3 className="m-2">Ingredients</h3>
-        </Header>
-        <div className="flex flex-col gap-4">
-          {
-            //   ingredients &&
-            meal?.ingredients?.map((ingredient: any) => (
-              <Item key={`ingredient-${ingredient.id}`} data={ingredient} onDelete={() => {}} />
-            ))
-          }
-
-          <AddItem meal={meal} />
-        </div>
-      </SubContainer>
-
-      <SubContainer>
-        <Header>
-          <h3>Directions</h3>
-        </Header>
-        <>
-          <Steps>
-            {directions &&
-              directions.map((step: any) => (
-                <Step key={step}>
-                  {!edit ? (
-                    <>
-                      <span>{step}</span>
-                      {!edit && (
-                        <>
-                          <UtilityButton
-                            type="button"
-                            variant="save"
-                            onClick={() => {}}
-                            theme="light"
-                          />
-                          <UtilityButton
-                            type="button"
-                            variant="close"
-                            onClick={() => {
-                              setEdit(false);
-                            }}
-                            theme="light"
-                          />
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    <DirectionsForm onSubmit={() => {}}>
-                      <input
-                        type="textarea"
-                        value={''}
-                        {...register('directions', {
-                          onChange: e => {
-                            setDirections(e.target.value);
-                          },
-                        })}
-                      />
-                      <UtilityWrapper>
+    <SubContainer>
+      <Header>
+        <h3>Directions</h3>
+      </Header>
+      <>
+        <Steps>
+          {directions &&
+            directions.map((step: any) => (
+              <Step key={step}>
+                {!edit ? (
+                  <>
+                    <span>{step}</span>
+                    {!edit && (
+                      <>
                         <UtilityButton
                           type="button"
                           variant="save"
@@ -315,37 +269,65 @@ export const MealDirections = ({ meal }: { meal: any }) => {
                           }}
                           theme="light"
                         />
-                      </UtilityWrapper>
-                    </DirectionsForm>
-                  )}
-                </Step>
-              ))}
-          </Steps>
-          {!addStep ? (
-            <Button type="button" secondary onClick={() => setAddStep(true)} label="Add Step" />
-          ) : (
-            <Form>
-              <input
-                type="textarea"
-                placeholder="Step directions"
-                onChange={e => setNewStep(e.target.value)}
-              />
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <DirectionsForm onSubmit={() => {}}>
+                    <input
+                      type="textarea"
+                      value={''}
+                      {...register('directions', {
+                        onChange: e => {
+                          setDirections(e.target.value);
+                        },
+                      })}
+                    />
+                    <UtilityWrapper>
+                      <UtilityButton
+                        type="button"
+                        variant="save"
+                        onClick={() => {}}
+                        theme="light"
+                      />
+                      <UtilityButton
+                        type="button"
+                        variant="close"
+                        onClick={() => {
+                          setEdit(false);
+                        }}
+                        theme="light"
+                      />
+                    </UtilityWrapper>
+                  </DirectionsForm>
+                )}
+              </Step>
+            ))}
+        </Steps>
+        {!addStep ? (
+          <Button type="button" secondary onClick={() => setAddStep(true)} label="Add Step" />
+        ) : (
+          <Form>
+            <input
+              type="textarea"
+              placeholder="Step directions"
+              onChange={e => setNewStep(e.target.value)}
+            />
 
-              <UtilityWrapper>
-                <UtilityButton type="button" variant="save" onClick={() => {}} theme="light" />
-                <UtilityButton
-                  type="button"
-                  variant="close"
-                  onClick={() => {
-                    setAddStep(false);
-                  }}
-                  theme="light"
-                />
-              </UtilityWrapper>
-            </Form>
-          )}
-        </>
-      </SubContainer>
-    </div>
+            <UtilityWrapper>
+              <UtilityButton type="button" variant="save" onClick={() => {}} theme="light" />
+              <UtilityButton
+                type="button"
+                variant="close"
+                onClick={() => {
+                  setAddStep(false);
+                }}
+                theme="light"
+              />
+            </UtilityWrapper>
+          </Form>
+        )}
+      </>
+    </SubContainer>
   );
 };

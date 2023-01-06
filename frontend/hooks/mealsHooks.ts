@@ -1,17 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  createMeal,
-  fetchMeal,
-  fetchMeals,
-  updateMeal,
-} from '../pages/api/meals';
+import { createMeal, fetchMeal, fetchMeals, updateMeal } from '../pages/api/meals';
 
 export const useMealsData = () => {
   return useQuery(['meals'], fetchMeals);
 };
 
 export const useMealData = (id: string) => {
-  return useQuery([`meal-${id}`], () => fetchMeal(id));
+  const { data, isLoading, isSuccess, isError, isFetching } = useQuery([`meal-${id}`], () =>
+    fetchMeal(id),
+  );
+  return { data, isLoading, isSuccess, isError, isFetching };
 };
 
 export const useAddMeal = () => {

@@ -8,8 +8,8 @@ export interface IBadge {
 const Badge: React.FC<IBadge> = ({ title, size }) => {
   return (
     <span
-      className={`  bg-opacity-40 text-slate-100 backdrop-blur-3xl ${
-        size !== 'lg' ? 'px-3 py-1 text-xs' : 'text-md w-[5rem] py-2 text-center'
+      className={`bg-secondary_400/40 backdrop-blur-lg text-secondary_700 ${
+        size !== 'lg' ? 'px-3 py-1 text-xs' : 'text-md w-[5.5rem] py-3 text-center'
       } rounded-3xl  z-20`}
     >
       {title}

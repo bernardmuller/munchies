@@ -48,3 +48,18 @@ export async function addIngredientToMeal({
     data: { ingredientId: ingredientId },
   }).then(response => response.data);
 }
+
+export async function removeIngredientFromMeal({
+  mealId,
+  ingredientId,
+}: {
+  mealId: string;
+  ingredientId: string;
+}) {
+  return await axios({
+    method: 'POST',
+    url: `${requireBaseURL()}/meals/${mealId}/ingredients/remove`,
+    headers: requireHeaders(),
+    data: { ingredientId: ingredientId },
+  }).then(response => response.data);
+}

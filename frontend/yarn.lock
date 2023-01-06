@@ -9294,6 +9294,11 @@ react-select@^5.4.0:
     prop-types "^15.6.0"
     react-transition-group "^4.3.0"
 
+react-swipe-to-delete-ios@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-swipe-to-delete-ios/-/react-swipe-to-delete-ios-2.1.0.tgz#fa5f0b05efd877e9cbc0aa2c53dc1ded083f6b93"
+  integrity sha512-9ajSa393m7curNF6qURWT7EwTJ9rv/Zb7nBaqdCr5tO9qM1Y4symkmIvYk3MFJKUoYGTuynQJNHGhh5OnOI6Yw==
+
 react-transition-group@^4.3.0, react-transition-group@^4.4.5:
   version "4.4.5"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.5.tgz#e53d4e3f3344da8521489fbef8f2581d42becdd1"

@@ -2,20 +2,29 @@ import MealHeroCard from 'components/cards/meal-detail-hero-card/MealDetailHeroC
 import DetailHeader from 'components/headers/detail-header/DetailHeader';
 import BlueHero from 'components/hero/hero/BlueHero';
 import PrimaryLayout from 'components/layouts/primary/PrimaryLayout';
-import { MealInfo, MealStats } from 'components/meal/meal-info/MealInfo';
+import { MealDirections } from 'components/meal/meal-directions/MealDirections';
+import MealIngredients from 'components/meal/meal-ingredients/MealIngredients';
+import { MealStats } from 'components/meal/meal-stats/MealStats';
 import { useMealData } from 'hooks/mealsHooks';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/page';
+import loader from '../../assets/images/loading-utensils.gif';
 
 const MealDetail: NextPageWithLayout = () => {
   const router = useRouter();
   const { id } = router.query;
   const mealData = useMealData(typeof id === 'string' ? id : '');
-  console.log(mealData.data);
-  if (!mealData.data) return <div className="w-full h-full ">Loading...</div>;
+
+  if (!mealData.data)
+    return (
+      <div className="w-fulle h-screen flex justify-center items-center">
+        <Image src={loader} height={200} width={200} alt="loading..." />
+      </div>
+    );
   return (
     <>
-      <section className="z-30 grid">
+      <section className="z-30 grid w-full">
         <BlueHero size="sm" />
         <DetailHeader
           leftButtonVariant="back"
@@ -30,12 +39,14 @@ const MealDetail: NextPageWithLayout = () => {
             image: mealData?.data?.image,
             description: mealData?.data?.description,
           }}
+          ingredients={mealData?.data?.ingredients?.length}
+          cookTimes={mealData?.data?.timesCooked}
+          minutes={mealData?.data?.readyInMinutes}
         />
 
-        <div className="prose flex flex-col gap-2">
-          <MealStats meal={mealData?.data} />
-        </div>
-        {/* <MealDirections meal={mealData.data} /> */}
+        <MealStats meal={mealData?.data} />
+        <MealIngredients meal={mealData?.data} isLoading={mealData?.isFetching} />
+        {/* <MealDirections meal={mealData?.data} /> */}
       </section>
     </>
   );
