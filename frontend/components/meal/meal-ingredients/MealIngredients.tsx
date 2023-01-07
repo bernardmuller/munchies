@@ -5,11 +5,13 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 const MealIngredients = ({ meal, isLoading }: { meal: any; isLoading: boolean }) => {
   const [loadingIngredients, setLoadingIngredients] = React.useState(false);
-  const [listRef] = useAutoAnimate<HTMLDivElement>();
+  // const [listRef] = useAutoAnimate<HTMLDivElement>();
 
   useEffect(() => {
     if (isLoading) setLoadingIngredients(true);
   }, [isLoading, loadingIngredients]);
+
+  console.log('meal :', meal);
 
   return (
     <div className="w-full prose flex flex-col gap-4">
@@ -17,7 +19,7 @@ const MealIngredients = ({ meal, isLoading }: { meal: any; isLoading: boolean })
         <H3 className="m-0 text-black">Ingredients:</H3>
         <P className="m-0 text-secondary_400 ">{meal.ingredients.length} items</P>
       </div>
-      <div className="grid gap-1 w-full" ref={listRef}>
+      <div className="grid gap-1 w-full">
         {meal.ingredients &&
           meal.ingredients.map((ingredient: any, index: number) => (
             <Ingredient key={index} ingredient={ingredient} mealId={meal.id} />

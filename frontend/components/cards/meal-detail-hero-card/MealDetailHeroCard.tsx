@@ -2,6 +2,13 @@ import Image from 'next/image';
 
 import Badge from 'components/chips/badge/Badge';
 import { H3, P } from 'components/typography';
+import { useState } from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Form from 'components/forms/react-hook-form-wrapper/Form';
+import { TextField } from '@mui/material';
+import { useUpdateMeal } from 'hooks/mealsHooks';
+import UtilityButton from 'components/buttons/utility-button/UtilityButton';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 
 export interface IHeroCard {
   heading: string;
@@ -17,7 +24,70 @@ export interface IHeroCard {
   ingredients?: number;
   cookTimes?: number;
   minutes?: number;
+  mealId: string;
 }
+
+const createComponentTheme = (theme: 'light' | 'dark') => {
+  return createTheme({
+    palette: {
+      mode: theme,
+    },
+  });
+};
+
+const MealName = ({ name, mealId }: { name: string; mealId: string }) => {
+  const [edit, setEdit] = useState(false);
+  const [newName, setNewName] = useState(name);
+  const updateMeal = useUpdateMeal();
+  const queryClient = useQueryClient();
+
+  const updateMealName = async () => {
+    updateMeal.mutate(
+      { id: mealId, data: { name: newName } },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries([`meal-${mealId}`]);
+          setEdit(false);
+          // TODI: add toast
+        },
+      },
+    );
+    setEdit(false);
+    setNewName(name);
+  };
+
+  if (edit) {
+    return (
+      <Form name="mealName" onSubmit={updateMealName} className="w-full flex pb-4">
+        <ThemeProvider theme={createComponentTheme('dark')}>
+          <TextField
+            name="name"
+            label="Meal Name"
+            autoFocus
+            value={newName}
+            onChange={(e: any) => setNewName(e.target.value)}
+            placeholder="eg. 123g"
+            type="text"
+            variant="standard"
+            className="w-full"
+            fullWidth
+            // onBlur={() => {
+            //   setEdit(false);
+            //   setNewName(name);
+            // }}
+          />
+          <UtilityButton type="submit" variant="save" theme="dark" />
+        </ThemeProvider>
+      </Form>
+    );
+  }
+
+  return (
+    <button onClick={() => setEdit(true)}>
+      <H3 className="text-2xl leading-7 text-white h-16 text-left">{name}</H3>
+    </button>
+  );
+};
 
 const MealHeroCard: React.FC<IHeroCard> = ({
   heading,
@@ -27,11 +97,12 @@ const MealHeroCard: React.FC<IHeroCard> = ({
   ingredients,
   cookTimes,
   minutes,
+  mealId,
 }) => {
   return (
     <div className=" flex flex-col gap-3 z-10">
       <div className="grid gap-3">
-        <H3 className="text-2xl leading-7 text-white h-16">{heading}</H3>
+        <MealName mealId={mealId} name={heading} />
         <P className=" text-[12px] text-slate-400">
           {minutes && `${minutes} minutes | `} {ingredients} ingredients | cooked {cookTimes || '0'}{' '}
           times

@@ -24,6 +24,9 @@ export interface ITextField {
   placeholder: string;
   register?: any;
   onChange?: any;
+  onInputBlur?: any;
+  autoFocus?: boolean;
+  theme: 'light' | 'dark';
 }
 
 const TextField: React.FC<ITextField> = ({
@@ -40,6 +43,9 @@ const TextField: React.FC<ITextField> = ({
   placeholder,
   register,
   onChange,
+  onInputBlur,
+  autoFocus,
+  theme,
   ...rest
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -54,6 +60,9 @@ const TextField: React.FC<ITextField> = ({
             id="outlined-adornment-password"
             type={showPassword ? 'text' : 'password'}
             value={value}
+            onBlur={() => {
+              alert('blurrrr');
+            }}
             placeholder={placeholder}
             {...register(name)}
             endAdornment={
@@ -77,7 +86,13 @@ const TextField: React.FC<ITextField> = ({
     );
   }
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider
+      theme={createTheme({
+        palette: {
+          mode: theme,
+        },
+      })}
+    >
       <Input
         name={name}
         type={type}
@@ -88,11 +103,17 @@ const TextField: React.FC<ITextField> = ({
         error={error}
         defaultValue={defaultValue}
         helperText={helperText}
-        size={small ? 'small' : 'medium'}
+        // size={small ? 'small' : 'medium'}
         required={required}
         fullWidth={fullWidth}
         placeholder={placeholder}
         onChange={onChange}
+        autoFocus={autoFocus}
+        onBlur={() => {
+          alert('blurrrr');
+          onInputBlur();
+        }}
+        className="input max-w-xs"
         {...register(name)}
         {...rest}
       />

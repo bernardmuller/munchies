@@ -26,6 +26,7 @@ export async function fetchMeal(id: string) {
 }
 
 export async function updateMeal({ id, data }: { id: string; data: any }) {
+  console.log(id, data);
   return await axios({
     method: 'PUT',
     url: `${requireBaseURL()}/meals/${id}`,

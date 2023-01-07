@@ -1,6 +1,8 @@
 import MealHeroCard from 'components/cards/meal-detail-hero-card/MealDetailHeroCard';
+import Form from 'components/forms/react-hook-form-wrapper/Form';
 import DetailHeader from 'components/headers/detail-header/DetailHeader';
 import BlueHero from 'components/hero/hero/BlueHero';
+import TextField from 'components/inputs/textfield/TextField';
 import PrimaryLayout from 'components/layouts/primary/PrimaryLayout';
 import { MealDirections } from 'components/meal/meal-directions/MealDirections';
 import MealIngredients from 'components/meal/meal-ingredients/MealIngredients';
@@ -29,7 +31,6 @@ const MealDetail: NextPageWithLayout = () => {
         <DetailHeader
           leftButtonVariant="back"
           onLeftButtonClick={() => router.back()}
-          heading={mealData.data?.name}
           theme="dark"
         />
         <MealHeroCard
@@ -42,6 +43,7 @@ const MealDetail: NextPageWithLayout = () => {
           ingredients={mealData?.data?.ingredients?.length}
           cookTimes={mealData?.data?.timesCooked}
           minutes={mealData?.data?.readyInMinutes}
+          mealId={mealData?.data?.id}
         />
 
         <MealStats meal={mealData?.data} />

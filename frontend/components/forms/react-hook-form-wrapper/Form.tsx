@@ -5,16 +5,18 @@ export default function Form({
   children,
   onSubmit,
   className,
+  name,
 }: {
   children: any;
   onSubmit: any;
   className: string;
+  name: string;
 }) {
   const methods = useForm();
   const { handleSubmit } = methods;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={className}>
+    <form name={name} onSubmit={handleSubmit(onSubmit)} className={className}>
       {React.Children.map(children, child => {
         return child.props.name
           ? React.createElement(child.type, {

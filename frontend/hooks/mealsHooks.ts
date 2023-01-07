@@ -22,10 +22,5 @@ export const useAddMeal = () => {
 };
 
 export const useUpdateMeal = () => {
-  const queryClient = useQueryClient();
-  return useMutation(updateMeal, {
-    onSuccess: () => {
-      return queryClient.invalidateQueries(['meals']);
-    },
-  });
+  return useMutation(updateMeal);
 };

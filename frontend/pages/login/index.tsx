@@ -25,7 +25,7 @@ const Login: NextPageWithLayout = () => {
 
   return (
     <div className="min-w-full prose flex flex-col px-[15%] pt-8">
-      <BlueHero />
+      <BlueHero size="lg" />
       <h1 className="text-center text-white z-10">Munchies</h1>
       <h2 className="ml-4">Login</h2>
       {error && <Toast variant="filled" severity="error" message={error} />}
