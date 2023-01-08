@@ -1,4 +1,4 @@
-import MealCard from 'components/cards/meal-card/MealCard';
+import MealCard, { IMealCard } from 'components/cards/meal-card/MealCard';
 import { H3 } from 'components/typography';
 import Link from 'next/link';
 

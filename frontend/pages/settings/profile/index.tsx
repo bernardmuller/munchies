@@ -28,6 +28,7 @@ const Profile = () => {
               router.back();
             }}
             leftButtonVariant="back"
+            theme="dark"
           />
           <section className="flex flex-col gap-10">
             <UserInfoWidget />
@@ -42,20 +43,21 @@ const Profile = () => {
               }}
             />
             <BasicMealSlider
+              theme="light"
               heading="Name's Recipes"
               meals={[
                 {
-                  title: 'Sushi',
+                  name: 'Sushi',
                   ingredients: [1, 2, 3],
                   seasons: ['winter'],
                 },
                 {
-                  title: 'Sushi',
+                  name: 'Sushi',
                   ingredients: [1, 2, 3],
                   seasons: ['winter'],
                 },
                 {
-                  title: 'Sushi',
+                  name: 'Sushi',
                   ingredients: [1, 2, 3],
                   seasons: ['winter'],
                 },

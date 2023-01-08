@@ -31,6 +31,7 @@ const Login: NextPageWithLayout = () => {
       {error && <Toast variant="filled" severity="error" message={error} />}
       <Form
         onSubmit={onSubmit}
+        name="login"
         className="px-16 flex flex-col gap-6 bg-white z-10 py-10 rounded-lg drop-shadow-xl"
       >
         <h2 className="m-0 mb-6 text-center">Login</h2>
@@ -40,6 +41,7 @@ const Login: NextPageWithLayout = () => {
           type="text"
           placeholder="me@email.com"
           onChange={() => setError(null)}
+          theme="light"
         />
         <TextField
           name="password"
@@ -47,6 +49,7 @@ const Login: NextPageWithLayout = () => {
           type="password"
           placeholder="**********"
           onChange={() => setError(null)}
+          theme="light"
         />
         <div className="flex flex-col gap-3 mt-6">
           <Button type="submit" label="Login" isLoading={loading} />

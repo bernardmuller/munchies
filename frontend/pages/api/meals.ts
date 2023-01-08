@@ -64,3 +64,33 @@ export async function removeIngredientFromMeal({
     data: { ingredientId: ingredientId },
   }).then(response => response.data);
 }
+
+export async function addDirectionToMeal({
+  mealId,
+  direction,
+}: {
+  mealId: string;
+  direction: string;
+}) {
+  return await axios({
+    method: 'PUT',
+    url: `${requireBaseURL()}/meals/${mealId}/directions/add`,
+    headers: requireHeaders(),
+    data: { direction: direction },
+  }).then(response => response.data);
+}
+
+export async function removeDirectionFromMeal({
+  mealId,
+  directionIndex,
+}: {
+  mealId: string;
+  directionIndex: number;
+}) {
+  return await axios({
+    method: 'PUT',
+    url: `${requireBaseURL()}/meals/${mealId}/directions/remove`,
+    headers: requireHeaders(),
+    data: { directionIndex: directionIndex },
+  }).then(response => response.data);
+}

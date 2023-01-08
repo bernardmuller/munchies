@@ -1,5 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createMeal, fetchMeal, fetchMeals, updateMeal } from '../pages/api/meals';
+import {
+  addDirectionToMeal,
+  createMeal,
+  fetchMeal,
+  fetchMeals,
+  removeDirectionFromMeal,
+  updateMeal,
+} from '../pages/api/meals';
 
 export const useMealsData = () => {
   return useQuery(['meals'], fetchMeals);
@@ -23,4 +30,22 @@ export const useAddMeal = () => {
 
 export const useUpdateMeal = () => {
   return useMutation(updateMeal);
+};
+
+export const useAddDirectionToMeal = (mealId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation(addDirectionToMeal, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([`meal-${mealId}`]);
+    },
+  });
+};
+
+export const useRemoveDirectionFromMeal = (mealId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation(removeDirectionFromMeal, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([`meal-${mealId}`]);
+    },
+  });
 };

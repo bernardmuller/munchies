@@ -1,96 +1,63 @@
 import { useQueryClient } from '@tanstack/react-query';
-import UtilityButton from 'components/buttons/utility-button/UtilityButton';
+
 import { P } from 'components/typography';
 import { useAddIngredientToMeal, useRemoveIngredientFromMeal } from 'hooks/ingredientsHooks';
 import { debounce } from 'lodash';
 import { fetchIngredients } from 'pages/api/ingredients';
 import React, { useEffect, useState } from 'react';
 import ReactSelect from 'react-select';
-import SwipeToDelete from 'react-swipe-to-delete-ios';
-import { FaRegistered, FaUtensils } from 'react-icons/fa';
 
-import react from 'react';
+import { FaRegistered, FaUtensils } from 'react-icons/fa';
 import TextField from 'components/inputs/textfield/TextField';
 import Form from 'components/forms/react-hook-form-wrapper/Form';
+import DeleteWrapper from 'components/containers/delete-wrapper/DeleteWrapper';
 
-const DeleteWrapper = ({
-  children,
-  handleDelete,
-}: //   onSuccess,
-//   onCancel,
-{
-  children: any;
-  handleDelete: () => void;
-  //   onSuccess: () => void;
-  //   onCancel: () => void;
-}) => {
-  return (
-    <SwipeToDelete
-      onDelete={handleDelete}
-      height={80}
-      transitionDuration={250}
-      deleteWidth={75}
-      deleteColor="linear-gradient(to left, rgb(255, 107, 99), rgb(186, 69, 63))"
-      deleteText="Delete"
-      id="swiper-1"
-      className="my-swiper rounded-lg"
-      onDeleteConfirm={(onSuccess: any) => {
-        // not default - default is null
-        onSuccess();
-        handleDelete();
-      }}
-    >
-      {children}
-    </SwipeToDelete>
-  );
-};
+// const Quantity = ({
+//   ingredientId,
+//   mealId,
+//   quantity,
+// }: {
+//   ingredientId: string;
+//   mealId: string;
+//   quantity: string;
+// }) => {
+//   const [edit, setEdit] = useState(false);
+//   // const quantity = useIngredientQuantity();
+//   const [quantityValue, setQuantityValue] = useState(quantity);
+//   if (edit) {
+//     return (
+//       <Form onSubmit={() => {}} className="flex flex-col w-24">
+//         <TextField
+//           name="quantity"
+//           label="Quantity"
+//           autoFocus
+//           value={quantityValue}
+//           onChange={(e: any) => setQuantityValue(e)}
+//           placeholder="eg. 123g"
+//           type="text"
+//           theme="light"
+//           onInputBlur={() => {
+//             alert('blurrrrrr2222222');
+//           }}
+//           // register={'name'}
+//         />
+//         {/* <input
+//           className="input"
+//           onBlur={() => {
+//             alert('lkwjdvnwd');
+//           }}
+//         /> */}
+//         {/* <input /> */}
+//       </Form>
+//     );
+//   }
 
-const Quantity = ({
-  ingredientId,
-  mealId,
-  quantity,
-}: {
-  ingredientId: string;
-  mealId: string;
-  quantity: string;
-}) => {
-  const [edit, setEdit] = useState(false);
-  // const quantity = useIngredientQuantity();
-  const [quantityValue, setQuantityValue] = useState(quantity);
-  if (edit) {
-    return (
-      <Form onSubmit={() => {}} className="flex flex-col w-24">
-        <TextField
-          name="quantity"
-          label="Quantity"
-          autoFocus
-          value={quantityValue}
-          onChange={(e: any) => setQuantityValue(e)}
-          placeholder="eg. 123g"
-          type="text"
-          theme="light"
-          onInputBlur={() => {
-            alert('blurrrrrr2222222');
-          }}
-          // register={'name'}
-        />
-        {/* <input
-          className="input"
-          onBlur={() => {
-            alert('lkwjdvnwd');
-          }}
-        /> */}
-        {/* <input /> */}
-      </Form>
-    );
-  }
-
-  return (
-    <button className="text-secondary_500 font-light text-sm m-0" onClick={() => setEdit(true)}>
-      {quantity}
-    </button>
-  );
-};
+//   return (
+//     <button className="text-secondary_500 font-light text-sm m-0" onClick={() => setEdit(true)}>
+//       {quantity}
+//     </button>
+//   );
+// };
 
 export const Ingredient = ({ ingredient, mealId }: { ingredient: any; mealId: string }) => {
   const queryClient = useQueryClient();

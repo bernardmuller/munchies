@@ -48,7 +48,7 @@ const HeroCard: React.FC<IHeroCard> = ({ heading, onClick, data, variant }) => {
         <div className="absolute bottom-0 w-full h-full bg-gradient-to-b from-transparent to-secondary_900 via-transparent" />
         {variant === 'menu' ? (
           <div className=" absolute bottom-4 pl-4">
-            <H3 className="text-2xl font-bold text-white mb-2">{data.name}</H3>
+            {data.name && <H3 className="text-2xl font-bold text-white mb-2">{data.name}</H3>}
             <P className="text-sm text-slate-400 font-light">{data.description}</P>
           </div>
         ) : (

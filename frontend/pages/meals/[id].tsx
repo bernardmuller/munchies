@@ -4,7 +4,7 @@ import DetailHeader from 'components/headers/detail-header/DetailHeader';
 import BlueHero from 'components/hero/hero/BlueHero';
 import TextField from 'components/inputs/textfield/TextField';
 import PrimaryLayout from 'components/layouts/primary/PrimaryLayout';
-import { MealDirections } from 'components/meal/meal-directions/MealDirections';
+import MealDirections from 'components/meal/meal-directions/MealDirections';
 import MealIngredients from 'components/meal/meal-ingredients/MealIngredients';
 import { MealStats } from 'components/meal/meal-stats/MealStats';
 import { useMealData } from 'hooks/mealsHooks';
@@ -46,9 +46,9 @@ const MealDetail: NextPageWithLayout = () => {
           mealId={mealData?.data?.id}
         />
 
-        <MealStats meal={mealData?.data} />
+        {/* <MealStats meal={mealData?.data} /> */}
         <MealIngredients meal={mealData?.data} isLoading={mealData?.isFetching} />
-        {/* <MealDirections meal={mealData?.data} /> */}
+        <MealDirections meal={mealData?.data} />
       </section>
     </>
   );

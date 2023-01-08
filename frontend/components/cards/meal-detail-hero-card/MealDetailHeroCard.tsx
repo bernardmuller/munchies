@@ -9,6 +9,8 @@ import { TextField } from '@mui/material';
 import { useUpdateMeal } from 'hooks/mealsHooks';
 import UtilityButton from 'components/buttons/utility-button/UtilityButton';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import { setProjectAnnotations } from '@storybook/react';
+import { Toast } from 'components/alerts/toast-alert/Toast';
 
 export interface IHeroCard {
   heading: string;
@@ -40,6 +42,7 @@ const MealName = ({ name, mealId }: { name: string; mealId: string }) => {
   const [newName, setNewName] = useState(name);
   const updateMeal = useUpdateMeal();
   const queryClient = useQueryClient();
+  const [toast, setToast] = useState(false);
 
   const updateMealName = async () => {
     updateMeal.mutate(
@@ -49,6 +52,7 @@ const MealName = ({ name, mealId }: { name: string; mealId: string }) => {
           queryClient.invalidateQueries([`meal-${mealId}`]);
           setEdit(false);
           // TODI: add toast
+          setToast(true);
         },
       },
     );
@@ -104,8 +108,9 @@ const MealHeroCard: React.FC<IHeroCard> = ({
       <div className="grid gap-3">
         <MealName mealId={mealId} name={heading} />
         <P className=" text-[12px] text-slate-400">
-          {minutes && `${minutes} minutes | `} {ingredients} ingredients | cooked {cookTimes || '0'}{' '}
-          times
+          {minutes && `${minutes} minutes | `}{' '}
+          {ingredients && `${ingredients} ingredient ${ingredients > 1 ? 's' : ''}`}
+          {cookTimes && ` | ${cookTimes} times cooked`}
         </P>
       </div>
       <div className="w-full relative h-80  bg-slate-400 rounded-3xl overflow-clip">
@@ -123,11 +128,11 @@ const MealHeroCard: React.FC<IHeroCard> = ({
         <div className="absolute bottom-0 w-full h-full bg-gradient-to-b from-transparent to-secondary_900 via-transparent" />
       </div>
       <div className="relative -top-8 w-full flex justify-center">
-        <div className="flex justify-center gap-3 w-full">
+        {/* <div className="flex justify-center gap-3 w-full">
           {['tag', 'tag', 'tag', 'tag', 'tag', 'tag']
             .map(tag => <Badge title={tag} size="lg" />)
             .slice(0, 3)}
-        </div>
+        </div> */}
       </div>
     </div>
   );

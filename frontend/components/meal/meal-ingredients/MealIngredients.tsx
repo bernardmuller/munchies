@@ -11,10 +11,8 @@ const MealIngredients = ({ meal, isLoading }: { meal: any; isLoading: boolean })
     if (isLoading) setLoadingIngredients(true);
   }, [isLoading, loadingIngredients]);
 
-  console.log('meal :', meal);
-
   return (
-    <div className="w-full prose flex flex-col gap-4">
+    <div className="w-full prose flex flex-col gap-4 pb-4">
       <div className="w-full flex justify-between items-center py-4">
         <H3 className="m-0 text-black">Ingredients:</H3>
         <P className="m-0 text-secondary_400 ">{meal.ingredients.length} items</P>

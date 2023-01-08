@@ -9,7 +9,7 @@ const UserInfoWidget = () => {
         <div className="h-[8rem] w-[8rem] flex flex-col items-center overflow-hidden rounded-full bg-secondary_400"></div>
         <H3 className="font-bold text-2xl mt-4">Name Surname</H3>
         <P className="font-light text-lg">me@email.com</P>
-        <Badge title="Admin" />
+        <Badge title="Admin" size="sm" />
       </div>
       <div className="px-[10%]">
         <InfoWidget />
