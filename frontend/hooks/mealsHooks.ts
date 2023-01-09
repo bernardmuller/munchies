@@ -32,19 +32,57 @@ export const useUpdateMeal = () => {
   return useMutation(updateMeal);
 };
 
-export const useAddDirectionToMeal = (mealId: string) => {
+export const useRemoveDirectionFromMeal = ({
+  mealId,
+  directionIndex,
+}: {
+  mealId: string;
+  directionIndex: number;
+}) => {
   const queryClient = useQueryClient();
-  return useMutation(addDirectionToMeal, {
-    onSuccess: () => {
+  return useMutation(removeDirectionFromMeal, {
+    onMutate: async () => {
+      await queryClient.cancelQueries([`meal-${mealId}`]);
+      const previousMeal = queryClient.getQueryData([`meal-${mealId}`]) as any;
+      queryClient.setQueryData([`meal-${mealId}`], {
+        ...previousMeal,
+        directions: previousMeal.directions.filter(
+          (direction: any, index: number) => index !== directionIndex,
+        ),
+      });
+      return { previousMeal };
+    },
+    onError: (err, variables, context) => {
+      queryClient.setQueryData([`meal-${mealId}`], context?.previousMeal);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries([`meal-${mealId}`]);
     },
   });
 };
 
-export const useRemoveDirectionFromMeal = (mealId: string) => {
+export const useAddDirectionToMeal = ({
+  mealId,
+  newDirection,
+}: {
+  mealId: string;
+  newDirection: string;
+}) => {
   const queryClient = useQueryClient();
-  return useMutation(removeDirectionFromMeal, {
-    onSuccess: () => {
+  return useMutation(addDirectionToMeal, {
+    onMutate: async () => {
+      await queryClient.cancelQueries([`meal-${mealId}`]);
+      const previousMeal = queryClient.getQueryData([`meal-${mealId}`]) as any;
+      queryClient.setQueryData([`meal-${mealId}`], {
+        ...previousMeal,
+        directions: [...previousMeal.directions, newDirection],
+      });
+      return { previousMeal };
+    },
+    onError: (err, variables, context) => {
+      queryClient.setQueryData([`meal-${mealId}`], context?.previousMeal);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries([`meal-${mealId}`]);
     },
   });

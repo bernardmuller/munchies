@@ -1,26 +1,15 @@
-import { useEffect, useState } from 'react';
-// import 'react-widgets/styles.css';
+import { useState } from 'react';
 import styled from 'styled-components';
-// import DropdownList from 'react-widgets/DropdownList';
-
-// import { FontSizes, colors } from 'common';
 import { useForm } from 'react-hook-form';
-
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Button from 'components/buttons/button/Button';
 import UtilityButton from 'components/buttons/utility-button/UtilityButton';
-import { useAddIngredientToMeal } from 'hooks/ingredientsHooks';
-import { debounce } from 'lodash';
-import { fetchIngredients } from 'pages/api/ingredients';
-import ReactSelect from 'react-select';
 import { colors } from 'shared/colors';
 import { H3, P } from 'components/typography';
 import { TextField } from '@mui/material';
-import { useAddDirectionToMeal } from 'hooks/mealsHooks';
 import DeleteWrapper from 'components/containers/delete-wrapper/DeleteWrapper';
-import { removeDirectionFromMeal } from 'pages/api/meals';
-
-// import { Grid } from '@chakra-ui/react';
+import { addDirectionToMeal, removeDirectionFromMeal } from 'pages/api/meals';
+import { useAddDirectionToMeal, useRemoveDirectionFromMeal } from 'hooks/mealsHooks';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -270,23 +259,12 @@ const Direction = ({
   direction: any;
   index: number;
 }) => {
-  const mutation = useMutation(removeDirectionFromMeal);
-  const queryClient = useQueryClient();
+  const mutation = useRemoveDirectionFromMeal({ mealId: mealId, directionIndex: index });
   return (
-    <div className="flex flex-col  ">
+    <div className="flex flex-col ">
       <DeleteWrapper
         handleDelete={() => {
-          mutation.mutate(
-            {
-              mealId: mealId,
-              directionIndex: index,
-            },
-            {
-              onSuccess: () => {
-                queryClient.invalidateQueries([`meal-${mealId}`]);
-              },
-            },
-          );
+          mutation.mutate({ mealId: mealId, directionIndex: index });
         }}
         height={40}
       >
@@ -300,7 +278,7 @@ const Direction = ({
           <div className="h-[1px] w-full bg-secondary_500" />
         </div>
       </DeleteWrapper>
-      <div className="px-2">
+      <div className="px-1 pb-4">
         <P className="text-black">{direction}</P>
       </div>
     </div>
@@ -335,8 +313,8 @@ export default MealDirections;
 export const AddDirection = ({ meal }: { meal: any }) => {
   const [add, setAdd] = useState(false);
   const [direction, setDirection] = useState('');
-  const mutation = useAddDirectionToMeal(meal.id);
-  const queryClient = useQueryClient();
+
+  const mutationAddDirection = useAddDirectionToMeal({ mealId: meal.id, newDirection: direction });
 
   if (!add)
     return (
@@ -352,32 +330,45 @@ export const AddDirection = ({ meal }: { meal: any }) => {
       <form className="flex w-full items-center justify-between gap-1">
         <div className="flex w-full">
           <div className="w-full flex justify-between items-center gap-4">
-            <TextField
-              name="direction"
-              label="Direction"
-              type="text"
-              autoFocus
-              placeholder="Add Direction..."
-              onChange={(e: any) => {
-                setDirection(e.target.value);
-              }}
-              className="w-full"
-            />
-            <UtilityButton
-              type="button"
-              variant="save"
-              theme="light"
-              onClick={() => {
-                mutation.mutate(
-                  { mealId: meal.id, direction: direction },
-                  {
-                    onSuccess: () => {
+            <div className="form-control w-full">
+              <label className="label p-0">
+                <span className="label-text">New Direction Step</span>
+                <div className="flex">
+                  <UtilityButton
+                    type="button"
+                    variant="save"
+                    theme="light"
+                    disabled={mutationAddDirection.isLoading}
+                    onClick={() => {
+                      mutationAddDirection.mutate({
+                        mealId: meal.id,
+                        newDirection: direction,
+                      });
+                      setDirection('');
+                    }}
+                  />
+                  <UtilityButton
+                    type="button"
+                    variant="close"
+                    theme="light"
+                    disabled={mutationAddDirection.isLoading}
+                    onClick={() => {
                       setAdd(false);
-                    },
-                  },
-                );
-              }}
-            />
+                    }}
+                  />
+                </div>
+              </label>
+              <textarea
+                name="direction"
+                className="textarea textarea-bordered w-full"
+                autoFocus
+                placeholder="eg. Whisk eggs until fluffy."
+                value={direction}
+                onChange={(e: any) => {
+                  setDirection(e.target.value);
+                }}
+              ></textarea>
+            </div>
           </div>
         </div>
       </form>

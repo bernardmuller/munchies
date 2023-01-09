@@ -33,12 +33,20 @@ export interface IUtilityButton {
   onClick?: () => any;
   border?: boolean;
   theme: 'light' | 'dark';
+  disabled?: boolean;
 }
 
 const ICON_SIZE = 25;
 const ICON_COLOR = 'white';
 
-const UtilityButton: React.FC<IUtilityButton> = ({ type, variant, onClick, border, theme }) => {
+const UtilityButton: React.FC<IUtilityButton> = ({
+  type,
+  variant,
+  onClick,
+  border,
+  theme,
+  disabled,
+}) => {
   if (!variant) {
     throw new Error('UtilityButton required variant.');
   }
@@ -46,6 +54,7 @@ const UtilityButton: React.FC<IUtilityButton> = ({ type, variant, onClick, borde
     <button
       type={type}
       onClick={onClick}
+      disabled={disabled || false}
       className={`h-12 w-12 flex items-center justify-center rounded-full active:bg-secondary_500 ${
         border && 'border-2'
       } `}

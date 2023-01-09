@@ -15,10 +15,12 @@ const DeleteWrapper = ({
       height={height || 80}
       transitionDuration={250}
       deleteWidth={75}
-      deleteColor="linear-gradient(to left, rgb(255, 107, 99), rgb(186, 69, 63))"
+      // deleteColor="linear-gradient(to left, rgb(255, 107, 99), rgb(186, 69, 63))"
+      deleteColor="white"
+      deleteComponent={<div className="bg-red-300 rounded-lg">Delete</div>}
       deleteText="Delete"
       id="swiper-1"
-      className="my-swiper rounded-lg"
+      className="my-swiper rounded-lg overflow-hidden"
       onDeleteConfirm={(onSuccess: any) => {
         // onSuccess();
         handleDelete();

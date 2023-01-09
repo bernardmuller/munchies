@@ -67,16 +67,16 @@ export async function removeIngredientFromMeal({
 
 export async function addDirectionToMeal({
   mealId,
-  direction,
+  newDirection,
 }: {
   mealId: string;
-  direction: string;
+  newDirection: string;
 }) {
   return await axios({
     method: 'PUT',
     url: `${requireBaseURL()}/meals/${mealId}/directions/add`,
     headers: requireHeaders(),
-    data: { direction: direction },
+    data: { direction: newDirection },
   }).then(response => response.data);
 }
 
