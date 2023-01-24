@@ -14,12 +14,23 @@ export interface IMealCard {
   title: string;
   seasons: season[];
   ingredients: number;
+  width: string;
 }
 
-const MealCard: React.FC<IMealCard> = ({ onClick, active, image, title, seasons, ingredients }) => {
+const MealCard: React.FC<IMealCard> = ({
+  onClick,
+  active,
+  image,
+  title,
+  seasons,
+  ingredients,
+  width,
+}) => {
   return (
     <div
-      className={`min-w-[11rem] h-[14rem] relative overflow-hidden rounded-xl bg-secondary cursor-pointer z-[1] ${
+      className={`${
+        width ? width : 'w-full'
+      } h-[14rem] relative overflow-hidden rounded-xl bg-secondary cursor-pointer z-[1] ${
         active ? ' border-primary_l border-4 shadow-idle' : 'shadow-lg'
       }`}
       onClick={onClick}

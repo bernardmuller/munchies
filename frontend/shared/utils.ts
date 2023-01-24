@@ -1,4 +1,5 @@
 import { getCookie } from 'cookies-next';
+import { createTheme } from '@mui/material/styles';
 
 export const requireBaseURL = () => {
   return process.env.ENV_NODE === 'development'
@@ -16,4 +17,12 @@ export const requireHeaders = () => {
     ContentType: 'Application/json',
     Authorization: requireAuthHeader(),
   };
+};
+
+export const createComponentTheme = (theme: 'light' | 'dark') => {
+  return createTheme({
+    palette: {
+      mode: theme,
+    },
+  });
 };

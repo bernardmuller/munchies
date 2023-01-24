@@ -3,6 +3,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Input from '@mui/material/TextField';
 import { useState } from 'react';
 import { IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5';
+import { createComponentTheme } from 'shared/utils';
 
 const theme = createTheme({
   palette: {
@@ -51,9 +52,12 @@ const TextField: React.FC<ITextField> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   if (!label) throw new Error(`TextField requires a label`);
+  if (!theme) throw new Error(`TextField requires a theme`);
+
+  const componentTheme = createComponentTheme(theme);
   if (type === 'password') {
     return (
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={componentTheme}>
         <FormControl variant="outlined">
           <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
           <OutlinedInput
@@ -86,13 +90,7 @@ const TextField: React.FC<ITextField> = ({
     );
   }
   return (
-    <ThemeProvider
-      theme={createTheme({
-        palette: {
-          mode: theme,
-        },
-      })}
-    >
+    <ThemeProvider theme={componentTheme}>
       <Input
         name={name}
         type={type}

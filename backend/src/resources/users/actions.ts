@@ -23,6 +23,7 @@ export const getUsers = async () => {
 };
 
 export const getUser = async (id: string) => {
+  if (!id) throw new Error('No id provided');
   const user = await db.user.findUnique({ where: { id } });
   if (!user) throw new Error(`User with id: ${id} not found`);
   return user;

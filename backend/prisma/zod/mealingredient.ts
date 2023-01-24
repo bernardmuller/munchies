@@ -5,6 +5,7 @@ export const MealIngredientModel = z.object({
   id: z.string(),
   mealId: z.string(),
   ingredientId: z.string(),
+  quantity: z.string().nullish(),
 })
 
 export interface CompleteMealIngredient extends z.infer<typeof MealIngredientModel> {

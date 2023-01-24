@@ -1,15 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FilterChip from '../../chips/filter-chip/FilterChip';
 
 export interface IChipFilter {
   title?: string;
   options: string[];
+  onSelected: (val: any) => void;
 }
 
 //TODO: replace typography with standarised typography
-const ChipFilters: React.FC<IChipFilter> = ({ title, options }) => {
+const ChipFilters: React.FC<IChipFilter> = ({ title, options, onSelected }) => {
   if (!options) throw new Error('ChipFilters requires options');
   const [active, setActive] = useState(0);
+  useEffect(() => {
+    onSelected(options[active]);
+  }, active);
   return (
     <div className=" flex flex-col gap-3">
       {title && (

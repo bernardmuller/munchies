@@ -5,7 +5,7 @@ import mealEndpoints from '../resources/meals/endpoints';
 import itemEndpoints from '../resources/items/endpoints';
 import ingredientEndpoints from '../resources/ingredients/endpoints';
 import householdEndpoints from '../resources/households/endpoints';
-// import grocerylistEndpoints from '../resources/grocerylists/endpoints';
+import grocerylistEndpoints from '../resources/grocerylists/endpoints';
 
 export const endpoints = [
   ...userEndpoints,
@@ -13,7 +13,7 @@ export const endpoints = [
   ...mealEndpoints,
   ...itemEndpoints,
   ...ingredientEndpoints,
-  //   ...grocerylistEndpoints,
+  ...grocerylistEndpoints,
   ...authEndpoints,
   ...householdEndpoints,
 ];

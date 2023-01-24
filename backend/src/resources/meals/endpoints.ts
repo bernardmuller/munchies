@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
 import {
+  addDirectionToMeal,
   addIngredientToMeal,
+  addQuantityToMealIngredient,
   createMeal,
   deleteMeal,
   getMeals,
+  removeDirectionFromMeal,
   removeIngredientFromMeal,
   updateMeal,
 } from './actions';
@@ -80,6 +83,46 @@ const endpoints = [
       const meal = await removeIngredientFromMeal({
         mealId: id,
         ingredientId: req.body.ingredientId,
+      });
+      return res.send(meal);
+    },
+    authenticate: true,
+  },
+  {
+    method: 'put',
+    path: '/meals/:id/ingredients/addQuantity',
+    handler: async (req: Request, res: Response) => {
+      const { id } = req.params;
+      const meal = await addQuantityToMealIngredient({
+        mealId: id,
+        ingredientId: req.body.ingredientId,
+        quantity: req.body.quantity,
+      });
+      return res.send(meal);
+    },
+    authenticate: true,
+  },
+  {
+    method: 'put',
+    path: '/meals/:id/directions/add',
+    handler: async (req: Request, res: Response) => {
+      const { id } = req.params;
+      const meal = await addDirectionToMeal({
+        mealId: id,
+        direction: req.body.direction,
+      });
+      return res.send(meal);
+    },
+    authenticate: true,
+  },
+  {
+    method: 'put',
+    path: '/meals/:id/directions/remove',
+    handler: async (req: Request, res: Response) => {
+      const { id } = req.params;
+      const meal = await removeDirectionFromMeal({
+        mealId: id,
+        directionIndex: req.body.directionIndex,
       });
       return res.send(meal);
     },

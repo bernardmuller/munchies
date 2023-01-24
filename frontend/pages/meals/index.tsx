@@ -22,11 +22,16 @@ interface IMeal {
 const Meals: NextPageWithLayout = () => {
   const [searchText, setSearchText] = useState('');
   const { data, isLoading } = useMealsData();
+  const [seasonFilter, setSeasonFilter] = useState(
+    'all' as 'all' | 'summer' | 'autumn' | 'winter' | 'spring',
+  );
   const addMeal = useAddMeal();
 
   const router = useRouter();
 
   if (isLoading) return <div>Loading...</div>;
+
+  console.log(data);
 
   return (
     <>
@@ -46,18 +51,28 @@ const Meals: NextPageWithLayout = () => {
           placeholder="Search..."
           onChange={val => setSearchText(val)}
         />
-        <ChipFilters options={['summer', 'autumn', 'winter', 'spring']} />
+        <ChipFilters
+          options={['all', 'summer', 'autumn', 'winter', 'spring']}
+          onSelected={(val: any) => setSeasonFilter(val)}
+        />
         <div className=" grid grid-cols-2 gap-4 overflow-scroll pb-4">
           {data &&
             data
-              .filter((meal: IMeal) => meal.name.includes(searchText))
-              .map((meal: IMeal) => (
+              .filter((meal: IMeal) => meal.name.toLowerCase().includes(searchText.toLowerCase()))
+              .filter((meal: IMeal) => {
+                if (meal.seasons?.includes(seasonFilter)) {
+                  console.log(' check ');
+                  return meal;
+                }
+                if (seasonFilter === 'all') return meal;
+              })
+              .map((meal: IMeal, index: number) => (
                 <MealCard
                   key={meal.id}
                   title={meal.name}
                   active={false}
-                  seasons={['summer']}
-                  ingredients={12}
+                  seasons={meal.seasons}
+                  ingredients={meal.ingredients?.length || 0}
                   image={
                     'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=781&q=80'
                   }

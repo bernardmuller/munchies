@@ -28,7 +28,7 @@ const Profile = () => {
               router.back();
             }}
             leftButtonVariant="back"
-            theme="dark"
+            theme="light"
           />
           <section className="flex flex-col gap-10">
             <UserInfoWidget />

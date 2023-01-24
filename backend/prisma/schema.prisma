@@ -61,7 +61,7 @@ model Meal {
   id         String   @id @db.Uuid
   name       String?  @default("New Meal")
   seasons    String?
-  directions String?
+  directions String[]
   cuisine    String?
   image      String?
   URL        String?
@@ -106,6 +106,7 @@ model MealIngredient {
 
   ingredientId String     @db.Uuid
   ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  quantity     String?
 }
 
 model Grocerylist {

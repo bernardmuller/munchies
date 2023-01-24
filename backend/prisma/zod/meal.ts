@@ -5,7 +5,7 @@ export const MealModel = z.object({
   id: z.string(),
   name: z.string().nullish(),
   seasons: z.string().nullish(),
-  directions: z.string().nullish(),
+  directions: z.string().array(),
   cuisine: z.string().nullish(),
   image: z.string().nullish(),
   URL: z.string().nullish(),

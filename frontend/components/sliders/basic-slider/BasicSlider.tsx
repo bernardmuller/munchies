@@ -13,9 +13,16 @@ export interface IHeroCard {
   meals: Meal[];
   onMealClicked: () => void;
   theme: 'light' | 'dark';
+  cardWidth?: string;
 }
 
-const BasicMealSlider: React.FC<IHeroCard> = ({ heading, meals, onMealClicked, theme }) => {
+const BasicMealSlider: React.FC<IHeroCard> = ({
+  heading,
+  meals,
+  onMealClicked,
+  theme,
+  cardWidth,
+}) => {
   return (
     <div className=" flex flex-col gap-2">
       <div className="flex justify-between">
@@ -40,6 +47,7 @@ const BasicMealSlider: React.FC<IHeroCard> = ({ heading, meals, onMealClicked, t
                 ingredients={meal?.ingredients?.length}
                 onClick={onMealClicked}
                 key={index}
+                width={cardWidth || 'w-full'}
               />
             ))}
           </>

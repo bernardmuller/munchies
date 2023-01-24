@@ -62,7 +62,9 @@ export const decodeToken = (token: string) => {
 
 export const tradeTokenForUser = async (authToken: string) => {
   const decoded = await decodeToken(authToken);
-  const user = await getUsers({ filters: { id: decoded?.userId } });
+
+  const user = await getUser(decoded?.userId);
+
   if (!user) throw new Error('User not found');
   return decoded?.userId;
 };
@@ -76,11 +78,9 @@ export const authenticateUser = async (
   if (!token) throw new AuthenticationError('no authorization token provided');
 
   const user = await tradeTokenForUser(token.split(' ')[1]);
-  const dbUser = await getUser(user.id);
+  const dbUser = await getUser(user);
+
   if (!dbUser) throw new Error('User not found');
-  if (dbUser) {
-    console.log(dbUser);
-  }
 
   res.locals.userId = user;
 

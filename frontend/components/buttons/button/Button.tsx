@@ -32,7 +32,7 @@ const Button: React.FC<IButton> = ({
           : secondary
           ? ' outline-slate-50 border-2 active:bg-stone-600'
           : inline
-          ? 'min-w-[5rem] active:bg-stone-600'
+          ? 'min-w-[5rem] active:bg-stone-600 text-primary_400'
           : 'bg-primary shadow-idle transition-all hover:shadow-primary hover:bg-primary_l active:bg-primary_d active:shadow-idle active:scale-95'
       }`}
     >

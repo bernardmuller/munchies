@@ -20,7 +20,7 @@ const MenuCard: React.FC<IHeroCard> = ({ onClick, data }) => {
   return (
     <div
       className=" flex flex-col gap-3 drop-shadow-sm p-4 shadow-xl rounded-lg"
-      onClick={() => alert('menu clicked')}
+      onClick={() => onClick()}
     >
       <div className="w-full relative h-48 rounded-xl bg-slate-400 object-cover overflow-clip">
         <Image src={data.image} alt="not found" layout="fill" objectFit="cover" />
