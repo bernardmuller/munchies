@@ -14,7 +14,7 @@ export interface IMealCard {
   title: string;
   seasons: season[];
   ingredients: number;
-  width: string;
+  width?: string;
 }
 
 const MealCard: React.FC<IMealCard> = ({
@@ -29,7 +29,7 @@ const MealCard: React.FC<IMealCard> = ({
   return (
     <div
       className={`${
-        width ? width : 'w-full'
+        width ? `min-w-[${width}] w-[${width}]` : 'w-full min-w-[9rem]'
       } h-[14rem] relative overflow-hidden rounded-xl bg-secondary cursor-pointer z-[1] ${
         active ? ' border-primary_l border-4 shadow-idle' : 'shadow-lg'
       }`}

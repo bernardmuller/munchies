@@ -7,6 +7,10 @@ import NavBar from 'components/navbar/navbar/NavBar';
 import UtilityButton from 'components/buttons/utility-button/UtilityButton';
 import { GroceryList } from 'components/menu/grocerylist';
 import MealCard from 'components/cards/meal-card/MealCard';
+import DetailHeader from 'components/headers/detail-header/DetailHeader';
+import { useMenuData } from 'hooks/menusHooks';
+import { useRouter } from 'next/router';
+import Button from 'components/buttons/button/Button';
 
 const Name = ({ name, onRename }: { name: string; onRename: () => void }) => {
   const { register, handleSubmit } = useForm();
@@ -42,43 +46,64 @@ const Name = ({ name, onRename }: { name: string; onRename: () => void }) => {
 };
 
 const MenuDetail = () => {
+  const router = useRouter();
+  const mealId = router.query.id;
+
+  console.log(router);
+  const { data, isFetching } = useMenuData(mealId as string);
+
+  if (isFetching) return <div>Loading...</div>;
+
+  console.log(data);
   return (
-    <div>
-      <div className="w-full h-full px-4 py-2">
-        <div className="w-full p-4 rounded-md">
-          <Name name={'Test'} onRename={() => {}} />
+    <div className="w-full">
+      <DetailHeader
+        onLeftButtonClick={function (): void {
+          throw new Error('Function not implemented.');
+        }}
+        leftButtonVariant={'back'}
+        theme={'light'}
+      />
+      <div className="w-full  rounded-md pb-4">
+        <Name name={data.name} onRename={() => {}} />
+      </div>
+      <div className="flex items-center justify-between py-4 m-0">
+        <h3 className="m-0 text-xl">Meals</h3>
 
-          <p className="text-gray-300 m-0">Creator: {'username'}</p>
-        </div>
-        <div className="flex items-center justify-between px-4 mx-4">
-          <h4>Meals</h4>
-        </div>
+        <Button
+          type="button"
+          label="Meals list"
+          onClick={() => router.push(`/menus/${mealId}/mealslist`)}
+        />
+      </div>
 
-        <div className="flex flex-col overflow-x-scroll px-2 mb-4">
-          <div className="flex gap-4 pb-4">
-            {[1, 3, 4, 5].map(meal => (
-              <MealCard
-                title={'Meal Name'}
-                seasons={['winter']}
-                key={meal}
-                onClick={() => {}}
-                ingredients={3}
-                width={'7rem'}
-                active={false}
-              />
-            ))}
-          </div>
+      <div className="flex flex-col overflow-x-scroll ">
+        <div className="flex gap-4 pb-4">
+          {/* */}
+          {data.meals?.map((meal: any) => (
+            <MealCard
+              title={meal.name}
+              seasons={['winter']}
+              key={meal}
+              onClick={() => {}}
+              ingredients={3}
+              active={false}
+            />
+          ))}
+          {!data.meals?.length && (
+            <p className="text-sm text-secondary_200">No meals in this menu yet.</p>
+          )}
         </div>
+      </div>
 
-        <div className="w-full p-4 rounded-md" style={{ marginBottom: '40rem' }}>
-          <GroceryList
-            mealItems={[]}
-            extraItems={[]}
-            menuId={''}
-            onReload={() => {}}
-            totalItems={10}
-          />
-        </div>
+      <div className="w-full">
+        <GroceryList
+          mealItems={[]}
+          extraItems={[]}
+          menuId={''}
+          onReload={() => {}}
+          totalItems={10}
+        />
       </div>
     </div>
   );

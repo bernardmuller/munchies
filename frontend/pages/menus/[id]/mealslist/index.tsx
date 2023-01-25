@@ -11,14 +11,17 @@ import PrimaryLayout from 'components/layouts/primary/PrimaryLayout';
 // import { MealStats } from 'components/meal/meal-stats/MealStats';
 // import { useMenuData } from 'hooks/menusHooks';
 import { useMealsData } from 'hooks/mealsHooks';
+import { useMenuData } from 'hooks/menusHooks';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/page';
-import loader from '../../assets/images/loading-utensils.gif';
+import loader from '../../../../assets/images/loading-utensils.gif';
 
 const MealsList: NextPageWithLayout = () => {
   const router = useRouter();
+  const mealId = router.query.id;
   const { data, isFetching } = useMealsData();
+  const { data: menuData, isFetching: menuIsFetching } = useMenuData(mealId as string);
 
   if (isFetching)
     return (
@@ -38,16 +41,15 @@ const MealsList: NextPageWithLayout = () => {
         <h1 className="text-black mb-1">Meals List</h1>
         <div>
           <h3>Meals</h3>
-          <div className="flex gap-4 overflow-x-scroll">
+          <div className="grid grid-cols-2 gap-4">
             {data.map((meal: any) => (
               <MealCard
                 key={meal.id}
                 onClick={() => {}}
                 title={meal.name}
                 seasons={meal.seasons}
-                ingredients={meal.ingredients.length}
-                active={false}
-                width={'7rem'}
+                ingredients={meal.ingredients?.length}
+                active={menuData.meals?.includes(meal.id)}
               />
             ))}
           </div>

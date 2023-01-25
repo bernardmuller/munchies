@@ -24,7 +24,8 @@
       "@/hooks/*": ["src/hooks/*"],
       "@/shared/*": ["src/shared/*"],
       "@/assets/*": ["src/assets/*"],
-      "@/storybook/*": ["src/storybook/*"]
+      "@/storybook/*": ["src/storybook/*"],
+      "@/hooks/*": ["src/hooks/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

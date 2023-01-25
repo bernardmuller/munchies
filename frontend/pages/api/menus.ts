@@ -35,33 +35,21 @@ export async function updateMeal({ id, data }: { id: string; data: any }) {
   }).then(response => response.data);
 }
 
-export async function addIngredientToMeal({
-  mealId,
-  ingredientId,
-}: {
-  mealId: string;
-  ingredientId: string;
-}) {
+export async function addMealToMenu({ mealId, menuId }: { mealId: string; menuId: string }) {
   return await axios({
     method: 'POST',
-    url: `${requireBaseURL()}/meals/${mealId}/ingredients/add`,
+    url: `${requireBaseURL()}/menus/${menuId}/meals/add`,
     headers: requireHeaders(),
-    data: { ingredientId: ingredientId },
+    data: { mealId: mealId },
   }).then(response => response.data);
 }
 
-export async function removeIngredientFromMeal({
-  mealId,
-  ingredientId,
-}: {
-  mealId: string;
-  ingredientId: string;
-}) {
+export async function removeMealFromMenu({ mealId, menuId }: { mealId: string; menuId: string }) {
   return await axios({
     method: 'POST',
-    url: `${requireBaseURL()}/meals/${mealId}/ingredients/remove`,
+    url: `${requireBaseURL()}/menus/${menuId}/meals/remove`,
     headers: requireHeaders(),
-    data: { ingredientId: ingredientId },
+    data: { mealId: mealId },
   }).then(response => response.data);
 }
 
