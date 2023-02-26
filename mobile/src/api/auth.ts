@@ -17,12 +17,11 @@ export async function login(loginInputs: { email: string; password: string }) {
 			password: loginInputs.password,
 		});
 		if (response.data.token) {
-			await AsyncStorage.setItem("@token", response.data.token);
-			return response.data;
+			return response?.data;
 		}
 	} catch (err: any) {
-		console.log(err);
 		// return processAxiosErrorResponse(err.response);
+		console.log(err);
 	}
 }
 
