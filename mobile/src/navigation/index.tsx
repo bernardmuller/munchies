@@ -7,44 +7,50 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "../screens/Login";
 import MealplanStack from "./stacks/MealplanStack";
 import RecipeStack from "./stacks/RecipeStack";
+import SettingsStack from "./stacks/SettingsStack";
 
 const PrivateStack = createBottomTabNavigator();
 const PublicStack = createNativeStackNavigator();
 
 function AuthStack() {
-	return (
-		<PublicStack.Navigator screenOptions={{ headerShown: false }}>
-			<PublicStack.Screen name="Login" component={Login} />
-		</PublicStack.Navigator>
-	);
+  return (
+    <PublicStack.Navigator screenOptions={{ headerShown: false }}>
+      <PublicStack.Screen name="Login" component={Login} />
+    </PublicStack.Navigator>
+  );
 }
 
 function AppStack() {
-	return (
-		<>
-			<PrivateStack.Navigator screenOptions={{ headerShown: false }}>
-				<PrivateStack.Screen
-					name="MealplansStack"
-					component={MealplanStack}
-					options={{ title: "Meal plans" }}
-				/>
-				<PrivateStack.Screen
-					name="RecipesStack"
-					component={RecipeStack}
-					options={{ title: "Recipes" }}
-				/>
-			</PrivateStack.Navigator>
-		</>
-	);
+  return (
+    <>
+      <PrivateStack.Navigator screenOptions={{ headerShown: false }}>
+        <PrivateStack.Screen
+          name="MealplansStack"
+          component={MealplanStack}
+          options={{ title: "Meal plans" }}
+        />
+        <PrivateStack.Screen
+          name="RecipesStack"
+          component={RecipeStack}
+          options={{ title: "Recipes" }}
+        />
+        <PrivateStack.Screen
+          name="SettingsStack"
+          component={SettingsStack}
+          options={{ title: "Settings" }}
+        />
+      </PrivateStack.Navigator>
+    </>
+  );
 }
 
 function AppNavigation() {
-	const { authToken } = useContext(AuthContext);
-	return (
-		<NavigationContainer>
-			{authToken !== "" ? <AppStack /> : <AuthStack />}
-		</NavigationContainer>
-	);
+  const { authToken } = useContext(AuthContext);
+  return (
+    <NavigationContainer>
+      {authToken !== "" ? <AppStack /> : <AuthStack />}
+    </NavigationContainer>
+  );
 }
 
 export default AppNavigation;

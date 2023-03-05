@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { requireBaseURL, requireHeaders } from '../../shared/utils';
+import { requireBaseURL, requireHeaders } from '../shared/utils';
 
 export async function createMeal() {
   return await axios({
     method: 'POST',
     url: `${requireBaseURL()}/meals`,
-    headers: requireHeaders(),
+    headers: await requireHeaders(),
   }).then(response => response.data);
 }
 
@@ -13,7 +13,7 @@ export async function fetchMenus() {
   return await axios({
     method: 'GET',
     url: `${requireBaseURL()}/menus`,
-    headers: requireHeaders(),
+    headers: await requireHeaders(),
   }).then(response => response.data);
 }
 
@@ -21,7 +21,7 @@ export async function fetchMenu(id: string) {
   return await axios({
     method: 'GET',
     url: `${requireBaseURL()}/menus/${id}`,
-    headers: requireHeaders(),
+    headers: await requireHeaders(),
   }).then(response => response.data);
 }
 
@@ -30,7 +30,7 @@ export async function updateMeal({ id, data }: { id: string; data: any }) {
   return await axios({
     method: 'PUT',
     url: `${requireBaseURL()}/meals/${id}`,
-    headers: requireHeaders(),
+    headers: await requireHeaders(),
     data: data,
   }).then(response => response.data);
 }
@@ -39,7 +39,7 @@ export async function addMealToMenu({ mealId, menuId }: { mealId: string; menuId
   return await axios({
     method: 'POST',
     url: `${requireBaseURL()}/menus/${menuId}/meals/add`,
-    headers: requireHeaders(),
+    headers: await requireHeaders(),
     data: { mealId: mealId },
   }).then(response => response.data);
 }
@@ -48,7 +48,7 @@ export async function removeMealFromMenu({ mealId, menuId }: { mealId: string; m
   return await axios({
     method: 'POST',
     url: `${requireBaseURL()}/menus/${menuId}/meals/remove`,
-    headers: requireHeaders(),
+    headers: await requireHeaders(),
     data: { mealId: mealId },
   }).then(response => response.data);
 }
@@ -63,7 +63,7 @@ export async function addDirectionToMeal({
   return await axios({
     method: 'PUT',
     url: `${requireBaseURL()}/meals/${mealId}/directions/add`,
-    headers: requireHeaders(),
+    headers: await requireHeaders(),
     data: { direction: newDirection },
   }).then(response => response.data);
 }
@@ -78,7 +78,7 @@ export async function removeDirectionFromMeal({
   return await axios({
     method: 'PUT',
     url: `${requireBaseURL()}/meals/${mealId}/directions/remove`,
-    headers: requireHeaders(),
+    headers: await requireHeaders(),
     data: { directionIndex: directionIndex },
   }).then(response => response.data);
 }

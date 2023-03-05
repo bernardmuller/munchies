@@ -2,38 +2,44 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const AuthContext = createContext({
-	authToken: "",
-	saveToken: (value: any) => {},
+  authToken: "",
+  saveToken: (value: any) => { },
+  clearToken: () => { },
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-	const [authToken, setAuthToken] = useState("");
+  const [authToken, setAuthToken] = useState("");
 
-	const saveToken = async (value: any) => {
-		setAuthToken(value);
-		await AsyncStorage.setItem("token", value);
-	};
+  const saveToken = async (value: any) => {
+    setAuthToken(value);
+    await AsyncStorage.setItem("token", value);
+  };
 
-	const isLoggedIn = async () => {
-		try {
-			let userToken = await AsyncStorage.getItem("token");
-			if (userToken) {
-				setAuthToken(userToken);
-			}
-		} catch (e) {
-			console.log("isLoggedIn error", e);
-		}
-	};
+  const clearToken = async () => {
+    setAuthToken("");
+    await AsyncStorage.removeItem("token");
+  }
 
-	useEffect(() => {
-		isLoggedIn();
-	}, []);
+  const isLoggedIn = async () => {
+    try {
+      let userToken = await AsyncStorage.getItem("token");
+      if (userToken) {
+        setAuthToken(userToken);
+      }
+    } catch (e) {
+      console.log("isLoggedIn error", e);
+    }
+  };
 
-	console.log("context token: ", authToken);
+  useEffect(() => {
+    isLoggedIn();
+  }, []);
 
-	return (
-		<AuthContext.Provider value={{ authToken, saveToken }}>
-			{children}
-		</AuthContext.Provider>
-	);
+  console.log("context token: ", authToken);
+
+  return (
+    <AuthContext.Provider value={{ authToken, saveToken, clearToken }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
