@@ -6,14 +6,19 @@ export const requireBaseURL = () => {
 		: process.env.MUNCHIES_API_URL;
 };
 
-export const requireAuthHeader = () => {
-	const token = AsyncStorage.getItem("token");
-	return "Bearer " + token;
+export const requireAuthHeader = async () => {
+	const token = await AsyncStorage.getItem("token");
+	if (token) {
+		return "Bearer " + token;
+	}
 };
 
-export const requireHeaders = () => {
+export const requireHeaders = async () => {
 	return {
-		ContentType: "Application/json",
-		Authorization: requireAuthHeader(),
+		"Accept-Version": 1,
+		Accept: "application/json",
+		"Access-Control-Allow-Origin": "*",
+		"Content-Type": "application/json; charset=utf-8",
+		Authorization: await requireAuthHeader(),
 	};
 };
