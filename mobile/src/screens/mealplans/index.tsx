@@ -13,18 +13,17 @@ function Mealplans({ navigation }: { navigation: any }) {
     <View className="grid gap-1 mt-1">
       {isLoading && <ActivityIndicator size={30} />}
 
-      <Text>Mealplans</Text>
       {data?.length > 0 ? (
-        data?.map((recipe: any) => (
+        data?.map((mealplan: any) => (
           <View
             className="p-2 w-full rounded-sm bg-white shadow-sm"
-            key={recipe.id}
+            key={mealplan.id}
           >
             <Button
-              title={recipe.name}
+              title={mealplan.name}
               onPress={() =>
-                navigation.push("RecipeDetail", {
-                  recipeId: recipe.id,
+                navigation.push("MealplanDetail", {
+                  mealplanId: mealplan.id,
                 })
               }
             />
