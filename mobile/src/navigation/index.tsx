@@ -8,6 +8,7 @@ import Login from "../screens/Login";
 import MealplanStack from "./stacks/MealplanStack";
 import RecipeStack from "./stacks/RecipeStack";
 import SettingsStack from "./stacks/SettingsStack";
+import GroceriesStack from "./stacks/GroceriesStack";
 
 const PrivateStack = createBottomTabNavigator();
 const PublicStack = createNativeStackNavigator();
@@ -38,6 +39,11 @@ function AppStack() {
           name="SettingsStack"
           component={SettingsStack}
           options={{ title: "Settings" }}
+        />
+        <PrivateStack.Screen
+          name="GroceriesStack"
+          component={GroceriesStack}
+          options={{ title: "Grocerylists" }}
         />
       </PrivateStack.Navigator>
     </>
