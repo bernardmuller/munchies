@@ -17,7 +17,7 @@ function MealplanStack() {
       <MealPlanStack.Screen
         name="MealplanDetail"
         component={MealplanDetail}
-        options={{ title: "Meal plan detail" }}
+        options={{ title: "" }}
       />
     </MealPlanStack.Navigator>
   );
