@@ -5,6 +5,7 @@ import {
   addQuantityToMealIngredient,
   createMeal,
   deleteMeal,
+  getMeal,
   getMeals,
   removeDirectionFromMeal,
   removeIngredientFromMeal,
@@ -25,6 +26,7 @@ const endpoints = [
     method: 'get',
     path: '/meals',
     handler: async (req: Request, res: Response) => {
+      console.log('get meals => ', req);
       const meals = await getMeals();
       return res.send(meals);
     },
@@ -35,7 +37,7 @@ const endpoints = [
     path: '/meals/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
-      const meal = await getMeals({ filters: { id } });
+      const meal = await getMeal(id);
       return res.send(meal);
     },
     authenticate: true,

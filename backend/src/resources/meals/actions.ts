@@ -7,6 +7,7 @@ import {
 import { MealModel } from '../../../prisma/zod';
 import { getIngredients } from '../ingredients/actions';
 import { NotFoundError } from '../../shared/errors';
+import { Ingredient } from '@prisma/client';
 
 export const createMeal = async (data: { id?: string }) => {
   const mealData = { ...data, id: data.id || getUuid() };
@@ -26,8 +27,6 @@ export const getMeals = async (params?: { filters?: { id?: string } }) => {
       include: { ingredient: true },
     });
 
-    console.log('uniqueMeal => ', uniqueMeal);
-
     let mealObj = {
       ...uniqueMeal,
       ingredients: [] as any,
@@ -41,6 +40,21 @@ export const getMeals = async (params?: { filters?: { id?: string } }) => {
     include: { ingredients: true },
   });
   return rows.map((row) => MealModel.parse(row));
+};
+
+export const getMeal = async (id: string) => {
+  let uniqueMeal = await db.meal.findUnique({
+    where: { id },
+  });
+  const mealIngredients = await db.mealIngredient.findMany({
+    where: { mealId: id },
+    include: { ingredient: true },
+  });
+
+  return {
+    ...uniqueMeal,
+    ingredients: mealIngredients.map((mi) => mi.ingredient),
+  };
 };
 
 export const updateMeal = async (

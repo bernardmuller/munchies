@@ -112,7 +112,7 @@ model MealIngredient {
 model Grocerylist {
   id        String   @id @db.Uuid
   createdAt DateTime @default(now()) @db.Timestamptz()
-  menuId    String?  @unique @db.Uuid
+  menuId    String?  @db.Uuid
   menu      Menu?    @relation(fields: [menuId], references: [id])
   Item      Item[]
 }
@@ -123,10 +123,10 @@ model Item {
   typeId      Int
   description String?
 
-  groceryListId String      @unique @db.Uuid
+  groceryListId String      @db.Uuid
   groceryList   Grocerylist @relation(fields: [groceryListId], references: [id], onDelete: SetNull)
 
-  ingredientId String?     @unique @db.Uuid
+  ingredientId String?     @db.Uuid
   ingredient   Ingredient? @relation(fields: [ingredientId], references: [id], onDelete: SetNull)
 
   Listing Listing[]

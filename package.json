@@ -20,6 +20,7 @@
     "@formkit/auto-animate": "^1.0.0-beta.5",
     "@typescript-eslint/eslint-plugin": "^5.45.1",
     "concurrently": "^7.4.0",
-    "date-fns": "^2.29.3"
+    "date-fns": "^2.29.3",
+    "expo-secure-store": "^12.1.1"
   }
 }

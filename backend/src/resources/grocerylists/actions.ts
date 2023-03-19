@@ -11,35 +11,38 @@ export const createGrocerylist = async (data: { menuId?: string }) => {
   return newGrocerylist;
 };
 
-export const getGrocerylists = async (params?: {
-  filters?: { id?: string; menuId?: string };
-}) => {
-  if (params?.filters?.id) {
-    const row = await db.grocerylist.findUnique({
-      where: { id: params?.filters?.id },
-    });
-    if (!row) throw new Error('Could not find grocerylist');
-    const grocerylist = GrocerylistModel.parse(row);
-    return grocerylist;
-  }
-  if (params?.filters?.menuId) {
-    const row = await db.grocerylist.findUnique({
-      where: { menuId: params?.filters?.menuId },
-    });
-    if (!row) throw new Error('Could not find grocerylist');
-    const grocerylist = GrocerylistModel.parse(row);
-    return grocerylist;
-  }
+export const getGrocerylists = async () => {
   const rows = await db.grocerylist.findMany();
   const Grocerylists = rows.map((row) => GrocerylistModel.parse(row));
   return Grocerylists;
+};
+
+export const getGrocerylist = async (id: string) => {
+  const row = await db.grocerylist.findUnique({
+    where: { id },
+  });
+  if (!row) throw new Error('Could not find grocerylist');
+  const items = await db.item.findMany({
+    where: { groceryListId: id },
+  });
+  const grocerylist = GrocerylistModel.parse(row);
+  return { ...grocerylist, items };
+};
+
+export const getGrocerylistByMenuId = async (menuId: string) => {
+  const row = await db.grocerylist.findUnique({
+    where: { menuId },
+  });
+  if (!row) throw new Error('Could not find grocerylist');
+  const grocerylist = GrocerylistModel.parse(row);
+  return grocerylist;
 };
 
 export const updateGrocerylist = async (
   id: string,
   data: { menuId: string },
 ) => {
-  const grocerylist = await getGrocerylists({ filters: { id } });
+  const grocerylist = await getGrocerylist(id);
   if (!grocerylist) {
     throw new Error('User not found');
   }
@@ -56,7 +59,7 @@ export const updateGrocerylist = async (
 };
 
 export const deleteGrocerylist = async (id: string) => {
-  const grocerylist = await getGrocerylists({ filters: { id } });
+  const grocerylist = await getGrocerylist(id);
   if (!grocerylist) throw new Error('User not found');
 
   await db.grocerylist.delete({

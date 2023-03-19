@@ -3,6 +3,7 @@ import {
   createGrocerylist,
   deleteGrocerylist,
   getGrocerylists,
+  getGrocerylist,
   updateGrocerylist,
 } from './actions';
 
@@ -30,7 +31,8 @@ const endpoints = [
     path: '/grocerylists/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
-      const grocerylist = await getGrocerylists({ filters: { id } });
+      const grocerylist = await getGrocerylist(id);
+
       return res.send(grocerylist);
     },
     authenticate: true,

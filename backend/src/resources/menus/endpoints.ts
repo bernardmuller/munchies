@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import {
-  addMealtoMenu,
+  addMealToMenu,
   createMenu,
   deleteMenu,
+  getMenu,
   getMenus,
   removeMealfromMenu,
   updateMenu,
@@ -13,7 +14,7 @@ const endpoints = [
     method: 'post',
     path: '/menus',
     handler: async (req: Request, res: Response) => {
-      const menu = await createMenu({});
+      const menu = await createMenu(req.body);
       return res.send(menu);
     },
     authenticate: true,
@@ -32,7 +33,7 @@ const endpoints = [
     path: '/menus/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
-      const menu = await getMenus({ filters: { id } });
+      const menu = await getMenu(id);
       return res.send(menu);
     },
     authenticate: true,
@@ -62,7 +63,9 @@ const endpoints = [
     path: '/menus/:id/meals/add',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
-      const menu = await addMealtoMenu({ menuId: id, mealId: req.body.mealId });
+      if (!id || !req.body.mealId)
+        return res.status(400).send({ message: 'Missing required fields' });
+      const menu = await addMealToMenu({ menuId: id, mealId: req.body.mealId });
       return res.send(menu);
     },
     authenticate: true,

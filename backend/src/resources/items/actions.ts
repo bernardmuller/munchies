@@ -8,7 +8,9 @@ export const createItem = async (data: {
 }) => {
   const itemData = { ...data, typeId: 1, id: getUuid() };
 
-  const res = await db.item.create({ data: itemData });
+  const res = await db.item.create({
+    data: itemData,
+  });
   const newItem = ItemModel.parse(res);
   return newItem;
 };

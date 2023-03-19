@@ -2,7 +2,7 @@ import { db } from '../../db/db';
 import { getUuid } from '../../shared/utils';
 import { MealModel, MenuModel } from '../../../prisma/zod';
 import { createGrocerylist } from '../grocerylists/actions';
-import { getMeals } from '../meals/actions';
+import { getMeal } from '../meals/actions';
 import { createItem } from '../items/actions';
 import { Meal } from '@prisma/client';
 import { NotFoundError } from '../../shared/errors';
@@ -16,6 +16,8 @@ export const createMenu = async (data: {
     houseHoldId: data.houseHoldId,
     id: data?.id || getUuid(),
   };
+
+  console.log('menuData ', menuData);
 
   const res = await db.menu.create({ data: menuData });
 
@@ -64,6 +66,30 @@ export const getMenus = async (params?: { filters?: { id?: string } }) => {
   return menus;
 };
 
+export const getMenu = async (id: string) => {
+  const uniqueMenu = await db.menu.findUnique({
+    where: { id },
+  });
+  const menuMeals = await db.menuMeals.findMany({
+    where: { menuId: uniqueMenu?.id },
+  });
+
+  const meals = await Promise.all(
+    menuMeals.map(async (menuMeal) => {
+      const dbMeal = await getMeal(menuMeal.mealId);
+      if (!dbMeal) {
+        throw new NotFoundError();
+      }
+      return dbMeal;
+    }),
+  );
+
+  return {
+    ...uniqueMenu,
+    meals: meals,
+  };
+};
+
 export const updateMenu = async (
   id: string,
   data: { name?: string; startDate?: Date; endDate?: Date },
@@ -105,23 +131,6 @@ export const deleteMenu = async (id: string) => {
 
 export const deleteAllMenus = async () => {
   await db.menu.deleteMany();
-};
-
-export const addMealtoMenu = async ({
-  mealId,
-  menuId,
-}: {
-  mealId: string;
-  menuId: string;
-}) => {
-  const newMenuMeal = await db.menuMeals.create({
-    data: {
-      id: getUuid(),
-      mealId: mealId,
-      menuId: menuId,
-    },
-  });
-  return newMenuMeal;
 };
 
 export const removeMealfromMenu = async ({
@@ -185,4 +194,67 @@ export const addMealslistToMenu = async ({
       }
     }
   }
+};
+
+export const addMealToMenu = async ({
+  mealId,
+  menuId,
+}: {
+  mealId: string;
+  menuId: string;
+}) => {
+  const dbMenu = await getMenu(menuId);
+  if (!dbMenu) return { message: `No menu found with id: ${menuId}` };
+
+  const grocerylist = await db.grocerylist.findFirst({
+    where: {
+      menuId: menuId,
+    },
+  });
+
+  const dbMeal = await getMeal(mealId);
+  if (!dbMeal) throw new Error(`No meal with id ${mealId} found`);
+  const mealMenus = await db.menuMeals.findMany({});
+
+  const existing = await db.menuMeals.findFirst({
+    where: {
+      AND: [{ mealId: mealId }, { menuId: menuId }],
+    },
+  });
+
+  if (existing) return { message: 'Meal already exists in menu' };
+
+  const newMealMenu = await db.menuMeals.create({
+    data: {
+      id: getUuid(),
+      mealId: mealId,
+      menuId: menuId,
+    },
+  });
+
+  const mealIngredients = await db.ingredient.findMany({
+    where: {
+      mealId: mealId,
+    },
+  });
+  console.log('ingredients => ', mealIngredients);
+
+  const items = await db.item.findMany({
+    where: {
+      grocerylistId: grocerylist?.id!,
+    },
+  });
+  console.log('items => ', items);
+
+  if (mealIngredients.length > 0) {
+    for (const ingredient of mealIngredients) {
+      await createItem({
+        ingredientId: ingredient.id,
+        grocerylistId: grocerylist?.id!,
+      });
+    }
+  }
+  return {
+    ...newMealMenu,
+  };
 };

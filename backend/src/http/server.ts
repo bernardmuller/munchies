@@ -14,7 +14,12 @@ export const createApp = () => {
   app.use(
     cors({
       credentials: true,
-      origin: ['https://munchiesapp.co.za', 'http://localhost:3000'],
+      origin: [
+        'https://munchiesapp.co.za',
+        'http://localhost:3000',
+        'http://192.168.8.176:19006',
+        'http://localhost:19006',
+      ],
     }),
   );
 

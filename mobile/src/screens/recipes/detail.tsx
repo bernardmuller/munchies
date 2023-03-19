@@ -5,20 +5,13 @@ import { Text } from "../../components/common/Text";
 
 import { useMealData } from "../../hooks/mealsHooks";
 import { Button } from "../../components/common/Button";
-import TextInput from "../../components/inputs/text";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { debounce } from "lodash";
 // import SearchableDropDown from "react-native-dropdown-searchable";
-import {
-	useAddIngredientToMeal,
-	useIngredientsData,
-} from "../../hooks/ingredientsHooks";
+import { useAddIngredientToMeal } from "../../hooks/ingredientsHooks";
 //@ts-ignore
 import SearchableDropdown from "react-native-searchable-dropdown";
 import { fetchIngredients } from "../../api/ingredients";
-import { useQueryClient } from "@tanstack/react-query";
 import { FlatList, useToast } from "native-base";
 import { ScrollView } from "react-native";
 
@@ -66,7 +59,6 @@ const AddIngredient = ({
 
 	useEffect(() => {
 		getIngredients().then((res) => {
-			console.log("fetched => ", res);
 			setItems(res);
 			setRefresh(false);
 		});
