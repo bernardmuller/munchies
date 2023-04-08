@@ -46,6 +46,8 @@ export const getMeal = async (id: string) => {
   let uniqueMeal = await db.meal.findUnique({
     where: { id },
   });
+  if (!uniqueMeal) throw new NotFoundError('Meal not found');
+  console.log('uniqueMeal ', uniqueMeal);
   const mealIngredients = await db.mealIngredient.findMany({
     where: { mealId: id },
     include: { ingredient: true },

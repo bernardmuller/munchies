@@ -70,6 +70,7 @@ export const getMenu = async (id: string) => {
   const uniqueMenu = await db.menu.findUnique({
     where: { id },
   });
+  if (!uniqueMenu) throw new NotFoundError('Menu not found');
   const menuMeals = await db.menuMeals.findMany({
     where: { menuId: uniqueMenu?.id },
   });
@@ -174,10 +175,10 @@ export const addMealslistToMenu = async ({
   if (!grocerylist) throw new Error(`No grocerylist found for menu: ${menuId}`);
 
   for (const meal of meals) {
-    const dbMeal = await getMeals({ filters: { id: meal.id } });
+    const dbMeal = await getMeal(meal.id);
     if (!dbMeal) throw new Error(`No meal with id ${meal.id} found`);
 
-    await addMealtoMenu({ menuId: menuId, mealId: meal.id });
+    await addMealToMenu({ menuId: menuId, mealId: meal.id });
 
     const mealIngredients = await db.ingredient.findMany({
       where: {
@@ -203,6 +204,7 @@ export const addMealToMenu = async ({
   mealId: string;
   menuId: string;
 }) => {
+  console.log('CHECK');
   const dbMenu = await getMenu(menuId);
   if (!dbMenu) return { message: `No menu found with id: ${menuId}` };
 
@@ -213,6 +215,7 @@ export const addMealToMenu = async ({
   });
 
   const dbMeal = await getMeal(mealId);
+  console.log('dbMeal => ', dbMeal);
   if (!dbMeal) throw new Error(`No meal with id ${mealId} found`);
   const mealMenus = await db.menuMeals.findMany({});
 
@@ -237,20 +240,20 @@ export const addMealToMenu = async ({
       mealId: mealId,
     },
   });
-  console.log('ingredients => ', mealIngredients);
 
   const items = await db.item.findMany({
     where: {
-      grocerylistId: grocerylist?.id!,
+      groceryListId: grocerylist?.id!,
     },
   });
-  console.log('items => ', items);
 
-  if (mealIngredients.length > 0) {
-    for (const ingredient of mealIngredients) {
+  console.log('grocerylist => ', grocerylist);
+
+  if (dbMeal.ingredients.length > 0 && grocerylist) {
+    for (const ingredient of dbMeal.ingredients) {
       await createItem({
         ingredientId: ingredient.id,
-        grocerylistId: grocerylist?.id!,
+        grocerylistId: grocerylist.id,
       });
     }
   }

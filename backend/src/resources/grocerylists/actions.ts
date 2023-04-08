@@ -25,6 +25,7 @@ export const getGrocerylist = async (id: string) => {
   const items = await db.item.findMany({
     where: { groceryListId: id },
   });
+  console.log('items ', items);
   const grocerylist = GrocerylistModel.parse(row);
   return { ...grocerylist, items };
 };
@@ -82,3 +83,39 @@ export const deleteGrocerylists = async () => {
 // }) => {
 // await .create({data : {}})
 // };
+//
+async function createMenuMealAndGroceryItems(
+  mealId: string,
+  menuId: string,
+): Promise<void> {
+  // create menu_meal
+  const menuMeal = await db.menuMeals.create({
+    mealId: mealId,
+    menuId: menuId,
+  });
+
+  // get menu's grocery list ID
+  const menu = await db.menu.findByPk(menuId);
+  const groceryListId = menu.groceryListId;
+
+  // loop through meal_ingredients
+  const mealIngredients = await db.meal_ingredient.findAll({
+    where: {
+      mealId,
+    },
+  });
+
+  for (const mealIngredient of mealIngredients) {
+    // create grocery item
+    const groceryItem = await db.grocery_item.create({
+      name: mealIngredient.name,
+      quantity: mealIngredient.quantity,
+    });
+
+    // add item to grocery list
+    await db.grocerylist_item.create({
+      groceryListId,
+      itemId: groceryItem.id,
+    });
+  }
+}
