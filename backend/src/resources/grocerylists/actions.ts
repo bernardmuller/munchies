@@ -12,7 +12,9 @@ export const createGrocerylist = async (data: { menuId?: string }) => {
 };
 
 export const getGrocerylists = async () => {
-  const rows = await db.grocerylist.findMany();
+  const rows = await db.grocerylist.findMany({
+    include: { menu: true },
+  });
   const Grocerylists = rows.map((row) => GrocerylistModel.parse(row));
   return Grocerylists;
 };
