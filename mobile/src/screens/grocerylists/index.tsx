@@ -18,7 +18,7 @@ function Grocerylists({ navigation }: { navigation: any }) {
 						key={list.id}
 					>
 						<Button
-							title={"list: " + list.id}
+							title={`${list.menu.name} Grocerylist`}
 							onPress={() =>
 								navigation.push("GrocerylistDetail", {
 									grocerylistId: list.id,
@@ -30,7 +30,6 @@ function Grocerylists({ navigation }: { navigation: any }) {
 			) : (
 				<Text>No groverylists</Text>
 			)}
-			<Text>{JSON.stringify(data, null, 2)}</Text>
 		</View>
 	);
 }

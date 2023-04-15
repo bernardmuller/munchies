@@ -28,20 +28,22 @@ const data = [
 export default function Detail({ route }: { route: any }) {
 	const { grocerylistId } = route.params;
 	const { data } = useGrocerylistData(grocerylistId);
-	const [groceryList, setGroceryList] = useState(data.items);
+	// const [groceryList, setGroceryList] = useState(data.items);
 
 	console.log("DATA => ", data);
 
-	const handleCheckItem = (menuId: any, itemId: any) => {
-		const newList = [...groceryList];
-		const menuIndex = newList.findIndex((menu) => menu.id === menuId);
-		const itemIndex = newList[menuIndex].items.findIndex(
-			(item: any) => item.id === itemId
-		);
-		newList[menuIndex].items[itemIndex].checked =
-			!newList[menuIndex].items[itemIndex].checked;
-		setGroceryList(newList);
-	};
+	// const handleCheckItem = (menuId: any, itemId: any) => {
+	// 	const newList = [...groceryList];
+	// 	const menuIndex = newList.findIndex((menu) => menu.id === menuId);
+	// 	const itemIndex = newList[menuIndex].items.findIndex(
+	// 		(item: any) => item.id === itemId
+	// 	);
+	// 	newList[menuIndex].items[itemIndex].checked =
+	// 		!newList[menuIndex].items[itemIndex].checked;
+	// 	setGroceryList(newList);
+	// };
+
+	if (!data) return <Text>Loading...</Text>;
 
 	const renderItem = ({ item }: any) => {
 		return (
@@ -63,21 +65,6 @@ export default function Detail({ route }: { route: any }) {
 		);
 	};
 
-	const renderMenu = ({ item }: any) => {
-		return (
-			<View className={`bg-gray-100 py-2 px-4 border-b border-gray-200`}>
-				<Text className={`text-base font-medium text-gray-600`}>
-					{item.ingredient.name}
-				</Text>
-				<FlatList
-					data={item.items}
-					renderItem={renderItem}
-					keyExtractor={(item: any) => item.id}
-				/>
-			</View>
-		);
-	};
-
 	return (
 		<View className={`flex-1 bg-white p-2`}>
 			<Text className="text-2xl font-semibold py-2">
@@ -86,7 +73,7 @@ export default function Detail({ route }: { route: any }) {
 			<Text className="text-xl py-2">Items</Text>
 			<Divider />
 			<FlatList
-				data={groceryList}
+				data={data && data.items}
 				renderItem={renderItem}
 				keyExtractor={(item: any) => item.id}
 			/>

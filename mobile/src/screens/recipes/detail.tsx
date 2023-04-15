@@ -165,7 +165,15 @@ function RecipeDetail({ route }: { route: any }) {
 				<Text className="text-lg">Ingredients:</Text>
 				<View className="grid gap-1">
 					{data.ingredients.map((ingredient: any) => (
-						<></>
+						<Text
+							key={
+								ingredient?.ingredient?.id +
+								Math.floor(Math.random())
+							}
+							className="py-2 px-3 w-full bg-white"
+						>
+							{ingredient?.name}
+						</Text>
 					))}
 				</View>
 				<FlatList
@@ -179,7 +187,7 @@ function RecipeDetail({ route }: { route: any }) {
 								}
 								className="py-2 px-3 w-full bg-white"
 							>
-								{ingredient?.item?.ingredient?.name}
+								{ingredient?.name}
 							</Text>
 						</>
 					)}

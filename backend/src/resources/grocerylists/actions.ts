@@ -15,8 +15,7 @@ export const getGrocerylists = async () => {
   const rows = await db.grocerylist.findMany({
     include: { menu: true },
   });
-  const Grocerylists = rows.map((row) => GrocerylistModel.parse(row));
-  return Grocerylists;
+  return rows;
 };
 
 export const getGrocerylist = async (id: string) => {
