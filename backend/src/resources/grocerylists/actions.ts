@@ -21,13 +21,16 @@ export const getGrocerylist = async (id: string) => {
   const row = await db.grocerylist.findUnique({
     where: { id },
   });
+  const menu = await db.menu.findUnique({
+    where: { id: row.menuId },
+  });
   if (!row) throw new Error('Could not find grocerylist');
   const items = await db.item.findMany({
     where: { groceryListId: id },
+    include: { ingredient: true },
   });
-  console.log('items ', items);
   const grocerylist = GrocerylistModel.parse(row);
-  return { ...grocerylist, items };
+  return { ...grocerylist, menu: menu, items };
 };
 
 export const getGrocerylistByMenuId = async (menuId: string) => {
