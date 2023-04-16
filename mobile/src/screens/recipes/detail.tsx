@@ -228,6 +228,7 @@ const Name = ({ name, onUpdateName }: any) => {
 	};
 
 	const handleChange = (e: any) => {
+		setError(false);
 		setText(e.nativeEvent.text);
 	};
 
@@ -261,6 +262,7 @@ const Name = ({ name, onUpdateName }: any) => {
 					w="100%"
 					defaultValue={text}
 					onChange={handleChange}
+					onBlur={handleSave}
 					InputRightElement={
 						<Button
 							size="xs"
