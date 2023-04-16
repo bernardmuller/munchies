@@ -17,7 +17,7 @@ import {
 import { useState } from "react";
 import { Entypo } from "@expo/vector-icons";
 
-export default function MealplanDetail({ route }: { route: any }) {
+export default function MealplanDetail({ route, navigation }: { route: any }) {
 	const { mealplanId } = route.params;
 	const { data, isLoading, isError } = useMenuData(mealplanId);
 	const updateMenu = useUpdateMenu(mealplanId);
@@ -55,7 +55,7 @@ export default function MealplanDetail({ route }: { route: any }) {
 						<Stack justifyContent="space-evenly">
 							<Text fontSize="xl">{meal.name}</Text>
 							<Text fontSize="sm" color="gray.400">
-								Ingredients: {meal.ingredients.length}
+								Ingredients: {meal?.ingredients?.length || "0"}
 							</Text>
 						</Stack>
 						<IconButton
@@ -66,7 +66,15 @@ export default function MealplanDetail({ route }: { route: any }) {
 					</Stack>
 				))}
 			</Stack>
-			<Button>Add Recipe</Button>
+			<Button
+				onPress={() =>
+					navigation.navigate("AddRecipes", {
+						mealplanId: mealplanId,
+					})
+				}
+			>
+				Add Recipe
+			</Button>
 		</ScrollView>
 	);
 }

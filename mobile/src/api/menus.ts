@@ -41,6 +41,7 @@ export async function addMealToMenu({
 	mealId: string;
 	menuId: string;
 }) {
+	console.log("addMealToMenu", mealId, menuId);
 	return await axios({
 		method: "POST",
 		url: `${requireBaseURL()}/menus/${menuId}/meals/add`,

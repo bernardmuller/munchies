@@ -9,7 +9,7 @@ export async function createMeal() {
 	return await axios({
 		method: "POST",
 		url: `${requireBaseURL()}/meals`,
-		// headers: requireHeaders(),
+		headers: await requireHeaders(),
 	}).then((response) => response.data);
 }
 
