@@ -11,7 +11,15 @@ import { useAddIngredientToMeal } from "../../hooks/ingredientsHooks";
 //@ts-ignore
 import SearchableDropdown from "react-native-searchable-dropdown";
 import { fetchIngredients } from "../../api/ingredients";
-import { Box, FlatList, Input, useToast, Button } from "native-base";
+import {
+	Box,
+	FlatList,
+	Input,
+	useToast,
+	Button,
+	WarningOutlineIcon,
+	FormControl,
+} from "native-base";
 import { ScrollView } from "react-native";
 
 const validationSchema = z.object({});
@@ -159,7 +167,6 @@ function RecipeDetail({ route }: { route: any }) {
 	if (!data && isFetching) return <ActivityIndicator size={30} />;
 	return (
 		<ScrollView className="p-2 ">
-			{/* <Text className="text-xl">{data.name}</Text> */}
 			<Name
 				name={data.name}
 				onUpdateName={(updateData: { name: string }) => {
@@ -214,6 +221,7 @@ export default RecipeDetail;
 const Name = ({ name, onUpdateName }: any) => {
 	const [edit, setEdit] = useState(false);
 	const [text, setText] = useState(name || "");
+	const [error, setError] = useState(false);
 
 	const toggleEdit = () => {
 		setEdit(!edit);
@@ -224,6 +232,10 @@ const Name = ({ name, onUpdateName }: any) => {
 	};
 
 	const handleSave = () => {
+		if (!text) {
+			setError(true);
+			return;
+		}
 		toggleEdit();
 		onUpdateName({ name: text });
 	};
@@ -243,24 +255,33 @@ const Name = ({ name, onUpdateName }: any) => {
 
 	return (
 		<Box alignItems="center py-2">
-			<Input
-				type="text"
-				w="100%"
-				defaultValue={text}
-				onChange={handleChange}
-				InputRightElement={
-					<Button
-						size="xs"
-						rounded="none"
-						w="1/6"
-						h="full"
-						onPress={handleSave}
+			<FormControl isInvalid={error}>
+				<Input
+					type="text"
+					w="100%"
+					defaultValue={text}
+					onChange={handleChange}
+					InputRightElement={
+						<Button
+							size="xs"
+							rounded="none"
+							w="1/6"
+							h="full"
+							onPress={handleSave}
+						>
+							Save
+						</Button>
+					}
+					placeholder="Enter name..."
+				/>
+				{error && (
+					<FormControl.ErrorMessage
+						leftIcon={<WarningOutlineIcon size="xs" />}
 					>
-						{edit ? "Save" : "Edit"}
-					</Button>
-				}
-				placeholder="Password"
-			/>
+						Please enter a valid recipe name.
+					</FormControl.ErrorMessage>
+				)}
+			</FormControl>
 		</Box>
 	);
 };
