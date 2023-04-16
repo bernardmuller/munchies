@@ -1,15 +1,21 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchMenus, fetchMenu, removeMealFromMenu } from '../api/menus.ts';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+	fetchMenus,
+	fetchMenu,
+	removeMealFromMenu,
+	updateMenu,
+} from "../api/menus";
 
 export const useMenusData = () => {
-  return useQuery(['menus'], fetchMenus);
+	return useQuery(["menus"], fetchMenus);
 };
 
 export const useMenuData = (id: string) => {
-  const { data, isLoading, isSuccess, isError, isFetching } = useQuery([`menu-${id}`], () =>
-    fetchMenu(id),
-  );
-  return { data, isLoading, isSuccess, isError, isFetching };
+	const { data, isLoading, isSuccess, isError, isFetching } = useQuery(
+		[`menu-${id}`],
+		() => fetchMenu(id)
+	);
+	return { data, isLoading, isSuccess, isError, isFetching };
 };
 // export const useAddMeal = () => {
 //   const queryClient = useQueryClient();
@@ -20,9 +26,25 @@ export const useMenuData = (id: string) => {
 //   });
 // };
 //
-// export const useUpdateMenu = () => {
-//   return useMutation(updateMeal);
-// };
+export const useUpdateMenu = ({ menuId }: { menuId: string }) => {
+	const queryClient = useQueryClient();
+	return useMutation(updateMenu, {
+		onMutate: async ({ data }) => {
+			await queryClient.cancelQueries([`menu-${menuId}`]);
+			const previousMenu = queryClient.getQueryData([
+				`menu-${menuId}}`,
+			]) as any;
+			queryClient.setQueryData([`menu-${menuId}}`], {
+				...previousMenu,
+				...data,
+			});
+			return { previousMenu };
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries([`menu-${menuId}}`]);
+		},
+	});
+};
 //
 // export const useRemoveMealFromMenu = ({ mealId, menuId }: { mealId: string; menuId: string }) => {
 //   const queryClient = useQueryClient();

@@ -95,7 +95,7 @@ export const updateMenu = async (
   id: string,
   data: { name?: string; startDate?: Date; endDate?: Date },
 ) => {
-  const menu = await getMenus({ filters: { id } });
+  const menu = await getMenu(id);
   if (!menu) {
     throw new Error('Menu not found');
   }
