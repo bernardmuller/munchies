@@ -1,14 +1,21 @@
 import { useMenuData, useUpdateMenu } from "../../hooks/menusHooks";
-import { View, Text } from "../../components/common";
+import { View } from "../../components/common";
 import { ActivityIndicator, ScrollView } from "react-native";
 import {
 	Box,
 	Button,
 	FormControl,
+	Icon,
+	IconButton,
 	Input,
+	Stack,
 	WarningOutlineIcon,
+	Text,
+	CloseIcon,
+	CheckIcon,
 } from "native-base";
 import { useState } from "react";
+import { Entypo } from "@expo/vector-icons";
 
 export default function MealplanDetail({ route }: { route: any }) {
 	const { mealplanId } = route.params;
@@ -28,19 +35,36 @@ export default function MealplanDetail({ route }: { route: any }) {
 					});
 				}}
 			/>
-			<Text>Created at: {data.createdAt}</Text>
+			<Text color="gray.400">Created at: {data.createdAt}</Text>
 			<Text className="text-lg mt-2 font-bold">Recipes:</Text>
 			{data.meals.map((meal: any) => (
-				<View
+				<Stack
+					direction="row"
 					key={meal.id}
-					className="h-16 bg-white rounded-lg p-2 px-4 shadow my-1"
+					height="20"
+					bgColor="white"
+					borderRadius={10}
+					p={2}
+					px={4}
+					shadow="2"
+					my={1}
+					justifyContent={"space-between"}
+					alignItems={"center"}
 				>
-					<Text className="text-lg">{meal.name}</Text>
-					<Text className="text-md text-stone-600">
-						Ingredients: {meal.ingredients.length}
-					</Text>
-				</View>
+					<Stack justifyContent="space-evenly">
+						<Text fontSize="xl">{meal.name}</Text>
+						<Text fontSize="sm" color="gray.400">
+							Ingredients: {meal.ingredients.length}
+						</Text>
+					</Stack>
+					<IconButton
+						height={10}
+						borderRadius="50%"
+						icon={<CloseIcon name="close" />}
+					/>
+				</Stack>
 			))}
+			<Button mt={3}>Add Recipe</Button>
 		</ScrollView>
 	);
 }
@@ -71,10 +95,7 @@ const Name = ({ name, onUpdateName }: any) => {
 	if (!edit) {
 		return (
 			<View className="flex flex-col">
-				<Text
-					className="border border-gray-300 rounded-md text-xl"
-					onPress={toggleEdit}
-				>
+				<Text fontSize="2xl" fontWeight="semibold" onPress={toggleEdit}>
 					{text}
 				</Text>
 			</View>
@@ -87,19 +108,25 @@ const Name = ({ name, onUpdateName }: any) => {
 				<Input
 					type="text"
 					w="100%"
+					h="10"
+					mb={1}
+					fontSize="md"
+					variant="underlined"
 					defaultValue={text}
 					onChange={handleChange}
 					onBlur={handleSave}
 					InputRightElement={
-						<Button
-							size="xs"
-							rounded="none"
-							w="1/6"
-							h="full"
+						<IconButton
+							icon={
+								<CheckIcon
+									size="lg"
+									rounded="full"
+									w="1/6"
+									h="full"
+								></CheckIcon>
+							}
 							onPress={handleSave}
-						>
-							Save
-						</Button>
+						/>
 					}
 					placeholder="Enter name..."
 				/>
