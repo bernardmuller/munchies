@@ -25,7 +25,7 @@ export default function MealplanDetail({ route }: { route: any }) {
 	console.log("mealplanId => ", mealplanId);
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
 	return (
-		<ScrollView className="p-2">
+		<ScrollView className="px-2 py-6">
 			<Name
 				name={data.name}
 				onUpdateName={(updateData: { name: string }) => {
@@ -36,35 +36,37 @@ export default function MealplanDetail({ route }: { route: any }) {
 				}}
 			/>
 			<Text color="gray.400">Created at: {data.createdAt}</Text>
-			<Text className="text-lg mt-2 font-bold">Recipes:</Text>
-			{data.meals.map((meal: any) => (
-				<Stack
-					direction="row"
-					key={meal.id}
-					height="20"
-					bgColor="white"
-					borderRadius={10}
-					p={2}
-					px={4}
-					shadow="2"
-					my={1}
-					justifyContent={"space-between"}
-					alignItems={"center"}
-				>
-					<Stack justifyContent="space-evenly">
-						<Text fontSize="xl">{meal.name}</Text>
-						<Text fontSize="sm" color="gray.400">
-							Ingredients: {meal.ingredients.length}
-						</Text>
+			<Stack py={3} pt={6}>
+				<Text fontSize="md">Recipes:</Text>
+				{data.meals.map((meal: any) => (
+					<Stack
+						direction="row"
+						key={meal.id}
+						height="20"
+						bgColor="white"
+						borderRadius={10}
+						p={2}
+						px={4}
+						shadow="2"
+						my={1}
+						justifyContent={"space-between"}
+						alignItems={"center"}
+					>
+						<Stack justifyContent="space-evenly">
+							<Text fontSize="xl">{meal.name}</Text>
+							<Text fontSize="sm" color="gray.400">
+								Ingredients: {meal.ingredients.length}
+							</Text>
+						</Stack>
+						<IconButton
+							height={10}
+							borderRadius="50%"
+							icon={<CloseIcon name="close" />}
+						/>
 					</Stack>
-					<IconButton
-						height={10}
-						borderRadius="50%"
-						icon={<CloseIcon name="close" />}
-					/>
-				</Stack>
-			))}
-			<Button mt={3}>Add Recipe</Button>
+				))}
+			</Stack>
+			<Button>Add Recipe</Button>
 		</ScrollView>
 	);
 }
