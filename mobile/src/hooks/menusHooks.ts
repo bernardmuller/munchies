@@ -5,6 +5,8 @@ import {
 	removeMealFromMenu,
 	updateMenu,
 } from "../api/menus";
+import useToast from "./useToast";
+import Toast from "../components/Toast";
 
 export const useMenusData = () => {
 	return useQuery(["menus"], fetchMenus);
@@ -28,6 +30,7 @@ export const useMenuData = (id: string) => {
 //
 export const useUpdateMenu = ({ menuId }: { menuId: string }) => {
 	const queryClient = useQueryClient();
+	const toast = useToast();
 	return useMutation(updateMenu, {
 		onMutate: async ({ data }) => {
 			await queryClient.cancelQueries([`menu-${menuId}`]);
@@ -42,6 +45,11 @@ export const useUpdateMenu = ({ menuId }: { menuId: string }) => {
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries([`menu-${menuId}}`]);
+			toast.show({
+				title: "Mealplan updated successfully",
+				placement: "top",
+				variant: "success",
+			});
 		},
 	});
 };
