@@ -3,8 +3,7 @@ import React, { useEffect, useState } from "react";
 import { View } from "../../components/common/View";
 import { Text } from "../../components/common/Text";
 
-import { useMealData } from "../../hooks/mealsHooks";
-import { Button } from "../../components/common/Button";
+import { useMealData, useUpdateMeal } from "../../hooks/mealsHooks";
 import { z } from "zod";
 import { debounce } from "lodash";
 // import SearchableDropDown from "react-native-dropdown-searchable";
@@ -12,7 +11,7 @@ import { useAddIngredientToMeal } from "../../hooks/ingredientsHooks";
 //@ts-ignore
 import SearchableDropdown from "react-native-searchable-dropdown";
 import { fetchIngredients } from "../../api/ingredients";
-import { FlatList, useToast } from "native-base";
+import { Box, FlatList, Input, useToast, Button } from "native-base";
 import { ScrollView } from "react-native";
 
 const validationSchema = z.object({});
@@ -154,13 +153,22 @@ const AddIngredient = ({
 };
 
 function RecipeDetail({ route }: { route: any }) {
-	const { data, isFetching } = useMealData(route.params.recipeId);
 	const { recipeId } = route.params;
+	const { data, isFetching } = useMealData(recipeId);
+	const updateMeal = useUpdateMeal({ mealId: recipeId });
 	if (!data && isFetching) return <ActivityIndicator size={30} />;
-	console.log("data => ", data);
 	return (
 		<ScrollView className="p-2 ">
-			<Text className="text-xl">{data.name}</Text>
+			{/* <Text className="text-xl">{data.name}</Text> */}
+			<Name
+				name={data.name}
+				onUpdateName={(updateData: { name: string }) => {
+					updateMeal.mutate({
+						id: recipeId,
+						data: { ...updateData },
+					});
+				}}
+			/>
 			<View className="pt-3">
 				<Text className="text-lg">Ingredients:</Text>
 				<View className="grid gap-1">
@@ -202,3 +210,57 @@ function RecipeDetail({ route }: { route: any }) {
 }
 
 export default RecipeDetail;
+
+const Name = ({ name, onUpdateName }: any) => {
+	const [edit, setEdit] = useState(false);
+	const [text, setText] = useState(name || "");
+
+	const toggleEdit = () => {
+		setEdit(!edit);
+	};
+
+	const handleChange = (e: any) => {
+		setText(e.nativeEvent.text);
+	};
+
+	const handleSave = () => {
+		toggleEdit();
+		onUpdateName({ name: text });
+	};
+
+	if (!edit) {
+		return (
+			<View className="flex flex-col">
+				<Text
+					className="border border-gray-300 rounded-md text-xl"
+					onPress={toggleEdit}
+				>
+					{text}
+				</Text>
+			</View>
+		);
+	}
+
+	return (
+		<Box alignItems="center py-2">
+			<Input
+				type="text"
+				w="100%"
+				defaultValue={text}
+				onChange={handleChange}
+				InputRightElement={
+					<Button
+						size="xs"
+						rounded="none"
+						w="1/6"
+						h="full"
+						onPress={handleSave}
+					>
+						{edit ? "Save" : "Edit"}
+					</Button>
+				}
+				placeholder="Password"
+			/>
+		</Box>
+	);
+};

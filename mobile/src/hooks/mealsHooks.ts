@@ -29,8 +29,24 @@ export const useAddMeal = () => {
 	});
 };
 
-export const useUpdateMeal = () => {
-	return useMutation(updateMeal);
+export const useUpdateMeal = ({ mealId }: { mealId: string }) => {
+	const queryClient = useQueryClient();
+	return useMutation(updateMeal, {
+		onMutate: async ({ data }) => {
+			await queryClient.cancelQueries([`meal-${mealId}`]);
+			const previousMeal = queryClient.getQueryData([
+				`meal-${mealId}`,
+			]) as any;
+			queryClient.setQueryData([`meal-${mealId}`], {
+				...previousMeal,
+				...data,
+			});
+			return { previousMeal };
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries([`meal-${mealId}`]);
+		},
+	});
 };
 
 export const useRemoveDirectionFromMeal = ({
