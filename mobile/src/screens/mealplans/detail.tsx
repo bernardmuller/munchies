@@ -1,4 +1,8 @@
-import { useMenuData, useUpdateMenu } from "../../hooks/menusHooks";
+import {
+	useMenuData,
+	useRemoveMealFromMenu,
+	useUpdateMenu,
+} from "../../hooks/menusHooks";
 import { View } from "../../components/common";
 import { ActivityIndicator, ScrollView } from "react-native";
 import {
@@ -21,6 +25,7 @@ export default function MealplanDetail({ route, navigation }: { route: any }) {
 	const { mealplanId } = route.params;
 	const { data, isLoading, isError } = useMenuData(mealplanId);
 	const updateMenu = useUpdateMenu(mealplanId);
+	const removeRecipe = useRemoveMealFromMenu({ menuId: mealplanId });
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
 	return (
 		<ScrollView className="px-2 py-6">
@@ -60,6 +65,12 @@ export default function MealplanDetail({ route, navigation }: { route: any }) {
 							height={10}
 							borderRadius="50%"
 							icon={<CloseIcon name="close" />}
+							onPress={() => {
+								removeRecipe.mutate({
+									mealId: meal.id,
+									menuId: mealplanId,
+								});
+							}}
 						/>
 					</Stack>
 				))}
