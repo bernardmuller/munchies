@@ -1,6 +1,7 @@
 import {
 	useAddMealToMenu,
 	useMenuData,
+	useRemoveMealFromMenu,
 	useUpdateMenu,
 } from "../../hooks/menusHooks";
 import { View } from "../../components/common";
@@ -30,7 +31,9 @@ export default function AddRecipes({ route }: { route: any }) {
 	const mealplan = useMenuData(mealplanId);
 	const updateMenu = useUpdateMenu(mealplanId);
 	const addRecipe = useAddMealToMenu({ menuId: mealplanId });
+	const removeRecipe = useRemoveMealFromMenu({ menuId: mealplanId });
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
+
 	return (
 		<ScrollView className="px-2 py-2">
 			{data.map((meal: any) => {
@@ -54,13 +57,20 @@ export default function AddRecipes({ route }: { route: any }) {
 								Ingredients: meal.ingredients.length
 							</Text>
 						</Stack>
-						{mealplan.data.meals.find(
-							(mealplanMeal: any) => mealplanMeal.id === meal.id
+						{mealplan?.data?.meals &&
+						mealplan?.data?.meals?.find(
+							(mealplanMeal: any) => mealplanMeal?.id === meal?.id
 						) ? (
 							<IconButton
 								height={10}
 								borderRadius="50%"
-								icon={<MinusIcon name="plus" />}
+								icon={<MinusIcon name="minus" />}
+								onPress={() =>
+									removeRecipe.mutate({
+										mealId: meal.id,
+										menuId: mealplanId,
+									})
+								}
 							/>
 						) : (
 							<IconButton
@@ -69,7 +79,7 @@ export default function AddRecipes({ route }: { route: any }) {
 								icon={<AddIcon name="plus" />}
 								onPress={() =>
 									addRecipe.mutate({
-										mealId: meal.id,
+										meal: meal,
 										menuId: mealplanId,
 									})
 								}

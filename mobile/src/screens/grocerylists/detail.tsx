@@ -30,8 +30,6 @@ export default function Detail({ route }: { route: any }) {
 	const { data } = useGrocerylistData(grocerylistId);
 	// const [groceryList, setGroceryList] = useState(data.items);
 
-	console.log("DATA => ", data);
-
 	// const handleCheckItem = (menuId: any, itemId: any) => {
 	// 	const newList = [...groceryList];
 	// 	const menuIndex = newList.findIndex((menu) => menu.id === menuId);

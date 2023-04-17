@@ -84,16 +84,15 @@ export const useAddMealToMenu = ({ menuId }: { menuId: string }) => {
 
 	const toast = useToast();
 	return useMutation(addMealToMenu, {
-		onMutate: async (newMeal) => {
-			console.log("MUTATE", newMeal);
-			console.log("NEW MEAL", newMeal);
+		onMutate: async ({ menuId, meal }) => {
 			await queryClient.cancelQueries([`menu-${menuId}`]);
 			const previousMenu = queryClient.getQueryData([
 				`menu-${menuId}`,
 			]) as any;
+
 			queryClient.setQueryData([`menu-${menuId}`], {
 				...previousMenu,
-				meals: [...previousMenu.meals],
+				meals: [...previousMenu.meals, meal],
 			});
 			return { previousMenu };
 		},
@@ -106,6 +105,37 @@ export const useAddMealToMenu = ({ menuId }: { menuId: string }) => {
 		onSuccess: () => {
 			toast.show({
 				title: "Meal added to mealplan successfully",
+				placement: "top",
+			});
+		},
+	});
+};
+
+export const useRemoveMealFromMenu = ({ menuId }: { menuId: string }) => {
+	const queryClient = useQueryClient();
+
+	const toast = useToast();
+	return useMutation(removeMealFromMenu, {
+		onMutate: async ({ menuId, mealId }) => {
+			await queryClient.cancelQueries([`menu-${menuId}`]);
+			const previousMenu = queryClient.getQueryData([
+				`menu-${menuId}`,
+			]) as any;
+			queryClient.setQueryData([`menu-${menuId}`], {
+				...previousMenu,
+				meals: previousMenu.meals.filter((meal: any) => {
+					if (meal.id !== mealId) return meal;
+				}),
+			});
+			return { previousMenu };
+		},
+		onError: (err, variables, context) => {
+			queryClient.setQueryData([`menu-${menuId}`], context?.previousMenu);
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries([`menu-${menuId}`]);
+			toast.show({
+				title: "Meal removed from mealplan successfully",
 				placement: "top",
 			});
 		},

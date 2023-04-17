@@ -35,18 +35,18 @@ export async function updateMenu({ id, data }: { id: string; data: any }) {
 }
 
 export async function addMealToMenu({
-	mealId,
+	meal,
 	menuId,
 }: {
-	mealId: string;
+	meal: any;
 	menuId: string;
 }) {
-	console.log("addMealToMenu", mealId, menuId);
+	console.log("addMealToMenu", meal.id, menuId);
 	return await axios({
 		method: "POST",
 		url: `${requireBaseURL()}/menus/${menuId}/meals/add`,
 		headers: await requireHeaders(),
-		data: { mealId: mealId },
+		data: { mealId: meal.id },
 	}).then((response) => response.data);
 }
 
@@ -62,5 +62,8 @@ export async function removeMealFromMenu({
 		url: `${requireBaseURL()}/menus/${menuId}/meals/remove`,
 		headers: await requireHeaders(),
 		data: { mealId: mealId },
-	}).then((response) => response.data);
+	}).then((response) => {
+		console.log("removeMealFromMenu", response.data);
+		return response.data;
+	});
 }

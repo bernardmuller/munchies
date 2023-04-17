@@ -21,8 +21,6 @@ export default function MealplanDetail({ route, navigation }: { route: any }) {
 	const { mealplanId } = route.params;
 	const { data, isLoading, isError } = useMenuData(mealplanId);
 	const updateMenu = useUpdateMenu(mealplanId);
-	console.log("DATA => ", JSON.stringify(data, null, 2));
-	console.log("mealplanId => ", mealplanId);
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
 	return (
 		<ScrollView className="px-2 py-6">
@@ -38,7 +36,7 @@ export default function MealplanDetail({ route, navigation }: { route: any }) {
 			<Text color="gray.400">Created at: {data.createdAt}</Text>
 			<Stack py={3} pt={6}>
 				<Text fontSize="md">Recipes:</Text>
-				{data.meals.map((meal: any) => (
+				{data?.meals?.map((meal: any) => (
 					<Stack
 						direction="row"
 						key={meal.id}
