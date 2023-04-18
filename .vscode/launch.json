@@ -1,0 +1,13 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "node-terminal",
+			"request": "launch",
+			"name": "Launch Backend",
+			"skipFiles": ["<node_internals>/**"],
+			"command": "yarn run start",
+			"cwd": "${workspaceFolder}/backend"
+		}
+	]
+}

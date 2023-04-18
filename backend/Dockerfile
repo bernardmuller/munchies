@@ -15,6 +15,6 @@ RUN npm uninstall bcrypt && npm i bcrypt
 RUN npx prisma generate
 
 
-EXPOSE 8080
+EXPOSE 5000
 
 CMD npm start

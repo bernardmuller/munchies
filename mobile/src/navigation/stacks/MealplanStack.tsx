@@ -3,16 +3,35 @@ import * as React from "react";
 import Mealplans from "../../screens/mealplans";
 import MealplanDetail from "../../screens/mealplans/detail";
 import AddRecipes from "../../screens/mealplans/AddRecipes";
+import { AddIcon, IconButton, Spinner } from "native-base";
+import { useCreateMenu, useMenusData } from "../../hooks/menusHooks";
 
 const MealPlanStack = createNativeStackNavigator();
 
 function MealplanStack() {
+	const createMenu = useCreateMenu();
+	
+	const { isFetching } = useMenusData();
 	return (
 		<MealPlanStack.Navigator>
 			<MealPlanStack.Screen
 				name="Mealplans"
 				component={Mealplans}
-				options={{ title: "Meal plans" }}
+				options={{
+					title: "Meal plans",
+					headerRight: () => (
+						<>
+							{createMenu.isLoading || isFetching ? (
+								<Spinner />
+							) : (
+								<IconButton
+									icon={<AddIcon />}
+									onPress={() => createMenu.mutate()}
+								/>
+							)}
+						</>
+					),
+				}}
 			/>
 
 			<MealPlanStack.Screen

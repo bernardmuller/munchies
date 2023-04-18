@@ -66,6 +66,7 @@ const endpoints = [
       if (!id || !req.body.mealId)
         return res.status(400).send({ message: 'Missing required fields' });
       const menu = await addMealToMenu({ menuId: id, mealId: req.body.mealId });
+      console.log('Response => ', menu);
       return res.send(menu);
     },
     authenticate: true,

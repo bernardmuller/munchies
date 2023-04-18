@@ -10,21 +10,21 @@ services:
         ports:
             - "5432:5432"
 
-    backend:
-        depends_on:
-            - "database"
-        build:
-            context: ./backend
-            dockerfile: Dockerfile
-        ports:
-            - "8080:8080"
-        restart: always
+    # backend:
+    #     depends_on:
+    #         - "database"
+    #     build:
+    #         context: ./backend
+    #         dockerfile: Dockerfile
+    #     ports:
+    #         - "8080:8080"
+    #     restart: always
 
-    frontend:
-        build:
-            context: ./frontend
-            dockerfile: Dockerfile
+    # frontend:
+    #     build:
+    #         context: ./
+    #         dockerfile: Dockerfile
 
-        ports:
-            - "3000:3000"
-        restart: always
+    #     ports:
+    #         - "3000:3000"
+    #     restart: always

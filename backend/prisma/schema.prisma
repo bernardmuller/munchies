@@ -53,8 +53,10 @@ model Menu {
   householdId String?    @db.Uuid
   Household   Household? @relation(fields: [householdId], references: [id])
 
-  grocerylist Grocerylist?
+  grocerylistId String? @unique @db.Uuid
+
   meals       MenuMeals[]
+  Grocerylist Grocerylist?
 }
 
 model Meal {
@@ -73,7 +75,7 @@ model Meal {
   createdAt  DateTime @default(now()) @db.Timestamptz()
   createdBy  String?  @db.Uuid
 
-  menu        MenuMeals?
+  menu        MenuMeals[]
   ingredients MealIngredient[]
 }
 
@@ -112,7 +114,7 @@ model MealIngredient {
 model Grocerylist {
   id        String   @id @db.Uuid
   createdAt DateTime @default(now()) @db.Timestamptz()
-  menuId    String?  @db.Uuid
+  menuId    String?  @unique @db.Uuid
   menu      Menu?    @relation(fields: [menuId], references: [id])
   Item      Item[]
 }

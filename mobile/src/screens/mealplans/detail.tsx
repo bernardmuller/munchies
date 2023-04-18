@@ -9,7 +9,6 @@ import {
 	Box,
 	Button,
 	FormControl,
-	Icon,
 	IconButton,
 	Input,
 	Stack,
@@ -19,11 +18,10 @@ import {
 	CheckIcon,
 } from "native-base";
 import { useState } from "react";
-import { Entypo } from "@expo/vector-icons";
 
 export default function MealplanDetail({ route, navigation }: { route: any }) {
 	const { mealplanId } = route.params;
-	const { data, isLoading, isError } = useMenuData(mealplanId);
+	const { data, isLoading } = useMenuData(mealplanId);
 	const updateMenu = useUpdateMenu(mealplanId);
 	const removeRecipe = useRemoveMealFromMenu({ menuId: mealplanId });
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
@@ -76,6 +74,7 @@ export default function MealplanDetail({ route, navigation }: { route: any }) {
 				))}
 			</Stack>
 			<Button
+				mb={2}
 				onPress={() =>
 					navigation.navigate("AddRecipes", {
 						mealplanId: mealplanId,

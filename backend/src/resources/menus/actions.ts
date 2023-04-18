@@ -204,7 +204,6 @@ export const addMealToMenu = async ({
   mealId: string;
   menuId: string;
 }) => {
-  console.log('CHECK');
   const dbMenu = await getMenu(menuId);
   if (!dbMenu) return { message: `No menu found with id: ${menuId}` };
 
@@ -215,9 +214,8 @@ export const addMealToMenu = async ({
   });
 
   const dbMeal = await getMeal(mealId);
-  console.log('dbMeal => ', dbMeal);
+
   if (!dbMeal) throw new Error(`No meal with id ${mealId} found`);
-  const mealMenus = await db.menuMeals.findMany({});
 
   const existing = await db.menuMeals.findFirst({
     where: {
@@ -225,7 +223,7 @@ export const addMealToMenu = async ({
     },
   });
 
-  if (existing) return { message: 'Meal already exists in menu' };
+  if (existing !== null) throw new Error('Meal already exists in menu');
 
   const newMealMenu = await db.menuMeals.create({
     data: {
@@ -234,20 +232,6 @@ export const addMealToMenu = async ({
       menuId: menuId,
     },
   });
-
-  const mealIngredients = await db.ingredient.findMany({
-    where: {
-      mealId: mealId,
-    },
-  });
-
-  const items = await db.item.findMany({
-    where: {
-      groceryListId: grocerylist?.id!,
-    },
-  });
-
-  console.log('grocerylist => ', grocerylist);
 
   if (dbMeal.ingredients.length > 0 && grocerylist) {
     for (const ingredient of dbMeal.ingredients) {

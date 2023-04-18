@@ -19,7 +19,7 @@ export const MealModel = z.object({
 })
 
 export interface CompleteMeal extends z.infer<typeof MealModel> {
-  menu?: CompleteMenuMeals | null
+  menu: CompleteMenuMeals[]
   ingredients: CompleteMealIngredient[]
 }
 
@@ -29,6 +29,6 @@ export interface CompleteMeal extends z.infer<typeof MealModel> {
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
 export const RelatedMealModel: z.ZodSchema<CompleteMeal> = z.lazy(() => MealModel.extend({
-  menu: RelatedMenuMealsModel.nullish(),
+  menu: RelatedMenuMealsModel.array(),
   ingredients: RelatedMealIngredientModel.array(),
 }))

@@ -1,12 +1,15 @@
 import axios from "axios";
 import { requireBaseURL, requireHeaders } from "../shared/utils";
 
-export async function createMeal() {
+export async function createMenu() {
 	return await axios({
 		method: "POST",
-		url: `${requireBaseURL()}/meals`,
+		url: `${requireBaseURL()}/menus`,
 		headers: await requireHeaders(),
-	}).then((response) => response.data);
+	}).then((response) => {
+		console.log("createMenu", response.data);
+		return response.data;
+	});
 }
 
 export async function fetchMenus() {
@@ -41,13 +44,15 @@ export async function addMealToMenu({
 	meal: any;
 	menuId: string;
 }) {
-	console.log("addMealToMenu", meal.id, menuId);
 	return await axios({
 		method: "POST",
 		url: `${requireBaseURL()}/menus/${menuId}/meals/add`,
 		headers: await requireHeaders(),
 		data: { mealId: meal.id },
-	}).then((response) => response.data);
+	}).then((response) => {
+		console.log("addMealToMenu", JSON.stringify(response, null, 2));
+		return response.data;
+	});
 }
 
 export async function removeMealFromMenu({
@@ -63,7 +68,7 @@ export async function removeMealFromMenu({
 		headers: await requireHeaders(),
 		data: { mealId: mealId },
 	}).then((response) => {
-		console.log("removeMealFromMenu", response.data);
+		console.log("removeMealFromMenu", response);
 		return response.data;
 	});
 }

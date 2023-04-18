@@ -5,6 +5,7 @@ import {
 	removeMealFromMenu,
 	updateMenu,
 	addMealToMenu,
+	createMenu,
 } from "../api/menus";
 import useToast from "./useToast";
 import Toast from "../components/Toast";
@@ -21,15 +22,16 @@ export const useMenuData = (id: string) => {
 	);
 	return { data, isLoading, isSuccess, isError, isFetching };
 };
-// export const useAddMeal = () => {
-//   const queryClient = useQueryClient();
-//   return useMutation(createMeal, {
-//     onSuccess: () => {
-//       return queryClient.invalidateQueries(['meals']);
-//     },
-//   });
-// };
-//
+
+export const useCreateMenu = () => {
+	const queryClient = useQueryClient();
+	return useMutation(createMenu, {
+		onSuccess: () => {
+			return queryClient.invalidateQueries(["menus"]);
+		},
+	});
+};
+
 export const useUpdateMenu = ({ menuId }: { menuId: string }) => {
 	const queryClient = useQueryClient();
 	const toast = useToast();
@@ -39,19 +41,22 @@ export const useUpdateMenu = ({ menuId }: { menuId: string }) => {
 			const previousMenu = queryClient.getQueryData([
 				`menu-${menuId}}`,
 			]) as any;
-			queryClient.setQueryData([`menu-${menuId}}`], {
+			queryClient.setQueryData([`menu-${menuId}`], {
 				...previousMenu,
 				...data,
 			});
 			return { previousMenu };
 		},
-		onSettled: () => {
-			queryClient.invalidateQueries([`menu-${menuId}}`]);
+		onSuccess: () => {
 			toast.show({
 				title: "Mealplan updated successfully",
 				placement: "top",
 				variant: "success",
 			});
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries([`menus`]);
+			queryClient.invalidateQueries([`menu-${menuId}`]);
 		},
 	});
 };
