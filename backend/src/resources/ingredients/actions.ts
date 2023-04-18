@@ -1,7 +1,7 @@
 import { db } from '../../db/db';
 import { getUuid } from '../../shared/utils';
 import { IngredientModel } from '../../../prisma/zod';
-import { ingredientCategories } from 'shared/constants';
+import { ingredientCategories } from '../../shared/constants';
 
 export const createIngredient = async (data: {
   id?: string;
