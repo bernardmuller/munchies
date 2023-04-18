@@ -4,6 +4,7 @@ import { CompleteMealIngredient, RelatedMealIngredientModel, CompleteItem, Relat
 export const IngredientModel = z.object({
   id: z.string(),
   name: z.string(),
+  categoryId: z.number().int(),
   createdAt: z.date(),
   mealId: z.string().nullish(),
 })
