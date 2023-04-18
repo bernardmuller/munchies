@@ -90,9 +90,10 @@ model MenuMeals {
 }
 
 model Ingredient {
-  id        String   @id @db.Uuid
-  name      String
-  createdAt DateTime @default(now()) @db.Timestamptz()
+  id         String   @id @db.Uuid
+  name       String
+  categoryId Int
+  createdAt  DateTime @default(now()) @db.Timestamptz()
 
   meal   MealIngredient[]
   mealId String?          @db.Uuid
@@ -165,4 +166,9 @@ model Listing {
   item   Item   @relation(fields: [itemId], references: [id], onDelete: SetNull)
 
   price String
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String
 }

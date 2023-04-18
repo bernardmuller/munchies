@@ -1,21 +1,15 @@
 import { db } from '../../db/db';
 import { getUuid } from '../../shared/utils';
 import { IngredientModel } from '../../../prisma/zod';
+import { ingredientCategories } from 'shared/constants';
 
-interface IOptions {
-  skip: number;
-  take: number;
-  orderBy: {
-    name: string;
-  };
-  where?: {
-    name: {
-      contains: string;
-    };
-  };
-}
-
-export const createIngredient = async (data: { id?: string; name: string }) => {
+export const createIngredient = async (data: {
+  id?: string;
+  categoryId: number;
+  name: string;
+}) => {
+  if (!ingredientCategories.find((category) => category.id === data.categoryId))
+    throw new Error('Invalid ingredient category id');
   const IngredientData = { ...data, id: data.id || getUuid() };
 
   const res = await db.ingredient.create({ data: IngredientData });
@@ -62,6 +56,15 @@ export const getIngredients = async (params?: {
   return Ingredients;
 };
 
+export const getIngredientbyId = async (id: string) => {
+  const row = await db.ingredient.findUnique({
+    where: { id },
+  });
+  if (!row) throw new Error(`Could not find`);
+  const Ingredient = IngredientModel.parse(row);
+  return Ingredient;
+};
+
 export const deleteIngredient = async (id: string) => {
   const ingredient = await getIngredients({ filters: { id } });
   if (!ingredient) throw new Error('Ingredient not found');
@@ -79,11 +82,17 @@ export const deleteAllIngredients = async () => {
 
 export const updateIngredient = async (
   id: string,
-  data: { id?: string; name: string },
+  data: { id?: string; name: string; categoryId: number },
 ) => {
   const Ingredient = await getIngredients({ filters: { id } });
   if (!Ingredient) {
     throw new Error('Ingredient not found');
+  }
+  if (data.categoryId) {
+    if (
+      !ingredientCategories.find((category) => category.id === data.categoryId)
+    )
+      throw new Error('Invalid ingredient category id');
   }
 
   const updatedIngredientData = await db.ingredient.update({
