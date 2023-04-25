@@ -84,10 +84,12 @@ export const updateIngredient = async (
   id: string,
   data: { id?: string; name: string; categoryId: number },
 ) => {
-  const Ingredient = await getIngredients({ filters: { id } });
+  const Ingredient = await getIngredientbyId(id);
+  console.log('update date => ', data);
   if (!Ingredient) {
     throw new Error('Ingredient not found');
   }
+
   if (data.categoryId) {
     if (
       !ingredientCategories.find((category) => category.id === data.categoryId)

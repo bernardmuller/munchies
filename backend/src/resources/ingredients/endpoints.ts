@@ -50,8 +50,8 @@ const endpoints = [
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
       const params = {
-        ingredientId: req.body.ingredientId,
-        typeId: req.body.typeId,
+        name: req.body.name,
+        categoryId: req.body.categoryId,
       };
       const ingredient = await updateIngredient(id, params);
       return res.send(ingredient);
