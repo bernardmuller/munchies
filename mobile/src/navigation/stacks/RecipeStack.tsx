@@ -4,6 +4,7 @@ import Recipes from "../../screens/recipes";
 import RecipeDetail from "../../screens/recipes/detail";
 import { useAddMeal, useMealsData } from "../../hooks/mealsHooks";
 import { AddIcon, IconButton, Spinner } from "native-base";
+import AddIngredients from "../../screens/recipes/AddIngredients";
 
 const SettingsStack = createNativeStackNavigator();
 
@@ -33,6 +34,10 @@ function RecipesStack() {
 			<SettingsStack.Screen
 				name="RecipeDetail"
 				component={RecipeDetail}
+			/>
+			<SettingsStack.Screen
+				name="AddIngredients"
+				component={AddIngredients}
 			/>
 		</SettingsStack.Navigator>
 	);

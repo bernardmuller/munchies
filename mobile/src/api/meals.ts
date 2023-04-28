@@ -56,7 +56,7 @@ export async function addIngredientToMeal({
 		method: "POST",
 		url: `${requireBaseURL()}/meals/${mealId}/ingredients/add`,
 		headers: await requireHeaders(),
-		data: { ingredientId: ingredient?.ingredient?.id },
+		data: { ingredientId: ingredient?.id },
 	}).then((response) => response.data);
 }
 

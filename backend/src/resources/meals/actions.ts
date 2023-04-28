@@ -55,7 +55,9 @@ export const getMeal = async (id: string) => {
 
   return {
     ...uniqueMeal,
-    ingredients: mealIngredients.map((mi) => mi.ingredient),
+    ingredients: mealIngredients.map((ing) => {
+      return { ...ing.ingredient, mealId: uniqueMeal?.id! };
+    }),
   };
 };
 

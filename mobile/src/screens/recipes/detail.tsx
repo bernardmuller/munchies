@@ -1,7 +1,6 @@
 import { ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import { View } from "../../components/common/View";
-import { Text } from "../../components/common/Text";
 
 import { useMealData, useUpdateMeal } from "../../hooks/mealsHooks";
 import { z } from "zod";
@@ -19,8 +18,13 @@ import {
 	Button,
 	WarningOutlineIcon,
 	FormControl,
+	Text,
+	Stack,
+	IconButton,
+	DeleteIcon,
 } from "native-base";
 import { ScrollView } from "react-native";
+import { format } from "date-fns";
 
 const validationSchema = z.object({});
 
@@ -87,7 +91,7 @@ const AddIngredient = ({
 	if (!items && loading) return <ActivityIndicator size={30} />;
 
 	if (!add)
-		return <Button title="Add ingredient" onPress={() => setAdd(true)} />;
+		return <Button onPress={() => setAdd(true)}>Add Ingredient</Button>;
 	return (
 		<View className="flex p-1 bg-white mt-1">
 			<SearchableDropdown
@@ -160,11 +164,12 @@ const AddIngredient = ({
 	);
 };
 
-function RecipeDetail({ route }: { route: any }) {
+function RecipeDetail({ route, navigation }: { route: any; navigation: any }) {
 	const { recipeId } = route.params;
 	const { data, isFetching } = useMealData(recipeId);
 	const updateMeal = useUpdateMeal({ mealId: recipeId });
 	if (!data && isFetching) return <ActivityIndicator size={30} />;
+	console.log("RECIPE => ", JSON.stringify(data, null, 2));
 	return (
 		<ScrollView className="p-2 ">
 			<Name
@@ -176,42 +181,49 @@ function RecipeDetail({ route }: { route: any }) {
 					});
 				}}
 			/>
+			<Text color="gray.400">
+				Created: {format(new Date(data.createdAt), "qo MMMM uuu")}
+			</Text>
 			<View className="pt-3">
-				<Text className="text-lg">Ingredients:</Text>
-				<View className="grid gap-1">
-					{data.ingredients.map((ingredient: any) => (
-						<Text
-							key={
-								ingredient?.ingredient?.id +
-								Math.floor(Math.random())
-							}
-							className="py-2 px-3 w-full bg-white"
-						>
-							{ingredient?.name}
-						</Text>
-					))}
-				</View>
+				<Text fontSize="lg" fontWeight="semibold" pb={2}>
+					Ingredients
+				</Text>
 				<FlatList
 					data={data.ingredients}
 					renderItem={(ingredient: any) => (
-						<>
+						<Stack
+							direction="row"
+							alignItems="center"
+							justifyContent="space-between"
+							bg="white"
+							p={3}
+							borderRadius={10}
+							mb={2}
+						>
 							<Text
-								key={
-									ingredient?.item?.ingredient?.id +
-									Math.floor(Math.random())
-								}
-								className="py-2 px-3 w-full bg-white"
+								key={`ingredient-${ingredient?.ingredient?.ingredient?.id}`}
 							>
-								{ingredient?.name}
+								{ingredient?.item?.name}
 							</Text>
-						</>
+							<IconButton icon={<DeleteIcon />} />
+						</Stack>
 					)}
 				/>
 			</View>
-			<AddIngredient
+			<Button
+				mb={2}
+				onPress={() =>
+					navigation.navigate("AddIngredients", {
+						recipeId: recipeId,
+					})
+				}
+			>
+				Add Recipe
+			</Button>
+			{/* <AddIngredient
 				recipeId={recipeId}
 				recipeIngredients={data.ingredients}
-			/>
+			/> */}
 		</ScrollView>
 	);
 }
@@ -243,14 +255,11 @@ const Name = ({ name, onUpdateName }: any) => {
 
 	if (!edit) {
 		return (
-			<View className="flex flex-col">
-				<Text
-					className="border border-gray-300 rounded-md text-xl"
-					onPress={toggleEdit}
-				>
+			<Stack>
+				<Text fontSize="2xl" fontWeight="semibold" onPress={toggleEdit}>
 					{text}
 				</Text>
-			</View>
+			</Stack>
 		);
 	}
 
