@@ -3,7 +3,8 @@ import { useGrocerylistData } from "../../hooks/grocerylistHooks";
 import { View, Text } from "../../components/common";
 import { TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { Divider, FlatList, Spacer } from "native-base";
+import { Box, Divider, FlatList, Spacer, Stack } from "native-base";
+import { Category, categories } from "../../constants/ingredientCategories";
 
 const data = [
 	{
@@ -41,6 +42,17 @@ export default function Detail({ route }: { route: any }) {
 	// 	setGroceryList(newList);
 	// };
 
+	const items = categories.map((category: Category) => {
+		return {
+			id: category.id,
+			items: data.items.filter(
+				(i: any) => i.ingredient.categoryId === category.id
+			),
+		};
+	});
+
+	console.log(items);
+
 	if (!data) return <Text>Loading...</Text>;
 
 	const renderItem = ({ item }: any) => {
@@ -69,10 +81,28 @@ export default function Detail({ route }: { route: any }) {
 				{data.menu.name} Grocerylist
 			</Text>
 			<Text className="text-xl py-2">Items</Text>
-			<Divider />
+
 			<FlatList
-				data={data && data.items}
-				renderItem={renderItem}
+				data={items}
+				renderItem={({ item }) => {
+					return (
+						<Stack>
+							<Box
+								h={12}
+								display="flex"
+								justifyContent="center"
+								p={1}
+							>
+								<Text>{categories[item?.id]?.name}</Text>
+							</Box>
+							<Divider />
+							<FlatList
+								data={item.items}
+								renderItem={renderItem}
+							/>
+						</Stack>
+					);
+				}}
 				keyExtractor={(item: any) => item.id}
 			/>
 		</View>

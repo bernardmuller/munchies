@@ -16,33 +16,9 @@ import {
 	useUpdateIngredient,
 } from "../../hooks/ingredientsHooks";
 import { ActivityIndicator } from "react-native";
-
-const categories = [
-	{
-		id: 1,
-		name: "Fruit & Vegetables",
-	},
-	{
-		id: 2,
-		name: "Protein",
-	},
-	{
-		id: 3,
-		name: "Dairy",
-	},
-	{
-		id: 4,
-		name: "Grains",
-	},
-	{
-		id: 5,
-		name: "Spices",
-	},
-	{
-		id: 6,
-		name: "Other",
-	},
-];
+import type { Category } from "../../constants/ingredientCategories";
+import { categories } from "../../constants/ingredientCategories";
+import { format } from "date-fns";
 
 export default function IngredientDetail({ route }: { route: any }) {
 	const { ingredientId } = route.params;
@@ -61,11 +37,12 @@ export default function IngredientDetail({ route }: { route: any }) {
 	return (
 		<Stack px={4} pt={4}>
 			<Name name={data.name} onUpdateName={handleUpdateName} />
-			<Text color="gray.400">Created at: {data.createdAt}</Text>
-			<FormControl w="3/4" maxW="300" isRequired isInvalid mt={3}>
+			<Text color="gray.400">
+				Created: {format(new Date(data.createdAt), "qo MMMM uuu")}
+			</Text>
+			<FormControl isInvalid mt={3}>
 				<FormControl.Label>Category</FormControl.Label>
 				<Select
-					minWidth="200"
 					accessibilityLabel="- Select Category -"
 					placeholder="- Select Category -"
 					_selectedItem={{
@@ -76,8 +53,16 @@ export default function IngredientDetail({ route }: { route: any }) {
 					defaultValue={String(
 						categories.find((c) => c.id === data.categoryId)?.id!
 					)}
+					onValueChange={(itemValue) => {
+						updateIngredient.mutate({
+							id: ingredientId,
+							data: { categoryId: Number(itemValue) },
+						});
+					}}
+					height={16}
+					fontSize="md"
 				>
-					{categories.map((category) => (
+					{categories.map((category: Category) => (
 						<Select.Item
 							key={category.id}
 							label={category.name}
@@ -126,13 +111,14 @@ const Name = ({ name, onUpdateName }: any) => {
 	return (
 		<Box alignItems="center py-2">
 			<FormControl isInvalid={error}>
+				{edit && <FormControl.Label>Ingredient Name</FormControl.Label>}
 				<Input
 					type="text"
 					w="100%"
-					h="10"
+					h={16}
 					mb={1}
+					autoFocus
 					fontSize="md"
-					variant="underlined"
 					defaultValue={text}
 					onChange={handleChange}
 					onBlur={handleSave}
