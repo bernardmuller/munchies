@@ -42,6 +42,8 @@ export default function Detail({ route }: { route: any }) {
 	// 	setGroceryList(newList);
 	// };
 
+	if (!data) return <Text>Loading...</Text>;
+
 	const items = categories.map((category: Category) => {
 		return {
 			id: category.id,
@@ -50,10 +52,6 @@ export default function Detail({ route }: { route: any }) {
 			),
 		};
 	});
-
-	console.log(items);
-
-	if (!data) return <Text>Loading...</Text>;
 
 	const renderItem = ({ item }: any) => {
 		return (
