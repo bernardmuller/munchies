@@ -2,34 +2,32 @@ import { Text, ActivityIndicator, Button } from "react-native";
 import * as React from "react";
 import { View } from "../../components/common/View";
 import { useGrocerylistsData } from "../../hooks/grocerylistHooks";
+import { FlatList } from "native-base";
+import ListItem from "../../components/common/ListItem";
 
 function Grocerylists({ navigation }: { navigation: any }) {
 	const { data, isLoading } = useGrocerylistsData();
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
-
+	console.log(data);
 	return (
 		<View className="grid gap-1 mt-1">
 			{isLoading && <ActivityIndicator size={30} />}
 
-			{data?.length > 0 ? (
-				data?.map((list: any) => (
-					<View
-						className="p-2 w-full rounded-sm bg-white shadow-sm"
-						key={list.id}
-					>
-						<Button
-							title={`${list.menu.name} Grocerylist`}
-							onPress={() =>
-								navigation.push("GrocerylistDetail", {
-									grocerylistId: list.id,
-								})
-							}
-						/>
-					</View>
-				))
-			) : (
-				<Text>No groverylists</Text>
-			)}
+			<FlatList
+				data={data}
+				renderItem={({ item }: any) => (
+					<ListItem
+						onPress={() => {
+							navigation.push("GrocerylistDetail", {
+								grocerylistId: item.id,
+							});
+						}}
+						label={`${item?.menu?.name}`}
+						key={`groverylist-${item.menu?.name}`}
+					/>
+				)}
+				mb={10}
+			/>
 		</View>
 	);
 }
