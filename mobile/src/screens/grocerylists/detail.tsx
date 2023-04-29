@@ -1,30 +1,17 @@
 import React, { useState } from "react";
 import { useGrocerylistData } from "../../hooks/grocerylistHooks";
-import { View, Text } from "../../components/common";
+
 import { TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { Box, Divider, FlatList, Spacer, Stack } from "native-base";
+import {
+	ChevronDownIcon,
+	Divider,
+	FlatList,
+	Stack,
+	Text,
+	View,
+} from "native-base";
 import { Category, categories } from "../../constants/ingredientCategories";
-
-const data = [
-	{
-		id: "1",
-		menu: "Produce",
-		items: [
-			{ id: "1", name: "Apples" },
-			{ id: "2", name: "Bananas" },
-			{ id: "3", name: "Oranges" },
-		],
-	},
-	{
-		id: "2",
-		menu: "Dairy",
-		items: [
-			{ id: "4", name: "Milk" },
-			{ id: "5", name: "Cheese" },
-		],
-	},
-];
 
 export default function Detail({ route }: { route: any }) {
 	const { grocerylistId } = route.params;
@@ -44,65 +31,86 @@ export default function Detail({ route }: { route: any }) {
 
 	if (!data) return <Text>Loading...</Text>;
 
-	const items = categories.map((category: Category) => {
-		return {
-			id: category.id,
-			items: data.items.filter(
-				(i: any) => i.ingredient.categoryId === category.id
-			),
-		};
-	});
-
-	const renderItem = ({ item }: any) => {
-		return (
-			<View
-				className={`flex-row items-center justify-between py-3 px-4 border-b border-gray-200`}
-			>
-				<Text className={`text-base font-medium text-gray-800`}>
-					{item.ingredient.name}
-				</Text>
-				<TouchableOpacity
-					className={`bg-white border border-gray-400 rounded-full p-2`}
-					// onPress={() => handleCheckItem(item.menuId, item.id)}
-				>
-					{item.checked && (
-						<AntDesign name="check" size={18} color="green" />
-					)}
-				</TouchableOpacity>
-			</View>
-		);
-	};
+	const items = categories
+		.map((category: Category) => {
+			return {
+				id: category.id,
+				items: data.items.filter(
+					(i: any) => i.ingredient.categoryId === category.id
+				),
+			};
+		})
+		.filter((i: any) => i.items.length > 0);
 
 	return (
-		<View className={`flex-1 bg-white p-2`}>
-			<Text className="text-2xl font-semibold py-2">
+		<Stack p={2}>
+			<Text fontSize="2xl" fontWeight="semibold">
 				{data.menu.name} Grocerylist
 			</Text>
-			<Text className="text-xl py-2">Items</Text>
+			<Text fontSize="xl">Items</Text>
 
 			<FlatList
 				data={items}
 				renderItem={({ item }) => {
-					return (
-						<Stack>
-							<Box
-								h={12}
-								display="flex"
-								justifyContent="center"
-								p={1}
-							>
-								<Text>{categories[item?.id]?.name}</Text>
-							</Box>
-							<Divider />
-							<FlatList
-								data={item.items}
-								renderItem={renderItem}
-							/>
-						</Stack>
-					);
+					return <CategoryItem item={item} />;
 				}}
 				keyExtractor={(item: any) => item.id}
+				mb={20}
 			/>
-		</View>
+		</Stack>
 	);
 }
+
+const CategoryItem = ({ item }: any) => {
+	const [expanded, setExpanded] = useState(false);
+
+	return (
+		<Stack>
+			<TouchableOpacity onPress={() => setExpanded((prev) => !prev)}>
+				<Stack
+					direction="row"
+					key={item.id}
+					height="20"
+					bgColor="white"
+					borderRadius={10}
+					p={2}
+					px={6}
+					shadow="2"
+					my={1}
+					mx={1}
+					justifyContent={"space-between"}
+					alignItems={"center"}
+				>
+					<Text>{categories[item?.id - 1]?.name}</Text>
+					<ChevronDownIcon />
+				</Stack>
+			</TouchableOpacity>
+			{expanded && <FlatList data={item.items} renderItem={Item} />}
+		</Stack>
+	);
+};
+
+const Item = ({ item }: any) => {
+	return (
+		<>
+			<Stack
+				direction="row"
+				justifyContent="space-between"
+				alignItems="center"
+				px={4}
+				py={4}
+			>
+				<Text>{item.ingredient.name}</Text>
+				<TouchableOpacity
+
+				// onPress={() => handleCheckItem(item.menuId, item.id)}
+				>
+					{/* {item.checked && ( */}
+					<AntDesign name="check" size={22} color="green" />
+					{/* )} */}
+				</TouchableOpacity>
+			</Stack>
+			<Divider my={1} />
+		</>
+	);
+};
