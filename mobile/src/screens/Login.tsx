@@ -61,13 +61,13 @@ function Login({ navigation }: { navigation: any }) {
 		handleSubmit,
 		formState: { errors },
 	} = useForm({
-		// resolver: zodResolver(validationSchema),
+		resolver: zodResolver(validationSchema),
 	});
 	const [showPassword, setShowPassword] = useState(false);
 	const { signIn, loading } = useLoginHandler();
 	const onSubmit = async (data: any) => {
-		console.log("DATA => ", data);
-		// await signIn(data);
+		// console.log("DATA => ", data);
+		await signIn(data);
 	};
 
 	console.log("ERRORS => ", errors);
