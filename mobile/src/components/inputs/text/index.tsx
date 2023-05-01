@@ -15,7 +15,7 @@ const TextInput = ({
 }: {
 	name: string;
 	label: string;
-	placeholder?: (text: string) => void;
+	placeholder: string;
 	secure?: boolean;
 	control: any;
 	onBlur?: () => void;
@@ -34,8 +34,11 @@ const TextInput = ({
 					onBlur={onBlur}
 					onChangeText={onChange}
 					value={value}
-					placeholder={placeholder || ""}
-					className="w-full"
+					placeholder={placeholder}
+					height={16}
+					fontSize="md"
+					borderRadius={10}
+					secureTextEntry={secure}
 				/>
 			)}
 			name={name}
