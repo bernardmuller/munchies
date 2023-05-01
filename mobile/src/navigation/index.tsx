@@ -10,6 +10,10 @@ import RecipeStack from "./stacks/RecipeStack";
 import SettingsStack from "./stacks/SettingsStack";
 import GroceriesStack from "./stacks/GroceriesStack";
 import IngredientsStack from "./stacks/IngredientsStack";
+import Icons from "../constants/Icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
+import { Box } from "native-base";
+import Colors from "../constants/Colors";
 
 const PrivateStack = createBottomTabNavigator();
 const PublicStack = createNativeStackNavigator();
@@ -22,34 +26,147 @@ function AuthStack() {
 	);
 }
 
+const Icon = ({ name, focused, children }: any) => {
+	return (
+		<Box
+			rounded="full"
+			bg={focused ? Colors.light.CTA : "none"}
+			height={16}
+			width={16}
+			alignItems="center"
+			justifyContent="center"
+		>
+			{children}
+		</Box>
+	);
+};
+
 function AppStack() {
 	return (
 		<>
-			<PrivateStack.Navigator screenOptions={{ headerShown: false }}>
+			<PrivateStack.Navigator
+				screenOptions={({ route }) => ({
+					headerShown: false,
+					tabBarStyle: {
+						backgroundColor: Colors.secondary["900"],
+						borderTopWidth: 0,
+						borderTopColor: "transparent",
+						height: 100,
+						paddingTop: 35,
+						paddingLeft: 10,
+						paddingRight: 10,
+					},
+					tabBarIcon: ({ focused, color, size }) => {
+						switch (route.name) {
+							case "GroceriesStack":
+								return (
+									<Icon focused={focused} name="shopping-bag">
+										<Feather
+											name="shopping-bag"
+											focused={focused}
+											size={24}
+											color={
+												focused
+													? Colors.white
+													: Colors.secondary[400]
+											}
+										/>
+									</Icon>
+								);
+							case "MealplansStack":
+								return (
+									<Icon focused={focused} name="fast-food">
+										<Ionicons
+											name="fast-food"
+											focused={focused}
+											size={24}
+											color={
+												focused
+													? Colors.white
+													: Colors.secondary[400]
+											}
+										/>
+									</Icon>
+								);
+							case "RecipesStack":
+								return (
+									<Icon focused={focused} name="book-open">
+										<Feather
+											name="book-open"
+											focused={focused}
+											size={24}
+											color={
+												focused
+													? Colors.white
+													: Colors.secondary[400]
+											}
+										/>
+									</Icon>
+								);
+							case "IngredientsStack":
+								return (
+									<Icon focused={focused} name="list">
+										<Feather
+											name="list"
+											focused={focused}
+											size={24}
+											color={
+												focused
+													? Colors.white
+													: Colors.secondary[400]
+											}
+										/>
+									</Icon>
+								);
+							case "SettingsStack":
+								return (
+									<Icon focused={focused} name="settings">
+										<Feather
+											name="settings"
+											focused={focused}
+											size={24}
+											color={
+												focused
+													? Colors.white
+													: Colors.secondary[400]
+											}
+										/>
+									</Icon>
+								);
+							default:
+								break;
+						}
+					},
+				})}
+			>
 				<PrivateStack.Screen
 					name="GroceriesStack"
 					component={GroceriesStack}
-					options={{ title: "Grocerylists" }}
+					options={{
+						title: "",
+					}}
 				/>
 				<PrivateStack.Screen
 					name="MealplansStack"
 					component={MealplanStack}
-					options={{ title: "Meal plans" }}
+					options={{ title: "" }}
 				/>
 				<PrivateStack.Screen
 					name="RecipesStack"
 					component={RecipeStack}
-					options={{ title: "Recipes" }}
+					options={{
+						title: "",
+					}}
 				/>
 				<PrivateStack.Screen
 					name="IngredientsStack"
 					component={IngredientsStack}
-					options={{ title: "Ingredients" }}
+					options={{ title: "" }}
 				/>
 				<PrivateStack.Screen
 					name="SettingsStack"
 					component={SettingsStack}
-					options={{ title: "Settings" }}
+					options={{ title: "" }}
 				/>
 			</PrivateStack.Navigator>
 		</>
