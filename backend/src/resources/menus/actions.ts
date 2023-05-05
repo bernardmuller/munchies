@@ -17,8 +17,6 @@ export const createMenu = async (data: {
     id: data?.id || getUuid(),
   };
 
-  console.log('menuData ', menuData);
-
   const res = await db.menu.create({ data: menuData });
 
   await createGrocerylist({ menuId: res.id });
@@ -27,42 +25,12 @@ export const createMenu = async (data: {
   return newMenu;
 };
 
-export const getMenus = async (params?: { filters?: { id?: string } }) => {
-  if (params?.filters?.id) {
-    const uniqueMenu = await db.menu.findUnique({
-      where: { id: params.filters.id },
-    });
-    const menuMeals = await db.menuMeals.findMany({
-      where: { menuId: uniqueMenu?.id },
-    });
-
-    let temp: any[] = [];
-    for (const menuMeal of menuMeals) {
-      const dbMeal = await getMeals({ filters: { id: menuMeal.mealId } });
-      if (!dbMeal) {
-        throw new NotFoundError();
-      }
-      temp.push(dbMeal);
-    }
-
-    // Replace map with https://www.npmjs.com/package/p-map
-    const meals = await Promise.all(
-      menuMeals.map(async (menuMeal) => {
-        const dbMeal = await getMeals({ filters: { id: menuMeal.mealId } });
-        if (!dbMeal) {
-          throw new NotFoundError();
-        }
-        return dbMeal;
-      }),
-    );
-
-    return {
-      ...uniqueMenu,
-      meals: temp,
-    };
-  }
-  const rows = await db.menu.findMany();
-  const menus = rows.map((row) => MenuModel.parse(row));
+export const getMenus = async () => {
+  // const rows = await db.menu.findMany();
+  const menus = db.$queryRaw`
+    SELECT * FROM "Menu" 
+    
+  `;
   return menus;
 };
 

@@ -1,8 +1,8 @@
-import { Text, ActivityIndicator, Button } from "react-native";
+import { ActivityIndicator, Button, TouchableOpacity } from "react-native";
 import * as React from "react";
 import { useMenusData } from "../../hooks/menusHooks";
 import { View } from "../../components/common";
-import { FlatList } from "native-base";
+import { ChevronRightIcon, FlatList, Stack, Text } from "native-base";
 import ListItem from "../../components/common/ListItem";
 
 function Mealplans({ navigation }: { navigation: any }): JSX.Element {
@@ -18,15 +18,32 @@ function Mealplans({ navigation }: { navigation: any }): JSX.Element {
 			<FlatList
 				data={data}
 				renderItem={({ item }: any) => (
-					<ListItem
-						onPress={() =>
-							navigation.push("MealplanDetail", {
-								mealplanId: item.id,
-							})
-						}
-						label={`${item?.name}`}
-						key={`groverylist-${item?.name}`}
-					/>
+					<TouchableOpacity onPress={() => {}}>
+						<Stack
+							direction="row"
+							key={`mealplan-${item.id}`}
+							height="20"
+							bgColor="white"
+							borderRadius={10}
+							p={2}
+							px={6}
+							shadow="2"
+							my={1}
+							mx={2}
+							justifyContent={"space-between"}
+							alignItems={"center"}
+						>
+							<Stack>
+								<Text fontSize="xl">{item.name}</Text>
+								<Text fontSize="sm">
+									{`${item?.meals?.length} meal${
+										item?.meals?.length > 1 ? "s" : ""
+									}`}
+								</Text>
+							</Stack>
+							<ChevronRightIcon />
+						</Stack>
+					</TouchableOpacity>
 				)}
 				mb={10}
 			/>

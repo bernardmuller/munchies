@@ -70,8 +70,6 @@ function Login({ navigation }: { navigation: any }) {
 		await signIn(data);
 	};
 
-	console.log("ERRORS => ", errors);
-
 	return (
 		<Stack>
 			<Stack
