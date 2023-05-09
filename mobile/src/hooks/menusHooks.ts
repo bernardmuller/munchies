@@ -12,7 +12,24 @@ import Toast from "../components/Toast";
 import { useMealData } from "./mealsHooks";
 
 export const useMenusData = () => {
-	return useQuery(["menus"], fetchMenus);
+	const {
+		data,
+		isLoading,
+		isSuccess,
+		isError,
+		isFetching,
+		refetch,
+		isRefetching,
+	} = useQuery([`menus`], fetchMenus);
+	return {
+		data,
+		isLoading,
+		isSuccess,
+		isError,
+		isFetching,
+		refetch,
+		isRefetching,
+	};
 };
 
 export const useMenuData = (id: string) => {

@@ -1,18 +1,34 @@
-import { ActivityIndicator, Button, TouchableOpacity } from "react-native";
+import {
+	ActivityIndicator,
+	Button,
+	RefreshControl,
+	TouchableOpacity,
+} from "react-native";
 import * as React from "react";
 import { useMenusData } from "../../hooks/menusHooks";
 import { View } from "../../components/common";
-import { ChevronRightIcon, FlatList, Stack, Text } from "native-base";
+import {
+	ChevronRightIcon,
+	FlatList,
+	ScrollView,
+	Stack,
+	Text,
+} from "native-base";
 import ListItem from "../../components/common/ListItem";
 
 function Mealplans({ navigation }: { navigation: any }): JSX.Element {
-	const { data, isLoading } = useMenusData();
+	const { data, isLoading, refetch, isRefetching } = useMenusData();
 
 	console.log(data);
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
 
 	return (
-		<View className="grid gap-1 mt-1">
+		<ScrollView
+			mt={2}
+			refreshControl={
+				<RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+			}
+		>
 			{isLoading && <ActivityIndicator size={30} />}
 
 			<FlatList
@@ -47,7 +63,7 @@ function Mealplans({ navigation }: { navigation: any }): JSX.Element {
 				)}
 				mb={10}
 			/>
-		</View>
+		</ScrollView>
 	);
 }
 
