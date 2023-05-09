@@ -6,9 +6,22 @@ export const useGrocerylistsData = () => {
 };
 
 export const useGrocerylistData = (id: string) => {
-	const { data, isLoading, isSuccess, isError, isFetching } = useQuery(
-		[`list-${id}`],
-		() => fetchGrocerylist(id)
-	);
-	return { data, isLoading, isSuccess, isError, isFetching };
+	const {
+		data,
+		isLoading,
+		isSuccess,
+		isError,
+		isFetching,
+		refetch,
+		isRefetching,
+	} = useQuery([`list-${id}`], () => fetchGrocerylist(id));
+	return {
+		data,
+		isLoading,
+		isSuccess,
+		isError,
+		isFetching,
+		refetch,
+		isRefetching,
+	};
 };

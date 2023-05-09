@@ -1,16 +1,26 @@
-import { Text, ActivityIndicator, Button } from "react-native";
+import { Text, ActivityIndicator, Button, RefreshControl } from "react-native";
 import * as React from "react";
 import { View } from "../../components/common/View";
 import { useGrocerylistsData } from "../../hooks/grocerylistHooks";
-import { FlatList } from "native-base";
+import { FlatList, ScrollView } from "native-base";
 import ListItem from "../../components/common/ListItem";
 
 function Grocerylists({ navigation }: { navigation: any }) {
-	const { data, isLoading } = useGrocerylistsData();
+	const { data, isLoading, refetch, isRefetching } = useGrocerylistsData();
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
-	console.log(data);
+
 	return (
-		<View className="grid gap-1 mt-1">
+		<ScrollView
+			mt={2}
+			refreshControl={
+				<RefreshControl
+					refreshing={isRefetching}
+					onRefresh={() => {
+						refetch();
+					}}
+				/>
+			}
+		>
 			{isLoading && <ActivityIndicator size={30} />}
 
 			<FlatList
@@ -28,7 +38,7 @@ function Grocerylists({ navigation }: { navigation: any }) {
 				)}
 				mb={10}
 			/>
-		</View>
+		</ScrollView>
 	);
 }
 

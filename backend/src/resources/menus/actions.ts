@@ -26,12 +26,11 @@ export const createMenu = async (data: {
 };
 
 export const getMenus = async () => {
-  // const rows = await db.menu.findMany();
-  const menus = db.$queryRaw`
-    SELECT * FROM "Menu" 
-    
-  `;
-  return menus;
+  return await db.menu.findMany({
+    include: {
+      meals: true,
+    },
+  });
 };
 
 export const getMenu = async (id: string) => {
