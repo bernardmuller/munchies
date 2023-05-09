@@ -9,7 +9,24 @@ import { addIngredientToMeal, removeIngredientFromMeal } from "../api/meals";
 import useToast from "./useToast";
 
 export const useIngredientsData = () => {
-	return useQuery(["ingredients"], () => fetchIngredients({}));
+	const {
+		data,
+		isLoading,
+		isSuccess,
+		isError,
+		isFetching,
+		isRefetching,
+		refetch,
+	} = useQuery(["ingredients"], () => fetchIngredients({}));
+	return {
+		data,
+		isLoading,
+		isSuccess,
+		isError,
+		isFetching,
+		isRefetching,
+		refetch,
+	};
 };
 
 export const useIngredientData = (id: string) => {

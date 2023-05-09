@@ -20,6 +20,7 @@ import {
 	CheckIcon,
 	AddIcon,
 	MinusIcon,
+	FlatList,
 } from "native-base";
 import { useState } from "react";
 import { Entypo } from "@expo/vector-icons";
@@ -48,9 +49,10 @@ export default function AddIngredients({ route }: { route: any }) {
 	);
 
 	return (
-		<ScrollView className="px-2 py-2">
-			{data.map((ingredient: any) => {
-				return (
+		<View className="px-2 py-2" pb={6}>
+			<FlatList
+				data={data}
+				renderItem={({ ingredient }: any) => (
 					<Stack
 						direction="row"
 						key={ingredient.id}
@@ -99,8 +101,8 @@ export default function AddIngredients({ route }: { route: any }) {
 							/>
 						)}
 					</Stack>
-				);
-			})}
-		</ScrollView>
+				)}
+			/>
+		</View>
 	);
 }

@@ -171,13 +171,7 @@ export const useAddIngredientToMeal = ({ mealId }: { mealId: string }) => {
 	});
 };
 
-export const useRemoveIngredientFromMeal = ({
-	mealId,
-	ingredient,
-}: {
-	mealId: string;
-	ingredient: any;
-}) => {
+export const useRemoveIngredientFromMeal = ({ mealId }: { mealId: string }) => {
 	const queryClient = useQueryClient();
 	const toast = useToast();
 

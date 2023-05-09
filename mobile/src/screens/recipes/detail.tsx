@@ -169,7 +169,7 @@ function RecipeDetail({ route, navigation }: { route: any; navigation: any }) {
 	const { data, isFetching } = useMealData(recipeId);
 	const updateMeal = useUpdateMeal({ mealId: recipeId });
 	if (!data && isFetching) return <ActivityIndicator size={30} />;
-	console.log("RECIPE => ", JSON.stringify(data, null, 2));
+
 	return (
 		// @ts-ignore
 		<ScrollView className="p-2 ">
@@ -219,7 +219,7 @@ function RecipeDetail({ route, navigation }: { route: any; navigation: any }) {
 					})
 				}
 			>
-				Add Recipe
+				Add Ingredient
 			</Button>
 			{/* <AddIngredient
 				recipeId={recipeId}

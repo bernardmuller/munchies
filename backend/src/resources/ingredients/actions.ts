@@ -36,7 +36,7 @@ export const getIngredients = async (params?: {
     skip: params?.offset || 0,
     take: params?.limit || 10,
     orderBy: {
-      name: 'asc',
+      createdAt: 'desc',
     },
   };
 
