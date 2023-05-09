@@ -6,7 +6,7 @@ import { useMealData, useUpdateMeal } from "../../hooks/mealsHooks";
 import { z } from "zod";
 import { debounce } from "lodash";
 // import SearchableDropDown from "react-native-dropdown-searchable";
-import { useAddIngredientToMeal } from "../../hooks/ingredientsHooks";
+import { useAddIngredientToMeal } from "../../hooks/mealsHooks";
 //@ts-ignore
 import SearchableDropdown from "react-native-searchable-dropdown";
 import { fetchIngredients } from "../../api/ingredients";
@@ -22,6 +22,7 @@ import {
 	Stack,
 	IconButton,
 	DeleteIcon,
+	CheckIcon,
 } from "native-base";
 import { ScrollView } from "react-native";
 import { format } from "date-fns";
@@ -46,7 +47,6 @@ const AddIngredient = ({
 	});
 	const addIngredient = useAddIngredientToMeal({
 		mealId: recipeId,
-		ingredient: selectedIngredient,
 	});
 
 	const toast = useToast();
@@ -171,6 +171,7 @@ function RecipeDetail({ route, navigation }: { route: any; navigation: any }) {
 	if (!data && isFetching) return <ActivityIndicator size={30} />;
 	console.log("RECIPE => ", JSON.stringify(data, null, 2));
 	return (
+		// @ts-ignore
 		<ScrollView className="p-2 ">
 			<Name
 				name={data.name}
@@ -255,11 +256,11 @@ const Name = ({ name, onUpdateName }: any) => {
 
 	if (!edit) {
 		return (
-			<Stack>
+			<View className="flex flex-col">
 				<Text fontSize="2xl" fontWeight="semibold" onPress={toggleEdit}>
 					{text}
 				</Text>
-			</Stack>
+			</View>
 		);
 	}
 
@@ -269,19 +270,28 @@ const Name = ({ name, onUpdateName }: any) => {
 				<Input
 					type="text"
 					w="100%"
+					h="16"
+					mb={1}
+					px={4}
+					fontSize="md"
+					variant="outline"
+					rounded={10}
 					defaultValue={text}
 					onChange={handleChange}
 					onBlur={handleSave}
 					InputRightElement={
-						<Button
-							size="xs"
-							rounded="none"
-							w="1/6"
-							h="full"
+						<IconButton
+							mr={2}
+							icon={
+								<CheckIcon
+									size="lg"
+									rounded="full"
+									w="1/6"
+									h="full"
+								></CheckIcon>
+							}
 							onPress={handleSave}
-						>
-							Save
-						</Button>
+						/>
 					}
 					placeholder="Enter name..."
 				/>
@@ -289,7 +299,7 @@ const Name = ({ name, onUpdateName }: any) => {
 					<FormControl.ErrorMessage
 						leftIcon={<WarningOutlineIcon size="xs" />}
 					>
-						Please enter a valid recipe name.
+						Please enter a valid name.
 					</FormControl.ErrorMessage>
 				)}
 			</FormControl>

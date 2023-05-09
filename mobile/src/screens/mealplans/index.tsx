@@ -34,7 +34,13 @@ function Mealplans({ navigation }: { navigation: any }): JSX.Element {
 			<FlatList
 				data={data}
 				renderItem={({ item }: any) => (
-					<TouchableOpacity onPress={() => {}}>
+					<TouchableOpacity
+						onPress={() => {
+							navigation.push("MealplanDetail", {
+								mealplanId: item.id,
+							});
+						}}
+					>
 						<Stack
 							direction="row"
 							key={`mealplan-${item.id}`}

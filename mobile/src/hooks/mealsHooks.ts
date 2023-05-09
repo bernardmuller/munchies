@@ -12,7 +12,27 @@ import {
 import useToast from "./useToast";
 
 export const useMealsData = () => {
-	return useQuery(["meals"], fetchMeals);
+	const {
+		data,
+		isLoading,
+		isSuccess,
+		isError,
+		isFetching,
+		isRefetching,
+		refetch,
+	} = useQuery({
+		queryKey: ["meals"],
+		queryFn: fetchMeals,
+	});
+	return {
+		data,
+		isLoading,
+		isSuccess,
+		isError,
+		isFetching,
+		isRefetching,
+		refetch,
+	};
 };
 
 export const useMealData = (id: string) => {

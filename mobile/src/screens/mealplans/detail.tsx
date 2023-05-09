@@ -126,15 +126,18 @@ const Name = ({ name, onUpdateName }: any) => {
 				<Input
 					type="text"
 					w="100%"
-					h="10"
+					h="16"
 					mb={1}
+					px={4}
 					fontSize="md"
-					variant="underlined"
+					variant="outline"
+					rounded={10}
 					defaultValue={text}
 					onChange={handleChange}
 					onBlur={handleSave}
 					InputRightElement={
 						<IconButton
+							mr={2}
 							icon={
 								<CheckIcon
 									size="lg"

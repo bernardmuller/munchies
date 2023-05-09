@@ -1,18 +1,28 @@
-import { Text, ActivityIndicator, Button } from "react-native";
+import { Text, ActivityIndicator, Button, RefreshControl } from "react-native";
 import * as React from "react";
 import { useMealsData } from "../../hooks/mealsHooks";
-import { FlatList, useToast } from "native-base";
+import { FlatList, ScrollView, useToast } from "native-base";
 import { Link } from "@react-navigation/native";
 import { View } from "../../components/common/View";
 import ListItem from "../../components/common/ListItem";
 
 function Recipes({ navigation }: { navigation: any }) {
-	const { data, isLoading, error, isError } = useMealsData();
+	const { data, isLoading, isError, isRefetching, refetch } = useMealsData();
 
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
 
 	return (
-		<View className="grid gap-1 mt-1">
+		<ScrollView
+			mt={2}
+			refreshControl={
+				<RefreshControl
+					refreshing={isRefetching}
+					onRefresh={() => {
+						refetch();
+					}}
+				/>
+			}
+		>
 			{isLoading && <ActivityIndicator size={30} />}
 
 			<FlatList
@@ -30,7 +40,7 @@ function Recipes({ navigation }: { navigation: any }) {
 				)}
 				mb={10}
 			/>
-		</View>
+		</ScrollView>
 	);
 }
 
