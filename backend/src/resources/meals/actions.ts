@@ -9,9 +9,9 @@ import { getIngredients } from '../ingredients/actions';
 import { NotFoundError } from '../../shared/errors';
 import { Ingredient } from '@prisma/client';
 
-export const createMeal = async (data: { id?: string }) => {
+export const createMeal = async (data: { id?: string, createdBy: string }) => {
   const mealData = { ...data, id: data.id || getUuid() };
-
+  console.log({data})
   const res = await db.meal.create({ data: mealData });
   const newMeal = MealModel.parse(res);
   return newMeal;
@@ -41,6 +41,15 @@ export const getMeals = async (params?: { filters?: { id?: string } }) => {
   });
   return rows.map((row) => MealModel.parse(row));
 };
+
+export const getMealsByUserId = async (id: string) => {
+  if(!id) throw new Error('No user id provided')
+  const rows = await db.meal.findMany({
+    where: { createdBy: id },
+    include: { ingredients: true },
+  });
+  return rows.map((row) => MealModel.parse(row));
+}
 
 export const getMeal = async (id: string) => {
   let uniqueMeal = await db.meal.findUnique({

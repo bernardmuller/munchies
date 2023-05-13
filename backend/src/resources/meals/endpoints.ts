@@ -7,6 +7,7 @@ import {
   deleteMeal,
   getMeal,
   getMeals,
+  getMealsByUserId,
   removeDirectionFromMeal,
   removeIngredientFromMeal,
   updateMeal,
@@ -17,7 +18,9 @@ const endpoints = [
     method: 'post',
     path: '/meals',
     handler: async (req: Request, res: Response) => {
-      const meal = await createMeal({});
+      const meal = await createMeal({
+        createdBy: res.locals.userId
+      });
       return res.send(meal);
     },
     authenticate: true,
@@ -26,8 +29,7 @@ const endpoints = [
     method: 'get',
     path: '/meals',
     handler: async (req: Request, res: Response) => {
-      console.log('get meals => ', req);
-      const meals = await getMeals();
+      const meals = await getMealsByUserId(res.locals.userId);
       return res.send(meals);
     },
     authenticate: true,
