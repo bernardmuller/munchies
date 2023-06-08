@@ -7,6 +7,7 @@ import {
   deleteMeal,
   getMeal,
   getMeals,
+  getMealsByUserId,
   removeDirectionFromMeal,
   removeIngredientFromMeal,
   updateMeal,
@@ -17,7 +18,9 @@ const endpoints = [
     method: 'post',
     path: '/meals',
     handler: async (req: Request, res: Response) => {
-      const meal = await createMeal({});
+      const meal = await createMeal({
+        createdBy: res.locals.userId
+      });
       return res.send(meal);
     },
     authenticate: true,
@@ -26,8 +29,7 @@ const endpoints = [
     method: 'get',
     path: '/meals',
     handler: async (req: Request, res: Response) => {
-      console.log('get meals => ', req);
-      const meals = await getMeals();
+      const meals = await getMealsByUserId(res.locals.userId);
       return res.send(meals);
     },
     authenticate: true,
@@ -47,8 +49,20 @@ const endpoints = [
     path: '/meals/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
-      const params = req.body;
-      console.log(params);
+      const params = {
+        name: req.body.name,
+        directions: req.body.directions,
+        cuisine: req.body.cuisine,
+        URL: req.body.URL,
+        image: req.body.image,
+        prepTime: req.body.prepTime,
+        cookTime: req.body.cookTime,
+        readyIn: req.body.readyIn,
+        rating: req.body.rating,
+        notes: req.body.notes,
+        updatedBy: res.locals.userId
+      }
+
       const meal = await updateMeal(id, params);
       return res.send(meal);
     },

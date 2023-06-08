@@ -9,33 +9,14 @@ import { getIngredients } from '../ingredients/actions';
 import { NotFoundError } from '../../shared/errors';
 import { Ingredient } from '@prisma/client';
 
-export const createMeal = async (data: { id?: string }) => {
+export const createMeal = async (data: { id?: string, createdBy: string }) => {
   const mealData = { ...data, id: data.id || getUuid() };
-
   const res = await db.meal.create({ data: mealData });
   const newMeal = MealModel.parse(res);
   return newMeal;
 };
 
-export const getMeals = async (params?: { filters?: { id?: string } }) => {
-  if (params?.filters?.id) {
-    let uniqueMeal = await db.meal.findUnique({
-      where: { id: params.filters.id },
-    });
-    const ingredientRows = await db.mealIngredient.findMany({
-      where: { mealId: params.filters.id },
-      include: { ingredient: true },
-    });
-
-    let mealObj = {
-      ...uniqueMeal,
-      ingredients: [] as any,
-    };
-    ingredientRows.forEach((ing) => {
-      return mealObj.ingredients.push(ing);
-    });
-    return mealObj;
-  }
+export const getMeals = async ( ) => {
   const rows = await db.meal.findMany({
     include: { ingredients: true },
     orderBy: {
@@ -45,6 +26,15 @@ export const getMeals = async (params?: { filters?: { id?: string } }) => {
 
   return rows;
 };
+
+export const getMealsByUserId = async (id: string) => {
+  if(!id) throw new Error('No user id provided')
+  const rows = await db.meal.findMany({
+    where: { createdBy: id },
+    include: { ingredients: true },
+  });
+  return rows.map((row) => MealModel.parse(row));
+}
 
 export const getMeal = async (id: string) => {
   let uniqueMeal = await db.meal.findUnique({
@@ -78,9 +68,12 @@ export const updateMeal = async (
     readyIn?: number;
     rating?: string;
     notes?: string;
+    updatedBy: string;
   },
 ) => {
-  const meal = await getMeals({ filters: { id } });
+  const meal = await getMeal(id);
+
+  if(data.updatedBy !== meal.createdBy) throw new Error('You are not authorized to update this meal.')
 
   if (!meal) {
     throw new NotFoundError();
@@ -100,7 +93,7 @@ export const updateMeal = async (
 };
 
 export const deleteMeal = async (id: string) => {
-  const user = await getMeals({ filters: { id } });
+  const user = await getMeal(id);
   if (!user) throw new Error('Meal not found');
 
   await db.meal.delete({
@@ -122,7 +115,7 @@ export const addIngredientToMeal = async ({
   mealId: string;
   ingredientId: string;
 }) => {
-  const meal = await getMeals({ filters: { id: mealId } });
+  const meal = await getMeal(mealId);
   if (!meal) throw new NotFoundError('Meal not found.');
 
   const ingredient = await getIngredients({ filters: { id: ingredientId } });
@@ -155,7 +148,7 @@ export const removeIngredientFromMeal = async ({
   mealId: string;
   ingredientId: string;
 }) => {
-  const meal = await getMeals({ filters: { id: mealId } });
+  const meal = await getMeal(mealId);
   if (!meal) throw new NotFoundError('Meal not found.');
 
   const ingredient = await getIngredients({ filters: { id: ingredientId } });
@@ -178,7 +171,7 @@ export const addQuantityToMealIngredient = async ({
   ingredientId: string;
   quantity: string;
 }) => {
-  const meal = await getMeals({ filters: { id: mealId } });
+  const meal = await getMeal(mealId);
   if (!meal) throw new NotFoundError('Meal not found.');
 
   const ingredient = await getIngredients({ filters: { id: ingredientId } });
@@ -202,7 +195,7 @@ export const addDirectionToMeal = async ({
   mealId: string;
   direction: string;
 }) => {
-  const meal = await getMeals({ filters: { id: mealId } });
+  const meal = await getMeal(mealId);
   if (!meal) throw new NotFoundError('Meal not found.');
 
   const directions = [...meal.directions, direction];
@@ -225,7 +218,7 @@ export const removeDirectionFromMeal = async ({
   directionIndex: number;
 }) => {
   console.log(directionIndex);
-  const meal = await getMeals({ filters: { id: mealId } });
+  const meal = await getMeal(mealId);
   if (!meal) throw new NotFoundError('Meal not found.');
 
   const directions = meal.directions.filter(
