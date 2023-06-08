@@ -30,6 +30,9 @@ export const getMenus = async () => {
     include: {
       meals: true,
     },
+    orderBy: {
+      createdAt: 'desc',
+    },
   });
 };
 

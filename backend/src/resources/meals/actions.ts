@@ -38,8 +38,12 @@ export const getMeals = async (params?: { filters?: { id?: string } }) => {
   }
   const rows = await db.meal.findMany({
     include: { ingredients: true },
+    orderBy: {
+      createdAt: 'desc',
+    },
   });
-  return rows.map((row) => MealModel.parse(row));
+
+  return rows;
 };
 
 export const getMeal = async (id: string) => {

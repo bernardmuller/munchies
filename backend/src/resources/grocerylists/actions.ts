@@ -14,6 +14,9 @@ export const createGrocerylist = async (data: { menuId?: string }) => {
 export const getGrocerylists = async () => {
   const rows = await db.grocerylist.findMany({
     include: { menu: true },
+    orderBy: {
+      createdAt: 'desc',
+    },
   });
   return rows;
 };
