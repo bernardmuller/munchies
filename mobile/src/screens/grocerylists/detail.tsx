@@ -12,6 +12,7 @@ import {
 	View,
 } from "native-base";
 import { Category, categories } from "../../constants/ingredientCategories";
+import { useCheckItem, useUnCheckItem } from "../../hooks/items";
 
 export default function Detail({ route }: { route: any }) {
 	const { grocerylistId } = route.params;
@@ -52,7 +53,12 @@ export default function Detail({ route }: { route: any }) {
 			<FlatList
 				data={items}
 				renderItem={({ item }) => {
-					return <CategoryItem item={item} />;
+					return (
+						<CategoryItem
+							item={item}
+							grocerylistId={grocerylistId}
+						/>
+					);
 				}}
 				keyExtractor={(item: any) => item.id}
 				mb={20}
@@ -61,8 +67,10 @@ export default function Detail({ route }: { route: any }) {
 	);
 }
 
-const CategoryItem = ({ item }: any) => {
+const CategoryItem = ({ item, grocerylistId }: any) => {
 	const [expanded, setExpanded] = useState(false);
+	const checkItemMutation = useCheckItem(grocerylistId);
+	const unCheckItemMutation = useUnCheckItem(grocerylistId);
 
 	return (
 		<Stack>
@@ -85,12 +93,29 @@ const CategoryItem = ({ item }: any) => {
 					<ChevronDownIcon />
 				</Stack>
 			</TouchableOpacity>
-			{expanded && <FlatList data={item.items} renderItem={Item} />}
+			{expanded && (
+				<FlatList
+					data={item.items}
+					renderItem={({ item }: any) => (
+						<Item
+							item={item}
+							onPress={() => {
+								if (item.check) {
+									unCheckItemMutation.mutate(item.id);
+								} else {
+									checkItemMutation.mutate(item.id);
+								}
+							}}
+						/>
+					)}
+				/>
+			)}
 		</Stack>
 	);
 };
 
-const Item = ({ item }: any) => {
+const Item = ({ item, onPress }: any) => {
+	const [checked, setChecked] = useState(item.check);
 	return (
 		<>
 			<Stack
@@ -102,12 +127,20 @@ const Item = ({ item }: any) => {
 			>
 				<Text>{item.ingredient.name}</Text>
 				<TouchableOpacity
-
-				// onPress={() => handleCheckItem(item.menuId, item.id)}
+					onPress={() => {
+						setChecked((prev: boolean) => !prev);
+						onPress();
+					}}
 				>
-					{/* {item.checked && ( */}
-					<AntDesign name="check" size={22} color="green" />
-					{/* )} */}
+					{checked ? (
+						<AntDesign name="checkcircle" size={24} color="black" />
+					) : (
+						<AntDesign
+							name="checkcircleo"
+							size={24}
+							color="black"
+						/>
+					)}
 				</TouchableOpacity>
 			</Stack>
 			<Divider my={1} />

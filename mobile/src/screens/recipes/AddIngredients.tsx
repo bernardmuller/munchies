@@ -52,10 +52,10 @@ export default function AddIngredients({ route }: { route: any }) {
 		<View className="px-2 py-2" pb={6}>
 			<FlatList
 				data={data}
-				renderItem={({ ingredient }: any) => (
+				renderItem={({ item }: any) => (
 					<Stack
 						direction="row"
-						key={ingredient.id}
+						key={item.ingredient.id}
 						height="20"
 						bgColor="white"
 						borderRadius={10}
@@ -67,14 +67,14 @@ export default function AddIngredients({ route }: { route: any }) {
 						alignItems={"center"}
 					>
 						<Stack justifyContent="space-evenly">
-							<Text fontSize="xl">{ingredient.name}</Text>
+							<Text fontSize="xl">{item.ingredient.name}</Text>
 							<Text fontSize="sm" color="gray.400">
 								Ingredients: meal.ingredients.length
 							</Text>
 						</Stack>
 						{meal?.data?.ingredients &&
 						meal?.data?.ingredients?.find(
-							(ing: any) => ing.id === ingredient.id
+							(ing: any) => ing.id === item.ingredient.id
 						) ? (
 							<IconButton
 								height={10}
@@ -82,7 +82,7 @@ export default function AddIngredients({ route }: { route: any }) {
 								icon={<MinusIcon name="minus" />}
 								onPress={() =>
 									removeIngredient.mutate({
-										ingredientId: ingredient?.id,
+										ingredientId: item.ingredient?.id,
 										mealId: recipeId,
 									})
 								}
@@ -94,7 +94,7 @@ export default function AddIngredients({ route }: { route: any }) {
 								icon={<AddIcon name="plus" />}
 								onPress={() =>
 									addIngredient.mutate({
-										ingredient: ingredient,
+										ingredient: item.ingredient,
 										mealId: recipeId,
 									})
 								}
