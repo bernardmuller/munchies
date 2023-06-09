@@ -11,7 +11,7 @@ function Ingredients({ navigation }: { navigation: any }) {
 		<SafeAreaView>
 			{isLoading && <ActivityIndicator size={30} />}
 			<FlatList
-				mt={2}
+				pt={2}
 				height="100%"
 				refreshControl={
 					<RefreshControl
