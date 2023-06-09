@@ -4,6 +4,7 @@ import { CompleteMenu, RelatedMenuModel, CompleteItem, RelatedItemModel } from "
 export const GrocerylistModel = z.object({
   id: z.string(),
   createdAt: z.date(),
+  createdBy: z.string().nullish(),
   menuId: z.string().nullish(),
 })
 

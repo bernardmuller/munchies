@@ -6,6 +6,7 @@ export const IngredientModel = z.object({
   name: z.string(),
   categoryId: z.number().int(),
   createdAt: z.date(),
+  createdBy: z.string().nullish(),
   mealId: z.string().nullish(),
 })
 

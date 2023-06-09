@@ -100,8 +100,5 @@ export const extractRequestOrigin = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const origin = req.headers.origin;
-  console.log(origin);
-
   next();
 };

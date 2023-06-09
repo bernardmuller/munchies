@@ -8,6 +8,7 @@ export const MenuModel = z.object({
   endDate: z.date().nullish(),
   createdAt: z.date(),
   householdId: z.string().nullish(),
+  createdBy: z.string().nullish(),
   grocerylistId: z.string().nullish(),
 })
 

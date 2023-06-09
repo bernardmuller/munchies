@@ -85,7 +85,6 @@ export const updateIngredient = async (
   data: { id?: string; name: string; categoryId: number },
 ) => {
   const Ingredient = await getIngredientbyId(id);
-  console.log('update date => ', data);
   if (!Ingredient) {
     throw new Error('Ingredient not found');
   }

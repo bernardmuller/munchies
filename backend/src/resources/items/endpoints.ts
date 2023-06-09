@@ -66,7 +66,6 @@ const endpoints = [
     method: 'post',
     path: '/items/:id/check',
     handler: async (req: Request, res: Response) => {
-      console.log('check');
       const { id } = req.params;
       const item = await checkItem(id);
       return res.send(item);
@@ -77,7 +76,6 @@ const endpoints = [
     method: 'post',
     path: '/items/:id/unCheck',
     handler: async (req: Request, res: Response) => {
-      console.log('uncheck');
       const { id } = req.params;
       const item = await unCheckItem(id);
       return res.send(item);

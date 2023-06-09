@@ -7,19 +7,16 @@ import { createItem } from '../items/actions';
 import { Meal } from '@prisma/client';
 import { NotFoundError } from '../../shared/errors';
 
-export const createMenu = async (data: {
-  id?: string;
-  houseHoldId: string;
-}) => {
+export const createMenu = async (data: { id?: string; createdBy: string }) => {
   const menuData = {
     name: 'New Menu',
-    houseHoldId: data.houseHoldId,
+    createdBy: data.createdBy,
     id: data?.id || getUuid(),
   };
 
   const res = await db.menu.create({ data: menuData });
 
-  await createGrocerylist({ menuId: res.id });
+  await createGrocerylist({ menuId: res.id, createdBy: data.createdBy });
 
   const newMenu = MenuModel.parse(res);
   return newMenu;
@@ -27,6 +24,20 @@ export const createMenu = async (data: {
 
 export const getMenus = async () => {
   return await db.menu.findMany({
+    include: {
+      meals: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+};
+
+export const getMenusByUserId = async (userId: string) => {
+  return await db.menu.findMany({
+    where: {
+      createdBy: userId,
+    },
     include: {
       meals: true,
     },

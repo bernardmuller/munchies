@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 import {
   createGrocerylist,
   deleteGrocerylist,
-  getGrocerylists,
   getGrocerylist,
   updateGrocerylist,
+  getGrocerylistsByUserId,
 } from './actions';
 
 const endpoints = [
@@ -21,7 +21,7 @@ const endpoints = [
     method: 'get',
     path: '/grocerylists',
     handler: async (req: Request, res: Response) => {
-      const grocerylists = await getGrocerylists();
+      const grocerylists = await getGrocerylistsByUserId(res.locals.userId);
       return res.send(grocerylists);
     },
     authenticate: true,

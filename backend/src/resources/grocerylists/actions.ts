@@ -2,7 +2,10 @@ import { db } from '../../db/db';
 import { getUuid } from '../../shared/utils';
 import { GrocerylistModel } from '../../../prisma/zod';
 
-export const createGrocerylist = async (data: { menuId?: string }) => {
+export const createGrocerylist = async (data: {
+  menuId?: string;
+  createdBy: string;
+}) => {
   const grocerylistData = { ...data, id: getUuid() };
 
   const res = await db.grocerylist.create({ data: grocerylistData });
@@ -13,6 +16,17 @@ export const createGrocerylist = async (data: { menuId?: string }) => {
 
 export const getGrocerylists = async () => {
   const rows = await db.grocerylist.findMany({
+    include: { menu: true },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+  return rows;
+};
+
+export const getGrocerylistsByUserId = async (userId: string) => {
+  const rows = await db.grocerylist.findMany({
+    where: { createdBy: userId },
     include: { menu: true },
     orderBy: {
       createdAt: 'desc',

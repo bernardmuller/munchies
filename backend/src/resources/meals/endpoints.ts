@@ -19,7 +19,7 @@ const endpoints = [
     path: '/meals',
     handler: async (req: Request, res: Response) => {
       const meal = await createMeal({
-        createdBy: res.locals.userId
+        createdBy: res.locals.userId,
       });
       return res.send(meal);
     },
@@ -60,8 +60,8 @@ const endpoints = [
         readyIn: req.body.readyIn,
         rating: req.body.rating,
         notes: req.body.notes,
-        updatedBy: res.locals.userId
-      }
+        updatedBy: res.locals.userId,
+      };
 
       const meal = await updateMeal(id, params);
       return res.send(meal);

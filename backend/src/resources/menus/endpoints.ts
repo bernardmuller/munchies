@@ -5,6 +5,7 @@ import {
   deleteMenu,
   getMenu,
   getMenus,
+  getMenusByUserId,
   removeMealfromMenu,
   updateMenu,
 } from './actions';
@@ -14,7 +15,10 @@ const endpoints = [
     method: 'post',
     path: '/menus',
     handler: async (req: Request, res: Response) => {
-      const menu = await createMenu(req.body);
+      const menu = await createMenu({
+        ...req.body,
+        createdBy: res.locals.userId,
+      });
       return res.send(menu);
     },
     authenticate: true,
@@ -23,7 +27,7 @@ const endpoints = [
     method: 'get',
     path: '/menus',
     handler: async (req: Request, res: Response) => {
-      const menus = await getMenus();
+      const menus = await getMenusByUserId(res.locals.userId);
       return res.send(menus);
     },
     authenticate: true,
@@ -66,7 +70,6 @@ const endpoints = [
       if (!id || !req.body.mealId)
         return res.status(400).send({ message: 'Missing required fields' });
       const menu = await addMealToMenu({ menuId: id, mealId: req.body.mealId });
-      console.log('Response => ', menu);
       return res.send(menu);
     },
     authenticate: true,
