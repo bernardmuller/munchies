@@ -14,7 +14,7 @@ function Recipes({ navigation }: { navigation: any }) {
 
 			<FlatList
 				height="100%"
-				mt={2}
+				pt={2}
 				refreshControl={
 					<RefreshControl
 						refreshing={isRefetching}

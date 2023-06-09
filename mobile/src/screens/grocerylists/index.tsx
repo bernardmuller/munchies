@@ -20,7 +20,7 @@ function Grocerylists({ navigation }: { navigation: any }) {
 						}}
 					/>
 				}
-				mt={2}
+				pt={2}
 				data={data}
 				height="100%"
 				renderItem={({ item }: any) => (

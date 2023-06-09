@@ -17,7 +17,7 @@ function Mealplans({ navigation }: { navigation: any }): JSX.Element {
 			{isLoading && <ActivityIndicator size={30} />}
 
 			<FlatList
-				mt={2}
+				pt={2}
 				height="100%"
 				refreshControl={
 					<RefreshControl
