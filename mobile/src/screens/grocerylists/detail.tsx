@@ -98,6 +98,7 @@ const CategoryItem = ({ item, grocerylistId }: any) => {
 					data={item.items}
 					renderItem={({ item }: any) => (
 						<Item
+							key={item.id}
 							item={item}
 							onPress={() => {
 								if (item.check) {

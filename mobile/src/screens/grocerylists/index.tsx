@@ -1,4 +1,10 @@
-import { Text, ActivityIndicator, Button, RefreshControl } from "react-native";
+import {
+	Text,
+	ActivityIndicator,
+	Button,
+	RefreshControl,
+	SafeAreaView,
+} from "react-native";
 import * as React from "react";
 import { View } from "../../components/common/View";
 import { useGrocerylistsData } from "../../hooks/grocerylistHooks";
@@ -10,21 +16,20 @@ function Grocerylists({ navigation }: { navigation: any }) {
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
 
 	return (
-		<ScrollView
-			mt={2}
-			refreshControl={
-				<RefreshControl
-					refreshing={isRefetching}
-					onRefresh={() => {
-						refetch();
-					}}
-				/>
-			}
-		>
+		<SafeAreaView>
 			{isLoading && <ActivityIndicator size={30} />}
 
 			<FlatList
+				refreshControl={
+					<RefreshControl
+						refreshing={isRefetching}
+						onRefresh={() => {
+							refetch();
+						}}
+					/>
+				}
 				data={data}
+				height="100%"
 				renderItem={({ item }: any) => (
 					<ListItem
 						onPress={() => {
@@ -38,7 +43,7 @@ function Grocerylists({ navigation }: { navigation: any }) {
 				)}
 				mb={10}
 			/>
-		</ScrollView>
+		</SafeAreaView>
 	);
 }
 
