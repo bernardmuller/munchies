@@ -8,8 +8,6 @@ import {
 	createMenu,
 } from "../api/menus";
 import useToast from "./useToast";
-import Toast from "../components/Toast";
-import { useMealData } from "./mealsHooks";
 
 export const useMenusData = () => {
 	const {
