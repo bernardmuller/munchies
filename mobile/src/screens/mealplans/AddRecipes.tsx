@@ -2,34 +2,15 @@ import {
 	useAddMealToMenu,
 	useMenuData,
 	useRemoveMealFromMenu,
-	useUpdateMenu,
 } from "../../hooks/menusHooks";
-import { View } from "../../components/common";
 import { ActivityIndicator, ScrollView } from "react-native";
-import {
-	Box,
-	Button,
-	FormControl,
-	Icon,
-	IconButton,
-	Input,
-	Stack,
-	WarningOutlineIcon,
-	Text,
-	CloseIcon,
-	CheckIcon,
-	AddIcon,
-	MinusIcon,
-} from "native-base";
-import { useState } from "react";
-import { Entypo } from "@expo/vector-icons";
+import { IconButton, Stack, Text, AddIcon, MinusIcon } from "native-base";
 import { useMealsData } from "../../hooks/mealsHooks";
 
 export default function AddRecipes({ route }: { route: any }) {
 	const { mealplanId } = route.params;
-	const { data, isLoading, isError } = useMealsData();
+	const { data, isLoading } = useMealsData();
 	const mealplan = useMenuData(mealplanId);
-	const updateMenu = useUpdateMenu(mealplanId);
 	const addRecipe = useAddMealToMenu({ menuId: mealplanId });
 	const removeRecipe = useRemoveMealFromMenu({ menuId: mealplanId });
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
