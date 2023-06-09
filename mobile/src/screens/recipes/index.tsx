@@ -1,9 +1,6 @@
-import { Text, ActivityIndicator, Button, RefreshControl } from "react-native";
-import * as React from "react";
+import { ActivityIndicator, RefreshControl, SafeAreaView } from "react-native";
 import { useMealsData } from "../../hooks/mealsHooks";
-import { FlatList, ScrollView, useToast } from "native-base";
-import { Link } from "@react-navigation/native";
-import { View } from "../../components/common/View";
+import { FlatList } from "native-base";
 import ListItem from "../../components/common/ListItem";
 
 function Recipes({ navigation }: { navigation: any }) {
@@ -12,20 +9,20 @@ function Recipes({ navigation }: { navigation: any }) {
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
 
 	return (
-		<ScrollView
-			mt={2}
-			refreshControl={
-				<RefreshControl
-					refreshing={isRefetching}
-					onRefresh={() => {
-						refetch();
-					}}
-				/>
-			}
-		>
+		<SafeAreaView>
 			{isLoading && <ActivityIndicator size={30} />}
 
 			<FlatList
+				height="100%"
+				mt={2}
+				refreshControl={
+					<RefreshControl
+						refreshing={isRefetching}
+						onRefresh={() => {
+							refetch();
+						}}
+					/>
+				}
 				data={data}
 				renderItem={({ item }: any) => (
 					<ListItem
@@ -40,7 +37,7 @@ function Recipes({ navigation }: { navigation: any }) {
 				)}
 				mb={10}
 			/>
-		</ScrollView>
+		</SafeAreaView>
 	);
 }
 

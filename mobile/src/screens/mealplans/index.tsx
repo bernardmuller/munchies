@@ -1,37 +1,30 @@
 import {
 	ActivityIndicator,
-	Button,
 	RefreshControl,
+	SafeAreaView,
 	TouchableOpacity,
 } from "react-native";
-import * as React from "react";
 import { useMenusData } from "../../hooks/menusHooks";
-import { View } from "../../components/common";
-import {
-	ChevronRightIcon,
-	FlatList,
-	ScrollView,
-	Stack,
-	Text,
-} from "native-base";
-import ListItem from "../../components/common/ListItem";
+import { ChevronRightIcon, FlatList, Stack, Text } from "native-base";
 
 function Mealplans({ navigation }: { navigation: any }): JSX.Element {
 	const { data, isLoading, refetch, isRefetching } = useMenusData();
 
-	console.log(data);
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
 
 	return (
-		<ScrollView
-			mt={2}
-			refreshControl={
-				<RefreshControl refreshing={isRefetching} onRefresh={refetch} />
-			}
-		>
+		<SafeAreaView>
 			{isLoading && <ActivityIndicator size={30} />}
 
 			<FlatList
+				mt={2}
+				height="100%"
+				refreshControl={
+					<RefreshControl
+						refreshing={isRefetching}
+						onRefresh={refetch}
+					/>
+				}
 				data={data}
 				renderItem={({ item }: any) => (
 					<TouchableOpacity
@@ -69,7 +62,7 @@ function Mealplans({ navigation }: { navigation: any }): JSX.Element {
 				)}
 				mb={10}
 			/>
-		</ScrollView>
+		</SafeAreaView>
 	);
 }
 

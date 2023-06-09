@@ -1,7 +1,6 @@
-import { ActivityIndicator, RefreshControl } from "react-native";
-import * as React from "react";
+import { ActivityIndicator, RefreshControl, SafeAreaView } from "react-native";
 import { useIngredientsData } from "../../hooks/ingredientsHooks";
-import { FlatList, ScrollView } from "native-base";
+import { FlatList } from "native-base";
 import ListItem from "../../components/common/ListItem";
 
 function Ingredients({ navigation }: { navigation: any }) {
@@ -9,19 +8,19 @@ function Ingredients({ navigation }: { navigation: any }) {
 
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
 	return (
-		<ScrollView
-			mt={2}
-			refreshControl={
-				<RefreshControl
-					refreshing={isRefetching}
-					onRefresh={() => {
-						refetch();
-					}}
-				/>
-			}
-		>
+		<SafeAreaView>
 			{isLoading && <ActivityIndicator size={30} />}
 			<FlatList
+				mt={2}
+				height="100%"
+				refreshControl={
+					<RefreshControl
+						refreshing={isRefetching}
+						onRefresh={() => {
+							refetch();
+						}}
+					/>
+				}
 				data={data}
 				renderItem={(item: any) => (
 					<ListItem
@@ -36,7 +35,7 @@ function Ingredients({ navigation }: { navigation: any }) {
 				)}
 				mb={10}
 			/>
-		</ScrollView>
+		</SafeAreaView>
 	);
 }
 

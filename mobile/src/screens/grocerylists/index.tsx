@@ -1,14 +1,6 @@
-import {
-	Text,
-	ActivityIndicator,
-	Button,
-	RefreshControl,
-	SafeAreaView,
-} from "react-native";
-import * as React from "react";
-import { View } from "../../components/common/View";
+import { ActivityIndicator, RefreshControl, SafeAreaView } from "react-native";
 import { useGrocerylistsData } from "../../hooks/grocerylistHooks";
-import { FlatList, ScrollView } from "native-base";
+import { FlatList } from "native-base";
 import ListItem from "../../components/common/ListItem";
 
 function Grocerylists({ navigation }: { navigation: any }) {
@@ -28,6 +20,7 @@ function Grocerylists({ navigation }: { navigation: any }) {
 						}}
 					/>
 				}
+				mt={2}
 				data={data}
 				height="100%"
 				renderItem={({ item }: any) => (
