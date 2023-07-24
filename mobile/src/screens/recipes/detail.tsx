@@ -1,4 +1,4 @@
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { View } from "../../components/common/View";
 
@@ -172,7 +172,7 @@ function RecipeDetail({ route, navigation }: { route: any; navigation: any }) {
 
 	return (
 		// @ts-ignore
-		<ScrollView className="p-2 ">
+		<SafeAreaView className="p-2 ">
 			<Name
 				name={data.name}
 				onUpdateName={(updateData: { name: string }) => {
@@ -190,7 +190,7 @@ function RecipeDetail({ route, navigation }: { route: any; navigation: any }) {
 					Ingredients
 				</Text>
 				<FlatList
-					data={data.ingredients}
+					data={data?.ingredients}
 					renderItem={(ingredient: any) => (
 						<Stack
 							direction="row"
@@ -225,7 +225,7 @@ function RecipeDetail({ route, navigation }: { route: any; navigation: any }) {
 				recipeId={recipeId}
 				recipeIngredients={data.ingredients}
 			/> */}
-		</ScrollView>
+		</SafeAreaView>
 	);
 }
 

@@ -126,8 +126,9 @@ export const addIngredientToMeal = async ({
     where: { AND: [{ mealId }, { ingredientId }] },
   });
 
-  if (existingMealIngredient)
-    throw new Error('Ingredient already exists in meal.');
+  // if (existingMealIngredient)
+
+  // throw new Error('Ingredient already exists in meal.');
 
   await db.mealIngredient.create({
     data: {

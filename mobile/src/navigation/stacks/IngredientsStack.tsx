@@ -9,6 +9,7 @@ import {
 	useCreateIngredient,
 	useIngredientsData,
 } from "../../hooks/ingredientsHooks";
+import headerOptions from "../HeaderOptions";
 
 const IngredientStack = createNativeStackNavigator();
 
@@ -16,13 +17,13 @@ function IngredientsStack({ navigation }: { navigation: any }) {
 	const createIngredient = useCreateIngredient();
 	const { isFetching } = useIngredientsData();
 	return (
-		<IngredientStack.Navigator>
+		<IngredientStack.Navigator screenOptions={headerOptions}>
 			<IngredientStack.Screen
 				name="Ingredients"
 				component={Ingredients}
 				options={{
 					title: "Ingredients",
-					headerRight: () => (
+					headerLeft: () => (
 						<>
 							{createIngredient.isLoading || isFetching ? (
 								<Spinner />

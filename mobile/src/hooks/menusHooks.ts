@@ -6,6 +6,7 @@ import {
 	updateMenu,
 	addMealToMenu,
 	createMenu,
+	fetchCurrentMenu,
 } from "../api/menus";
 import useToast from "./useToast";
 
@@ -42,6 +43,7 @@ export const useCreateMenu = () => {
 	const queryClient = useQueryClient();
 	return useMutation(createMenu, {
 		onSuccess: () => {
+			queryClient.invalidateQueries(["currentMenu"]);
 			return queryClient.invalidateQueries(["menus"]);
 		},
 	});
@@ -160,4 +162,8 @@ export const useRemoveMealFromMenu = ({ menuId }: { menuId: string }) => {
 			});
 		},
 	});
+};
+
+export const useCurrentMenuData = () => {
+	return useQuery(["currentMenu"], () => fetchCurrentMenu());
 };

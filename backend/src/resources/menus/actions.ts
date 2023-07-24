@@ -6,19 +6,33 @@ import { getMeal } from '../meals/actions';
 import { createItem } from '../items/actions';
 import { Meal } from '@prisma/client';
 import { NotFoundError } from '../../shared/errors';
+import { format } from 'date-fns';
 
 export const createMenu = async (data: { id?: string; createdBy: string }) => {
+  const existingMenus = await db.menu.findMany({
+    where: { createdBy: data.createdBy },
+  });
+  for (const menu of existingMenus) {
+    await archiveMenu(menu.id);
+  }
   const menuData = {
-    name: 'New Menu',
+    name: `Mealplan ${format(new Date(), 'MM/dd/yyyy')}`,
     createdBy: data.createdBy,
     id: data?.id || getUuid(),
   };
 
   const res = await db.menu.create({ data: menuData });
 
-  await createGrocerylist({ menuId: res.id, createdBy: data.createdBy });
+  const newGroceryList = await createGrocerylist({
+    menuId: res.id,
+    createdBy: data.createdBy,
+  });
+  const updatedMenu = await db.menu.update({
+    where: { id: res.id },
+    data: { grocerylistId: newGroceryList.id },
+  });
 
-  const newMenu = MenuModel.parse(res);
+  const newMenu = MenuModel.parse(updatedMenu);
   return newMenu;
 };
 
@@ -225,4 +239,53 @@ export const addMealToMenu = async ({
   return {
     ...newMealMenu,
   };
+};
+
+export const archiveMenu = async (id: string) => {
+  const menu = await getMenu(id);
+  if (!menu) throw new Error('Menu not found');
+
+  const archivedMenu = await db.menu.update({
+    where: { id },
+    data: { archived: true },
+  });
+
+  return archivedMenu;
+};
+
+export const getCurrentMenu = async (userId: any) => {
+  const menu = await db.menu.findFirst({
+    where: {
+      AND: [{ archived: false }, { createdBy: userId }],
+    },
+  });
+  if (!menu) throw new Error('No current menu found');
+  const menuMeals = await db.menuMeals.findMany({
+    where: { menuId: menu?.id },
+  });
+
+  const meals = await Promise.all(
+    menuMeals.map(async (menuMeal) => {
+      const dbMeal = await getMeal(menuMeal.mealId);
+      if (!dbMeal) {
+        throw new NotFoundError();
+      }
+      return dbMeal;
+    }),
+  );
+
+  const returnData = {
+    ...menu,
+    meals: meals,
+    grocerylist: await db.grocerylist.findUnique({
+      where: {
+        id: menu?.grocerylistId,
+      },
+      include: {
+        Item: true,
+      },
+    }),
+  };
+
+  return returnData;
 };

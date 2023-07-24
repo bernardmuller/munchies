@@ -5,6 +5,8 @@ import RecipeDetail from "../../screens/recipes/detail";
 import { useAddMeal, useMealsData } from "../../hooks/mealsHooks";
 import { AddIcon, IconButton, Spinner } from "native-base";
 import AddIngredients from "../../screens/recipes/AddIngredients";
+import Common from "./CommonStack";
+import headerOptions from "../HeaderOptions";
 
 const SettingsStack = createNativeStackNavigator();
 
@@ -17,7 +19,9 @@ function RecipesStack() {
 				name="Recipes"
 				component={Recipes}
 				options={{
-					headerRight: () => (
+					...headerOptions,
+
+					headerLeft: () => (
 						<>
 							{addRecipe.isLoading || isFetching ? (
 								<Spinner />
@@ -39,6 +43,7 @@ function RecipesStack() {
 				name="AddIngredients"
 				component={AddIngredients}
 			/>
+			{Common({ navigator: SettingsStack })}
 		</SettingsStack.Navigator>
 	);
 }

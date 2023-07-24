@@ -1,9 +1,5 @@
 import axios from "axios";
-import {
-	requireAuthHeader,
-	requireBaseURL,
-	requireHeaders,
-} from "../shared/utils";
+import { requireBaseURL, requireHeaders } from "../shared/utils";
 
 export async function createMeal() {
 	return await axios({
@@ -18,14 +14,7 @@ export async function fetchMeals() {
 		method: "GET",
 		url: `${requireBaseURL()}/meals`,
 		headers: await requireHeaders(),
-	})
-		.then((response) => response.data)
-		.catch((err) => console.log(err));
-
-	// return await fetch(`${requireBaseURL()}/meals`, {
-	// 	method: "GET",
-	// 	headers: await requireHeaders(),
-	// });
+	}).then((response) => response.data);
 }
 
 export async function fetchMeal(id: string) {
@@ -56,7 +45,7 @@ export async function addIngredientToMeal({
 		method: "POST",
 		url: `${requireBaseURL()}/meals/${mealId}/ingredients/add`,
 		headers: await requireHeaders(),
-		data: { ingredientId: ingredient?.id },
+		data: { ingredientId: ingredient },
 	}).then((response) => response.data);
 }
 

@@ -9,6 +9,7 @@ export const MenuModel = z.object({
   createdAt: z.date(),
   householdId: z.string().nullish(),
   createdBy: z.string().nullish(),
+  archived: z.boolean().nullish(),
   grocerylistId: z.string().nullish(),
 })
 

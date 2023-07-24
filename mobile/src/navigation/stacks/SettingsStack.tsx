@@ -7,6 +7,7 @@ import { DeleteIcon, IconButton } from "native-base";
 import { FiLogOut } from "react-icons/fi";
 import { TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import Common from "./CommonStack";
 
 const SettingsStack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ function Settings() {
 					),
 				}}
 			/>
+			{Common({ navigator: SettingsStack })}
 		</SettingsStack.Navigator>
 	);
 }

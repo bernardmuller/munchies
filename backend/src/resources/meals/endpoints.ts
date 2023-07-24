@@ -83,6 +83,7 @@ const endpoints = [
     path: '/meals/:id/ingredients/add',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
+      console.log('req.body', req.body);
       const meal = await addIngredientToMeal({
         mealId: id,
         ingredientId: req.body.ingredientId,

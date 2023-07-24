@@ -21,6 +21,9 @@ import { useState } from "react";
 
 export default function MealplanDetail({ route, navigation }: { route: any }) {
 	const { mealplanId } = route.params;
+	if (!mealplanId) {
+		navigation.navigate("Mealplans");
+	}
 	const { data, isLoading } = useMenuData(mealplanId);
 	const updateMenu = useUpdateMenu(mealplanId);
 	const removeRecipe = useRemoveMealFromMenu({ menuId: mealplanId });
@@ -65,7 +68,7 @@ export default function MealplanDetail({ route, navigation }: { route: any }) {
 							icon={<CloseIcon name="close" />}
 							onPress={() => {
 								removeRecipe.mutate({
-									mealId: meal.id,
+									mealId: meal?.id,
 									menuId: mealplanId,
 								});
 							}}

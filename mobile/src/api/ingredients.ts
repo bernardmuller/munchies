@@ -46,7 +46,6 @@ export async function updateIngredient({
 	id: string;
 	data: any;
 }) {
-	console.log("updateIngredient", id, data);
 	return await axios({
 		method: "PUT",
 		url: `${requireBaseURL()}/ingredients/${id}`,

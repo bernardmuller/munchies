@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import {
   addMealToMenu,
+  archiveMenu,
   createMenu,
   deleteMenu,
+  getCurrentMenu,
   getMenu,
   getMenus,
   getMenusByUserId,
@@ -27,6 +29,11 @@ const endpoints = [
     method: 'get',
     path: '/menus',
     handler: async (req: Request, res: Response) => {
+      const { current } = req.query;
+      if (current) {
+        const menu = await getCurrentMenu(res.locals.userId);
+        return res.send(menu);
+      }
       const menus = await getMenusByUserId(res.locals.userId);
       return res.send(menus);
     },
@@ -83,6 +90,16 @@ const endpoints = [
         menuId: id,
         mealId: req.body.mealId,
       });
+      return res.send(menu);
+    },
+    authenticate: true,
+  },
+  {
+    method: 'post',
+    path: '/menus/:id/archive',
+    handler: async (req: Request, res: Response) => {
+      const { id } = req.params;
+      const menu = await archiveMenu(id);
       return res.send(menu);
     },
     authenticate: true,

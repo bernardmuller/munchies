@@ -14,9 +14,11 @@ import Icons from "../constants/Icons";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { Box } from "native-base";
 import Colors from "../constants/Colors";
+import DashboardStack from "./stacks/DashboardStack";
 
 const PrivateStack = createBottomTabNavigator();
 const PublicStack = createNativeStackNavigator();
+const AdminStack = createNativeStackNavigator();
 
 function AuthStack() {
 	return (
@@ -58,11 +60,11 @@ function AppStack() {
 					},
 					tabBarIcon: ({ focused, color, size }) => {
 						switch (route.name) {
-							case "GroceriesStack":
+							case "DashboardStack":
 								return (
-									<Icon focused={focused} name="shopping-bag">
+									<Icon focused={focused} name="home">
 										<Feather
-											name="shopping-bag"
+											name="home"
 											focused={focused}
 											size={24}
 											color={
@@ -118,21 +120,6 @@ function AppStack() {
 										/>
 									</Icon>
 								);
-							case "SettingsStack":
-								return (
-									<Icon focused={focused} name="settings">
-										<Feather
-											name="settings"
-											focused={focused}
-											size={24}
-											color={
-												focused
-													? Colors.white
-													: Colors.secondary[400]
-											}
-										/>
-									</Icon>
-								);
 							default:
 								break;
 						}
@@ -140,16 +127,11 @@ function AppStack() {
 				})}
 			>
 				<PrivateStack.Screen
-					name="GroceriesStack"
-					component={GroceriesStack}
+					name="DashboardStack"
+					component={DashboardStack}
 					options={{
 						title: "",
 					}}
-				/>
-				<PrivateStack.Screen
-					name="MealplansStack"
-					component={MealplanStack}
-					options={{ title: "" }}
 				/>
 				<PrivateStack.Screen
 					name="RecipesStack"
@@ -163,21 +145,35 @@ function AppStack() {
 					component={IngredientsStack}
 					options={{ title: "" }}
 				/>
-				<PrivateStack.Screen
-					name="SettingsStack"
-					component={SettingsStack}
-					options={{ title: "" }}
-				/>
 			</PrivateStack.Navigator>
 		</>
 	);
 }
 
+const Admin = () => {
+	return (
+		<>
+			<AdminStack.Navigator>
+				<AdminStack.Screen
+					name="SettingsStack"
+					component={SettingsStack}
+				/>
+			</AdminStack.Navigator>
+		</>
+	);
+};
+
 function AppNavigation() {
 	const { authToken } = useContext(AuthContext);
 	return (
 		<NavigationContainer>
-			{authToken !== "" ? <AppStack /> : <AuthStack />}
+			{authToken !== "" ? (
+				<>
+					<AppStack />
+				</>
+			) : (
+				<AuthStack />
+			)}
 		</NavigationContainer>
 	);
 }

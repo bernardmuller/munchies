@@ -14,25 +14,7 @@ function MealplanStack() {
 	const { isFetching } = useMenusData();
 	return (
 		<MealPlanStack.Navigator>
-			<MealPlanStack.Screen
-				name="Mealplans"
-				component={Mealplans}
-				options={{
-					title: "Meal plans",
-					headerRight: () => (
-						<>
-							{createMenu.isLoading || isFetching ? (
-								<Spinner />
-							) : (
-								<IconButton
-									icon={<AddIcon />}
-									onPress={() => createMenu.mutate()}
-								/>
-							)}
-						</>
-					),
-				}}
-			/>
+			
 
 			<MealPlanStack.Screen
 				name="MealplanDetail"

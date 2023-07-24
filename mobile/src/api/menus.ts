@@ -7,7 +7,6 @@ export async function createMenu() {
 		url: `${requireBaseURL()}/menus`,
 		headers: await requireHeaders(),
 	}).then((response) => {
-		console.log("createMenu", response.data);
 		return response.data;
 	});
 }
@@ -50,7 +49,6 @@ export async function addMealToMenu({
 		headers: await requireHeaders(),
 		data: { mealId: meal.id },
 	}).then((response) => {
-		console.log("addMealToMenu", JSON.stringify(response, null, 2));
 		return response.data;
 	});
 }
@@ -68,7 +66,16 @@ export async function removeMealFromMenu({
 		headers: await requireHeaders(),
 		data: { mealId: mealId },
 	}).then((response) => {
-		console.log("removeMealFromMenu", response);
+		return response.data;
+	});
+}
+
+export async function fetchCurrentMenu() {
+	return await axios({
+		method: "GET",
+		url: `${requireBaseURL()}/menus?current=true`,
+		headers: await requireHeaders(),
+	}).then((response) => {
 		return response.data;
 	});
 }

@@ -31,9 +31,6 @@ export async function authenticate(inputs: { token: string }) {
 			`${requireBaseURL()}/auth/authenticate`,
 			inputs
 		);
-		if (response) {
-			console.log("authenticate: ", response.data);
-		}
 		return response.data;
 	} catch (err: any) {
 		return processAxiosErrorResponse(err.response);

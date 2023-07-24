@@ -21,6 +21,7 @@ const endpoints = [
     method: 'get',
     path: '/grocerylists',
     handler: async (req: Request, res: Response) => {
+      console.log('res.locals.userId', res.locals.userId);
       const grocerylists = await getGrocerylistsByUserId(res.locals.userId);
       return res.send(grocerylists);
     },

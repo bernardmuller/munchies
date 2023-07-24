@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native";
 export type ListItemProps = {
 	onPress: () => void;
 	label: string;
-	key: string;
+	key?: string;
 };
 
 export default function ListItem({ onPress, label, key }: ListItemProps) {
