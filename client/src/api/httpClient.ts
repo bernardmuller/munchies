@@ -35,7 +35,9 @@ const axiosConfig: CreateAxiosDefaults = {
 const httpClient = axios.create(axiosConfig);
 
 httpClient.interceptors.request.use(
-	async () => {},
+	async (req) => {
+		return req;
+	},
 	(error) => {
 		return Promise.reject(error);
 	}

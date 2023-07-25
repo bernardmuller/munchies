@@ -19,7 +19,6 @@ export async function login(loginInputs: { email: string; password: string }) {
 			return response?.data;
 		}
 	} catch (err: any) {
-		// return processAxiosErrorResponse(err.response);
 		console.log(err);
 	}
 }

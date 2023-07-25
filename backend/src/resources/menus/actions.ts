@@ -107,7 +107,7 @@ export const updateMenu = async (
 };
 
 export const deleteMenu = async (id: string) => {
-  const menu = await getMenus({ filters: { id } });
+  const menu = await getMenus();
   if (!menu) throw new Error('User not found');
 
   await db.menu.delete({
@@ -158,7 +158,7 @@ export const addMealslistToMenu = async ({
   meals: Meal[];
   menuId: string;
 }) => {
-  const dbMenu = await getMenus({ filters: { id: menuId } });
+  const dbMenu = await getMenus();
   if (!dbMenu) return { message: `No menu found with id: ${menuId}` };
 
   const grocerylist = await db.grocerylist.findFirst({
