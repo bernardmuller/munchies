@@ -19,6 +19,7 @@ export const createApp = () => {
         'http://localhost:3000',
         'http://192.168.8.176:19006',
         'http://localhost:19006',
+        'http://localhost:4000',
       ],
     }),
   );
