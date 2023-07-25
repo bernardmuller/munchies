@@ -6,7 +6,6 @@ import { getMeal } from '../meals/actions';
 import { createItem } from '../items/actions';
 import { Meal } from '@prisma/client';
 import { NotFoundError } from '../../shared/errors';
-import { format } from 'date-fns';
 
 export const createMenu = async (data: { id?: string; createdBy: string }) => {
   const existingMenus = await db.menu.findMany({
@@ -16,7 +15,7 @@ export const createMenu = async (data: { id?: string; createdBy: string }) => {
     await archiveMenu(menu.id);
   }
   const menuData = {
-    name: `Mealplan ${format(new Date(), 'MM/dd/yyyy')}`,
+    name: `Mealplan ${new Date().getFullYear().toString()}`,
     createdBy: data.createdBy,
     id: data?.id || getUuid(),
   };
