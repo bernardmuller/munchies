@@ -11,7 +11,7 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<body>
+			<body data-theme="munchies">
 				<QueryClientProvider client={new QueryClient()}>
 					{children}
 				</QueryClientProvider>

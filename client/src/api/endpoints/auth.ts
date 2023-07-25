@@ -4,6 +4,7 @@ import axios from "axios";
 import { requireBaseURL } from "@/shared/utils";
 import httpClient from "../httpClient";
 import createSession from "@/shared/utils/createSession";
+import getApiRoute from "@/shared/utils/getApiRoute";
 
 const processAxiosErrorResponse = (res: any) => {
 	return {
@@ -15,7 +16,7 @@ const processAxiosErrorResponse = (res: any) => {
 
 export async function login(loginInputs: { email: string; password: string }) {
 	return await httpClient
-		.post(`/auth/login`, loginInputs)
+		.post(getApiRoute("login"), loginInputs)
 		.then((res) => createSession(res.data));
 }
 

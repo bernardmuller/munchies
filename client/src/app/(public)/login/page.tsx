@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginDTO, LoginDTOSchema } from "@/types";
+import { LoginDTOSchema } from "@/types";
 import { useLogin } from "@/hooks/authHooks";
 
 function Login() {
@@ -18,13 +17,11 @@ function Login() {
 	});
 
 	const onSubmit = (data: any) => {
-		console.log({ data });
-
 		loginMutation.mutate(data);
 	};
 
 	return (
-		<section className="bg-gray-50 dark:bg-gray-900">
+		<section className="munchies bg-munchies-secondary">
 			<div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
 				<Link
 					href="#"
@@ -65,7 +62,7 @@ function Login() {
 								/>
 								{errors.email && (
 									<p className="prose-p: text-xs text-red-400">
-										{errors?.email?.message}
+										{errors?.email?.message as string}
 									</p>
 								)}
 							</div>
@@ -86,7 +83,7 @@ function Login() {
 								></input>
 								{errors.password && (
 									<p className="prose-p: text-xs text-red-400">
-										{errors?.password?.message}
+										{errors?.password?.message as string}
 									</p>
 								)}
 							</div>
@@ -116,7 +113,7 @@ function Login() {
 							</div>
 							<button
 								type="submit"
-								className=" btn btn-primary w-full"
+								className="btn bg-primary w-full"
 							>
 								Sign in
 							</button>
