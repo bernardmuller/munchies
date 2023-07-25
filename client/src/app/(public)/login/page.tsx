@@ -4,22 +4,24 @@ import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema, Login } from "@/types";
+import { LoginDTO, LoginDTOSchema } from "@/types";
+import { useLogin } from "@/hooks/authHooks";
 
 function Login() {
+	const loginMutation = useLogin();
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm({
-		resolver: zodResolver(LoginSchema),
+		resolver: zodResolver(LoginDTOSchema),
 	});
 
-	const onSubmit = (data: Login) => {
+	const onSubmit = (data: any) => {
 		console.log({ data });
-	};
 
-	console.log({ errors });
+		loginMutation.mutate(data);
+	};
 
 	return (
 		<section className="bg-gray-50 dark:bg-gray-900">

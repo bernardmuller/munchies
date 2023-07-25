@@ -1,10 +1,8 @@
-import "./globals.css";
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-	title: "Munchies",
-	description: "The all-in-one grocery list manager.",
-};
+import "./globals.css";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function RootLayout({
 	children,
@@ -13,7 +11,11 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<body>{children}</body>
+			<body>
+				<QueryClientProvider client={new QueryClient()}>
+					{children}
+				</QueryClientProvider>
+			</body>
 		</html>
 	);
 }

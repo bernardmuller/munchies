@@ -1,11 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { login } from "../api/auth";
-export const useLogin = ({
-	email,
-	password,
-}: {
-	email: string;
-	password: string;
-}) => {
+import { login } from "@/api//endpoints/auth";
+export const useLogin = () => {
 	return useMutation(login);
 };

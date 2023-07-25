@@ -28,32 +28,35 @@ const getHeaders = () => {
 };
 
 const axiosConfig: CreateAxiosDefaults = {
-	baseURL: process.env.NEXT_PUBLIC_API_URL,
+	baseURL:
+		process.env.ENV_NODE !== "development"
+			? process.env.NEXT_PUBLIC_API_URL
+			: "http://localhost:5000/api/",
 	headers: getHeaders(),
 };
 
 const httpClient = axios.create(axiosConfig);
 
-httpClient.interceptors.request.use(
-	async (req) => {
-		return req;
-	},
-	(error) => {
-		return Promise.reject(error);
-	}
-);
+// httpClient.interceptors.request.use(
+// 	async (req) => {
+// 		return req;
+// 	},
+// 	(error) => {
+// 		return Promise.reject(error);
+// 	}
+// );
 
-httpClient.interceptors.response.use(
-	(response) => {
-		return response;
-	},
-	(error: AxiosError) => {
-		if (error.code === "ERR_NETWORK" || error.response?.status === 401) {
-			return (window.location.href = "/login");
-		}
+// httpClient.interceptors.response.use(
+// 	(response) => {
+// 		return response;
+// 	},
+// 	(error: AxiosError) => {
+// 		if (error.code === "ERR_NETWORK" || error.response?.status === 401) {
+// 			return (window.location.href = "/login");
+// 		}
 
-		return Promise.reject(error);
-	}
-);
+// 		return Promise.reject(error);
+// 	}
+// );
 
 export default httpClient;

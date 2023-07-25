@@ -1,5 +1,9 @@
+"use client";
+
 import axios from "axios";
 import { requireBaseURL } from "@/shared/utils";
+import httpClient from "../httpClient";
+import createSession from "@/shared/utils/createSession";
 
 const processAxiosErrorResponse = (res: any) => {
 	return {
@@ -10,17 +14,9 @@ const processAxiosErrorResponse = (res: any) => {
 };
 
 export async function login(loginInputs: { email: string; password: string }) {
-	try {
-		const response = await axios.post(`${requireBaseURL()}/auth/login`, {
-			email: loginInputs.email.toLowerCase(),
-			password: loginInputs.password,
-		});
-		if (response.data.token) {
-			return response?.data;
-		}
-	} catch (err: any) {
-		console.log(err);
-	}
+	return await httpClient
+		.post(`/auth/login`, loginInputs)
+		.then((res) => createSession(res.data));
 }
 
 export async function authenticate(inputs: { token: string }) {
