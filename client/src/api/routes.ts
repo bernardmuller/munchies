@@ -1,6 +1,6 @@
 const apiRoutes = {
-	login: "/api/auth/login",
-	register: "/api/auth/register",
+	login: "/auth/login",
+	register: "/auth/register",
 };
 
 export default apiRoutes;

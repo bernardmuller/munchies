@@ -12,6 +12,7 @@ module.exports = {
 				"gradient-conic":
 					"conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
 			},
+
 			colors: {
 				primary: {
 					default: "#68BF50",
@@ -72,17 +73,6 @@ module.exports = {
 				double_border: "0 35px 60px -15px rgba(0, 0, 0, 0.3)",
 			},
 		},
-		daisyui: {
-			themes: [
-				{
-					munchies: {
-						primary: "#68BF50",
-						"primary-focus": "#5EAB49",
-						secondary: "#5377A2",
-					},
-				},
-			],
-		},
 	},
-	plugins: [require("@tailwindcss/typography"), require("daisyui")],
+	plugins: [require("@tailwindcss/typography")],
 };
