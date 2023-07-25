@@ -1,27 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchGrocerylist, fetchGrocerylists } from "../api/grocerylists";
+import { fetchGrocerylist } from "@/api/endpoints/grocerylists";
 
-export const useGrocerylistsData = () => {
-	return useQuery(["grocerylists"], () => fetchGrocerylists());
-};
+// export const useGrocerylistsData = () => {
+// 	return useQuery(["grocerylists"], () => fetchGrocerylists());
+// };
 
 export const useGrocerylistData = (id: string) => {
-	const {
-		data,
-		isLoading,
-		isSuccess,
-		isError,
-		isFetching,
-		refetch,
-		isRefetching,
-	} = useQuery([`list-${id}`], () => fetchGrocerylist(id));
-	return {
-		data,
-		isLoading,
-		isSuccess,
-		isError,
-		isFetching,
-		refetch,
-		isRefetching,
-	};
+	return useQuery([`list-${id}`], () => fetchGrocerylist(id));
 };

@@ -1,6 +1,6 @@
 export const requireBaseURL = () => {
 	return process.env.ENV_NODE !== "production"
-		? "http://192.168.8.176:5000/api"
+		? "http://localhost:5000/api"
 		: process.env.MUNCHIES_API_URL;
 };
 

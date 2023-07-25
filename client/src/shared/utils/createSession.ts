@@ -11,6 +11,7 @@ const createSession = ({ token }: { token: string }) => {
 		const decodedToken = jwt_decode(token) as DecodedToken;
 		const session = {
 			userId: decodedToken.userId,
+			token: token,
 		};
 		if (session.userId) {
 			console.log({ session });

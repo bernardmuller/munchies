@@ -7,8 +7,8 @@ import {
 	addMealToMenu,
 	createMenu,
 	fetchCurrentMenu,
-} from "../api/menus";
-import useToast from "./useToast";
+} from "@/api/endpoints/menus";
+// import useToast from "./useToast";
 
 export const useMenusData = () => {
 	const {
@@ -51,7 +51,6 @@ export const useCreateMenu = () => {
 
 export const useUpdateMenu = ({ menuId }: { menuId: string }) => {
 	const queryClient = useQueryClient();
-	const toast = useToast();
 	return useMutation(updateMenu, {
 		onMutate: async ({ data }) => {
 			await queryClient.cancelQueries([`menu-${menuId}`]);
@@ -64,13 +63,7 @@ export const useUpdateMenu = ({ menuId }: { menuId: string }) => {
 			});
 			return { previousMenu };
 		},
-		onSuccess: () => {
-			toast.show({
-				title: "Mealplan updated successfully",
-				placement: "top",
-				variant: "success",
-			});
-		},
+		onSuccess: () => {},
 		onSettled: () => {
 			queryClient.invalidateQueries([`menus`]);
 			queryClient.invalidateQueries([`menu-${menuId}`]);
@@ -104,7 +97,6 @@ export const useUpdateMenu = ({ menuId }: { menuId: string }) => {
 export const useAddMealToMenu = ({ menuId }: { menuId: string }) => {
 	const queryClient = useQueryClient();
 
-	const toast = useToast();
 	return useMutation(addMealToMenu, {
 		onMutate: async ({ menuId, meal }) => {
 			await queryClient.cancelQueries([`menu-${menuId}`]);
@@ -124,19 +116,13 @@ export const useAddMealToMenu = ({ menuId }: { menuId: string }) => {
 		onSettled: () => {
 			queryClient.invalidateQueries([`menu-${menuId}`]);
 		},
-		onSuccess: () => {
-			toast.show({
-				title: "Meal added to mealplan successfully",
-				placement: "top",
-			});
-		},
+		onSuccess: () => {},
 	});
 };
 
 export const useRemoveMealFromMenu = ({ menuId }: { menuId: string }) => {
 	const queryClient = useQueryClient();
 
-	const toast = useToast();
 	return useMutation(removeMealFromMenu, {
 		onMutate: async ({ menuId, mealId }) => {
 			await queryClient.cancelQueries([`menu-${menuId}`]);
@@ -156,10 +142,6 @@ export const useRemoveMealFromMenu = ({ menuId }: { menuId: string }) => {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries([`menu-${menuId}`]);
-			toast.show({
-				title: "Meal removed from mealplan successfully",
-				placement: "top",
-			});
 		},
 	});
 };
