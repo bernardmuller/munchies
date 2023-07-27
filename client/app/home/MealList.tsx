@@ -35,34 +35,26 @@ export default function MealList({ meals }: Props) {
 	return (
 		<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 			{meals?.map((meal: Meal) => (
-				<div
-					key={meal.id}
-					className="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+				<a
+					href="#"
+					className="flex items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
 				>
-					<div className="flex-shrink-0">
-						<Image
-							className="h-10 w-10 rounded-full"
-							src={meal.image || ""}
-							alt=""
-							width="40"
-							height="40"
-						/>
+					<Image
+						className="object-cover w-28 rounded-t-lg h-28 md:h-auto md:w-28 md:rounded-none md:rounded-l-lg"
+						src="/docs/images/blog/image-4.jpg"
+						alt=""
+						width={100}
+						height={100}
+					/>
+					<div className="flex flex-col justify-between p-4 leading-normal">
+						<h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+							{meal.name}
+						</h5>
+						<p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+							{meal.ingredients.length} ingredients
+						</p>
 					</div>
-					<div className="flex-1 min-w-0">
-						<a href="#" className="focus:outline-none">
-							<span
-								className="absolute inset-0"
-								aria-hidden="true"
-							/>
-							<p className="text-sm font-medium text-gray-900">
-								{meal.name}
-							</p>
-							<p className="text-sm text-gray-500 truncate">
-								{meal.ingredients.length}
-							</p>
-						</a>
-					</div>
-				</div>
+				</a>
 			))}
 		</div>
 	);

@@ -2,12 +2,12 @@ import React from "react";
 
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { BellIcon, MenuIcon, PlusIcon, XIcon } from "@heroicons/react/outline";
+import { MenuIcon, PlusIcon, XIcon } from "@heroicons/react/outline";
 import "./globals.css";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { Button } from "../components/ui/button";
 
 const user = {
 	name: "Bernard Muller",
@@ -75,18 +75,16 @@ const Header = () => {
 									</div>
 									<div className="hidden md:block">
 										<div className="ml-4 flex items-center md:ml-6">
-											<button
+											<Button
 												type="button"
-												className="bg-primary py-1 px-4 text-sm font-light text-white_d rounded-md hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-gray-800 focus:ring-white"
+												onClick={() => {}}
 											>
-												<span className="">
-													Create new plan
-												</span>
+												Create new plan
 												{/* <BellIcon
 													className="h-6 w-6"
 													aria-hidden="true"
 												/> */}
-											</button>
+											</Button>
 
 											{/* Profile dropdown */}
 											<Menu
