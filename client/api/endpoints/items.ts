@@ -1,18 +1,13 @@
-import axios from "axios";
-import { requireBaseURL, requireHeaders } from "../shared/utils";
+import httpClient from "../httpClient";
 
 export async function checkItem(id: string) {
-	return await axios({
-		method: "POST",
-		url: `${requireBaseURL()}/items/${id}/check`,
-		headers: await requireHeaders(),
-	}).then((response) => response.data);
+	return await httpClient
+		.post(`/items/${id}/check`)
+		.then((response) => response.data);
 }
 
 export async function unCheckItem(id: string) {
-	return await axios({
-		method: "POST",
-		url: `${requireBaseURL()}/items/${id}/unCheck`,
-		headers: await requireHeaders(),
-	}).then((response) => response.data);
+	return await httpClient
+		.post(`/items/${id}/unCheck`)
+		.then((response) => response.data);
 }

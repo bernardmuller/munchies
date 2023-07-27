@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { checkItem, unCheckItem } from "../api/items";
+import { checkItem, unCheckItem } from "@/api/endpoints/items";
 
 export const useCheckItem = (groceryListId: string) => {
 	const queryClient = useQueryClient();

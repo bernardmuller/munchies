@@ -1,22 +1,40 @@
-import { Checkbox } from "../../components/ui/checkbox";
-import { GroceryListItem } from "../../types";
+import { Checkbox } from "@/components/ui/checkbox";
+import { GroceryListItem } from "@/types";
 import React from "react";
+import { useUnCheckItem, useCheckItem } from "@/hooks/items";
 
-type Props = {
+type GrocerylistProps = {
 	items: GroceryListItem[];
 };
 
-const GroceryList = ({ items }: Props) => {
+const Item = (item: GroceryListItem) => {
+	const checkItem = useCheckItem(item.groceryListId);
+	const uncheckItem = useUnCheckItem(item.groceryListId);
+
+	const handleChange = () => {
+		if (item.check) {
+			uncheckItem.mutate(item.id);
+		} else {
+			checkItem.mutate(item.id);
+		}
+	};
+
+	return (
+		<div className="flex gap-2 items-center">
+			<Checkbox checked={item.check} onCheckedChange={handleChange} />
+			<span>{item.ingredient.name}</span>
+		</div>
+	);
+};
+
+const GroceryList = ({ items }: GrocerylistProps) => {
 	return (
 		<div className=" max-w-full  text-base font-sans">
 			<div className="flex flex-col w-full overflow-hidden m-auto pb-4">
 				<h1 className="text-2xl">Grocerylist</h1>
 				<div className="grid gap-2 py-4">
 					{items?.map((item: GroceryListItem) => (
-						<div className="flex gap-2 items-center">
-							<Checkbox onCheckedChange={(e) => {}} />
-							<span>{item.ingredient.name}</span>
-						</div>
+						<Item key={item.id} {...item} />
 					))}
 				</div>
 				{items?.length === 0 && (

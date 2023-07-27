@@ -12,8 +12,6 @@ export default function Home() {
 		menu?.grocerylistId as string
 	);
 
-	console.log({ menu });
-
 	if (!menu) return <div>Loading...</div>;
 	return (
 		<div className="flex flex-col lg:flex-row gap-8  w-full min-h-[50vh]">
