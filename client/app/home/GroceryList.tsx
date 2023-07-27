@@ -20,8 +20,11 @@ const Item = (item: GroceryListItem) => {
 	};
 
 	return (
-		<div className="flex gap-2 items-center">
-			<Checkbox checked={item.check} onCheckedChange={handleChange} />
+		<div
+			className="flex gap-2 items-center hover:cursor-pointer"
+			onClick={handleChange}
+		>
+			<Checkbox checked={item.check} />
 			<span>{item.ingredient.name}</span>
 		</div>
 	);
@@ -31,8 +34,8 @@ const GroceryList = ({ items }: GrocerylistProps) => {
 	return (
 		<div className=" max-w-full  text-base font-sans">
 			<div className="flex flex-col w-full overflow-hidden m-auto pb-4">
-				<h1 className="text-2xl">Grocerylist</h1>
-				<div className="grid gap-2 py-4">
+				<h1 className="text-2xl mb-4 font-semibold">Grocerylist</h1>
+				<div className="grid gap-3">
 					{items?.map((item: GroceryListItem) => (
 						<Item key={item.id} {...item} />
 					))}

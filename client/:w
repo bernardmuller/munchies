@@ -14,10 +14,10 @@ export default function Home() {
 
 	if (!menu)
 		return (
-			<div className="w-full flex flex-row gap-6 justify-evenly min-h-[50vh]">
-				<Skeleton className="flex-[0.3] w-full h-28 rounded-md" />
-				<Skeleton className="flex-[0.3] w-full h-28 rounded-md" />
-				<Skeleton className="flex-[0.4] w-full h-[40vh] rounded-md" />
+			<div className="flex flex-row gap-4 justify-evenly min-h-[50vh]">
+				<Skeleton className="w-full h-28 rounded-md" />
+				<Skeleton className="w-full h-28 rounded-md" />
+				<Skeleton className="w-48 h-[40vh] rounded-md" />
 			</div>
 		);
 
