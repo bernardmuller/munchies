@@ -5,7 +5,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MenuIcon, PlusIcon, XIcon } from "@heroicons/react/outline";
 import "./globals.css";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "../components/ui/button";
 
@@ -29,6 +29,7 @@ function classNames(...classes: any[]) {
 const Header = () => {
 	const pathname = usePathname();
 	const location = pathname.split("/")[1];
+	const router = useRouter();
 	return (
 		<div className="bg-gray-800 pb-32">
 			<Disclosure as="nav" className="bg-gray-800">
@@ -77,13 +78,13 @@ const Header = () => {
 										<div className="ml-4 flex items-center md:ml-6">
 											<Button
 												type="button"
-												onClick={() => {}}
+												onClick={() => {
+													router.push(
+														"/mealplans/new"
+													);
+												}}
 											>
-												Create new plan
-												{/* <BellIcon
-													className="h-6 w-6"
-													aria-hidden="true"
-												/> */}
+												Create new Mealplan
 											</Button>
 
 											{/* Profile dropdown */}
@@ -212,9 +213,11 @@ const Header = () => {
 											{user.email}
 										</div>
 									</div>
-									<button
+									<Button
 										type="button"
-										className="ml-auto bg-primary flex-shrink-0 p-2 text-white rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+										onClick={() => {
+											router.push("/mealplans/new");
+										}}
 									>
 										<span className="sr-only">
 											Create new plan
@@ -223,7 +226,7 @@ const Header = () => {
 											className="h-6 w-6"
 											aria-hidden="true"
 										/>
-									</button>
+									</Button>
 								</div>
 								<div className="mt-3 px-2 space-y-1">
 									{userNavigation.map((item) => (

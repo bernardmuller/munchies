@@ -8,31 +8,13 @@ import {
 	removeDirectionFromMeal,
 	removeIngredientFromMeal,
 	updateMeal,
-} from "../api/meals";
-import useToast from "./useToast";
+} from "@/api/endpoints/meals";
 
 export const useMealsData = () => {
-	const {
-		data,
-		isLoading,
-		isSuccess,
-		isError,
-		isFetching,
-		isRefetching,
-		refetch,
-	} = useQuery({
+	return useQuery({
 		queryKey: ["meals"],
 		queryFn: fetchMeals,
 	});
-	return {
-		data,
-		isLoading,
-		isSuccess,
-		isError,
-		isFetching,
-		isRefetching,
-		refetch,
-	};
 };
 
 export const useMealData = (id: string) => {
@@ -134,15 +116,10 @@ export const useAddDirectionToMeal = ({
 
 export const useAddIngredientToMeal = ({ mealId }: { mealId: string }) => {
 	const queryClient = useQueryClient();
-	const toast = useToast();
 
 	return useMutation(addIngredientToMeal, {
 		onSuccess: () => {
 			queryClient.invalidateQueries([`meal-${mealId}`]);
-			toast.show({
-				title: "Ingredient added successfully",
-				placement: "top",
-			});
 		},
 		onMutate: async ({
 			mealId,
@@ -173,15 +150,10 @@ export const useAddIngredientToMeal = ({ mealId }: { mealId: string }) => {
 
 export const useRemoveIngredientFromMeal = ({ mealId }: { mealId: string }) => {
 	const queryClient = useQueryClient();
-	const toast = useToast();
 
 	return useMutation(removeIngredientFromMeal, {
 		onSuccess: () => {
 			queryClient.invalidateQueries([`meal-${mealId}`]);
-			toast.show({
-				title: "Ingredient removed successfully",
-				placement: "top",
-			});
 		},
 		onMutate: async ({
 			mealId,

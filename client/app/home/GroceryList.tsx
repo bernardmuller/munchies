@@ -1,3 +1,5 @@
+"use client";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { GroceryListItem } from "@/types";
 import React from "react";
