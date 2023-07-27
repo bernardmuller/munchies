@@ -31,9 +31,13 @@ export const getMealsByUserId = async (id: string) => {
   if (!id) throw new Error('No user id provided');
   const rows = await db.meal.findMany({
     where: { createdBy: id },
-    include: { ingredients: true },
+    include: {
+      ingredients: {
+        include: { ingredient: true },
+      },
+    },
   });
-  return rows.map((row) => MealModel.parse(row));
+  return rows;
 };
 
 export const getMeal = async (id: string) => {

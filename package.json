@@ -18,6 +18,8 @@
   "homepage": "https://github.com/bernardmuller/munchies#readme",
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.5",
+    "@headlessui/react": "^1.7.15",
+    "@heroicons/react": "v1",
     "@typescript-eslint/eslint-plugin": "^5.45.1",
     "concurrently": "^7.4.0",
     "date-fns": "^2.29.3",
