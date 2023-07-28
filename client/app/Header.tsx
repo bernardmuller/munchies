@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
@@ -7,7 +7,8 @@ import "./globals.css";
 
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import { Button } from "../components/ui/button";
+import { Button } from "@/components/ui/button";
+import appRoutes from "@/shared/configs/appRoutes";
 
 const user = {
 	name: "Bernard Muller",
@@ -30,6 +31,12 @@ const Header = () => {
 	const pathname = usePathname();
 	const location = pathname.split("/")[1];
 	const router = useRouter();
+
+	const pageName = useMemo(() => {
+		const route = appRoutes.find((route) => route.path === pathname);
+		return route?.name;
+	}, [pathname]);
+
 	return (
 		<div className="bg-gray-800 pb-32">
 			<Disclosure as="nav" className="bg-gray-800">
@@ -41,7 +48,7 @@ const Header = () => {
 									<div className="flex items-center">
 										<div className="flex-shrink-0">
 											<Image
-												className="h-8 w-8"
+												className="h-6 w-8"
 												src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
 												alt="Workflow"
 												height="32"
@@ -247,7 +254,9 @@ const Header = () => {
 			</Disclosure>
 			<header className="py-10">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-					<h1 className="text-3xl font-bold text-white">Dashboard</h1>
+					<h1 className="text-3xl font-bold text-white">
+						{pageName}
+					</h1>
 				</div>
 			</header>
 		</div>

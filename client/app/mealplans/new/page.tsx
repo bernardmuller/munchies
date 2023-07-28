@@ -8,6 +8,8 @@ import Ingredients from "./Ingredients";
 import { Meal, Ingredient } from "@/types";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useCreateMealplan } from "@/hooks/menusHooks";
+import { Loader2 } from "lucide-react";
 
 type AMeal = Meal & {
 	ingredients: AIngredient[];
@@ -27,6 +29,7 @@ type AIngredient = Ingredient & {
 function NewMealplan() {
 	const [selectedMeals, setSelectedMeals] = useState<Meal[]>([]);
 	const meals = useMealsData();
+	const createMealplan = useCreateMealplan();
 
 	const handleAddMeal = (meal: Meal) => {
 		setSelectedMeals([...selectedMeals, meal]);
@@ -52,6 +55,12 @@ function NewMealplan() {
 			</div>
 		);
 
+	const onSubmit = async () => {
+		await createMealplan.mutateAsync({
+			meals: selectedMeals,
+		});
+	};
+
 	return (
 		<div>
 			<div className="flex flex-col lg:flex-row gap-8  w-full min-h-[50vh]">
@@ -72,7 +81,17 @@ function NewMealplan() {
 				<a href="/home">
 					<Button variant="secondary">Cancel</Button>
 				</a>
-				<Button>Create Mealplan</Button>
+				<Button
+					disabled={createMealplan.isLoading}
+					onClick={() => {
+						onSubmit();
+					}}
+				>
+					{createMealplan.isLoading && (
+						<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+					)}
+					Create Mealplan
+				</Button>
 			</div>
 		</div>
 	);

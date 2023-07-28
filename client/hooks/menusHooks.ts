@@ -8,6 +8,7 @@ import {
 	createMenu,
 	fetchCurrentMenu,
 } from "@/api/endpoints/menus";
+import { useRouter } from "next/navigation";
 // import useToast from "./useToast";
 
 export const useMenusData = () => {
@@ -39,12 +40,14 @@ export const useMenuData = (id: string) => {
 	return { data, isLoading, isSuccess, isError, isFetching };
 };
 
-export const useCreateMenu = () => {
+export const useCreateMealplan = () => {
 	const queryClient = useQueryClient();
+	const router = useRouter();
 	return useMutation(createMenu, {
 		onSuccess: () => {
 			queryClient.invalidateQueries(["currentMenu"]);
-			return queryClient.invalidateQueries(["menus"]);
+			queryClient.invalidateQueries(["menus"]);
+			router.push("/home");
 		},
 	});
 };

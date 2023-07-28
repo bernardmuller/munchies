@@ -29,6 +29,11 @@ function AddMealList({ meals, onAddMeal, onRemoveMeal, selectedMeals }: Props) {
 						<Button
 							className="absolute shadow-lg top-1 right-1 h-8 w-8 rounded-full"
 							onClick={() => handleClick(meal)}
+							variant={
+								selectedMeals?.find((m) => m.id === meal.id)
+									? "destructive"
+									: "default"
+							}
 						>
 							{selectedMeals?.find((m) => m.id === meal.id)
 								? "-"

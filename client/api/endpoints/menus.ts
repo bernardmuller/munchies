@@ -1,19 +1,25 @@
-import axios from "axios";
 import httpClient from "../httpClient";
 import apiRoutes from "../routes";
 import { MealPlan } from "@/types";
-// import { requireBaseURL, requireHeaders } from "../shared/utils";
-//
-// export async function createMenu() {
-// 	return await axios({
-// 		method: "POST",
-// 		url: `${requireBaseURL()}/menus`,
-// 		headers: await requireHeaders(),
-// 	}).then((response) => {
-// 		return response.data;
-// 	});
-// }
-//
+import { z } from "zod";
+
+const mealDTO = z.object({
+	id: z.string(),
+});
+
+const createMenuDTO = z.object({
+	meals: z.array(mealDTO),
+});
+
+type CreateMenuDTO = z.infer<typeof createMenuDTO>;
+
+export async function createMenu(data: CreateMenuDTO) {
+	const reqData = createMenuDTO.parse(data);
+	return await httpClient.post(`/menus`, reqData).then((response) => {
+		return response.data;
+	});
+}
+
 // export async function fetchMenus() {
 // 	return await axios({
 // 		method: "GET",
