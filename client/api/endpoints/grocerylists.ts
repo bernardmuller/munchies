@@ -14,7 +14,6 @@ import { GroceryList } from "@/types";
 export async function fetchGrocerylist(id: string) {
 	if (!id) return;
 	return await httpClient.get(`/grocerylists/${id}`).then((response) => {
-		console.log(response.data);
 		return response.data as GroceryList;
 	});
 }

@@ -18,8 +18,6 @@ const getHeaders = () => {
 
 		const authToken = session?.token;
 
-		console.log({ session });
-
 		if (authToken) {
 			headers.Authorization = `Bearer ${authToken}`;
 			headers["Content-Type"] = "application/json";

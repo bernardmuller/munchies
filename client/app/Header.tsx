@@ -82,7 +82,16 @@ const Header = () => {
 										</div>
 									</div>
 									<div className="hidden md:block">
-										<div className="ml-4 flex items-center md:ml-6">
+										<div className="ml-4 gap-2 flex items-center md:ml-6">
+											<Button
+												type="button"
+												onClick={() => {
+													router.push("/meals/new");
+												}}
+											>
+												Create new Meal
+											</Button>
+
 											<Button
 												type="button"
 												onClick={() => {
