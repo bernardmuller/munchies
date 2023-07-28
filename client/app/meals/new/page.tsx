@@ -2,12 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -15,6 +13,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useIngredientsData } from "@/hooks/ingredientsHooks";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const formSchema = z.object({
 	name: z.string().min(2, {
@@ -26,6 +27,7 @@ const formSchema = z.object({
 });
 
 export default function NewMeal() {
+	const ingredients = useIngredientsData();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -34,12 +36,10 @@ export default function NewMeal() {
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
 		console.log(values);
 	}
 
-	if (false)
+	if (!ingredients.data)
 		return (
 			<div className="w-full flex flex-row gap-6 justify-evenly min-h-[50vh]">
 				<Skeleton className="flex-[0.3] w-full h-28 rounded-md" />
@@ -48,6 +48,7 @@ export default function NewMeal() {
 			</div>
 		);
 
+	console.log({ ingredients });
 	return (
 		<Form {...form}>
 			<div className="flex flex-col lg:flex-row gap-8  w-full min-h-[50vh]">
@@ -167,9 +168,25 @@ export default function NewMeal() {
 				</div>
 
 				<div className="w-full h-full lg:flex-[0.4] lg:pl-4 sm:pt-7 lg:pt-0">
-					<h2 className="text-2xl mb-4 font-semibold">
-						Ingredients and instructions
-					</h2>
+					<Tabs defaultValue="ingredients" className="w-full">
+						<TabsList className="w-full">
+							<TabsTrigger value="ingredients" className="w-full">
+								Ingredients
+							</TabsTrigger>
+							<TabsTrigger
+								value="instructions"
+								className="w-full"
+							>
+								Instructions
+							</TabsTrigger>
+						</TabsList>
+						<TabsContent value="ingredients">
+							Make changes to your account here.
+						</TabsContent>
+						<TabsContent value="instructions">
+							Change your password here.
+						</TabsContent>
+					</Tabs>
 				</div>
 			</div>
 			<div className="w-full flex gap-2 justify-end">
