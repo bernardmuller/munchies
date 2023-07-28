@@ -80,7 +80,7 @@ function NewMealplan() {
 					/>
 				</div>
 
-				<div className="w-full h-full lg:flex-[0.4] lg:pl-4 sm:pt-7 lg:pt-0">
+				<div className="w-full h-full lg:flex-[0.4] lg:pl-4 sm:pt-7 lg:pt-0 pb-10 lg:pb-0">
 					<Ingredients ingredients={ingredientsList} />
 				</div>
 			</div>
