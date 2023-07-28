@@ -28,14 +28,17 @@ type AIngredient = Ingredient & {
 
 function NewMealplan() {
 	const [selectedMeals, setSelectedMeals] = useState<Meal[]>([]);
+	const [error, setError] = useState<string>("");
 	const meals = useMealsData();
 	const createMealplan = useCreateMealplan();
 
 	const handleAddMeal = (meal: Meal) => {
+		setError("");
 		setSelectedMeals([...selectedMeals, meal]);
 	};
 
 	const handleRemoveMeal = (meal: Meal) => {
+		setError("");
 		setSelectedMeals(selectedMeals.filter((m) => m.id !== meal.id));
 	};
 
@@ -56,6 +59,10 @@ function NewMealplan() {
 		);
 
 	const onSubmit = async () => {
+		if (selectedMeals.length === 0) {
+			setError("You need to select at least one meal");
+			return;
+		}
 		await createMealplan.mutateAsync({
 			meals: selectedMeals,
 		});
@@ -77,21 +84,28 @@ function NewMealplan() {
 					<Ingredients ingredients={ingredientsList} />
 				</div>
 			</div>
-			<div className="w-full flex justify-end gap-4">
-				<a href="/home">
-					<Button variant="secondary">Cancel</Button>
-				</a>
-				<Button
-					disabled={createMealplan.isLoading}
-					onClick={() => {
-						onSubmit();
-					}}
-				>
-					{createMealplan.isLoading && (
-						<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+			<div className="w-full flex justify-end">
+				<div className="flex flex-col gap-2">
+					{error && (
+						<span className="text-red-400 text-sm">{error}</span>
 					)}
-					Create Mealplan
-				</Button>
+					<div className="w-full flex justify-end gap-4">
+						<a href="/home">
+							<Button variant="secondary">Cancel</Button>
+						</a>
+						<Button
+							disabled={createMealplan.isLoading}
+							onClick={() => {
+								onSubmit();
+							}}
+						>
+							{createMealplan.isLoading && (
+								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+							)}
+							Create Mealplan
+						</Button>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
