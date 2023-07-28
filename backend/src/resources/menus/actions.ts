@@ -7,7 +7,11 @@ import { createItem } from '../items/actions';
 import { Meal } from '@prisma/client';
 import { NotFoundError } from '../../shared/errors';
 
-export const createMenu = async (data: { id?: string; createdBy: string }) => {
+export const createMenu = async (data: {
+  id?: string;
+  createdBy: string;
+  meals: { id: string }[];
+}) => {
   const existingMenus = await db.menu.findMany({
     where: { createdBy: data.createdBy },
   });
@@ -30,6 +34,10 @@ export const createMenu = async (data: { id?: string; createdBy: string }) => {
     where: { id: res.id },
     data: { grocerylistId: newGroceryList.id },
   });
+
+  for (const meal of data.meals) {
+    await addMealToMenu({ menuId: res.id, mealId: meal.id });
+  }
 
   const newMenu = MenuModel.parse(updatedMenu);
   return newMenu;

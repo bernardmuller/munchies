@@ -29,7 +29,6 @@ const endpoints = [
     method: 'get',
     path: '/menus',
     handler: async (req: Request, res: Response) => {
-      console.log('check 123');
       const { current } = req.query;
       if (current) {
         const menu = await getCurrentMenu(res.locals.userId);
