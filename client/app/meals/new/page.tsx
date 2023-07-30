@@ -16,6 +16,11 @@ import { useForm } from "react-hook-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIngredientsData } from "@/hooks/ingredientsHooks";
 import { Skeleton } from "@/components/ui/skeleton";
+import DebouncedInput from "./DebouncedInput";
+import IngredientSelect from "./IngredientSelect";
+import { useState } from "react";
+import NewIngredients from "@/app/mealplans/new/Ingredients";
+import { Ingredient } from "@/types";
 
 const formSchema = z.object({
 	name: z.string().min(2, {
@@ -28,6 +33,9 @@ const formSchema = z.object({
 
 export default function NewMeal() {
 	const ingredients = useIngredientsData();
+	const [selectedIngredients, setSelectedIngredients] = useState<
+		Ingredient[]
+	>([]);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -142,7 +150,7 @@ export default function NewMeal() {
 									render={({ field }) => (
 										<FormItem>
 											<FormLabel>
-												Ready In
+												Ready Ink
 												<span className="text-red-400">
 													*
 												</span>
@@ -181,7 +189,23 @@ export default function NewMeal() {
 							</TabsTrigger>
 						</TabsList>
 						<TabsContent value="ingredients">
-							Make changes to your account here.
+							<div className="flex flex-col gap-1">
+								<h3 className="text-xl font-semibold">
+									Ingredients
+								</h3>
+								<IngredientSelect
+									heading={false}
+									onIngredientSelect={(val) => {
+										setSelectedIngredients((prev) => [
+											...prev,
+											val,
+										]);
+									}}
+								/>
+								<NewIngredients
+									ingredients={selectedIngredients}
+								/>
+							</div>
 						</TabsContent>
 						<TabsContent value="instructions">
 							Change your password here.

@@ -6,6 +6,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 type NewIngredientsProps = {
 	ingredients: Ingredient[];
+	heading?: boolean;
 };
 
 const Item = (ingredient: Ingredient) => {
@@ -17,12 +18,17 @@ const Item = (ingredient: Ingredient) => {
 	);
 };
 
-const NewIngredients = ({ ingredients }: NewIngredientsProps) => {
-	const [parent, enableAnimations] = useAutoAnimate(/* optional config */);
+const NewIngredients = ({
+	ingredients,
+	heading = false,
+}: NewIngredientsProps) => {
+	const [parent] = useAutoAnimate();
 	return (
 		<div className=" max-w-full  text-base font-sans">
 			<div className="flex flex-col w-full overflow-hidden m-auto pb-4">
-				<h1 className="text-2xl mb-4 font-semibold">Ingredients</h1>
+				{heading && (
+					<h1 className="text-2xl mb-4 font-semibold">Ingredients</h1>
+				)}
 				<div className="grid gap-3" ref={parent}>
 					{ingredients?.map((ingredient: Ingredient) => (
 						<Item key={ingredient.id} {...ingredient} />

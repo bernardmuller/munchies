@@ -19,12 +19,18 @@ import httpClient from "../httpClient";
 export async function fetchIngredients({
 	page,
 	searchTerm,
+	limit,
 }: {
 	page?: string;
 	searchTerm?: string;
+	limit?: string;
 }) {
 	return await httpClient
-		.get(`/ingredients?&searchTerm=${searchTerm || ""}&limit=10`)
+		.get(
+			`/ingredients?&searchTerm=${searchTerm || ""}&limit=${
+				limit || 10
+			}&page=${page || 0}}`
+		)
 		.then((response) => response.data);
 }
 

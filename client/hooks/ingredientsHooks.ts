@@ -6,6 +6,15 @@ import { fetchIngredients } from "@/api/endpoints/ingredients";
 export const useIngredientsData = () => {
 	return useQuery(["ingredients"], () => fetchIngredients({}));
 };
+
+export const useAllIngredientsData = () => {
+	return useQuery(["ingredients"], () =>
+		fetchIngredients({
+			page: "0",
+			limit: "4000",
+		})
+	);
+};
 //
 // export const useIngredientData = (id: string) => {
 // 	const { data, isLoading, isSuccess, isError, isFetching } = useQuery(

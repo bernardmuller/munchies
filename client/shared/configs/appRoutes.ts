@@ -11,6 +11,18 @@ const appRoutes = [
 		path: "/meals/new",
 		name: "New Meal",
 	},
+	{
+		path: "/settings/profile",
+		name: "Settings",
+	},
+	{
+		path: "/settings/preferences",
+		name: "Settings",
+	},
+	{
+		path: "/settings/ingredients",
+		name: "Settings",
+	},
 ];
 
 export default appRoutes;
