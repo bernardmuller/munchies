@@ -41,9 +41,11 @@
 		"tailwindcss": "3.3.3",
 		"tailwindcss-animate": "^1.0.6",
 		"typescript": "5.1.6",
+		"uuid": "^9.0.0",
 		"zod": "^3.21.4"
 	},
 	"devDependencies": {
-		"@types/lodash.debounce": "^4.0.7"
+		"@types/lodash.debounce": "^4.0.7",
+		"@types/uuid": "^9.0.2"
 	}
 }

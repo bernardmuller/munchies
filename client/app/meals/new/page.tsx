@@ -16,11 +16,12 @@ import { useForm } from "react-hook-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIngredientsData } from "@/hooks/ingredientsHooks";
 import { Skeleton } from "@/components/ui/skeleton";
-import DebouncedInput from "./DebouncedInput";
 import IngredientSelect from "./IngredientSelect";
 import { useState } from "react";
 import NewIngredients from "@/app/mealplans/new/Ingredients";
 import { Ingredient } from "@/types";
+import Instructions from "@/app/mealplans/new/Instructions";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
 	name: z.string().min(2, {
@@ -31,17 +32,30 @@ const formSchema = z.object({
 	readyIn: z.string(),
 });
 
+type Instruction = {
+	id: string;
+	value: string;
+};
+
 export default function NewMeal() {
 	const ingredients = useIngredientsData();
+	const router = useRouter();
 	const [selectedIngredients, setSelectedIngredients] = useState<
 		Ingredient[]
 	>([]);
+	const [newInstructions, setNewInstructions] = useState<Instruction[]>([]);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: "",
 		},
 	});
+
+	console.log(form.formState.errors);
+
+	const handleAddInstruction = (instruction: Instruction) => {
+		setNewInstructions([...newInstructions, instruction]);
+	};
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		console.log(values);
@@ -56,122 +70,111 @@ export default function NewMeal() {
 			</div>
 		);
 
-	console.log({ ingredients });
 	return (
-		<Form {...form}>
+		<Form {...form} onSubmit={form.handleSubmit(onSubmit)}>
 			<div className="flex flex-col lg:flex-row gap-8  w-full min-h-[50vh]">
 				<div className="w-full h-full xl:flex-[0.6] ">
 					<div>
-						<h2 className="text-2xl mb-4 font-semibold">
-							New Meal
-						</h2>
-						<form
-							onSubmit={form.handleSubmit(onSubmit)}
-							className="space-y-4"
-						>
+						<FormField
+							control={form.control}
+							name="name"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>
+										Name
+										<span className="text-red-400">*</span>
+									</FormLabel>
+									<FormControl>
+										<Input
+											placeholder="eg. Hot dogs"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<div className="flex flex-row justify-between gap-4">
 							<FormField
 								control={form.control}
-								name="name"
+								name="prepTime"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>
-											Name
+											Prep Time
 											<span className="text-red-400">
 												*
 											</span>
 										</FormLabel>
 										<FormControl>
-											<Input
-												placeholder="eg. Hot dogs"
-												{...field}
-											/>
+											<div className="flex gap-1 items-center">
+												<Input
+													type="number"
+													placeholder="60"
+													step="5"
+													{...field}
+												/>
+												min
+											</div>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
 								)}
 							/>
-
-							<div className="flex flex-row justify-between gap-4">
-								<FormField
-									control={form.control}
-									name="prepTime"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>
-												Prep Time
-												<span className="text-red-400">
-													*
-												</span>
-											</FormLabel>
-											<FormControl>
-												<div className="flex gap-1 items-center">
-													<Input
-														type="number"
-														placeholder="60"
-														step="5"
-														{...field}
-													/>
-													min
-												</div>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="cookTime"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>
-												Cook Time
-												<span className="text-red-400">
-													*
-												</span>
-											</FormLabel>
-											<FormControl>
-												<div className="flex gap-1 items-center">
-													<Input
-														type="number"
-														placeholder="60"
-														step="5"
-														{...field}
-													/>
-													min
-												</div>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="readyIn"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>
-												Ready Ink
-												<span className="text-red-400">
-													*
-												</span>
-											</FormLabel>
-											<FormControl>
-												<div className="flex gap-1 items-center">
-													<Input
-														type="number"
-														placeholder="60"
-														step="5"
-														{...field}
-													/>
-													min
-												</div>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-						</form>
+							<FormField
+								control={form.control}
+								name="cookTime"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>
+											Cook Time
+											<span className="text-red-400">
+												*
+											</span>
+										</FormLabel>
+										<FormControl>
+											<div className="flex gap-1 items-center">
+												<Input
+													type="number"
+													placeholder="60"
+													step="5"
+													{...field}
+												/>
+												min
+											</div>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="readyIn"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>
+											Ready Ink
+											<span className="text-red-400">
+												*
+											</span>
+										</FormLabel>
+										<FormControl>
+											<div className="flex gap-1 items-center">
+												<Input
+													type="number"
+													placeholder="60"
+													step="5"
+													{...field}
+												/>
+												min
+											</div>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
 					</div>
 				</div>
 
@@ -194,7 +197,6 @@ export default function NewMeal() {
 									Ingredients
 								</h3>
 								<IngredientSelect
-									heading={false}
 									onIngredientSelect={(val) => {
 										setSelectedIngredients((prev) => [
 											...prev,
@@ -203,18 +205,28 @@ export default function NewMeal() {
 									}}
 								/>
 								<NewIngredients
+									heading={false}
 									ingredients={selectedIngredients}
 								/>
 							</div>
 						</TabsContent>
 						<TabsContent value="instructions">
-							Change your password here.
+							<Instructions
+								instructions={newInstructions}
+								onAddInstruction={handleAddInstruction}
+							/>
 						</TabsContent>
 					</Tabs>
 				</div>
 			</div>
 			<div className="w-full flex gap-2 justify-end">
-				<Button variant="secondary" type="submit">
+				<Button
+					variant="secondary"
+					type="submit"
+					onClick={() => {
+						router.back();
+					}}
+				>
 					Cancel
 				</Button>
 				<Button type="submit">Submit</Button>

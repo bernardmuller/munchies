@@ -20,7 +20,7 @@ const Item = (ingredient: Ingredient) => {
 
 const NewIngredients = ({
 	ingredients,
-	heading = false,
+	heading = true,
 }: NewIngredientsProps) => {
 	const [parent] = useAutoAnimate();
 	return (
