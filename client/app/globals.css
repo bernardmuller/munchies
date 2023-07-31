@@ -87,7 +87,7 @@
 	/* .my-react-select-container {
   } */
 	.my-react-select-container .my-react-select__control {
-		@apply bg-white dark:bg-background border-2 border-slate-200 dark:border-ring hover:border-neutral-400 dark:hover:border-neutral-500;
+		@apply bg-white dark:bg-background border-2 border-slate-200 dark:border-ring hover:border-neutral-400 dark:hover:border-neutral-500 text-sm;
 	}
 
 	.my-react-select-container .my-react-select__control--is-focused {

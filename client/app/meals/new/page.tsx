@@ -202,7 +202,7 @@ export default function NewMeal() {
 									}}
 								/>
 								<div className="flex flex-col gap-2">
-									<h4 className="text-md font-normal dark:text-slate-400">
+									<h4 className="text-md font-normal text-slate-400">
 										Selected Ingredients:
 									</h4>
 									<NewIngredients

@@ -36,7 +36,7 @@ const NewIngredients = ({
 				</div>
 				{ingredients?.length === 0 && (
 					<div className="flex flex-coljustify-center">
-						<p className="text-md text-gray-400">
+						<p className="text-sm text-slate-300">
 							No ingredients added yet
 						</p>
 					</div>
