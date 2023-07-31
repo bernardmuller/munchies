@@ -1,19 +1,43 @@
 import { db } from '../../db/db';
-import {
-  createNotFoundMessage,
-  createSuccessMessage,
-  getUuid,
-} from '../../shared/utils';
+import { createSuccessMessage, getUuid } from '../../shared/utils';
 import { MealModel } from '../../../prisma/zod';
 import { getIngredients } from '../ingredients/actions';
 import { NotFoundError } from '../../shared/errors';
-import { Ingredient } from '@prisma/client';
+import { Ingredient, Meal } from '@prisma/client';
 
-export const createMeal = async (data: { id?: string; createdBy: string }) => {
-  const mealData = { ...data, id: data.id || getUuid() };
+type CreateMealArgs = Meal & {
+  ingredients?: Ingredient[];
+};
+
+export const createMeal = async (data: CreateMealArgs) => {
+  console.log('data', data);
+  if (!data.ingredients) throw new Error('No name provided');
+  const mealData = {
+    name: data.name,
+    readyIn: data?.readyIn,
+    prepTime: data.prepTime,
+    cookTime: data.cookTime,
+    cuisine: data.cuisine,
+    URL: data.URL,
+    image: data.image,
+    rating: data.rating,
+    notes: data.notes,
+    id: getUuid(),
+    createdBy: data.createdBy,
+  };
   const res = await db.meal.create({ data: mealData });
-  const newMeal = MealModel.parse(res);
-  return newMeal;
+
+  for (const ingredient of data.ingredients) {
+    await db.mealIngredient.create({
+      data: {
+        id: getUuid(),
+        mealId: res.id,
+        ingredientId: ingredient.id,
+      },
+    });
+  }
+
+  return res;
 };
 
 export const getMeals = async () => {

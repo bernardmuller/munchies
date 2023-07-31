@@ -20,6 +20,17 @@ const endpoints = [
     handler: async (req: Request, res: Response) => {
       const meal = await createMeal({
         createdBy: res.locals.userId,
+        name: req.body.name,
+        directions: req.body.directions,
+        cuisine: req.body.cuisine,
+        URL: req.body.URL,
+        image: req.body.image,
+        prepTime: req.body.prepTime,
+        cookTime: req.body.cookTime,
+        readyIn: req.body.readyIn,
+        rating: req.body.rating,
+        notes: req.body.notes,
+        ingredients: req.body.ingredients,
       });
       return res.send(meal);
     },
