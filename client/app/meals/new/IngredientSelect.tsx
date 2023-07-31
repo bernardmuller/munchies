@@ -44,6 +44,8 @@ export default function IngredientSelect({
 				onInputChange={(value) => setInputValue(value)}
 				placeholder="Add an ingredient"
 				options={options}
+				className="my-react-select-container"
+				classNamePrefix="my-react-select"
 			/>
 		</div>
 	);

@@ -4,8 +4,10 @@
 
 @layer base {
 	:root {
-		--background: 0 0% 100%;
+		--background: #eff1f6;
 		--foreground: 222.2 84% 4.9%;
+
+		--header: #141925;
 
 		--muted: 210 40% 96.1%;
 		--muted-foreground: 215.4 16.3% 46.9%;
@@ -19,11 +21,11 @@
 		--border: 214.3 31.8% 91.4%;
 		--input: 214.3 31.8% 91.4%;
 
-		--primary: 107, 46%, 53%;
+		--primary: #6fce55;
 		--primary-foreground: 210 40% 98%;
 		--primary-hover: 107, 46%, 63%;
 
-		--secondary: 210 40% 96.1%;
+		--secondary: #1c2533;
 		--secondary-foreground: 222.2 47.4% 11.2%;
 
 		--accent: 210 40% 96.1%;
@@ -38,8 +40,10 @@
 	}
 
 	.dark {
-		--background: 222.2 84% 4.9%;
+		--background: #141925;
 		--foreground: 210 40% 98%;
+
+		--header: #0d1017;
 
 		--muted: 217.2 32.6% 17.5%;
 		--muted-foreground: 215 20.2% 65.1%;
@@ -53,10 +57,11 @@
 		--border: 217.2 32.6% 17.5%;
 		--input: 217.2 32.6% 17.5%;
 
-		--primary: 210 40% 98%;
-		--primary-foreground: 222.2 47.4% 11.2%;
+		--primary: #6fce55;
+		--primary-foreground: 210 40% 98%;
+		--primary-hover: 107, 46%, 63%;
 
-		--secondary: 217.2 32.6% 17.5%;
+		--secondary: #0d1017;
 		--secondary-foreground: 210 40% 98%;
 
 		--accent: 217.2 32.6% 17.5%;
@@ -75,5 +80,38 @@
 	}
 	body {
 		@apply bg-background text-foreground;
+	}
+}
+
+@layer components {
+	/* .my-react-select-container {
+  } */
+	.my-react-select-container .my-react-select__control {
+		@apply bg-white dark:bg-background border-2 border-slate-200 dark:border-ring hover:border-neutral-400 dark:hover:border-neutral-500;
+	}
+
+	.my-react-select-container .my-react-select__control--is-focused {
+		@apply border-neutral-500 hover:border-neutral-500 dark:border-neutral-400 dark:hover:border-neutral-400 shadow-none;
+	}
+
+	.my-react-select-container .my-react-select__menu {
+		@apply bg-white dark:bg-neutral-700 border-2 border-neutral-300 dark:border-neutral-600;
+	}
+
+	.my-react-select-container .my-react-select__option {
+		@apply text-slate-600 dark:text-foreground bg-white hover:bg-muted dark:bg-secondary dark:hover:bg-neutral-800;
+	}
+	/* .my-react-select-container .my-react-select__option--is-focused {
+    @apply bg-neutral-200 dark:bg-neutral-800;
+  } */
+
+	.my-react-select-container .my-react-select__indicator-separator {
+		@apply bg-white;
+	}
+
+	.my-react-select-container .my-react-select__input-container,
+	.my-react-select-container .my-react-select__placeholder,
+	.my-react-select-container .my-react-select__single-value {
+		@apply text-slate-400 dark:text-slate-400 font-light;
 	}
 }

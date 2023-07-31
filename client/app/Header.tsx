@@ -9,6 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import appRoutes from "@/shared/configs/appRoutes";
+import { ThemeToggler } from "./ThemeToggler";
 
 const user = {
 	name: "Bernard Muller",
@@ -38,8 +39,8 @@ const Header = () => {
 	}, [pathname]);
 
 	return (
-		<div className="bg-gray-800 pb-32">
-			<Disclosure as="nav" className="bg-gray-800">
+		<div className="bg-header dark:bg-header pb-32">
+			<Disclosure as="nav" className="bg-header">
 				{({ open }: any) => (
 					<>
 						<div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -64,7 +65,7 @@ const Header = () => {
 														className={classNames(
 															item.href ===
 																`/${location}`
-																? "bg-gray-900 text-white"
+																? "bg-secondary text-white"
 																: "text-gray-300 hover:bg-gray-700 hover:text-white",
 															"px-3 py-2 rounded-md text-sm font-medium"
 														)}
@@ -83,6 +84,7 @@ const Header = () => {
 									</div>
 									<div className="hidden md:block">
 										<div className="ml-4 gap-2 flex items-center md:ml-6">
+											<ThemeToggler />
 											<Button
 												type="button"
 												onClick={() => {
