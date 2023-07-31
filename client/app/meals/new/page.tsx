@@ -192,10 +192,7 @@ export default function NewMeal() {
 							</TabsTrigger>
 						</TabsList>
 						<TabsContent value="ingredients">
-							<div className="flex flex-col gap-1">
-								<h3 className="text-xl font-semibold">
-									Ingredients
-								</h3>
+							<div className="flex flex-col gap-4">
 								<IngredientSelect
 									onIngredientSelect={(val) => {
 										setSelectedIngredients((prev) => [
@@ -204,10 +201,15 @@ export default function NewMeal() {
 										]);
 									}}
 								/>
-								<NewIngredients
-									heading={false}
-									ingredients={selectedIngredients}
-								/>
+								<div className="flex flex-col gap-2">
+									<h4 className="text-md font-normal dark:text-slate-400">
+										Selected Ingredients:
+									</h4>
+									<NewIngredients
+										heading={false}
+										ingredients={selectedIngredients}
+									/>
+								</div>
 							</div>
 						</TabsContent>
 						<TabsContent value="instructions">

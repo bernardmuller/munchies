@@ -59,13 +59,12 @@ const Header = () => {
 										<div className="hidden md:block">
 											<div className="ml-10 flex items-baseline space-x-4">
 												{navigation.map((item) => (
-													<a
+													<div
 														key={item.name}
-														href={item.href}
 														className={classNames(
 															item.href ===
 																`/${location}`
-																? "bg-secondary text-white"
+																? "bg-background text-white"
 																: "text-gray-300 hover:bg-gray-700 hover:text-white",
 															"px-3 py-2 rounded-md text-sm font-medium"
 														)}
@@ -75,9 +74,14 @@ const Header = () => {
 																? "page"
 																: undefined
 														}
+														onClick={() =>
+															router.push(
+																item.href
+															)
+														}
 													>
 														{item.name}
-													</a>
+													</div>
 												))}
 											</div>
 										</div>
