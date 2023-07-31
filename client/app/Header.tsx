@@ -5,6 +5,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MenuIcon, PlusIcon, XIcon } from "@heroicons/react/outline";
 import "./globals.css";
 
+import Select from "react-select";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,11 @@ const userNavigation = [
 	{ name: "Your Profile", href: "#" },
 	{ name: "Settings", href: "/settings/profile" },
 	{ name: "Sign out", href: "#" },
+];
+
+const actionNavigation = [
+	{ label: "Meal plan", value: "/mealplans/new" },
+	{ label: "Meal", value: "/meals/new" },
 ];
 
 function classNames(...classes: any[]) {
@@ -64,7 +70,7 @@ const Header = () => {
 														className={classNames(
 															item.href ===
 																`/${location}`
-																? "bg-background text-white"
+																? "bg-secondary dark:bg-background text-white"
 																: "text-gray-300 hover:bg-gray-700 hover:text-white",
 															"px-3 py-2 rounded-md text-sm font-medium"
 														)}
@@ -89,25 +95,17 @@ const Header = () => {
 									<div className="hidden md:block">
 										<div className="ml-4 gap-2 flex items-center md:ml-6">
 											<ThemeToggler />
-											<Button
-												type="button"
-												onClick={() => {
-													router.push("/meals/new");
+											<Select
+												options={actionNavigation}
+												onChange={(e) => {
+													router.push(e?.value);
 												}}
-											>
-												Create new Meal
-											</Button>
-
-											<Button
-												type="button"
-												onClick={() => {
-													router.push(
-														"/mealplans/new"
-													);
-												}}
-											>
-												Create new Mealplan
-											</Button>
+												value={null}
+												placeholder="Create New"
+												isSearchable={false}
+												className="my-react-select-container"
+												classNamePrefix="my-react-select"
+											/>
 
 											{/* Profile dropdown */}
 											<Menu
