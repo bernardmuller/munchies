@@ -1,5 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchIngredients } from "@/api/endpoints/ingredients";
+import {
+	createIngredient,
+	fetchIngredients,
+} from "@/api/endpoints/ingredients";
 // import { addIngredientToMeal, removeIngredientFromMeal } from "../api/meals";
 // import useToast from "./useToast";
 
@@ -24,14 +27,14 @@ export const useAllIngredientsData = () => {
 // 	return { data, isLoading, isSuccess, isError, isFetching };
 // };
 //
-// export const useCreateIngredient = () => {
-// 	const queryClient = useQueryClient();
-// 	return useMutation(createIngredient, {
-// 		onSuccess: () => {
-// 			return queryClient.invalidateQueries(["ingredients"]);
-// 		},
-// 	});
-// };
+export const useCreateIngredient = () => {
+	const queryClient = useQueryClient();
+	return useMutation(createIngredient, {
+		onSuccess: () => {
+			return queryClient.invalidateQueries(["ingredients"]);
+		},
+	});
+};
 //
 // export const useAddIngredient = () => {
 // 	const queryClient = useQueryClient();

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Meal } from "@/types";
+import { Minus, Plus } from "lucide-react";
 import Image from "next/image";
 
 type Props = {
@@ -34,10 +35,13 @@ function AddMealList({ meals, onAddMeal, onRemoveMeal, selectedMeals }: Props) {
 									? "destructive"
 									: "default"
 							}
+							size="icon"
 						>
-							{selectedMeals?.find((m) => m.id === meal.id)
-								? "-"
-								: "+"}
+							{selectedMeals?.find((m) => m.id === meal.id) ? (
+								<Plus className="bg-white h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+							) : (
+								<Minus className="bg-white h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+							)}
 						</Button>
 						<div className="w-24 h-24 relative overflow-hidden">
 							<Image

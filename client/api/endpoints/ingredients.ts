@@ -2,19 +2,16 @@ import axios from "axios";
 import httpClient from "../httpClient";
 // import { requireBaseURL, requireHeaders } from "../shared/utils";
 
-// export async function createIngredient(newIngredientData: {
-// 	name: string;
-// 	categoryId: number;
-// }) {
-// 	return await axios({
-// 		method: "POST",
-// 		url: `${requireBaseURL()}/ingredients`,
-// 		headers: await requireHeaders(),
-// 		data: newIngredientData,
-// 	}).then((response) => {
-// 		return response.data;
-// 	});
-// }
+export async function createIngredient(newIngredientData: {
+	name: string;
+	categoryId: number;
+}) {
+	return await httpClient
+		.post(`/ingredients`, newIngredientData)
+		.then((response) => {
+			return response.data;
+		});
+}
 
 export async function fetchIngredients({
 	page,

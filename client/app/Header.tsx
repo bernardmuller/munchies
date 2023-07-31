@@ -28,6 +28,7 @@ const userNavigation = [
 const actionNavigation = [
 	{ label: "Meal plan", value: "/mealplans/new" },
 	{ label: "Meal", value: "/meals/new" },
+	{ label: "Ingredient", value: "/ingredients/new" },
 ];
 
 function classNames(...classes: any[]) {

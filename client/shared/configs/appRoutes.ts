@@ -23,6 +23,10 @@ const appRoutes = [
 		path: "/settings/ingredients",
 		name: "Settings",
 	},
+	{
+		path: "/ingredients/new",
+		name: "New Ingredient",
+	},
 ];
 
 export default appRoutes;
