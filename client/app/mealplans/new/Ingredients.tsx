@@ -3,17 +3,31 @@
 import { Ingredient } from "@/types";
 import React from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { X } from "lucide-react";
 
 type NewIngredientsProps = {
 	ingredients: Ingredient[];
 	heading?: boolean;
+	onDelete: (id: string) => void;
 };
 
-const Item = (ingredient: Ingredient) => {
+type ItemProps = {
+	ingredient: Ingredient;
+	onDelete?: (id: string) => void;
+};
+
+const Item = ({ ingredient, onDelete }: ItemProps) => {
 	return (
-		<div className="flex gap-2 items-center hover:cursor-pointer">
-			<div className="h-3 w-3 rounded-full bg-gray-300" />
-			<span>{ingredient.name}</span>
+		<div className="flex justify-between">
+			<div className="flex gap-2 items-center hover:cursor-pointer">
+				<div className="h-3 w-3 rounded-full bg-gray-300" />
+				<span>{ingredient.name}</span>
+			</div>
+			{/*
+      <div className="" onClick={() => onDelete(ingredient.id)}>
+        X
+      </div>
+    */}
 		</div>
 	);
 };
@@ -21,6 +35,7 @@ const Item = (ingredient: Ingredient) => {
 const NewIngredients = ({
 	ingredients,
 	heading = true,
+	onDelete,
 }: NewIngredientsProps) => {
 	const [parent] = useAutoAnimate();
 	return (
@@ -31,7 +46,11 @@ const NewIngredients = ({
 				)}
 				<div className="grid gap-3" ref={parent}>
 					{ingredients?.map((ingredient: Ingredient) => (
-						<Item key={ingredient.id} {...ingredient} />
+						<Item
+							key={ingredient.id}
+							onDelete={onDelete}
+							ingredient={ingredient}
+						/>
 					))}
 				</div>
 				{ingredients?.length === 0 && (

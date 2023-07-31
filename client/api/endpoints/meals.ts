@@ -1,13 +1,11 @@
 import axios from "axios";
 import httpClient from "../httpClient";
 
-// export async function createMeal() {
-// 	return await axios({
-// 		method: "POST",
-// 		url: `${requireBaseURL()}/meals`,
-// 		headers: await requireHeaders(),
-// 	}).then((response) => response.data);
-// }
+export async function createMeal(data: any) {
+	return await httpClient
+		.post(`/meals`, data)
+		.then((response) => response.data);
+}
 
 export async function fetchMeals() {
 	return await httpClient.get(`/meals`).then((response) => response.data);

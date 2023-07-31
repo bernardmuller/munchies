@@ -20,6 +20,9 @@ export default function IngredientSelect({
 	onIngredientSelect,
 }: IngredientSelectProps) {
 	const ingredients = useAllIngredientsData();
+	const [selectedOptions, setSelectedOptions] = React.useState<
+		IngredientOption[]
+	>([]);
 	const [inputValue, setInputValue] = React.useState("");
 
 	const options = ingredients.data?.map((ingredient: Ingredient) => ({
@@ -28,7 +31,7 @@ export default function IngredientSelect({
 	}));
 
 	return (
-		<div className="grid gap-2">
+		<div className="grid gap-2 w-full">
 			<Select
 				onChange={(selectedOption: IngredientOption) => {
 					onIngredientSelect(
