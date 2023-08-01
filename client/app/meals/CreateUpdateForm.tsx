@@ -42,7 +42,7 @@ function CreateUpdateForm({
 	const [selectedIngredients, setSelectedIngredients] = useState<
 		Ingredient[]
 	>([]);
-	const [newInstructions, setNewInstructions] = useState<Instruction[]>([]);
+	const [newInstructions, setNewInstructions] = useState<string[]>([]);
 	const {
 		register,
 		formState: { errors },
@@ -56,7 +56,7 @@ function CreateUpdateForm({
 		},
 	});
 
-	const handleAddInstruction = (instruction: Instruction) => {
+	const handleAddInstruction = (instruction: string) => {
 		setError(null);
 		setNewInstructions([...newInstructions, instruction]);
 	};
@@ -250,16 +250,16 @@ function CreateUpdateForm({
 			</div>
 
 			<div className="w-full flex  justify-end">
-				<div className="flex flex-col">
+				<div className="flex flex-col justify-end">
 					{error && (
 						<p className="text-red-500 text-sm py-1">{error}</p>
 					)}
-					<div className="flex gap-2">
+					<div className="flex gap-2 justify-end">
 						<Button
 							variant="secondary"
-							type="submit"
+							type="button"
 							onClick={() => {
-								router.back();
+								router.push("/home");
 							}}
 						>
 							Cancel

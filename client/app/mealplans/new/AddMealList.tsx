@@ -37,11 +37,9 @@ function AddMealList({ meals, onAddMeal, onRemoveMeal, selectedMeals }: Props) {
 							}
 							size="icon"
 						>
-							{selectedMeals?.find((m) => m.id === meal.id) ? (
-								<Plus className="bg-white h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-							) : (
-								<Minus className="bg-white h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-							)}
+							{selectedMeals?.find((m) => m.id === meal.id)
+								? "-"
+								: "+"}
 						</Button>
 						<div className="w-24 h-24 relative overflow-hidden">
 							<Image

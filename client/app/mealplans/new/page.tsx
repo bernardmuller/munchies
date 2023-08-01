@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useCreateMealplan } from "@/hooks/menusHooks";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type AMeal = Meal & {
 	ingredients: AIngredient[];
@@ -31,6 +32,7 @@ function NewMealplan() {
 	const [error, setError] = useState<string>("");
 	const meals = useMealsData();
 	const createMealplan = useCreateMealplan();
+	const router = useRouter();
 
 	const handleAddMeal = (meal: Meal) => {
 		setError("");
@@ -90,9 +92,13 @@ function NewMealplan() {
 						<span className="text-red-400 text-sm">{error}</span>
 					)}
 					<div className="w-full flex justify-end gap-4">
-						<a href="/home">
-							<Button variant="secondary">Cancel</Button>
-						</a>
+						<Button
+							type="button"
+							variant="secondary"
+							onClick={() => router.push("/home")}
+						>
+							Cancel
+						</Button>
 						<Button
 							disabled={createMealplan.isLoading}
 							onClick={() => {
