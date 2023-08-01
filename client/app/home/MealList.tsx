@@ -15,12 +15,7 @@ export default function MealList({ meals }: Props) {
 			<h2 className="text-2xl mb-4 font-semibold">Current Mealplan</h2>
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				{meals?.map((meal: Meal) => (
-					<div
-						className="flex items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-						onClick={() => {
-							router.push(`/meals/${meal.id}`);
-						}}
-					>
+					<div className="flex items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
 						<div className="relative w-28 h-28 overflow-hidden">
 							<Image
 								className="object-cover w-28 rounded-t-lg h-28 md:h-auto md:w-28 md:rounded-none md:rounded-l-lg"
@@ -32,7 +27,12 @@ export default function MealList({ meals }: Props) {
 							/>
 						</div>
 						<div className="flex flex-col justify-between p-4 leading-normal">
-							<h5 className="mb-2 text-lg font-normal tracking-tight text-gray-900 dark:text-white">
+							<h5
+								onClick={() => {
+									router.push(`/meals/${meal.id}`);
+								}}
+								className="cursor-pointer hover:underline mb-2 text-lg font-normal tracking-tight text-gray-900 dark:text-white"
+							>
 								{meal.name}
 							</h5>
 							<p className="mb-3 font-normal text-gray-700 dark:text-gray-400">

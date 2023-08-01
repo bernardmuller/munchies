@@ -30,9 +30,6 @@ function AddMealList({ meals, onAddMeal, onRemoveMeal, selectedMeals }: Props) {
 				{meals?.map((meal: Meal) => (
 					<div
 						key={meal.id}
-						onClick={() => {
-							router.push(`/meals/${meal.id}`);
-						}}
 						className="z-10 relative flex items-center bg-white border border-gray-200 rounded-lg  md:flex-row md:max-w-xl  dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
 					>
 						<Button
@@ -60,7 +57,12 @@ function AddMealList({ meals, onAddMeal, onRemoveMeal, selectedMeals }: Props) {
 							/>
 						</div>
 						<div className="flex flex-col m-0 leading-normal px-2">
-							<h5 className="mb-2 text-lg font-normal tracking-tight text-gray-900 dark:text-white">
+							<h5
+								onClick={() => {
+									router.push(`/meals/${meal.id}`);
+								}}
+								className="cursor-pointer hover:underline mb-2 text-lg font-normal tracking-tight text-gray-900 dark:text-white"
+							>
 								{meal.name}
 							</h5>
 							<p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
