@@ -8,18 +8,13 @@ import { useForm } from "react-hook-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIngredientsData } from "@/hooks/ingredientsHooks";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NewIngredients from "@/app/mealplans/new/Ingredients";
 import { Ingredient, Meal } from "@/types";
 import Instructions from "@/app/mealplans/new/Instructions";
 import { useRouter } from "next/navigation";
 import IngredientSelect from "./new/IngredientSelect";
 import { Loader2 } from "lucide-react";
-
-type Instruction = {
-	id: string;
-	value: string;
-};
 
 type CreateUpdateProps = {
 	data?: Meal;
@@ -41,8 +36,10 @@ function CreateUpdateForm({
 	const router = useRouter();
 	const [selectedIngredients, setSelectedIngredients] = useState<
 		Ingredient[]
-	>([]);
-	const [newInstructions, setNewInstructions] = useState<string[]>([]);
+	>(data?.ingredients || []);
+	const [newInstructions, setNewInstructions] = useState<string[]>(
+		data?.directions || []
+	);
 	const {
 		register,
 		formState: { errors },
@@ -52,7 +49,7 @@ function CreateUpdateForm({
 	} = useForm<z.infer<typeof validationSchema>>({
 		resolver: zodResolver(validationSchema),
 		defaultValues: {
-			name: "",
+			name: data?.name,
 		},
 	});
 
@@ -79,7 +76,18 @@ function CreateUpdateForm({
 		onSubmitForm(newMealDTO);
 	}
 
-	if (!ingredients.data)
+	useEffect(() => {
+		if (formType === "update" && data) {
+			setValue("name", data.name);
+			setValue("cookTime", data.cookTime);
+			setValue("prepTime", data.prepTime);
+			setValue("readyIn", data.readyIn);
+			setSelectedIngredients(data.ingredients);
+			setNewInstructions(data.directions);
+		}
+	}, [data]);
+
+	if (!ingredients.data || (formType === "update" && !data))
 		return (
 			<div className="w-full flex flex-row gap-6 justify-evenly min-h-[50vh]">
 				<Skeleton className="flex-[0.3] w-full h-28 rounded-md" />
@@ -100,6 +108,7 @@ function CreateUpdateForm({
 							</label>
 							<Input
 								placeholder="eg. Hot dogs"
+								defaultValue={data?.name}
 								{...register("name")}
 							/>
 
@@ -117,8 +126,8 @@ function CreateUpdateForm({
 									<Input
 										type="number"
 										placeholder="60"
-										step="5"
 										{...register("prepTime")}
+										defaultValue={data?.prepTime as string}
 										onChange={(e) => {
 											setValue(
 												"prepTime",
@@ -142,7 +151,6 @@ function CreateUpdateForm({
 									<Input
 										type="number"
 										placeholder="60"
-										step="5"
 										{...register("cookTime")}
 										onChange={(e) => {
 											setValue(
@@ -168,8 +176,8 @@ function CreateUpdateForm({
 									<Input
 										type="number"
 										placeholder="60"
-										step="5"
 										{...register("readyIn")}
+										defaultValue={data?.readyIn as string}
 										onChange={(e) => {
 											setValue(
 												"readyIn",
@@ -204,31 +212,33 @@ function CreateUpdateForm({
 						</TabsList>
 						<TabsContent value="ingredients">
 							<div className="flex flex-col gap-4">
-								<div className="flex flex-row gap-2 items-center">
-									<IngredientSelect
-										onIngredientSelect={(val) => {
-											setSelectedIngredients((prev) => [
-												...prev,
-												val,
-											]);
-										}}
-									/>
-									<Button
-										variant="secondary"
-										type="button"
-										onClick={() =>
-											setSelectedIngredients([])
-										}
-									>
-										Clear
-									</Button>
-								</div>
+								{formType === "create" && (
+									<div className="flex flex-row gap-2 items-center">
+										<IngredientSelect
+											onIngredientSelect={(val) => {
+												setSelectedIngredients(
+													(prev) => [...prev, val]
+												);
+											}}
+										/>
+										<Button
+											variant="secondary"
+											type="button"
+											onClick={() =>
+												setSelectedIngredients([])
+											}
+										>
+											Clear
+										</Button>
+									</div>
+								)}
 								<div className="flex flex-col gap-2">
 									<h4 className="text-sm font-normal text-slate-400">
 										Selected Ingredients:
 									</h4>
 									<NewIngredients
 										heading={false}
+										editable={formType === "create"}
 										onDelete={(id) => {
 											setSelectedIngredients((prev) =>
 												prev.filter((i) => i.id !== id)
@@ -243,6 +253,7 @@ function CreateUpdateForm({
 							<Instructions
 								instructions={newInstructions}
 								onAddInstruction={handleAddInstruction}
+								editable={formType === "create"}
 							/>
 						</TabsContent>
 					</Tabs>
@@ -259,7 +270,7 @@ function CreateUpdateForm({
 							variant="secondary"
 							type="button"
 							onClick={() => {
-								router.push("/home");
+								router.back();
 							}}
 						>
 							Cancel

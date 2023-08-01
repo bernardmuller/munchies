@@ -2,20 +2,24 @@
 
 import { Meal } from "@/types";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type Props = {
 	meals: Meal[];
 };
 
 export default function MealList({ meals }: Props) {
+	const router = useRouter();
 	return (
 		<>
 			<h2 className="text-2xl mb-4 font-semibold">Current Mealplan</h2>
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				{meals?.map((meal: Meal) => (
-					<a
-						href="#"
+					<div
 						className="flex items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+						onClick={() => {
+							router.push(`/meals/${meal.id}`);
+						}}
 					>
 						<div className="relative w-28 h-28 overflow-hidden">
 							<Image
@@ -35,7 +39,7 @@ export default function MealList({ meals }: Props) {
 								{meal.ingredients.length} ingredients
 							</p>
 						</div>
-					</a>
+					</div>
 				))}
 			</div>
 		</>

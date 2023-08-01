@@ -9,6 +9,7 @@ type NewIngredientsProps = {
 	ingredients: Ingredient[];
 	heading?: boolean;
 	onDelete: (id: string) => void;
+	editable?: boolean;
 };
 
 type ItemProps = {
@@ -36,6 +37,7 @@ const NewIngredients = ({
 	ingredients,
 	heading = true,
 	onDelete,
+	editable = true,
 }: NewIngredientsProps) => {
 	const [parent] = useAutoAnimate();
 	return (

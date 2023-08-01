@@ -62,7 +62,6 @@ const endpoints = [
       const { id } = req.params;
       const params = {
         name: req.body.name,
-        directions: req.body.directions,
         cuisine: req.body.cuisine,
         URL: req.body.URL,
         image: req.body.image,
@@ -71,7 +70,6 @@ const endpoints = [
         readyIn: req.body.readyIn,
         rating: req.body.rating,
         notes: req.body.notes,
-        updatedBy: res.locals.userId,
       };
 
       const meal = await updateMeal(id, params);

@@ -95,7 +95,7 @@ function NewMealplan() {
 						<Button
 							type="button"
 							variant="secondary"
-							onClick={() => router.push("/home")}
+							onClick={() => router.back()}
 						>
 							Cancel
 						</Button>

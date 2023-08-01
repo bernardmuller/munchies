@@ -5,12 +5,25 @@ import { getIngredients } from '../ingredients/actions';
 import { NotFoundError } from '../../shared/errors';
 import { Ingredient, Meal } from '@prisma/client';
 
-type CreateMealArgs = Meal & {
-  ingredients?: Ingredient[];
+type CreateMealArgs = Pick<
+  Meal,
+  | 'name'
+  | 'directions'
+  | 'cuisine'
+  | 'URL'
+  | 'image'
+  | 'prepTime'
+  | 'cookTime'
+  | 'readyIn'
+  | 'rating'
+  | 'notes'
+  | 'createdBy'
+> & {
+  ingredients: Ingredient[];
+  directions: string[];
 };
 
 export const createMeal = async (data: CreateMealArgs) => {
-  console.log('data', data);
   if (!data.ingredients) throw new Error('No name provided');
   const mealData = {
     name: data.name,
@@ -23,6 +36,7 @@ export const createMeal = async (data: CreateMealArgs) => {
     rating: data.rating,
     notes: data.notes,
     id: getUuid(),
+    directions: data.directions,
     createdBy: data.createdBy,
   };
   const res = await db.meal.create({ data: mealData });
@@ -87,7 +101,6 @@ export const updateMeal = async (
   id: string,
   data: {
     name?: string;
-    directions?: string;
     cuisine?: string;
     URL?: string;
     image?: string;
@@ -96,13 +109,12 @@ export const updateMeal = async (
     readyIn?: number;
     rating?: string;
     notes?: string;
-    updatedBy: string;
   },
 ) => {
   const meal = await getMeal(id);
 
-  if (data.updatedBy !== meal.createdBy)
-    throw new Error('You are not authorized to update this meal.');
+  // if (data.updatedBy !== meal.createdBy)
+  //   throw new Error('You are not authorized to update this meal.');
 
   if (!meal) {
     throw new NotFoundError();
@@ -112,6 +124,7 @@ export const updateMeal = async (
     where: { id },
     data: {
       ...data,
+      createdBy: meal.createdBy,
     },
   });
 

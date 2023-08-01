@@ -3,8 +3,8 @@
 import * as z from "zod";
 import CreateUpdateForm from "../CreateUpdateForm";
 import { Ingredient } from "@/types";
-import { useCreateMeal } from "@/hooks/mealsHooks";
-import { useRouter } from "next/navigation";
+import { useCreateMeal, useMealData } from "@/hooks/mealsHooks";
+import { useParams, useRouter } from "next/navigation";
 
 const formSchema = z.object({
 	name: z.string().min(2, {
@@ -15,9 +15,21 @@ const formSchema = z.object({
 	readyIn: z.string(),
 });
 
+type createMealDTO = z.infer<typeof formSchema> & {
+	ingredients: {
+		id: number;
+		name: string;
+	}[];
+};
+
 export default function NewMeal() {
+	const params = useParams();
 	const createMeal = useCreateMeal();
+	const meal = useMealData(params.mealId);
 	const router = useRouter();
+
+	console.log(meal);
+
 	const handleCreateMeal = (data: any) => {
 		createMeal.mutate(data, {
 			onSuccess: () => {
@@ -28,7 +40,7 @@ export default function NewMeal() {
 	return (
 		<CreateUpdateForm
 			onSubmitForm={handleCreateMeal}
-			formType="create"
+			formType="update"
 			validationSchema={formSchema}
 			isLoading={createMeal.isLoading}
 		/>

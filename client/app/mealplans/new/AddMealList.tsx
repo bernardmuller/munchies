@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Meal } from "@/types";
 import { Minus, Plus } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type Props = {
 	meals: Meal[];
@@ -13,6 +14,7 @@ type Props = {
 };
 
 function AddMealList({ meals, onAddMeal, onRemoveMeal, selectedMeals }: Props) {
+	const router = useRouter();
 	const handleClick = (meal: Meal) => {
 		if (selectedMeals?.find((m) => m.id === meal.id)) {
 			onRemoveMeal(meal);
@@ -26,7 +28,13 @@ function AddMealList({ meals, onAddMeal, onRemoveMeal, selectedMeals }: Props) {
 			<h2 className="text-2xl mb-4 font-semibold">Add Meals</h2>
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				{meals?.map((meal: Meal) => (
-					<div className=" relative flex items-center bg-white border border-gray-200 rounded-lg  md:flex-row md:max-w-xl  dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+					<div
+						key={meal.id}
+						onClick={() => {
+							router.push(`/meals/${meal.id}`);
+						}}
+						className="z-10 relative flex items-center bg-white border border-gray-200 rounded-lg  md:flex-row md:max-w-xl  dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+					>
 						<Button
 							className="absolute shadow-lg top-1 right-1 h-8 w-8 rounded-full"
 							onClick={() => handleClick(meal)}

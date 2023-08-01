@@ -16,14 +16,10 @@ export const useMealsData = () => {
 		queryFn: fetchMeals,
 	});
 };
-//
-// export const useMealData = (id: string) => {
-// 	const { data, isLoading, isSuccess, isError, isFetching } = useQuery(
-// 		[`meal-${id}`],
-// 		() => fetchMeal(id)
-// 	);
-// 	return { data, isLoading, isSuccess, isError, isFetching };
-// };
+
+export const useMealData = (id: string) => {
+	return useQuery([`meal-${id}`], () => fetchMeal(id));
+};
 
 export const useCreateMeal = () => {
 	const queryClient = useQueryClient();
@@ -33,27 +29,27 @@ export const useCreateMeal = () => {
 		},
 	});
 };
-//
-// export const useUpdateMeal = ({ mealId }: { mealId: string }) => {
-// 	const queryClient = useQueryClient();
-// 	return useMutation(updateMeal, {
-// 		onMutate: async ({ data }) => {
-// 			await queryClient.cancelQueries([`meal-${mealId}`]);
-// 			const previousMeal = queryClient.getQueryData([
-// 				`meal-${mealId}`,
-// 			]) as any;
-// 			queryClient.setQueryData([`meal-${mealId}`], {
-// 				...previousMeal,
-// 				...data,
-// 			});
-// 			return { previousMeal };
-// 		},
-// 		onSettled: () => {
-// 			queryClient.invalidateQueries([`meal-${mealId}`]);
-// 		},
-// 	});
-// };
-//
+
+export const useUpdateMeal = ({ mealId }: { mealId: string }) => {
+	const queryClient = useQueryClient();
+	return useMutation(updateMeal, {
+		onMutate: async ({ data }) => {
+			await queryClient.cancelQueries([`meal-${mealId}`]);
+			const previousMeal = queryClient.getQueryData([
+				`meal-${mealId}`,
+			]) as any;
+			queryClient.setQueryData([`meal-${mealId}`], {
+				...previousMeal,
+				...data,
+			});
+			return { previousMeal };
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries([`meal-${mealId}`]);
+		},
+	});
+};
+
 // export const useRemoveDirectionFromMeal = ({
 // 	mealId,
 // 	directionIndex,

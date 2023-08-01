@@ -10,24 +10,19 @@ export async function createMeal(data: any) {
 export async function fetchMeals() {
 	return await httpClient.get(`/meals`).then((response) => response.data);
 }
-//
-// export async function fetchMeal(id: string) {
-// 	return await axios({
-// 		method: "GET",
-// 		url: `${requireBaseURL()}/meals/${id}`,
-// 		headers: await requireHeaders(),
-// 	}).then((response) => response.data);
-// }
-//
-// export async function updateMeal({ id, data }: { id: string; data: any }) {
-// 	return await axios({
-// 		method: "PUT",
-// 		url: `${requireBaseURL()}/meals/${id}`,
-// 		headers: await requireHeaders(),
-// 		data: data,
-// 	}).then((response) => response.data);
-// }
-//
+
+export async function fetchMeal(id: string) {
+	return await httpClient
+		.get(`/meals/${id}`)
+		.then((response) => response.data);
+}
+
+export async function updateMeal({ id, data }: { id: string; data: any }) {
+	return await httpClient
+		.put(`/meals/${id}`, data)
+		.then((response) => response.data);
+}
+
 // export async function addIngredientToMeal({
 // 	mealId,
 // 	ingredient,
