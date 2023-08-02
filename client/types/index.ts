@@ -5,7 +5,15 @@ export const LoginDTOSchema = z.object({
 	password: z.string().min(6).max(100),
 });
 
+export const SignupDTOSchema = z.object({
+	email: z.string().email(),
+	password: z.string().min(6).max(100),
+	lastName: z.string().min(1).max(100),
+	firstName: z.string().min(1).max(100),
+});
+
 export type LoginDTO = z.infer<typeof LoginDTOSchema>;
+export type SignupDTO = z.infer<typeof SignupDTOSchema>;
 
 const IngredientSchema = z.object({
 	id: z.string(),

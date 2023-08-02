@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { login } from "@/api//endpoints/auth";
+import { login, signup } from "@/api/endpoints/auth";
 import { useRouter } from "next/navigation";
 
 export const useLogin = () => {
@@ -9,4 +9,8 @@ export const useLogin = () => {
 			router.push("/home");
 		},
 	});
+};
+
+export const useSignup = () => {
+	return useMutation(signup);
 };
