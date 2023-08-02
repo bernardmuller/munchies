@@ -40,7 +40,12 @@ const registerSchema = z.object({
 type Schema = z.infer<typeof registerSchema>;
 type User = z.infer<typeof UserModel>;
 
-export const register = async (data: { email: string; password: string }) => {
+export const register = async (data: {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}) => {
   const existingUser = await db.user.findUnique({
     where: {
       email: data.email,
