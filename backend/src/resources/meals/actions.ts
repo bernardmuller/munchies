@@ -85,7 +85,7 @@ export const getMealsByUserId = async (id: string) => {
 
 export const getMeal = async (id: string) => {
   let uniqueMeal = await db.meal.findUnique({
-    where: { id },
+    where: { id: id, deleted: false },
   });
   if (!uniqueMeal) throw new NotFoundError('Meal not found');
 
