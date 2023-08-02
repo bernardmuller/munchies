@@ -1,8 +1,8 @@
 "use client";
 
 import * as z from "zod";
-import CreateUpdateForm from "../CreateUpdateForm";
-import { useCreateMeal, useMealData, useUpdateMeal } from "@/hooks/mealsHooks";
+import CreateUpdateForm from "@/app/meals/CreateUpdateForm";
+import { useMealData, useUpdateMeal } from "@/hooks/mealsHooks";
 import { useParams, useRouter } from "next/navigation";
 
 const formSchema = z.object({
@@ -13,13 +13,6 @@ const formSchema = z.object({
 	prepTime: z.string(),
 	readyIn: z.string(),
 });
-
-type createMealDTO = z.infer<typeof formSchema> & {
-	ingredients: {
-		id: number;
-		name: string;
-	}[];
-};
 
 export default function NewMeal() {
 	const params = useParams();
