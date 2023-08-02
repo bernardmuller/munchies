@@ -168,7 +168,7 @@ function Signup() {
 							</Button>
 							<p className="text-sm font-light text-gray-500 dark:text-gray-400">
 								Already have an account?{" "}
-								<Link href="#" className="link">
+								<Link href="/login" className="link">
 									Log in
 								</Link>
 							</p>

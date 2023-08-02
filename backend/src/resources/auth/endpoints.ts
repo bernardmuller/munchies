@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { authenticate, login, register } from './actions';
+import { authenticate, forgotPassword, login, register } from './actions';
 
 const endpoints = [
   {
@@ -46,6 +46,20 @@ const endpoints = [
     },
     authenticate: false,
   },
+  // NOTE: This endpoint is not implemented yet
+  //       DO NOT uncomment, it will create a vulnerability
+  //
+  // {
+  //   method: 'post',
+  //   path: '/auth/forgot-password',
+  //   handler: async (req: Request, res: Response) => {
+  //     const { email } = req.body;
+  //     if (!email) throw new Error('No email provided');
+  //     const response = await forgotPassword(email);
+  //     return res.status(200).send({ message: response });
+  //   },
+  //   authenticate: false,
+  // },
 ];
 
 export default endpoints;
