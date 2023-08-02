@@ -5,17 +5,16 @@ import Header from "./Header";
 import "./globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { useAllIngredientsData } from "@/hooks/ingredientsHooks";
-import { useMealsData } from "@/hooks/mealsHooks";
-import { useCurrentMenuData } from "@/hooks/menusHooks";
+import { usePathname } from "next/navigation";
 
 const App = ({ children }: any) => {
-	const ingredients = useAllIngredientsData();
-	const meals = useMealsData();
-	const currentMenu = useCurrentMenuData();
+	const pathname = usePathname();
 
-	const loading =
-		ingredients.isLoading || meals.isLoading || currentMenu.isLoading;
+	if (pathname === "/login" || pathname === "/signup")
+		return (
+			<main className="flex items-center justify-center">{children}</main>
+		);
+
 	return (
 		<div className="min-h-full">
 			<Header />
@@ -23,11 +22,7 @@ const App = ({ children }: any) => {
 			<main className="-mt-32">
 				<div className="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8">
 					<div className="bg-white rounded-lg shadow dark:shadow-none px-5 py-6 sm:px-6 dark:bg-background">
-						{loading ? (
-							<div className="min-h-96">loading...</div>
-						) : (
-							<>{children}</>
-						)}
+						{children}
 					</div>
 				</div>
 			</main>

@@ -23,17 +23,11 @@ export const login = async (data: { email: string; password: string }) => {
   const isPasswordValid = await compare(data.password, user.password);
   if (!isPasswordValid) throw new Error('Invalid email and/or password');
 
-  // const session = await db.session.create({
-  //   data: {
-  //     id: getUuid(),
-  //     userId: user.id,
-  //   },
-  // });
-
-  const token = createJwtToken({
-    userId: user.id,
-    // sessionId: session.id,
+  const token = await createJwtToken({
+    user,
   });
+
+  console.log('token', token);
 
   return { token };
 };

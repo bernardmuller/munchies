@@ -11,6 +11,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import appRoutes from "@/shared/configs/appRoutes";
 import { ThemeToggler } from "./ThemeToggler";
+import getCurrentUser from "@/shared/utils/getCurrentUser";
 
 const user = {
 	name: "Bernard Muller",
@@ -39,6 +40,7 @@ const Header = () => {
 	const pathname = usePathname();
 	const location = pathname.split("/")[1];
 	const router = useRouter();
+	const currentUser = getCurrentUser();
 
 	const pageName = useMemo(() => {
 		const route = appRoutes.find((route) => route.path === pathname);
@@ -228,7 +230,7 @@ const Header = () => {
 									</div>
 									<div className="ml-3">
 										<div className="text-base font-medium leading-none text-white">
-											{user.name}
+											{currentUser}
 										</div>
 										<div className="text-sm font-medium leading-none text-gray-400">
 											{user.email}

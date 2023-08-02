@@ -5,6 +5,22 @@ import MealList from "./MealList";
 import GroceryList from "./GroceryList";
 import { useGrocerylistData } from "@/hooks/grocerylistHooks";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMealsData } from "@/hooks/mealsHooks";
+import { useAllIngredientsData } from "@/hooks/ingredientsHooks";
+
+const LoadData = ({ children }: any) => {
+	const ingredients = useAllIngredientsData();
+	const meals = useMealsData();
+	const currentMenu = useCurrentMenuData();
+
+	const loading =
+		ingredients.isLoading || meals.isLoading || currentMenu.isLoading;
+	return (
+		<>
+			<>{children}</>
+		</>
+	);
+};
 
 export default function Home() {
 	const { data: menu } = useCurrentMenuData();

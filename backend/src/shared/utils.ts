@@ -1,18 +1,12 @@
 import { v4 as uuid } from 'uuid';
 import isStrongPassword from 'validator/lib/isStrongPassword';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { getUser, getUsers } from '../resources/users/actions';
+import { getUser } from '../resources/users/actions';
 import { requireEnvVar } from '../db/utils';
-import { z } from 'zod';
 import { AuthenticationError } from './errors';
 import { NextFunction, Request, Response } from 'express';
-import { router } from '../http/routes';
-
-declare namespace Express {
-  export interface Request {
-    currentUser?: string;
-  }
-}
+import { add, formatISO } from 'date-fns';
+import { User } from '@prisma/client';
 
 export const getUuid = () => {
   return uuid();
@@ -26,23 +20,23 @@ export const isValidPassword = (str: string) => {
     );
 };
 
-export const createJwtToken = ({
-  userId,
-}: // sessionId,
-{
-  userId: string;
-  // sessionId: string;
-}) => {
-  return jwt.sign(
+export const createJwtToken = async ({ user }: { user: User }) => {
+  const ONE_DAY = 60 * 60 * 24;
+  const tomorrow = add(new Date(), { days: 1 });
+  const expiryDate = formatISO(tomorrow);
+
+  const token = jwt.sign(
     {
-      userId,
-      // sessionId,
+      username: `${user.firstName} ${user.lastName}`,
+      userId: user.id,
+      expiresAt: expiryDate,
     },
     requireEnvVar('JWT_SECRET'),
     {
-      // expiresIn: 60 * 60 * 24 * 7,
+      expiresIn: ONE_DAY,
     },
   );
+  return token;
 };
 
 export const decodeToken = (token: string) => {

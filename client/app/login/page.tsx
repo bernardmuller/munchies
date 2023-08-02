@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginDTOSchema } from "@/types";
 import { useLogin } from "@/hooks/authHooks";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 function Login() {
 	const loginMutation = useLogin();
@@ -21,8 +23,8 @@ function Login() {
 	};
 
 	return (
-		<section className="bg-white_d dark:bg-gray-900">
-			<div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+		<section className="w-[27rem]">
+			<div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:h-[70vh] lg:py-0">
 				<Link
 					href="#"
 					className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
@@ -51,9 +53,9 @@ function Login() {
 									htmlFor="email"
 									className="block text-sm font-medium text-gray-900 dark:text-white"
 								>
-									Your email
+									Email
 								</label>
-								<input
+								<Input
 									type="email"
 									id="email"
 									className="input w-full"
@@ -73,14 +75,14 @@ function Login() {
 								>
 									Password
 								</label>
-								<input
+								<Input
 									{...register("password")}
 									type="password"
 									name="password"
 									id="password"
 									placeholder="••••••••"
 									className="input w-full "
-								></input>
+								></Input>
 								{errors.password && (
 									<p className="prose-p: text-xs text-red-400">
 										{errors?.password?.message as string}
@@ -88,31 +90,13 @@ function Login() {
 								)}
 							</div>
 							<div className="flex items-center justify-between">
-								<div className="flex items-start">
-									<div className="flex items-center h-5">
-										<input
-											disabled
-											id="remember"
-											aria-describedby="remember"
-											type="checkbox"
-										/>
-									</div>
-									<div className="ml-3 text-sm">
-										<label
-											htmlFor="remember"
-											className="text-gray-500 dark:text-gray-300"
-										>
-											Remember me
-										</label>
-									</div>
-								</div>
 								<a href="#" className="link">
 									Forgot password?
 								</a>
 							</div>
-							<button type="submit" className="btn w-full">
+							<Button type="submit" className="btn w-full">
 								Sign in
-							</button>
+							</Button>
 							<p className="text-sm font-light text-gray-500 dark:text-gray-400">
 								Don’t have an account yet?{" "}
 								<Link href="#" className="link">

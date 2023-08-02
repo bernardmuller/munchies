@@ -15,6 +15,7 @@ const processAxiosErrorResponse = (res: any) => {
 };
 
 export async function login(loginInputs: { email: string; password: string }) {
+	console.log("loginInputs", loginInputs);
 	return await httpClient
 		.post(getApiRoute("login"), loginInputs)
 		.then((res) => createSession(res.data));
