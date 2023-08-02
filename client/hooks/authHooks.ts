@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { login, signup } from "@/api/endpoints/auth";
 import { useRouter } from "next/navigation";
 

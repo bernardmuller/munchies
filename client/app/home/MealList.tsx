@@ -15,7 +15,10 @@ export default function MealList({ meals }: Props) {
 			<h2 className="text-2xl mb-4 font-semibold">Current Mealplan</h2>
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				{meals?.map((meal: Meal) => (
-					<div className="flex items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+					<div
+						key={meal.id}
+						className="flex items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+					>
 						<div className="relative w-28 h-28 overflow-hidden">
 							<Image
 								className="object-cover w-28 rounded-t-lg h-28 md:h-auto md:w-28 md:rounded-none md:rounded-l-lg"

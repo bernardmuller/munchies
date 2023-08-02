@@ -45,9 +45,8 @@ function NewMealplan() {
 	};
 
 	const ingredientsList = useMemo(() => {
-		// noooo idea how to fix this
-		return selectedMeals.reduce((acc, meal: AMeal) => {
-			return [...acc, ...meal.ingredients.map((i) => i.ingredient)];
+		return selectedMeals.reduce((acc: Meal[], meal: Meal): Meal[] => {
+			return [...acc, ...meal.ingredients.map((i: any) => i.ingredient)];
 		}, []);
 	}, [selectedMeals]);
 

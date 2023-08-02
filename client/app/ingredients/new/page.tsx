@@ -85,20 +85,23 @@ function NewIngredient() {
 								<Select
 									options={ingredientCategories.map(
 										(cat) => ({
-											value: cat.id,
+											value: String(cat.id),
 											label: cat.name,
 										})
 									)}
 									placeholder="Select a category"
+									// @ts-ignore
 									onChange={(val: {
 										value: string;
 										label: string;
 									}) => {
-										clearErrors("categoryId");
-										setValue(
-											"categoryId",
-											String(val.value)
-										);
+										if (val) {
+											clearErrors("categoryId");
+											setValue(
+												"categoryId",
+												String(val.value)
+											);
+										}
 									}}
 									className="my-react-select-container"
 									classNamePrefix="my-react-select"

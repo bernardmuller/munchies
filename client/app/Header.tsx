@@ -48,6 +48,7 @@ const Header = () => {
 
 	return (
 		<div className="bg-header dark:bg-header pb-32">
+			{/* @ts-ignore */}
 			<Disclosure as="nav" className="bg-header">
 				{({ open }: any) => (
 					<>
@@ -100,7 +101,9 @@ const Header = () => {
 											<Select
 												options={actionNavigation}
 												onChange={(e) => {
-													router.push(e?.value);
+													router.push(
+														e?.value as string
+													);
 												}}
 												value={null}
 												placeholder="Create New"
@@ -112,6 +115,7 @@ const Header = () => {
 											{/* Profile dropdown */}
 											<Menu
 												as="div"
+												// @ts-ignore
 												className="ml-3 relative"
 											>
 												<div>
@@ -201,7 +205,9 @@ const Header = () => {
 									<Disclosure.Button
 										key={item.name}
 										as="a"
+										// @ts-ignore
 										href={item.href}
+										// @ts-ignore
 										className={classNames(
 											item.current
 												? "bg-gray-900 text-white"
@@ -255,7 +261,9 @@ const Header = () => {
 										<Disclosure.Button
 											key={item.name}
 											as="a"
+											// @ts-ignore
 											href={item.href}
+											// @ts-ignore
 											className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
 										>
 											{item.name}

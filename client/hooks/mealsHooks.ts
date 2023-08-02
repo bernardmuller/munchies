@@ -1,13 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-	addDirectionToMeal,
-	addIngredientToMeal,
 	createMeal,
 	deleteMeal,
 	fetchMeal,
 	fetchMeals,
-	removeDirectionFromMeal,
-	removeIngredientFromMeal,
 	updateMeal,
 } from "@/api/endpoints/meals";
 

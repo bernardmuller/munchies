@@ -98,3 +98,12 @@ const MealPlanSchema = z.object({
 });
 
 export type MealPlan = z.infer<typeof MealPlanSchema>;
+
+const SessionSchema = z.object({
+	userId: z.string(),
+	token: z.string(),
+	expiresAt: z.string(),
+	username: z.string(),
+});
+
+export type Session = z.infer<typeof SessionSchema>;

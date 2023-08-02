@@ -33,6 +33,7 @@ export default function IngredientSelect({
 	return (
 		<div className="grid gap-2 w-full">
 			<Select
+				// @ts-ignore
 				onChange={(selectedOption: IngredientOption) => {
 					onIngredientSelect(
 						ingredients.data?.find(

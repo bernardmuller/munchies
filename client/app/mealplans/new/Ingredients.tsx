@@ -3,32 +3,26 @@
 import { Ingredient } from "@/types";
 import React from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { X } from "lucide-react";
 
 type NewIngredientsProps = {
-	ingredients: Ingredient[];
+	ingredients: Partial<Ingredient>[];
 	heading?: boolean;
-	onDelete: (id: string) => void;
+	onDelete?: (id: string) => void;
 	editable?: boolean;
 };
 
 type ItemProps = {
-	ingredient: Ingredient;
+	ingredient: Partial<Ingredient>;
 	onDelete?: (id: string) => void;
 };
 
-const Item = ({ ingredient, onDelete }: ItemProps) => {
+const Item = ({ ingredient }: ItemProps) => {
 	return (
 		<div className="flex justify-between">
 			<div className="flex gap-2 items-center hover:cursor-pointer">
 				<div className="h-3 w-3 rounded-full bg-gray-300" />
 				<span>{ingredient.name}</span>
 			</div>
-			{/*
-      <div className="" onClick={() => onDelete(ingredient.id)}>
-        X
-      </div>
-    */}
 		</div>
 	);
 };
@@ -37,7 +31,6 @@ const NewIngredients = ({
 	ingredients,
 	heading = true,
 	onDelete,
-	editable = true,
 }: NewIngredientsProps) => {
 	const [parent] = useAutoAnimate();
 	return (
@@ -47,7 +40,7 @@ const NewIngredients = ({
 					<h1 className="text-2xl mb-4 font-semibold">Ingredients</h1>
 				)}
 				<div className="grid gap-3" ref={parent}>
-					{ingredients?.map((ingredient: Ingredient) => (
+					{ingredients?.map((ingredient: Partial<Ingredient>) => (
 						<Item
 							key={ingredient.id}
 							onDelete={onDelete}
