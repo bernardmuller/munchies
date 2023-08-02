@@ -56,11 +56,16 @@ export const createMeal = async (data: CreateMealArgs) => {
 
 export const getMeals = async () => {
   const rows = await db.meal.findMany({
+    where: {
+      deleted: false,
+    },
     include: { ingredients: true },
     orderBy: {
       createdAt: 'desc',
     },
   });
+
+  console.log(rows);
 
   return rows;
 };
@@ -68,7 +73,7 @@ export const getMeals = async () => {
 export const getMealsByUserId = async (id: string) => {
   if (!id) throw new Error('No user id provided');
   const rows = await db.meal.findMany({
-    where: { createdBy: id },
+    where: { createdBy: id, deleted: false },
     include: {
       ingredients: {
         include: { ingredient: true },
@@ -135,15 +140,17 @@ export const updateMeal = async (
 };
 
 export const deleteMeal = async (id: string) => {
-  const user = await getMeal(id);
-  if (!user) throw new Error('Meal not found');
+  const meal = await getMeal(id);
+  if (!meal) throw new Error('Meal not found');
 
-  await db.meal.delete({
-    where: {
-      id,
+  const updatedMealData = await db.meal.update({
+    where: { id },
+    data: {
+      deleted: true,
     },
   });
-  return createSuccessMessage();
+
+  return updatedMealData;
 };
 
 export const deleteMeals = async () => {

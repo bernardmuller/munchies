@@ -82,6 +82,7 @@ const endpoints = [
     path: '/meals/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
+      console.log('id', id);
       const meal = await deleteMeal(id);
       return res.send(meal);
     },

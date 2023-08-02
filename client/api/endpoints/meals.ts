@@ -23,6 +23,12 @@ export async function updateMeal({ id, data }: { id: string; data: any }) {
 		.then((response) => response.data);
 }
 
+export async function deleteMeal(id: string) {
+	return await httpClient
+		.delete(`/meals/${id}`)
+		.then((response) => response.data);
+}
+
 // export async function addIngredientToMeal({
 // 	mealId,
 // 	ingredient,

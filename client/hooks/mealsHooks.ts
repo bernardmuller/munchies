@@ -3,6 +3,7 @@ import {
 	addDirectionToMeal,
 	addIngredientToMeal,
 	createMeal,
+	deleteMeal,
 	fetchMeal,
 	fetchMeals,
 	removeDirectionFromMeal,
@@ -46,6 +47,15 @@ export const useUpdateMeal = ({ mealId }: { mealId: string }) => {
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries([`meal-${mealId}`]);
+		},
+	});
+};
+
+export const useDeleteMeal = (mealId: string) => {
+	const queryClient = useQueryClient();
+	return useMutation(deleteMeal, {
+		onSuccess: () => {
+			queryClient.invalidateQueries(["meals"]);
 		},
 	});
 };

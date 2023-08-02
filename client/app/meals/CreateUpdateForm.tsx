@@ -15,6 +15,7 @@ import Instructions from "@/app/mealplans/new/Instructions";
 import { useRouter } from "next/navigation";
 import IngredientSelect from "./new/IngredientSelect";
 import { Loader2 } from "lucide-react";
+import { useDeleteMeal } from "@/hooks/mealsHooks";
 
 type CreateUpdateProps = {
 	data?: Meal;
@@ -40,6 +41,8 @@ function CreateUpdateForm({
 	const [newInstructions, setNewInstructions] = useState<string[]>(
 		data?.directions || []
 	);
+	const deleteMeal = useDeleteMeal(data?.id as string);
+
 	const {
 		register,
 		formState: { errors },
@@ -75,6 +78,14 @@ function CreateUpdateForm({
 
 		onSubmitForm(newMealDTO);
 	}
+
+	const handleDeleteMeal = () => {
+		deleteMeal.mutate(data?.id as string, {
+			onSuccess: () => {
+				router.back();
+			},
+		});
+	};
 
 	useEffect(() => {
 		if (formType === "update" && data) {
@@ -260,7 +271,19 @@ function CreateUpdateForm({
 				</div>
 			</div>
 
-			<div className="w-full flex  justify-end">
+			<div className={`w-full flex justify-between`}>
+				<div>
+					{formType === "update" && (
+						<Button
+							type="button"
+							disabled={deleteMeal.isLoading}
+							variant="destructive"
+							onClick={handleDeleteMeal}
+						>
+							Delete Meal
+						</Button>
+					)}
+				</div>
 				<div className="flex flex-col justify-end">
 					{error && (
 						<p className="text-red-500 text-sm py-1">{error}</p>
@@ -279,7 +302,7 @@ function CreateUpdateForm({
 							{isLoading && (
 								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
 							)}
-							Submit
+							Save Meal
 						</Button>
 					</div>
 				</div>

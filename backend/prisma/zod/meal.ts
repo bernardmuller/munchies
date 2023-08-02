@@ -14,6 +14,7 @@ export const MealModel = z.object({
   readyIn: z.number().int().nullish(),
   rating: z.string().nullish(),
   notes: z.string().nullish(),
+  deleted: z.boolean().nullish(),
   createdAt: z.date(),
   createdBy: z.string().nullish(),
 })
