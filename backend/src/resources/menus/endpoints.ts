@@ -18,8 +18,8 @@ const endpoints = [
     path: '/menus',
     handler: async (req: Request, res: Response) => {
       const menu = await createMenu({
-        ...req.body,
         createdBy: res.locals.userId,
+        meals: req.body.meals,
       });
       return res.send(menu);
     },

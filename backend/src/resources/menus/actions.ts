@@ -18,6 +18,7 @@ export const createMenu = async (data: {
   for (const menu of existingMenus) {
     await archiveMenu(menu.id);
   }
+
   const menuData = {
     name: `Mealplan ${new Date().getFullYear().toString()}`,
     createdBy: data.createdBy,
@@ -207,6 +208,7 @@ export const addMealToMenu = async ({
   menuId: string;
 }) => {
   const dbMenu = await getMenu(menuId);
+
   if (!dbMenu) return { message: `No menu found with id: ${menuId}` };
 
   const grocerylist = await db.grocerylist.findFirst({
@@ -216,7 +218,6 @@ export const addMealToMenu = async ({
   });
 
   const dbMeal = await getMeal(mealId);
-
   if (!dbMeal) throw new Error(`No meal with id ${mealId} found`);
 
   const existing = await db.menuMeals.findFirst({
@@ -249,7 +250,9 @@ export const addMealToMenu = async ({
 };
 
 export const archiveMenu = async (id: string) => {
-  const menu = await getMenu(id);
+  const menu = await db.menu.findUnique({
+    where: { id },
+  });
   if (!menu) throw new Error('Menu not found');
 
   const archivedMenu = await db.menu.update({
@@ -266,14 +269,25 @@ export const getCurrentMenu = async (userId: any) => {
       AND: [{ archived: false }, { createdBy: userId }],
     },
   });
-  if (!menu) throw new Error('No current menu found');
+  if (!menu)
+    return {
+      data: {},
+      message: 'No current menu found',
+    };
   const menuMeals = await db.menuMeals.findMany({
     where: { menuId: menu?.id },
   });
 
   const meals = await Promise.all(
     menuMeals.map(async (menuMeal) => {
-      const dbMeal = await getMeal(menuMeal.mealId);
+      const dbMeal = await db.meal.findUnique({
+        where: {
+          id: menuMeal.mealId,
+        },
+        include: {
+          ingredients: true,
+        },
+      });
       if (!dbMeal) {
         throw new NotFoundError();
       }
@@ -286,7 +300,7 @@ export const getCurrentMenu = async (userId: any) => {
     meals: meals,
     grocerylist: await db.grocerylist.findUnique({
       where: {
-        id: menu?.grocerylistId,
+        id: menu?.grocerylistId as string,
       },
       include: {
         Item: true,

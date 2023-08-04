@@ -15,6 +15,7 @@ type CreateMenuDTO = z.infer<typeof createMenuDTO>;
 
 export async function createMenu(data: CreateMenuDTO) {
 	const reqData = createMenuDTO.parse(data);
+
 	return await httpClient.post(`/menus`, reqData).then((response) => {
 		return response.data;
 	});

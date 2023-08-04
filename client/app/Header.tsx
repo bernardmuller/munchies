@@ -6,12 +6,12 @@ import { MenuIcon, PlusIcon, XIcon } from "@heroicons/react/outline";
 import "./globals.css";
 
 import Select from "react-select";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import appRoutes from "@/shared/configs/appRoutes";
 import { ThemeToggler } from "./ThemeToggler";
 import getCurrentUser from "@/shared/utils/getCurrentUser";
+import { useMealData } from "@/hooks/mealsHooks";
 
 const user = {
 	email: "tom@example.com",
@@ -42,7 +42,15 @@ const Header = () => {
 	const currentUser = getCurrentUser();
 
 	const pageName = useMemo(() => {
-		const route = appRoutes.find((route) => route.path === pathname);
+		const route = appRoutes.find((route) => {
+			if (route?.path.includes("meals") && !route?.path.includes("new")) {
+				return {
+					path: pathname,
+					name: "Meal",
+				};
+			}
+			return route?.path === pathname;
+		});
 		return route?.name;
 	}, [pathname]);
 
@@ -222,6 +230,22 @@ const Header = () => {
 									</Disclosure.Button>
 								))}
 							</div>
+
+							<div className="flex items-center justify-between px-2 py-3 space-x-1 sm:px-3">
+								<ThemeToggler align="start" />
+								<Select
+									options={actionNavigation}
+									onChange={(e) => {
+										router.push(e?.value as string);
+									}}
+									value={null}
+									placeholder="Create New"
+									isSearchable={false}
+									className="my-react-select-container w-full"
+									classNamePrefix="my-react-select"
+								/>
+							</div>
+
 							<div className="pt-4 pb-3 border-t border-gray-700">
 								<div className="flex items-center px-5">
 									<div className="flex-shrink-0">
@@ -241,20 +265,6 @@ const Header = () => {
 											{user.email}
 										</div>
 									</div>
-									<Button
-										type="button"
-										onClick={() => {
-											router.push("/mealplans/new");
-										}}
-									>
-										<span className="sr-only">
-											Create new plan
-										</span>
-										<PlusIcon
-											className="h-6 w-6"
-											aria-hidden="true"
-										/>
-									</Button>
 								</div>
 								<div className="mt-3 px-2 space-y-1">
 									{userNavigation.map((item) => (

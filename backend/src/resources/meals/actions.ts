@@ -39,6 +39,7 @@ export const createMeal = async (data: CreateMealArgs) => {
     directions: data.directions,
     createdBy: data.createdBy,
   };
+
   const res = await db.meal.create({ data: mealData });
 
   for (const ingredient of data.ingredients) {
@@ -64,8 +65,6 @@ export const getMeals = async () => {
       createdAt: 'desc',
     },
   });
-
-  console.log(rows);
 
   return rows;
 };

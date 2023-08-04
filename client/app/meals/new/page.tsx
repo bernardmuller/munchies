@@ -3,8 +3,9 @@
 import * as z from "zod";
 import CreateUpdateForm from "../CreateUpdateForm";
 import { Ingredient } from "@/types";
-import { useCreateMeal } from "@/hooks/mealsHooks";
+import { useCreateMeal, useUploadMealImage } from "@/hooks/mealsHooks";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
 	name: z.string().min(2, {
@@ -15,22 +16,44 @@ const formSchema = z.object({
 	readyIn: z.string(),
 });
 
+type NewMealDTO = {
+	name: string;
+	cookTime: number;
+	prepTime: number;
+	readyIn: number;
+	ingredients: Ingredient[];
+	instructions: string[];
+	image: FormData;
+};
+
 export default function NewMeal() {
 	const createMeal = useCreateMeal();
-	const router = useRouter();
-	const handleCreateMeal = (data: any) => {
-		createMeal.mutate(data, {
-			onSuccess: () => {
-				router.push("/home");
+	const uploadImage = useUploadMealImage();
+
+	const handleCreateMeal = (data: NewMealDTO) => {
+		uploadImage.mutate(data.image, {
+			onSuccess: (image) => {
+				const newMealDTO = {
+					name: data.name,
+					cookTime: data.cookTime,
+					prepTime: data.prepTime,
+					readyIn: data.readyIn,
+					ingredients: data.ingredients,
+					instructions: data.instructions,
+					image: image.url,
+				};
+
+				createMeal.mutate(newMealDTO);
 			},
 		});
 	};
+
 	return (
 		<CreateUpdateForm
 			onSubmitForm={handleCreateMeal}
 			formType="create"
 			validationSchema={formSchema}
-			isLoading={createMeal.isLoading}
+			isLoading={createMeal.isLoading || uploadImage.isLoading}
 		/>
 	);
 }

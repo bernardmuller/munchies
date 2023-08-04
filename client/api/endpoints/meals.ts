@@ -29,6 +29,22 @@ export async function deleteMeal(id: string) {
 		.then((response) => response.data);
 }
 
+export async function UploadImage(formData: FormData) {
+	try {
+		const response = await fetch(
+			"https://api.cloudinary.com/v1_1/munchiesapp/image/upload",
+			{
+				method: "POST",
+				body: formData,
+			}
+		);
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Error uploading the image: ", error);
+	}
+}
+
 // export async function addIngredientToMeal({
 // 	mealId,
 // 	ingredient,

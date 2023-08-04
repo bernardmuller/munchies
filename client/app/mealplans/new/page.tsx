@@ -64,7 +64,7 @@ function NewMealplan() {
 			setError("You need to select at least one meal");
 			return;
 		}
-		await createMealplan.mutateAsync({
+		createMealplan.mutate({
 			meals: selectedMeals,
 		});
 	};

@@ -47,14 +47,20 @@ function AddMealList({ meals, onAddMeal, onRemoveMeal, selectedMeals }: Props) {
 								: "+"}
 						</Button>
 						<div className="w-24 h-24 relative overflow-hidden">
-							<Image
-								className="object-cover w-28  h-28 md:h-auto md:w-28 md:rounded-none md:rounded-l-lg"
-								src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=780&q=80"
-								alt=""
-								// width={100}
-								// height={100}
-								fill
-							/>
+							{meal.image ? (
+								<>
+									<Image
+										className="object-cover w-28 bg-secondary  h-28 md:h-auto md:w-28 md:rounded-none md:rounded-l-lg"
+										src={meal.image}
+										alt=""
+										// width={100}
+										// height={100}
+										fill
+									/>
+								</>
+							) : (
+								<div className="w-full h-full bg-secondary rounded-l-lg"></div>
+							)}
 						</div>
 						<div className="flex flex-col m-0 leading-normal px-2">
 							<h5
@@ -71,6 +77,19 @@ function AddMealList({ meals, onAddMeal, onRemoveMeal, selectedMeals }: Props) {
 						</div>
 					</div>
 				))}
+				{meals.length === 0 && (
+					<div className="flex flex-col gap-2">
+						<p className="text-sm text-slate-400">No meals found</p>
+						<Button
+							className="w-48"
+							onClick={() => {
+								router.push(`/meals/new`);
+							}}
+						>
+							Create a meal
+						</Button>
+					</div>
+				)}
 			</div>
 		</>
 	);

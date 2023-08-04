@@ -14,8 +14,9 @@ import { Ingredient, Meal } from "@/types";
 import Instructions from "@/app/mealplans/new/Instructions";
 import { useRouter } from "next/navigation";
 import IngredientSelect from "./new/IngredientSelect";
-import { Loader2 } from "lucide-react";
+import { BeefIcon, Loader2 } from "lucide-react";
 import { useDeleteMeal } from "@/hooks/mealsHooks";
+import Image from "next/image";
 
 type CreateUpdateProps = {
 	data?: Meal;
@@ -33,7 +34,8 @@ function CreateUpdateForm({
 	isLoading,
 }: CreateUpdateProps) {
 	const ingredients = useIngredientsData();
-	const [error, setError] = useState<string | null>(null);
+	const [image, setImage] = useState<FormData | null>(null);
+	const [error, setErrorMessage] = useState<string | null>(null);
 	const router = useRouter();
 	const [selectedIngredients, setSelectedIngredients] = useState<
 		Ingredient[]
@@ -48,6 +50,7 @@ function CreateUpdateForm({
 		formState: { errors },
 		handleSubmit,
 		setValue,
+		setError,
 		clearErrors,
 	} = useForm<z.infer<typeof validationSchema>>({
 		resolver: zodResolver(validationSchema),
@@ -57,7 +60,7 @@ function CreateUpdateForm({
 	});
 
 	const handleAddInstruction = (instruction: string) => {
-		setError(null);
+		setErrorMessage(null);
 		setNewInstructions([...newInstructions, instruction]);
 	};
 
@@ -69,15 +72,32 @@ function CreateUpdateForm({
 			readyIn: parseInt(values.readyIn),
 			ingredients: selectedIngredients,
 			instructions: newInstructions,
+			image: image,
 		};
 
 		if (selectedIngredients.length === 0) {
-			setError("You must add at least one ingredient.");
+			setErrorMessage("You must add at least one ingredient.");
+			return;
+		}
+
+		if (!image) {
+			setError("image", {
+				message: "You must upload an image.",
+			});
 			return;
 		}
 
 		onSubmitForm(newMealDTO);
 	}
+
+	const handleImage = (e: any) => {
+		const file = e.target.files[0];
+		const formData = new FormData();
+		formData.append("file", file);
+		formData.append("upload_preset", "m1npbppd");
+
+		setImage(formData);
+	};
 
 	const handleDeleteMeal = () => {
 		deleteMeal.mutate(data?.id as string, {
@@ -93,6 +113,7 @@ function CreateUpdateForm({
 			setValue("cookTime", data.cookTime);
 			setValue("prepTime", data.prepTime);
 			setValue("readyIn", data.readyIn);
+			setValue("image", data.image);
 			setSelectedIngredients(data.ingredients);
 			setNewInstructions(data.directions);
 		}
@@ -206,6 +227,47 @@ function CreateUpdateForm({
 							</div>
 						</div>
 					</div>
+					<div className="flex flex-col gap-1">
+						<label className="text-sm">
+							Picture
+							<span className="text-red-400">*</span>
+						</label>
+						<div className="flex gap-1 items-center">
+							{formType === "update" ? (
+								<>
+									<div className="relative w-[100px] h-[100px] rounded-md bg-gray-200 flex items-center justify-center overflow-hidden">
+										{data?.image ? (
+											<Image
+												src={data?.image as string}
+												fill
+												alt="meal image"
+												className="object-cover"
+											/>
+										) : (
+											<div className="bg-secondary rounded-md w-full h-full flex justify-center items-center">
+												<BeefIcon
+													size={48}
+													className="stroke-slate-400"
+												/>
+											</div>
+										)}
+									</div>
+								</>
+							) : (
+								<>
+									<Input
+										type="file"
+										className="hover:cursor-pointer"
+										onChange={handleImage}
+									/>
+								</>
+							)}
+						</div>
+
+						<p className="text-red-500 text-sm py-1 pt-0">
+							{errors.image?.message as string}
+						</p>
+					</div>
 				</div>
 
 				<div className="w-full h-full lg:flex-[0.4] lg:pl-4 sm:pt-7 lg:pt-0">
@@ -244,9 +306,11 @@ function CreateUpdateForm({
 									</div>
 								)}
 								<div className="flex flex-col gap-2">
-									<h4 className="text-sm font-normal text-slate-400">
-										Selected Ingredients:
-									</h4>
+									{selectedIngredients?.length !== 0 && (
+										<h4 className="text-sm font-normal text-slate-400">
+											Selected Ingredients:
+										</h4>
+									)}
 									<NewIngredients
 										heading={false}
 										editable={formType === "create"}
@@ -257,6 +321,17 @@ function CreateUpdateForm({
 										}}
 										ingredients={selectedIngredients}
 									/>
+
+									{ingredients?.data?.length === 0 && (
+										<Button
+											className="w-48"
+											onClick={() => {
+												router.push("/ingredients/new");
+											}}
+										>
+											Create an ingredient
+										</Button>
+									)}
 								</div>
 							</div>
 						</TabsContent>

@@ -42,9 +42,11 @@ const GroceryList = ({ items }: GrocerylistProps) => {
 						<Item key={item.id} {...item} />
 					))}
 				</div>
-				{items?.length === 0 && (
-					<div className="flex flex-col items-center justify-center">
-						<p className="text-lg">No items in grocerylist</p>
+				{!items && (
+					<div className="flex flex-col">
+						<p className="text-sm text-slate-400">
+							No items in grocerylist
+						</p>
 					</div>
 				)}
 			</div>

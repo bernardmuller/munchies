@@ -1,11 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+	UploadImage,
 	createMeal,
 	deleteMeal,
 	fetchMeal,
 	fetchMeals,
 	updateMeal,
 } from "@/api/endpoints/meals";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 export const useMealsData = () => {
 	return useQuery({
@@ -20,9 +23,11 @@ export const useMealData = (id: string) => {
 
 export const useCreateMeal = () => {
 	const queryClient = useQueryClient();
+	const router = useRouter();
 	return useMutation(createMeal, {
 		onSuccess: () => {
-			return queryClient.invalidateQueries(["meals"]);
+			queryClient.invalidateQueries(["meals"]);
+			router.push("/home");
 		},
 	});
 };
@@ -54,6 +59,10 @@ export const useDeleteMeal = (mealId: string) => {
 			queryClient.invalidateQueries(["meals"]);
 		},
 	});
+};
+
+export const useUploadMealImage = () => {
+	return useMutation(UploadImage);
 };
 
 // export const useRemoveDirectionFromMeal = ({

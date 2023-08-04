@@ -28,19 +28,24 @@ export default function Instructions({
 		<div className="flex flex-col gap-4">
 			{editable && (
 				<>
-					<label htmlFor="instruction">Add an instruction</label>
-					<div className="flex gap-2">
-						<Input
-							type="text"
-							id="instruction"
-							placeholder="eg. Whisk the eggs"
-							onChange={(e) => setText(e.target.value)}
-						/>
+					<div className="flex gap-2 mt-1">
+						<div className="w-full flex flex-col gap-1">
+							<label htmlFor="instruction" className="text-sm">
+								Add an instruction
+							</label>
+							<Input
+								type="text"
+								id="instruction"
+								placeholder="eg. Whisk the eggs"
+								onChange={(e) => setText(e.target.value)}
+							/>
+						</div>
 						<Button
 							type="button"
 							variant="secondary"
 							disabled={text?.length === 0 ? true : false}
 							onClick={onSubmit}
+							className="mt-6"
 						>
 							Add
 						</Button>
@@ -56,7 +61,9 @@ export default function Instructions({
 					);
 				})}
 			</ol>
-			{instructions.length === 0 && <p>No instructions found</p>}
+			{instructions.length === 0 && (
+				<p className="text-slate-400 text-sm">No instructions found</p>
+			)}
 		</div>
 	);
 }

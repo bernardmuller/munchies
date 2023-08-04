@@ -3,6 +3,8 @@
 import { Ingredient } from "@/types";
 import React from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 type NewIngredientsProps = {
 	ingredients: Partial<Ingredient>[];
@@ -33,6 +35,7 @@ const NewIngredients = ({
 	onDelete,
 }: NewIngredientsProps) => {
 	const [parent] = useAutoAnimate();
+	const router = useRouter();
 	return (
 		<div className=" max-w-full  text-base font-sans">
 			<div className="flex flex-col w-full overflow-hidden m-auto pb-4">
@@ -49,8 +52,8 @@ const NewIngredients = ({
 					))}
 				</div>
 				{ingredients?.length === 0 && (
-					<div className="flex flex-coljustify-center">
-						<p className="text-sm text-slate-300">
+					<div className="flex flex-col justify-center gap-2">
+						<p className="text-sm text-slate-400">
 							No ingredients added yet
 						</p>
 					</div>

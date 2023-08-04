@@ -42,6 +42,7 @@ const MealSchema = z.object({
 	createdAt: z.string(),
 	createdBy: z.string(),
 	ingredients: z.array(IngredientSchema),
+	deleted: z.boolean(),
 });
 
 export type Meal = z.infer<typeof MealSchema>;
