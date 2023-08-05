@@ -11,7 +11,7 @@
     "migrate": "NODE_OPTIONS=\"--require tsconfig-paths/register\" npx prisma migrate dev",
     "seed": "ts-node-dev --respawn --transpile-only --exit-child --log-error -- ./src/db/seeder.ts",
     "pretest": "ts-node --require tsconfig-paths/register ./src/tests/dbSetup.ts",
-    "test": "ava"
+    "test": ""
   },
   "author": "",
   "license": "ISC",
@@ -52,7 +52,6 @@
     "@types/validator": "^13.7.3",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
-    "ava": "^4.2.0",
     "eslint": "^8.12.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
