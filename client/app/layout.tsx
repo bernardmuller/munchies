@@ -6,8 +6,6 @@ import "./globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { usePathname } from "next/navigation";
-import { CloudinaryContext } from "cloudinary-react";
-import { cloudinaryConfig } from "@/shared/providers/cloudinaryProvider";
 import { Toaster } from "@/components/ui/toaster";
 
 const App = ({ children }: any) => {
@@ -43,16 +41,14 @@ export default function RootLayout({
 			<body data-theme="munchies">
 				<QueryClientProvider client={new QueryClient()}>
 					<ReactQueryDevtools initialIsOpen={false} />
-					<CloudinaryContext cloudName={cloudinaryConfig.cloud_name}>
-						<ThemeProvider
-							attribute="class"
-							defaultTheme="system"
-							enableSystem
-						>
-							<App>{children}</App>
-							<Toaster />
-						</ThemeProvider>
-					</CloudinaryContext>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+					>
+						<App>{children}</App>
+						<Toaster />
+					</ThemeProvider>
 				</QueryClientProvider>
 			</body>
 		</html>
