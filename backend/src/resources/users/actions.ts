@@ -7,6 +7,7 @@ export const createUser = async (data: {
   id?: string;
   email: string;
   firstName?: string;
+  lastName?: string;
   password: string;
 }) => {
   const userData = { ...data, id: data.id || getUuid() };

@@ -12,7 +12,15 @@ import { AuthenticationError } from '../../shared/errors';
 import nodemailer from 'nodemailer';
 import { requireEnvVar } from '../../db/utils';
 
-export const login = async (data: { email: string; password: string }) => {
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
+type LoginData = z.infer<typeof loginSchema>;
+
+export const login = async (data: LoginData) => {
+  loginSchema.parse(data);
   const user = await db.user.findUnique({
     where: {
       email: data.email,
@@ -28,45 +36,36 @@ export const login = async (data: { email: string; password: string }) => {
     user,
   });
 
-  console.log('token', token);
-
   return { token };
 };
 
 const registerSchema = z.object({
   email: z.string().email(),
-  password: z.string(),
+  password: z.string().min(6),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
 });
 
-type Schema = z.infer<typeof registerSchema>;
 type User = z.infer<typeof UserModel>;
 
-export const register = async (data: {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-}) => {
+type RegisterData = z.infer<typeof registerSchema>;
+
+export const register = async (data: RegisterData) => {
+  registerSchema.parse(data);
   const existingUser = await db.user.findUnique({
     where: {
       email: data.email,
     },
   });
-
   if (existingUser) throw new Error('User with that email already exists.');
-  if (!data.password) throw new Error('Provide a valid password.');
-
+  if (!data.password) throw new Error('Please provide a valid password.');
   isValidPassword(data?.password);
-
   const salt = await genSalt(10);
   const passwordHash = await hash(data.password, salt);
-
-  const userData: Schema = registerSchema.parse({
-    email: data.email,
+  const newUser: User = await createUser({
+    ...data,
     password: passwordHash,
   });
-
-  const newUser: User = await createUser(userData);
   return newUser;
 };
 
