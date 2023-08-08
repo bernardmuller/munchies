@@ -21,7 +21,7 @@ const getHeaders = () => {
 
 const axiosConfig: CreateAxiosDefaults = {
 	baseURL:
-		process.env.ENV_NODE !== "development"
+		process.env.NODE_ENV === "development"
 			? process.env.NEXT_PUBLIC_API_URL
 			: "http://localhost:5000/api/",
 	headers: getHeaders(),
@@ -31,7 +31,11 @@ const httpClient = axios.create(axiosConfig);
 
 httpClient.interceptors.request.use(
 	async (req) => {
+		if (req.url === "/auth/login" || "/auth/register") {
+			return req;
+		}
 		const session = JSON.parse(localStorage.getItem("session") || "{}");
+
 		if (!session?.token) {
 			window.location.href = "/login";
 		}
