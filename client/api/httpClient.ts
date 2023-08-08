@@ -20,10 +20,10 @@ const getHeaders = () => {
 };
 
 const axiosConfig: CreateAxiosDefaults = {
-	baseURL: "http://localhost:5000/api/",
-	// process.env.ENV_NODE !== "development"
-	// 	? process.env.NEXT_PUBLIC_API_URL
-	// 	: "http://localhost:5000/api/",
+	baseURL:
+		process.env.ENV_NODE !== "development"
+			? process.env.NEXT_PUBLIC_API_URL
+			: "http://localhost:5000/api/",
 	headers: getHeaders(),
 };
 
