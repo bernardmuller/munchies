@@ -11,7 +11,7 @@ RUN npm install --force --legacy-peer-deps && npm i -g prisma --force --legacy-p
 
 COPY . . 
 
-RUN npm uninstall bcrypt && npm i bcrypt
+# RUN npm uninstall bcrypt && npm i bcrypt
 RUN npx prisma generate
 
 
