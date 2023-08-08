@@ -7,7 +7,7 @@ COPY package.json .
 COPY prisma ./prisma/
 COPY tsconfig.json ./
 
-RUN npm install && npm i -g prisma && npm install @prisma/client 
+RUN npm install && npm i -g prisma --force --legacy-peer-deps && npm install @prisma/client --force --legacy-peer-deps
 
 COPY . . 
 
