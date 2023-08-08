@@ -12,6 +12,8 @@
 		"@cloudinary/react": "^1.11.2",
 		"@cloudinary/url-gen": "^1.11.1",
 		"@formkit/auto-animate": "^0.7.0",
+		"@headlessui/react": "^1.7.16",
+		"@heroicons/react": "v1",
 		"@hookform/resolvers": "^3.1.1",
 		"@radix-ui/react-checkbox": "^1.0.4",
 		"@radix-ui/react-dropdown-menu": "^2.0.5",
