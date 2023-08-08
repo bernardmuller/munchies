@@ -3,7 +3,6 @@ import helmet from 'helmet';
 import cors from 'cors';
 import { router } from './routes';
 import { errorHandler } from './errors';
-import { createSplashScreen } from './routes';
 import path from 'path';
 import { getSourceFolderfromCurrentDirectory } from './utils';
 

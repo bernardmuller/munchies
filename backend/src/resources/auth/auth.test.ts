@@ -89,4 +89,6 @@ describe('AUTH - login', async () => {
     });
     expect(response.token).toBeTruthy();
   });
+
+  await db.user.deleteMany();
 });

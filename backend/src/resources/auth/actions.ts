@@ -26,16 +26,12 @@ export const login = async (data: LoginData) => {
       email: data.email,
     },
   });
-
   if (!user) throw new Error('Invalid email and/or password');
-
   const isPasswordValid = await compare(data.password, user.password);
   if (!isPasswordValid) throw new Error('Invalid email and/or password');
-
   const token = await createJwtToken({
     user,
   });
-
   return { token };
 };
 
