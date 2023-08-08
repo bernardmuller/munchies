@@ -9,8 +9,6 @@ import { db } from '../../db/db';
 import { UserModel } from '../../../prisma/zod';
 import { createUser, getUser } from '../users/actions';
 import { AuthenticationError } from '../../shared/errors';
-import nodemailer from 'nodemailer';
-import { requireEnvVar } from '../../db/utils';
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -74,86 +72,3 @@ export const authenticate = async (token: string) => {
 
   return dbUser;
 };
-
-export const forgotPassword = async (email: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      email,
-    },
-  });
-
-  if (!user) throw new Error('User not found');
-
-  const token = await createJwtToken({
-    user,
-  });
-
-  const resetPasswordLink = `${requireEnvVar(
-    'BASE_URL',
-  )}/reset-password?token=${token}`;
-
-  await sendEmail(
-    email,
-    'Reset Password',
-    `Please use the following link to reset your password: ${resetPasswordLink}}`,
-  ).catch((error) => console.error(error));
-
-  return 'Email sent';
-};
-
-export const resetPassword = async (data: {
-  token: string;
-  password: string;
-}) => {
-  const user = await tradeTokenForUser(data.token);
-  if (!user) throw new Error('User not found');
-
-  const salt = await genSalt(10);
-  const passwordHash = await hash(data.password, salt);
-
-  const updatedUser = await db.user.update({
-    where: {
-      id: user.id,
-    },
-    data: {
-      password: passwordHash,
-    },
-  });
-
-  return updatedUser;
-};
-
-const transporterConfig: nodemailer.TransportOptions = {
-  host: 'smtp.forwardemail.net',
-  port: 465,
-  secure: true,
-  auth: {
-    user: requireEnvVar('EMAIL_ADDRESS'),
-    pass: 'REPLACE-WITH-YOUR-GENERATED-PASSWORD',
-  },
-};
-
-const transporter = nodemailer.createTransport(transporterConfig);
-
-async function sendEmail(
-  to: string,
-  subject: string,
-  text: string,
-): Promise<void> {
-  try {
-    const mailOptions: nodemailer.SendMailOptions = {
-      from: requireEnvVar('EMAIL_ADDRESS'),
-      to,
-      subject,
-      text,
-    };
-
-    console.log('Sending email: ', mailOptions);
-
-    const info = await transporter.sendMail(mailOptions);
-
-    console.log('Email sent: ', info.response);
-  } catch (error) {
-    console.error('Error sending email:', error);
-  }
-}

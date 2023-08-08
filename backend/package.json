@@ -32,7 +32,6 @@
     "helmet": "^5.1.0",
     "jsonwebtoken": "^8.5.1",
     "node-fetch": "^3.3.2",
-    "nodemailer": "^6.9.4",
     "pg": "^8.7.3",
     "pg-connection-string": "^2.5.0",
     "shelljs": "^0.8.5",
