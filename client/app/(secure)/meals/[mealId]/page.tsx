@@ -1,7 +1,7 @@
 "use client";
 
 import * as z from "zod";
-import CreateUpdateForm from "@/app/meals/CreateUpdateForm";
+import CreateUpdateForm from "@/app/(secure)/meals/CreateUpdateForm";
 import { useMealData, useUpdateMeal } from "@/hooks/mealsHooks";
 import { useParams, useRouter } from "next/navigation";
 
