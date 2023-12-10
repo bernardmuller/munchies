@@ -139,13 +139,23 @@ const Header = () => {
 														<span className="sr-only">
 															Open user menu
 														</span>
-														<Image
+														{/* <Image
 															className="h-8 w-8 rounded-full"
 															src={user.imageUrl}
 															alt=""
 															height="32"
 															width="32"
-														/>
+														/> */}
+														<div className="h-10 w-10 bg-gradient-to-r from-blue-400 to-primary rounded-full flex justify-center items-center">
+															<h3 className="text-xl text-white text">
+																{currentUser.split(
+																	" "
+																)[0][0] +
+																	currentUser.split(
+																		" "
+																	)[1][0]}
+															</h3>
+														</div>
 													</Menu.Button>
 												</div>
 												<Transition
