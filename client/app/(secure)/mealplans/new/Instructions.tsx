@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 type InstructionsProps = {
 	instructions: string[];
@@ -15,12 +15,12 @@ export default function Instructions({
 	onAddInstruction,
 	editable,
 }: InstructionsProps) {
-	const [text, setText] = useState<string>("");
+	const { register, getValues, setValue } = useForm();
 
 	const onSubmit = () => {
-		if (text === "") return;
-		onAddInstruction(text);
-		setText("");
+		if (getValues("instruction") === "") return;
+		onAddInstruction(getValues("instruction"));
+		setValue("instruction", "");
 	};
 
 	if (!instructions) return <p></p>;
@@ -37,22 +37,27 @@ export default function Instructions({
 								type="text"
 								id="instruction"
 								placeholder="eg. Whisk the eggs"
-								onChange={(e) => setText(e.target.value)}
+								{...register("instruction")}
+								onChange={(e) => {
+									setValue("instruction", e.target.value);
+								}}
 							/>
 						</div>
 						<Button
 							type="button"
 							variant="secondary"
-							disabled={text?.length === 0 ? true : false}
-							onClick={onSubmit}
+							disabled={
+								getValues("instruction") === 0 ? true : false
+							}
 							className="mt-6"
+							onClick={() => onSubmit()}
 						>
 							Add
 						</Button>
 					</div>
 				</>
 			)}
-			<ol className="list-inside list-decimal flex flex-col gap-1 overflow-hidden">
+			<ol className="list-inside list-decimal flex flex-col gap-1 overflow-hidden mb-4">
 				{instructions.map((instruction, index) => {
 					return (
 						<li key={`${index}-${instruction}`} className="">

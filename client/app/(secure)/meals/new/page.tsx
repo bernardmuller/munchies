@@ -4,16 +4,11 @@ import * as z from "zod";
 import CreateUpdateForm from "../CreateUpdateForm";
 import { Ingredient } from "@/types";
 import { useCreateMeal, useUploadMealImage } from "@/hooks/mealsHooks";
-import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
 	name: z.string().min(2, {
 		message: "Name must be at least 2 characters.",
 	}),
-	cookTime: z.string(),
-	prepTime: z.string(),
-	readyIn: z.string(),
 });
 
 type NewMealDTO = {
@@ -22,7 +17,7 @@ type NewMealDTO = {
 	prepTime: number;
 	readyIn: number;
 	ingredients: Ingredient[];
-	instructions: string[];
+	directions: string[];
 	image: FormData;
 };
 
@@ -39,7 +34,7 @@ export default function NewMeal() {
 					prepTime: data.prepTime,
 					readyIn: data.readyIn,
 					ingredients: data.ingredients,
-					instructions: data.instructions,
+					directions: data.directions,
 					image: image.url,
 				};
 

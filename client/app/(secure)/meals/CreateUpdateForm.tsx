@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIngredientsData } from "@/hooks/ingredientsHooks";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -50,6 +50,7 @@ function CreateUpdateForm({
 		formState: { errors },
 		handleSubmit,
 		setValue,
+		getValues,
 		setError,
 		clearErrors,
 	} = useForm<z.infer<typeof validationSchema>>({
@@ -67,11 +68,11 @@ function CreateUpdateForm({
 	function onSubmit(values: z.infer<typeof validationSchema>) {
 		const newMealDTO = {
 			name: values.name,
-			cookTime: parseInt(values.cookTime),
-			prepTime: parseInt(values.prepTime),
-			readyIn: parseInt(values.readyIn),
+			cookTime: getValues("cookTime"),
+			prepTime: getValues("prepTime"),
+			readyIn: getValues("readyIn"),
 			ingredients: selectedIngredients,
-			instructions: newInstructions,
+			directions: newInstructions,
 			image: image,
 		};
 
@@ -116,6 +117,10 @@ function CreateUpdateForm({
 			setValue("image", data.image);
 			setSelectedIngredients(data.ingredients);
 			setNewInstructions(data.directions);
+		} else {
+			setValue("cookTime", 0);
+			setValue("prepTime", 0);
+			setValue("readyIn", 0);
 		}
 	}, [data]);
 
@@ -160,10 +165,18 @@ function CreateUpdateForm({
 										placeholder="60"
 										{...register("prepTime")}
 										defaultValue={data?.prepTime as string}
+										min={0}
 										onChange={(e) => {
 											setValue(
 												"prepTime",
 												parseInt(e.target.value)
+											);
+											setValue(
+												"readyIn",
+												parseInt(e.target.value) +
+													parseInt(
+														getValues("cookTime")
+													)
 											);
 											clearErrors("prepTime");
 										}}
@@ -184,10 +197,21 @@ function CreateUpdateForm({
 										type="number"
 										placeholder="60"
 										{...register("cookTime")}
+										min={0}
 										onChange={(e) => {
+											console.log(typeof e.target.value);
 											setValue(
 												"cookTime",
 												parseInt(e.target.value)
+											);
+											setValue(
+												"readyIn",
+												parseInt(
+													e.target.value as string
+												) +
+													parseInt(
+														getValues("prepTime")
+													)
 											);
 											clearErrors("cookTime");
 										}}
@@ -199,13 +223,13 @@ function CreateUpdateForm({
 									{errors.cookTime?.message as string}
 								</p>
 							</div>
-							<div className="flex flex-col gap-1">
+							<div className="flex flex-col gap-1 w-full">
 								<label className="text-sm">
 									Ready In
 									<span className="text-red-400">*</span>
 								</label>
-								<div className="flex gap-1 items-center">
-									<Input
+								<div className="flex gap-1 items-center py-2">
+									{/* <Input
 										type="number"
 										placeholder="60"
 										{...register("readyIn")}
@@ -217,8 +241,8 @@ function CreateUpdateForm({
 											);
 											clearErrors("readyIn");
 										}}
-									/>
-									min
+									/> */}
+									{getValues("readyIn") || 0} min
 								</div>
 
 								<p className="text-red-500 text-sm py-1">
@@ -289,6 +313,7 @@ function CreateUpdateForm({
 									<div className="flex flex-row gap-2 items-center">
 										<IngredientSelect
 											onIngredientSelect={(val) => {
+												setErrorMessage(null);
 												setSelectedIngredients(
 													(prev) => [...prev, val]
 												);
