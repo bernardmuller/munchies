@@ -65,13 +65,21 @@ const Header = () => {
 								<div className="flex items-center justify-between h-16 px-4 sm:px-0">
 									<div className="flex items-center">
 										<div className="flex-shrink-0">
-											<Image
+											{/* <Image
 												className="h-6 w-8"
 												src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
 												alt="Workflow"
 												height="32"
 												width="32"
-											/>
+											/> */}
+											<div className="flex">
+												<h1 className="text-white text-2xl font-extrabold pl-2 mr-0 pr-0">
+													M
+												</h1>
+												<h1 className="text-white text-2xl font-extrabold">
+													unchies
+												</h1>
+											</div>
 										</div>
 										<div className="hidden md:block">
 											<div className="ml-10 flex items-baseline space-x-4">
@@ -83,7 +91,7 @@ const Header = () => {
 																`/${location}`
 																? "bg-secondary dark:bg-background text-white"
 																: "text-gray-300 hover:bg-gray-700 hover:text-white",
-															"px-3 py-2 rounded-md text-sm font-medium"
+															"px-3 py-2 rounded-md text-sm font-medium hover:cursor-pointer"
 														)}
 														aria-current={
 															item.href ===
