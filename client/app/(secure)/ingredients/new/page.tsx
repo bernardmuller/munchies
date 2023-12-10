@@ -3,24 +3,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import {
-	Category,
-	ingredientCategories,
-} from "@/shared/configs/ingredientCategories";
+import { ingredientCategories } from "@/shared/configs/ingredientCategories";
 import Select from "react-select";
 import { Loader2 } from "lucide-react";
 import { useCreateIngredient } from "@/hooks/ingredientsHooks";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
 	name: z.string().min(2, {
@@ -32,11 +22,14 @@ const formSchema = z.object({
 function NewIngredient() {
 	const router = useRouter();
 	const createIngredient = useCreateIngredient();
+	const { toast } = useToast();
 	const {
 		register,
 		formState: { errors },
 		handleSubmit,
 		setValue,
+		reset,
+		getValues,
 		clearErrors,
 	} = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -53,7 +46,12 @@ function NewIngredient() {
 		};
 		createIngredient.mutate(ingredientDTO, {
 			onSuccess: () => {
-				router.push("/home");
+				reset();
+				toast({
+					variant: "success",
+					title: "Success",
+					description: "Ingredient created successfully",
+				});
 			},
 		});
 	};
@@ -90,6 +88,16 @@ function NewIngredient() {
 										})
 									)}
 									placeholder="Select a category"
+									value={{
+										value: getValues("categoryId"),
+										label: ingredientCategories.find(
+											(cat) =>
+												cat.id ===
+												parseInt(
+													getValues("categoryId")
+												)
+										)?.name,
+									}}
 									// @ts-ignore
 									onChange={(val: {
 										value: string;
