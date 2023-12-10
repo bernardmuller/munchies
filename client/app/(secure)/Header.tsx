@@ -1,9 +1,10 @@
+"use client";
+
 import React, { useMemo } from "react";
 
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import "./globals.css";
 
 import Select from "react-select";
 import { usePathname, useRouter } from "next/navigation";

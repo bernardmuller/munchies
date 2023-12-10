@@ -23,7 +23,7 @@ function Login() {
 	};
 
 	return (
-		<section className="w-[27rem]">
+		<section className="w-full">
 			<div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:h-[70vh] lg:py-0">
 				<Link
 					href="#"

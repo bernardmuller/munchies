@@ -1,25 +1,24 @@
 "use client";
 
-import { ThemeProvider } from "@/shared/providers/themeProvider";
 import Header from "./Header";
-import "./globals.css";
+import "@/styles/globals.css";
+// import { usePathname } from "next/navigation";
+import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/shared/providers/themeProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { usePathname } from "next/navigation";
-import { Toaster } from "@/components/ui/toaster";
 
 const App = ({ children }: any) => {
-	const pathname = usePathname();
+	// const pathname = usePathname();
 
-	if (pathname === "/login" || pathname === "/signup")
-		return (
-			<main className="flex items-center justify-center">{children}</main>
-		);
+	// if (pathname === "/login" || pathname === "/signup")
+	// 	return (
+	// 		<main className="flex items-center justify-center">{children}</main>
+	// 	);
 
 	return (
 		<div className="min-h-full">
 			<Header />
-
 			<main className="-mt-32">
 				<div className="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8">
 					<div className="bg-white rounded-lg shadow dark:shadow-none px-5 py-6 sm:px-6 dark:bg-background">
@@ -47,6 +46,7 @@ export default function RootLayout({
 						enableSystem
 					>
 						<App>{children}</App>
+
 						<Toaster />
 					</ThemeProvider>
 				</QueryClientProvider>

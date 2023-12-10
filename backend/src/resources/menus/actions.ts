@@ -308,5 +308,7 @@ export const getCurrentMenu = async (userId: any) => {
     }),
   };
 
+  console.log(returnData);
+
   return returnData;
 };
