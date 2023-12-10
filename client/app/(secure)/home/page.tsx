@@ -13,12 +13,12 @@ import { useEffect, useState } from "react";
 export default function Home() {
 	const { data: menu } = useCurrentMenuData();
 
-	console.log({ menu });
 	useAllIngredientsData();
 	useMealsData();
 	const { data: grocerylist } = useGrocerylistData(
 		menu?.grocerylistId as string
 	);
+
 	const [showConfetti, setShowConfetti] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -51,7 +51,22 @@ export default function Home() {
 				</div>
 
 				<div className="w-full h-full lg:flex-[0.4] lg:pl-4 sm:pt-7 lg:pt-0">
-					<GroceryList items={grocerylist?.items!} />
+					<GroceryList
+						heading="Grocery List"
+						items={
+							grocerylist?.items?.filter(
+								(i: any) => i.typeId === 1
+							)!
+						}
+					/>
+					<GroceryList
+						heading="Extra Items"
+						items={
+							grocerylist?.items?.filter(
+								(i: any) => i.typeId === 2
+							)!
+						}
+					/>
 				</div>
 			</div>
 		</>

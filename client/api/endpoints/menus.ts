@@ -7,8 +7,13 @@ const mealDTO = z.object({
 	id: z.string(),
 });
 
+const ingredientDTO = z.object({
+	id: z.string(),
+});
+
 const createMenuDTO = z.object({
 	meals: z.array(mealDTO),
+	extraItems: z.array(ingredientDTO),
 });
 
 type CreateMenuDTO = z.infer<typeof createMenuDTO>;
@@ -82,6 +87,6 @@ export async function createMenu(data: CreateMenuDTO) {
 //
 export async function fetchCurrentMenu() {
 	return await httpClient.get(apiRoutes.getCurrentMenu).then((res) => {
-		return res.data as MealPlan;
+		return res.data;
 	});
 }

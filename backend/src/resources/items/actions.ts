@@ -5,8 +5,9 @@ import { ItemModel } from '../../../prisma/zod';
 export const createItem = async (data: {
   ingredientId: string;
   grocerylistId: string;
+  typeId?: number;
 }) => {
-  const itemData = { ...data, typeId: 1, id: getUuid() };
+  const itemData = { ...data, typeId: data.typeId || 1, id: getUuid() };
 
   const res = await db.item.create({
     data: {

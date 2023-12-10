@@ -40,7 +40,7 @@ const NewIngredients = ({
 		<div className=" max-w-full  text-base font-sans">
 			<div className="flex flex-col w-full overflow-hidden m-auto pb-4">
 				{heading && (
-					<h1 className="text-2xl mb-4 font-semibold">Ingredients</h1>
+					<h3 className="text-2xl mb-4 font-semibold">Ingredients</h3>
 				)}
 				<div className="grid gap-3" ref={parent}>
 					{ingredients?.map((ingredient: Partial<Ingredient>) => (

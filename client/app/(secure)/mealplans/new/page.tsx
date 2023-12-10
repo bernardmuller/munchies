@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useCreateMealplan } from "@/hooks/menusHooks";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import IngredientSelect from "../../meals/new/IngredientSelect";
 
 type AMeal = Meal & {
 	ingredients: AIngredient[];
@@ -33,6 +34,7 @@ function NewMealplan() {
 	const meals = useMealsData();
 	const createMealplan = useCreateMealplan();
 	const router = useRouter();
+	const [extraIngredients, setExtraIngredients] = useState<Ingredient[]>([]);
 
 	const handleAddMeal = (meal: Meal) => {
 		setError("");
@@ -66,6 +68,9 @@ function NewMealplan() {
 		}
 		createMealplan.mutate({
 			meals: selectedMeals,
+			extraItems: extraIngredients.map((i) => {
+				return { id: i.id };
+			}),
 		});
 	};
 
@@ -81,8 +86,29 @@ function NewMealplan() {
 					/>
 				</div>
 
-				<div className="w-full h-full lg:flex-[0.4] lg:pl-4 sm:pt-7 lg:pt-0 pb-10 lg:pb-0">
+				<div className="w-full h-full lg:flex-[0.4] lg:pl-4 lg:pt-0 lg:pb-0">
 					<Ingredients ingredients={ingredientsList} />
+				</div>
+				<div className="w-full h-full flex flex-col gap-1 lg:flex-[0.4] lg:pl-4 sm:pt-7 lg:pt-0 pb-10 lg:pb-0">
+					<div>
+						<h3 className="text-2xl mb-4 font-semibold">
+							Extra Items
+						</h3>
+						<div className="flex gap-1 w-1/2 pb-4">
+							<IngredientSelect
+								onIngredientSelect={(val) => {
+									setExtraIngredients((prev) => [
+										...prev,
+										val,
+									]);
+								}}
+							/>
+						</div>
+					</div>
+					<Ingredients
+						heading={false}
+						ingredients={extraIngredients}
+					/>
 				</div>
 			</div>
 			<div className="w-full flex justify-end">

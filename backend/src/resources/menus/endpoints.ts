@@ -20,6 +20,7 @@ const endpoints = [
       const menu = await createMenu({
         createdBy: res.locals.userId,
         meals: req.body.meals,
+        extraItems: req.body.extraItems,
       });
       return res.send(menu);
     },

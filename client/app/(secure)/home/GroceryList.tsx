@@ -7,6 +7,7 @@ import { useUnCheckItem, useCheckItem } from "@/hooks/items";
 
 type GrocerylistProps = {
 	items: GroceryListItem[];
+	heading: string;
 };
 
 const Item = (item: GroceryListItem) => {
@@ -32,11 +33,11 @@ const Item = (item: GroceryListItem) => {
 	);
 };
 
-const GroceryList = ({ items }: GrocerylistProps) => {
+const GroceryList = ({ items, heading }: GrocerylistProps) => {
 	return (
 		<div className=" max-w-full  text-base font-sans">
 			<div className="flex flex-col w-full overflow-hidden m-auto pb-4">
-				<h1 className="text-2xl mb-4 font-semibold">Grocerylist</h1>
+				<h1 className="text-2xl mb-4 font-semibold">{heading}</h1>
 				<div className="grid gap-3">
 					{items?.map((item: GroceryListItem) => (
 						<Item key={item.id} {...item} />

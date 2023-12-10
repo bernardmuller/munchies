@@ -11,7 +11,9 @@ export const createMenu = async (data: {
   id?: string;
   createdBy: string;
   meals: { id: string }[];
+  extraItems?: { id: string }[];
 }) => {
+  console.log({ data });
   const existingMenus = await db.menu.findMany({
     where: { createdBy: data.createdBy },
   });
@@ -38,6 +40,16 @@ export const createMenu = async (data: {
 
   for (const meal of data.meals) {
     await addMealToMenu({ menuId: res.id, mealId: meal.id });
+  }
+
+  if (data.extraItems) {
+    for (const ingredient of data.extraItems) {
+      await createItem({
+        ingredientId: ingredient.id,
+        grocerylistId: newGroceryList.id,
+        typeId: 2,
+      });
+    }
   }
 
   const newMenu = MenuModel.parse(updatedMenu);
@@ -274,6 +286,7 @@ export const getCurrentMenu = async (userId: any) => {
       data: {},
       message: 'No current menu found',
     };
+
   const menuMeals = await db.menuMeals.findMany({
     where: { menuId: menu?.id },
   });
@@ -307,8 +320,6 @@ export const getCurrentMenu = async (userId: any) => {
       },
     }),
   };
-
-  console.log(returnData);
 
   return returnData;
 };
