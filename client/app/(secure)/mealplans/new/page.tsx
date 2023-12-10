@@ -12,6 +12,7 @@ import { useCreateMealplan } from "@/hooks/menusHooks";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import IngredientSelect from "../../meals/new/IngredientSelect";
+import { set } from "zod";
 
 type AMeal = Meal & {
 	ingredients: AIngredient[];
@@ -77,7 +78,7 @@ function NewMealplan() {
 	return (
 		<div>
 			<div className="flex flex-col lg:flex-row gap-8  w-full min-h-[50vh]">
-				<div className="w-full h-full xl:flex-[0.6] ">
+				<div className="w-full h-full  lg:w-2/3">
 					<AddMealList
 						meals={meals?.data}
 						onAddMeal={handleAddMeal}
@@ -85,30 +86,39 @@ function NewMealplan() {
 						selectedMeals={selectedMeals}
 					/>
 				</div>
-
-				<div className="w-full h-full lg:flex-[0.4] lg:pl-4 lg:pt-0 lg:pb-0">
-					<Ingredients ingredients={ingredientsList} />
-				</div>
-				<div className="w-full h-full flex flex-col gap-1 lg:flex-[0.4] lg:pl-4 sm:pt-7 lg:pt-0 pb-10 lg:pb-0">
-					<div>
-						<h3 className="text-2xl mb-4 font-semibold">
-							Extra Items
-						</h3>
-						<div className="flex gap-1 w-1/2 pb-4">
-							<IngredientSelect
-								onIngredientSelect={(val) => {
-									setExtraIngredients((prev) => [
-										...prev,
-										val,
-									]);
-								}}
-							/>
-						</div>
+				<div className="flex md:flex-col">
+					<div className="w-full h-full  lg:pl-4 lg:pt-0 lg:pb-0">
+						<Ingredients ingredients={ingredientsList} />
 					</div>
-					<Ingredients
-						heading={false}
-						ingredients={extraIngredients}
-					/>
+					<div className="w-full h-full flex flex-col gap-1 lg:pl-4 sm:pt-7 lg:pt-0 pb-10 lg:pb-0">
+						<div className="w-full">
+							<h3 className="text-2xl mb-4 font-semibold">
+								Extra Items
+							</h3>
+							<div className="flex gap-1 pb-4 w-full">
+								<IngredientSelect
+									onIngredientSelect={(val) => {
+										setExtraIngredients((prev) => [
+											...prev,
+											val,
+										]);
+									}}
+								/>
+								<Button
+									variant="secondary"
+									onClick={() => {
+										setExtraIngredients([]);
+									}}
+								>
+									Clear
+								</Button>
+							</div>
+						</div>
+						<Ingredients
+							heading={false}
+							ingredients={extraIngredients}
+						/>
+					</div>
 				</div>
 			</div>
 			<div className="w-full flex justify-end">

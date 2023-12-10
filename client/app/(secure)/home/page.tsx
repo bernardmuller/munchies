@@ -46,11 +46,11 @@ export default function Home() {
 		<>
 			{showConfetti && <Confetti />}
 			<div className="flex flex-col lg:flex-row gap-8  w-full min-h-[50vh]">
-				<div className="w-full h-full xl:flex-[0.6] ">
+				<div className="w-full h-full  ">
 					<MealList meals={menu?.meals} />
 				</div>
 
-				<div className="w-full h-full lg:flex-[0.4] lg:pl-4 sm:pt-7 lg:pt-0">
+				<div className="w-full h-full  lg:pl-4 sm:pt-7 lg:pt-0">
 					<h3 className="text-xl font-semibold">Grocerylist</h3>
 					<GroceryList
 						heading=""
@@ -60,7 +60,10 @@ export default function Home() {
 							)!
 						}
 					/>
-					<h4 className="text-lg font-medium">Extra Items</h4>
+					{grocerylist?.items?.filter((i: any) => i.typeId === 2)
+						.length! > 0 && (
+						<h4 className="text-lg font-medium">Extra Items</h4>
+					)}
 					<GroceryList
 						heading=""
 						items={
