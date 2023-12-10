@@ -51,16 +51,18 @@ export default function Home() {
 				</div>
 
 				<div className="w-full h-full lg:flex-[0.4] lg:pl-4 sm:pt-7 lg:pt-0">
+					<h3 className="text-xl font-semibold">Grocerylist</h3>
 					<GroceryList
-						heading="Grocery List"
+						heading=""
 						items={
 							grocerylist?.items?.filter(
 								(i: any) => i.typeId === 1
 							)!
 						}
 					/>
+					<h4 className="text-lg font-medium">Extra Items</h4>
 					<GroceryList
-						heading="Extra Items"
+						heading=""
 						items={
 							grocerylist?.items?.filter(
 								(i: any) => i.typeId === 2
