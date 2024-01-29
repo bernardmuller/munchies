@@ -12,6 +12,8 @@ import Image from "next/image";
 import appRoutes from "@/shared/configs/appRoutes";
 import { ThemeToggler } from "./ThemeToggler";
 import getCurrentUser from "@/shared/utils/getCurrentUser";
+import getCurrentSession from "@/shared/utils/getCurrentSession";
+import useAvatar from "@/hooks/useAvatar";
 
 const user = {
 	email: "tom@example.com",
@@ -39,7 +41,8 @@ const Header = () => {
 	const pathname = usePathname();
 	const location = pathname.split("/")[1];
 	const router = useRouter();
-	const currentUser = getCurrentUser();
+	const currentUser = getCurrentSession();
+	const avatar = useAvatar(currentUser.username);
 
 	const pageName = useMemo(() => {
 		const route = appRoutes.find((route) => {
@@ -147,14 +150,13 @@ const Header = () => {
 															width="32"
 														/> */}
 														<div className="h-10 w-10 bg-gradient-to-r from-blue-400 to-primary rounded-full flex justify-center items-center">
-															<h3 className="text-xl text-white text">
-																{currentUser.split(
-																	" "
-																)[0][0] +
-																	currentUser.split(
-																		" "
-																	)[1][0]}
-															</h3>
+															<Image
+																className="h-10 w-10 rounded-full"
+																src={avatar}
+																alt="avatar"
+																height="32"
+																width="32"
+															/>
 														</div>
 													</Menu.Button>
 												</div>
@@ -269,15 +271,15 @@ const Header = () => {
 									<div className="flex-shrink-0">
 										<Image
 											className="h-10 w-10 rounded-full"
-											src={user.imageUrl}
-											alt=""
+											src={avatar}
+											alt="avatar"
 											height="40"
 											width="40"
 										/>
 									</div>
 									<div className="ml-3">
 										<div className="text-base font-medium leading-none text-white">
-											{currentUser}
+											{currentUser.username}
 										</div>
 										<div className="text-sm font-medium leading-none text-gray-400">
 											{user.email}
