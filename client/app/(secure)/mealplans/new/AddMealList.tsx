@@ -40,7 +40,6 @@ function AddMealList({ meals, onAddMeal, onRemoveMeal, selectedMeals }: Props) {
 									? "destructive"
 									: "default"
 							}
-							size="icon"
 						>
 							{selectedMeals?.find((m) => m.id === meal.id)
 								? "-"
