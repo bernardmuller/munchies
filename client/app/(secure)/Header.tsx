@@ -11,7 +11,6 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import appRoutes from "@/shared/configs/appRoutes";
 import { ThemeToggler } from "./ThemeToggler";
-import getCurrentUser from "@/shared/utils/getCurrentUser";
 import getCurrentSession from "@/shared/utils/getCurrentSession";
 import useAvatar from "@/hooks/useAvatar";
 
@@ -280,9 +279,6 @@ const Header = () => {
 									<div className="ml-3">
 										<div className="text-base font-medium leading-none text-white">
 											{currentUser.username}
-										</div>
-										<div className="text-sm font-medium leading-none text-gray-400">
-											{user.email}
 										</div>
 									</div>
 								</div>

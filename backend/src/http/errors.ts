@@ -7,9 +7,9 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   }
   switch (err) {
     case err instanceof AuthenticationError:
-      res.status(401).json({ error: { message: err.message } });
+      res.status(400).json({ error: { message: err.message } });
     default:
-      res.status(401).json({ error: { message: err.message } });
+      res.status(400).json({ error: { message: err.message } });
     // break;
   }
 };

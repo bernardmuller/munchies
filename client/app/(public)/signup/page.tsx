@@ -9,8 +9,9 @@ import { useSignup } from "@/hooks/authHooks";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-function Signup() {
+function SignupForm() {
 	const signupMutation = useSignup();
 	const [success, setSuccess] = useState(false);
 	const router = useRouter();
@@ -56,7 +57,7 @@ function Signup() {
 		);
 
 	return (
-		<section className="w-[27rem]">
+		<section className="md:w-[27rem]">
 			<div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:h-[70vh] lg:py-0">
 				<Link
 					href="#"
@@ -71,6 +72,7 @@ function Signup() {
             height="32"
           />
           */}
+					Munchies
 				</Link>
 				<div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
 					<div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -163,12 +165,20 @@ function Signup() {
 									</p>
 								)}
 							</div>
+							{signupMutation.isError && (
+								<p className="prose-p: text-xs text-red-400">
+									Please check your credentials and try again
+								</p>
+							)}
 							<Button type="submit" className="btn w-full">
 								Sign up
 							</Button>
 							<p className="text-sm font-light text-gray-500 dark:text-gray-400">
 								Already have an account?{" "}
-								<Link href="/login" className="link">
+								<Link
+									href="/login"
+									className="link text-black underline"
+								>
 									Log in
 								</Link>
 							</p>
@@ -177,6 +187,15 @@ function Signup() {
 				</div>
 			</div>
 		</section>
+	);
+}
+
+const queryClient = new QueryClient();
+function Signup() {
+	return (
+		<QueryClientProvider client={queryClient}>
+			<SignupForm />
+		</QueryClientProvider>
 	);
 }
 

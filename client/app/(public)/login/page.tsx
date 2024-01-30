@@ -7,8 +7,14 @@ import { LoginDTOSchema } from "@/types";
 import { useLogin } from "@/hooks/authHooks";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+	QueryClient,
+	QueryClientProvider,
+	useQueryClient,
+} from "@tanstack/react-query";
+import BlueHero from "../BlueHero";
 
-function Login() {
+function LoginForm() {
 	const loginMutation = useLogin();
 	const {
 		register,
@@ -18,13 +24,14 @@ function Login() {
 		resolver: zodResolver(LoginDTOSchema),
 	});
 
-	const onSubmit = (data: any) => {
-		loginMutation.mutate(data);
+	const onSubmit = async (data: any) => {
+		const res = await loginMutation.mutateAsync(data);
+		console.log(res);
 	};
 
 	return (
-		<section className="w-full">
-			<div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:h-[70vh] lg:py-0">
+		<section className="relative w-full">
+			<div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:h-[70vh] lg:py-0 z-40">
 				<Link
 					href="#"
 					className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
@@ -38,11 +45,12 @@ function Login() {
             height="32"
           />
           */}
+					Munchies
 				</Link>
 				<div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
 					<div className="p-6 space-y-4 md:space-y-6 sm:p-8">
 						<h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-							Sign in to your account
+							Log in to your account
 						</h1>
 						<form
 							className="space-y-4 md:space-y-6"
@@ -59,7 +67,6 @@ function Login() {
 									type="email"
 									id="email"
 									className="input w-full"
-									placeholder="name@company.com"
 									{...register("email")}
 								/>
 								{errors.email && (
@@ -80,7 +87,6 @@ function Login() {
 									type="password"
 									name="password"
 									id="password"
-									placeholder="••••••••"
 									className="input w-full "
 								></Input>
 								{errors.password && (
@@ -90,16 +96,31 @@ function Login() {
 								)}
 							</div>
 							<div className="flex items-center justify-between">
-								<a href="#" className="link">
+								<Link
+									href="#"
+									className="text-sm text-gray-500"
+								>
 									Forgot password?
-								</a>
+								</Link>
 							</div>
-							<Button type="submit" className="btn w-full">
-								Sign in
+							{loginMutation.isError && (
+								<p className="prose-p: text-xs text-red-400">
+									Please enter a valid email and password
+								</p>
+							)}
+							<Button
+								type="submit"
+								className="btn w-full"
+								isLoading={loginMutation.isLoading}
+							>
+								Log in
 							</Button>
 							<p className="text-sm font-light text-gray-500 dark:text-gray-400">
 								Don’t have an account yet?{" "}
-								<Link href="/signup" className="link">
+								<Link
+									href="/signup"
+									className="text-black underline"
+								>
 									Sign up
 								</Link>
 							</p>
@@ -108,6 +129,15 @@ function Login() {
 				</div>
 			</div>
 		</section>
+	);
+}
+
+const queryClient = new QueryClient();
+function Login() {
+	return (
+		<QueryClientProvider client={queryClient}>
+			<LoginForm />
+		</QueryClientProvider>
 	);
 }
 

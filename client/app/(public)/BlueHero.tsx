@@ -1,3 +1,4 @@
+"use client";
 import { HomeParticles } from "@/components/custom/Particles";
 
 const BlueHero = ({
@@ -11,8 +12,8 @@ const BlueHero = ({
 }) => {
 	return (
 		<div
-			className={`bg-background w-full ${
-				size === "lg" ? "h-[50vh]" : "h-[25rem]"
+			className={`bg-header w-full ${
+				size === "lg" ? "h-[80vh] md:h-[50vh]" : "h-[25rem]"
 			} absolute top-0 left-0 overflow-hidden z-0`}
 		>
 			{glow && (
