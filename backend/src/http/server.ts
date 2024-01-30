@@ -20,6 +20,8 @@ export const createApp = () => {
         'http://localhost:19006',
         'http://localhost:4000',
         'https://munchies.bernardmuller.dev',
+        'https://munchies.bernardmuller.co.za',
+        
       ],
     }),
   );
