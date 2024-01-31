@@ -75,6 +75,7 @@ export const useCheckItem = (groceryListId: string) => {
 			);
 		},
 		onSuccess: () => {
+			queryClient.invalidateQueries([`list-${groceryListId}`]);
 			return queryClient.invalidateQueries([`currentMenu`]);
 		},
 	});
@@ -100,6 +101,7 @@ export const useUnCheckItem = (groceryListId: string) => {
 			);
 		},
 		onSuccess: () => {
+			queryClient.invalidateQueries([`list-${groceryListId}`]);
 			return queryClient.invalidateQueries([`currentMenu`]);
 		},
 	});
