@@ -59,7 +59,7 @@ export const useCheckItem = (groceryListId: string) => {
 	const queryClient = useQueryClient();
 	return useMutation(checkItem, {
 		onMutate: async (item) => {
-			// Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+			console.log("check item");
 			await queryClient.cancelQueries([`currentMenu`]);
 
 			await queryClient.setQueryData(
@@ -85,7 +85,6 @@ export const useUnCheckItem = (groceryListId: string) => {
 	const queryClient = useQueryClient();
 	return useMutation(unCheckItem, {
 		onMutate: async (item: any) => {
-			// Cancel any outgoing refetches (so they don't overwrite our optimistic update)
 			await queryClient.cancelQueries([`currentMenu`]);
 
 			await queryClient.setQueryData(
