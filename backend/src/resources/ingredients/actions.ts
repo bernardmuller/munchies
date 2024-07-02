@@ -8,6 +8,7 @@ export const createIngredient = async (data: {
   categoryId: number;
   name: string;
 }) => {
+  console.log('data', data);
   if (!ingredientCategories.find((category) => category.id === data.categoryId))
     throw new Error('Invalid ingredient category id');
   const IngredientData = { ...data, id: data.id || getUuid() };

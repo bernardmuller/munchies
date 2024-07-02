@@ -1,7 +1,7 @@
 import {
 	useMenuData,
 	useRemoveMealFromMenu,
-	useUpdateMenu,
+	// useUpdateMenu,
 } from "../../hooks/menusHooks";
 import { View } from "../../components/common";
 import { ActivityIndicator, ScrollView } from "react-native";
@@ -19,24 +19,25 @@ import {
 } from "native-base";
 import { useState } from "react";
 
-export default function MealplanDetail({ route, navigation }: { route: any }) {
+export default function MealplanDetail({ route }: { route: any }) {
 	const { mealplanId } = route.params;
 	if (!mealplanId) {
-		navigation.navigate("Mealplans");
+		// navigation.navigate("Mealplans");
 	}
 	const { data, isLoading } = useMenuData(mealplanId);
-	const updateMenu = useUpdateMenu(mealplanId);
-	const removeRecipe = useRemoveMealFromMenu({ menuId: mealplanId });
+	// const updateMenu = useUpdateMenu({ menuId: mealplanId });
+	// const removeRecipe = useRemoveMealFromMenu({ menuId: mealplanId });
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
 	return (
-		<ScrollView className="px-2 py-6">
-			<Name
+		<ScrollView>
+			<Text>Test</Text>
+			{/* <Name
 				name={data.name}
 				onUpdateName={(updateData: { name: string }) => {
-					updateMenu.mutate({
-						id: mealplanId,
-						data: { ...updateData },
-					});
+					// updateMenu.mutate({
+					// 	id: mealplanId,
+					// 	data: { ...updateData },
+					// });
 				}}
 			/>
 			<Text color="gray.400">Created at: {data.createdAt}</Text>
@@ -67,10 +68,10 @@ export default function MealplanDetail({ route, navigation }: { route: any }) {
 							borderRadius="50%"
 							icon={<CloseIcon name="close" />}
 							onPress={() => {
-								removeRecipe.mutate({
-									mealId: meal?.id,
-									menuId: mealplanId,
-								});
+								// removeRecipe.mutate({
+								// 	mealId: meal?.id,
+								// 	menuId: mealplanId,
+								// });
 							}}
 						/>
 					</Stack>
@@ -79,13 +80,14 @@ export default function MealplanDetail({ route, navigation }: { route: any }) {
 			<Button
 				mb={2}
 				onPress={() =>
-					navigation.navigate("AddRecipes", {
-						mealplanId: mealplanId,
-					})
+					// navigation.navigate("AddRecipes", {
+					// 	mealplanId: mealplanId,
+					// })
+					{}
 				}
 			>
 				Add Recipe
-			</Button>
+			</Button> */}
 		</ScrollView>
 	);
 }

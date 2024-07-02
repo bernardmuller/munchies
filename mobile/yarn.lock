@@ -2478,6 +2478,13 @@
     "@tamagui/use-controllable-state" "1.101.3"
     reforest "^0.13.0"
 
+"@tamagui/helpers-icon@1.101.3":
+  version "1.101.3"
+  resolved "https://registry.yarnpkg.com/@tamagui/helpers-icon/-/helpers-icon-1.101.3.tgz#ce0920a7033ee4ab7f63b4ac351634a55fd2c7fe"
+  integrity sha512-aFWm3N57owJHjulpdWx+xJ/VIBOTe6YNIm75gGLivronT+3I1ux5ur3FXbizepKZvRWcbUk+ZF3sgsAmeDYDZQ==
+  dependencies:
+    "@tamagui/core" "1.101.3"
+
 "@tamagui/helpers-tamagui@1.101.3":
   version "1.101.3"
   resolved "https://registry.yarnpkg.com/@tamagui/helpers-tamagui/-/helpers-tamagui-1.101.3.tgz#32b1a7ae268bd75805d1fe5751833ecd34f04b59"
@@ -2537,6 +2544,14 @@
     "@tamagui/stacks" "1.101.3"
     "@tamagui/text" "1.101.3"
     "@tamagui/web" "1.101.3"
+
+"@tamagui/lucide-icons@^1.101.3":
+  version "1.101.3"
+  resolved "https://registry.yarnpkg.com/@tamagui/lucide-icons/-/lucide-icons-1.101.3.tgz#73eeebd7fc3ee45cba0cb64029bd27e6196f5995"
+  integrity sha512-ip+N+hRAO/sjJEN2r8nzzpVfVTDOpIqWke4td3NDE9kRaVGuBWEFta6ib7qG8JeKPNKhSdnj9XuWRSJNrkf8fA==
+  dependencies:
+    "@tamagui/core" "1.101.3"
+    "@tamagui/helpers-icon" "1.101.3"
 
 "@tamagui/normalize-css-color@1.101.3":
   version "1.101.3"

@@ -4,14 +4,13 @@ import { FlatList } from "native-base";
 import ListItem from "../../components/common/ListItem";
 
 function Ingredients({ navigation }: { navigation: any }) {
-	const { data, isLoading, isRefetching, refetch } = useIngredientsData();
+	const { data, isRefetching, refetch } = useIngredientsData();
 
-	if (!data && isLoading) return <ActivityIndicator size={30} />;
+	if (!data) return <ActivityIndicator size={30} />;
 	return (
 		<SafeAreaView>
-			{isLoading && <ActivityIndicator size={30} />}
 			<FlatList
-				pt={2}
+				pt={1}
 				height="100%"
 				refreshControl={
 					<RefreshControl

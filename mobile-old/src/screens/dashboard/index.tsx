@@ -33,9 +33,9 @@ import { useCheckItem, useUnCheckItem } from "../../hooks/items";
 import { AntDesign } from "@expo/vector-icons";
 import { useGrocerylistData } from "../../hooks/grocerylistHooks";
 
-export default function MealplanDetail({ route, navigation }: { route: any }) {
+export default function MealplanDetail({ route }: { route: any }) {
 	const { data, isLoading } = useCurrentMenuData();
-	const updateMenu = useUpdateMenu(data?.id);
+	// const updateMenu = useUpdateMenu(data?.id);
 	// const createMenu = useCreateMenu();
 	const removeRecipe = useRemoveMealFromMenu({ menuId: "" });
 	const [activeTab, setActiveTab] = useState<"menu" | "grocerylist">("menu");
@@ -43,31 +43,30 @@ export default function MealplanDetail({ route, navigation }: { route: any }) {
 
 	if (isLoading) return <ActivityIndicator size={30} />;
 
-	const items = categories
-		?.map((category: Category) => {
-			return {
-				id: category.id,
-				items: data?.grocerylist?.items?.filter(
-					(i: any) => i.ingredient.categoryId === category.id
-				),
-			};
-		})
-		?.filter((i: any) => i.items.length > 0);
+	const items = categories?.map((category: Category) => {
+		return {
+			id: category.id,
+			items: data?.grocerylist?.items?.filter(
+				(i: any) => i.ingredient.categoryId === category.id
+			),
+		};
+	});
+	// ?.filter((i: any) => i.items.length > 0);
 
 	return (
 		<SafeAreaView>
 			<Stack px={4} py={2}>
 				<Text>Dashboard</Text>
-				<Name
-					name={data.name}
+				{/* <Name
+					// name={data.name}
 					onUpdateName={(updateData: { name: string }) => {
-						updateMenu.mutate({
-							id: "",
-							data: { ...updateData },
-						});
+						// updateMenu.mutate({
+						// 	id: "",
+						// 	data: { ...updateData },
+						// });
 					}}
-				/>
-				<Text color="gray.400">Created at: {data.createdAt}</Text>
+				/> */}
+				<Text color="gray.400">Created at: {data?.createdAt}</Text>
 				{activeTab === "menu" ? (
 					<>
 						<Stack py={3} pt={6}>
@@ -98,10 +97,10 @@ export default function MealplanDetail({ route, navigation }: { route: any }) {
 										borderRadius="50%"
 										icon={<CloseIcon name="close" />}
 										onPress={() => {
-											removeRecipe.mutate({
-												mealId: meal.id,
-												menuId: "",
-											});
+											// removeRecipe.mutate({
+											// 	mealId: meal.id,
+											// 	menuId: "",
+											// });
 										}}
 									/>
 								</Stack>
@@ -110,9 +109,10 @@ export default function MealplanDetail({ route, navigation }: { route: any }) {
 						<Button
 							mb={2}
 							onPress={() =>
-								navigation.navigate("AddRecipes", {
-									mealplanId: data.id,
-								})
+								// navigation.navigate("AddRecipes", {
+								// 	mealplanId: data.id,
+								// })
+								{}
 							}
 						>
 							Add Recipe
@@ -121,7 +121,7 @@ export default function MealplanDetail({ route, navigation }: { route: any }) {
 				) : (
 					<Stack p={2}>
 						<Text fontSize="2xl" fontWeight="semibold">
-							{data.menu.name} Grocerylist
+							{data?.menu?.name} Grocerylist
 						</Text>
 						<Text fontSize="xl">Items</Text>
 
@@ -131,11 +131,11 @@ export default function MealplanDetail({ route, navigation }: { route: any }) {
 								return (
 									<CategoryItem
 										item={item}
-										grocerylistId={data.grocerylistId}
+										grocerylistId={data?.grocerylistId}
 									/>
 								);
 							}}
-							keyExtractor={(item: any) => item.id}
+							keyExtractor={(item: any) => item?.id}
 							mb={20}
 						/>
 					</Stack>

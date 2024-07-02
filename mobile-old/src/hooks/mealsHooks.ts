@@ -1,4 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+	InvalidateQueryFilters,
+	QueryFilters,
+	useMutation,
+	useQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
 import {
 	addDirectionToMeal,
 	addIngredientToMeal,
@@ -36,27 +42,31 @@ export const useMealsData = () => {
 };
 
 export const useMealData = (id: string) => {
-	const { data, isLoading, isSuccess, isError, isFetching } = useQuery(
-		[`meal-${id}`],
-		() => fetchMeal(id)
-	);
+	const { data, isLoading, isSuccess, isError, isFetching } = useQuery({
+		queryKey: [`meal-${id}`],
+		queryFn: () => fetchMeal(id),
+	});
 	return { data, isLoading, isSuccess, isError, isFetching };
 };
 
 export const useAddMeal = () => {
 	const queryClient = useQueryClient();
-	return useMutation(createMeal, {
+	return useMutation({
+		mutationFn: createMeal,
 		onSuccess: () => {
-			return queryClient.invalidateQueries(["meals"]);
+			return queryClient.invalidateQueries([
+				"meals",
+			] as InvalidateQueryFilters);
 		},
 	});
 };
 
 export const useUpdateMeal = ({ mealId }: { mealId: string }) => {
 	const queryClient = useQueryClient();
-	return useMutation(updateMeal, {
+	return useMutation({
+		mutationFn: (data: any) => updateMeal({ id: mealId, data }),
 		onMutate: async ({ data }) => {
-			await queryClient.cancelQueries([`meal-${mealId}`]);
+			await queryClient.cancelQueries([`meal-${mealId}`] as QueryFilters);
 			const previousMeal = queryClient.getQueryData([
 				`meal-${mealId}`,
 			]) as any;
@@ -67,7 +77,9 @@ export const useUpdateMeal = ({ mealId }: { mealId: string }) => {
 			return { previousMeal };
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries([`meal-${mealId}`]);
+			queryClient.invalidateQueries([
+				`meal-${mealId}`,
+			] as InvalidateQueryFilters);
 		},
 	});
 };
@@ -80,9 +92,11 @@ export const useRemoveDirectionFromMeal = ({
 	directionIndex: number;
 }) => {
 	const queryClient = useQueryClient();
-	return useMutation(removeDirectionFromMeal, {
+	return useMutation({
+		mutationFn: (directionIndex: number) =>
+			removeDirectionFromMeal({ mealId, directionIndex }),
 		onMutate: async () => {
-			await queryClient.cancelQueries([`meal-${mealId}`]);
+			await queryClient.cancelQueries([`meal-${mealId}`] as QueryFilters);
 			const previousMeal = queryClient.getQueryData([
 				`meal-${mealId}`,
 			]) as any;
@@ -98,7 +112,9 @@ export const useRemoveDirectionFromMeal = ({
 			queryClient.setQueryData([`meal-${mealId}`], context?.previousMeal);
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries([`meal-${mealId}`]);
+			queryClient.invalidateQueries([
+				`meal-${mealId}`,
+			] as InvalidateQueryFilters);
 		},
 	});
 };
@@ -111,9 +127,11 @@ export const useAddDirectionToMeal = ({
 	newDirection: string;
 }) => {
 	const queryClient = useQueryClient();
-	return useMutation(addDirectionToMeal, {
+	return useMutation({
+		mutationFn: (direction: string) =>
+			addDirectionToMeal({ mealId, newDirection }),
 		onMutate: async () => {
-			await queryClient.cancelQueries([`meal-${mealId}`]);
+			await queryClient.cancelQueries([`meal-${mealId}`] as QueryFilters);
 			const previousMeal = queryClient.getQueryData([
 				`meal-${mealId}`,
 			]) as any;
@@ -127,7 +145,9 @@ export const useAddDirectionToMeal = ({
 			queryClient.setQueryData([`meal-${mealId}`], context?.previousMeal);
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries([`meal-${mealId}`]);
+			queryClient.invalidateQueries([
+				`meal-${mealId}`,
+			] as InvalidateQueryFilters);
 		},
 	});
 };
@@ -136,9 +156,13 @@ export const useAddIngredientToMeal = ({ mealId }: { mealId: string }) => {
 	const queryClient = useQueryClient();
 	const toast = useToast();
 
-	return useMutation(addIngredientToMeal, {
+	return useMutation({
+		mutationFn: (ingredient: any) =>
+			addIngredientToMeal({ mealId, ingredient }),
 		onSuccess: () => {
-			queryClient.invalidateQueries([`meal-${mealId}`]);
+			queryClient.invalidateQueries([
+				`meal-${mealId}`,
+			] as InvalidateQueryFilters);
 			toast.show({
 				title: "Ingredient added successfully",
 				placement: "top",
@@ -151,7 +175,7 @@ export const useAddIngredientToMeal = ({ mealId }: { mealId: string }) => {
 			mealId: string;
 			ingredient: any;
 		}) => {
-			await queryClient.cancelQueries([`meal-${mealId}`]);
+			await queryClient.cancelQueries([`meal-${mealId}`] as QueryFilters);
 			const previousMeal = queryClient.getQueryData([
 				`meal-${mealId}`,
 			]) as any;
@@ -166,7 +190,9 @@ export const useAddIngredientToMeal = ({ mealId }: { mealId: string }) => {
 			queryClient.setQueryData([`meal-${mealId}`], context?.previousMeal);
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries([`meal-${mealId}`]);
+			queryClient.invalidateQueries([
+				`meal-${mealId}`,
+			] as InvalidateQueryFilters);
 		},
 	});
 };
@@ -175,40 +201,41 @@ export const useRemoveIngredientFromMeal = ({ mealId }: { mealId: string }) => {
 	const queryClient = useQueryClient();
 	const toast = useToast();
 
-	return useMutation(removeIngredientFromMeal, {
+	return useMutation({
+		mutationFn: (ingredientId: string) =>
+			removeIngredientFromMeal({ mealId, ingredientId }),
 		onSuccess: () => {
-			queryClient.invalidateQueries([`meal-${mealId}`]);
+			queryClient.invalidateQueries([
+				`meal-${mealId}`,
+			] as InvalidateQueryFilters);
 			toast.show({
 				title: "Ingredient removed successfully",
 				placement: "top",
 			});
 		},
-		onMutate: async ({
-			mealId,
-			ingredientId,
-		}: {
-			mealId: string;
-			ingredientId: string;
-		}) => {
-			await queryClient.cancelQueries([`meal-${mealId}`]);
+		onMutate: async () => {
+			await queryClient.cancelQueries([`meal-${mealId}`] as QueryFilters);
 			const previousMeal = queryClient.getQueryData([
 				`meal-${mealId}`,
 			]) as any;
-			queryClient.setQueryData([`meal-${mealId}`], {
-				...previousMeal,
-				ingredients: previousMeal.ingredients.filter(
-					(ingredient: any) => {
-						if (ingredient.id !== ingredientId) return ingredient;
-					}
-				),
-			});
+			// queryClient.setQueryData([`meal-${mealId}`], {
+			// 	...previousMeal,
+			// 	ingredients: previousMeal.ingredients.filter(
+			// 		(ingredient: any) => {
+			// 			if (ingredient.id !== data.ingredientId)
+			// 				return ingredient;
+			// 		}
+			// 	),
+			// });
 			return { previousMeal };
 		},
 		onError: (err, variables, context) => {
 			queryClient.setQueryData([`meal-${mealId}`], context?.previousMeal);
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries([`meal-${mealId}`]);
+			queryClient.invalidateQueries([
+				`meal-${mealId}`,
+			] as InvalidateQueryFilters);
 		},
 	});
 };

@@ -1,4 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+	InvalidateQueryFilters,
+	QueryFilters,
+	useMutation,
+	useQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
 import {
 	fetchMenus,
 	fetchMenu,
@@ -11,40 +17,30 @@ import {
 import useToast from "./useToast";
 
 export const useMenusData = () => {
-	const {
-		data,
-		isLoading,
-		isSuccess,
-		isError,
-		isFetching,
-		refetch,
-		isRefetching,
-	} = useQuery([`menus`], fetchMenus);
-	return {
-		data,
-		isLoading,
-		isSuccess,
-		isError,
-		isFetching,
-		refetch,
-		isRefetching,
-	};
+	return useQuery({
+		queryKey: ["menus"],
+		queryFn: fetchMenus,
+	});
 };
 
 export const useMenuData = (id: string) => {
-	const { data, isLoading, isSuccess, isError, isFetching } = useQuery(
-		[`menu-${id}`],
-		() => fetchMenu(id)
-	);
-	return { data, isLoading, isSuccess, isError, isFetching };
+	return useQuery({
+		queryKey: [`menu-${id}`],
+		queryFn: () => fetchMenu(id),
+	});
 };
 
 export const useCreateMenu = () => {
 	const queryClient = useQueryClient();
-	return useMutation(createMenu, {
+	return useMutation({
+		mutationFn: createMenu,
 		onSuccess: () => {
-			queryClient.invalidateQueries(["currentMenu"]);
-			return queryClient.invalidateQueries(["menus"]);
+			queryClient.invalidateQueries([
+				"currentMenu",
+			] as InvalidateQueryFilters);
+			return queryClient.invalidateQueries([
+				"menus",
+			] as InvalidateQueryFilters);
 		},
 	});
 };
@@ -52,9 +48,10 @@ export const useCreateMenu = () => {
 export const useUpdateMenu = ({ menuId }: { menuId: string }) => {
 	const queryClient = useQueryClient();
 	const toast = useToast();
-	return useMutation(updateMenu, {
+	return useMutation({
+		mutationFn: (data: any) => updateMenu({ id: menuId, data }),
 		onMutate: async ({ data }) => {
-			await queryClient.cancelQueries([`menu-${menuId}`]);
+			await queryClient.cancelQueries([`menu-${menuId}`] as QueryFilters);
 			const previousMenu = queryClient.getQueryData([
 				`menu-${menuId}}`,
 			]) as any;
@@ -72,8 +69,10 @@ export const useUpdateMenu = ({ menuId }: { menuId: string }) => {
 			});
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries([`menus`]);
-			queryClient.invalidateQueries([`menu-${menuId}`]);
+			queryClient.invalidateQueries([`menus`] as InvalidateQueryFilters);
+			queryClient.invalidateQueries([
+				`menu-${menuId}`,
+			] as InvalidateQueryFilters);
 		},
 	});
 };
@@ -105,9 +104,10 @@ export const useAddMealToMenu = ({ menuId }: { menuId: string }) => {
 	const queryClient = useQueryClient();
 
 	const toast = useToast();
-	return useMutation(addMealToMenu, {
+	return useMutation({
+		mutationFn: (meal: any) => addMealToMenu({ meal, menuId }),
 		onMutate: async ({ menuId, meal }) => {
-			await queryClient.cancelQueries([`menu-${menuId}`]);
+			await queryClient.cancelQueries([`menu-${menuId}`] as QueryFilters);
 			const previousMenu = queryClient.getQueryData([
 				`menu-${menuId}`,
 			]) as any;
@@ -122,7 +122,9 @@ export const useAddMealToMenu = ({ menuId }: { menuId: string }) => {
 			queryClient.setQueryData([`menu-${menuId}`], context?.previousMenu);
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries([`menu-${menuId}`]);
+			queryClient.invalidateQueries([
+				`menu-${menuId}`,
+			] as InvalidateQueryFilters);
 		},
 		onSuccess: () => {
 			toast.show({
@@ -137,25 +139,28 @@ export const useRemoveMealFromMenu = ({ menuId }: { menuId: string }) => {
 	const queryClient = useQueryClient();
 
 	const toast = useToast();
-	return useMutation(removeMealFromMenu, {
-		onMutate: async ({ menuId, mealId }) => {
-			await queryClient.cancelQueries([`menu-${menuId}`]);
+	return useMutation({
+		mutationFn: (mealId: string) => removeMealFromMenu({ mealId, menuId }),
+		onMutate: async () => {
+			await queryClient.cancelQueries([`menu-${menuId}`] as QueryFilters);
 			const previousMenu = queryClient.getQueryData([
 				`menu-${menuId}`,
 			]) as any;
-			queryClient.setQueryData([`menu-${menuId}`], {
-				...previousMenu,
-				meals: previousMenu.meals.filter((meal: any) => {
-					if (meal.id !== mealId) return meal;
-				}),
-			});
+			// queryClient.setQueryData([`menu-${menuId}`], {
+			// 	...previousMenu,
+			// 	meals: previousMenu.meals.filter((meal: any) => {
+			// 		if (meal.id !== mealId) return meal;
+			// 	}),
+			// });
 			return { previousMenu };
 		},
 		onError: (err, variables, context) => {
 			queryClient.setQueryData([`menu-${menuId}`], context?.previousMenu);
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries([`menu-${menuId}`]);
+			queryClient.invalidateQueries([
+				`menu-${menuId}`,
+			] as InvalidateQueryFilters);
 			toast.show({
 				title: "Meal removed from mealplan successfully",
 				placement: "top",
@@ -165,5 +170,8 @@ export const useRemoveMealFromMenu = ({ menuId }: { menuId: string }) => {
 };
 
 export const useCurrentMenuData = () => {
-	return useQuery(["currentMenu"], () => fetchCurrentMenu());
+	return useQuery({
+		queryKey: ["currentMenu"],
+		queryFn: fetchCurrentMenu,
+	});
 };

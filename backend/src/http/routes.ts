@@ -1,12 +1,16 @@
 import { Router } from 'express';
 import { endpoints } from './endpoints';
-import { createEndpoint, getSourceFolderfromCurrentDirectory } from './utils';
+import {
+  Endpoint,
+  createEndpoint,
+  getSourceFolderfromCurrentDirectory,
+} from './utils';
 import path from 'path';
 
 export const router = Router();
 
 export const endpoint = (endpoint: any) => endpoint;
-endpoints.forEach((endpoint) => createEndpoint(router, endpoint));
+endpoints.forEach((endpoint) => createEndpoint(router, endpoint as Endpoint));
 
 export const createSplashScreen = (router: Router) => {
   router.get('/api', (req, res) => {

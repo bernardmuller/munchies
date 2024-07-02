@@ -25,7 +25,7 @@ function IngredientsStack({ navigation }: { navigation: any }) {
 					title: "Ingredients",
 					headerLeft: () => (
 						<>
-							{createIngredient.isLoading || isFetching ? (
+							{createIngredient.isPending || isFetching ? (
 								<Spinner />
 							) : (
 								<IconButton

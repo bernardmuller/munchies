@@ -1,4 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+	InvalidateQueryFilters,
+	QueryFilters,
+	useMutation,
+	useQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
 import {
 	createIngredient,
 	fetchIngredient,
@@ -9,48 +15,40 @@ import { addIngredientToMeal, removeIngredientFromMeal } from "../api/meals";
 import useToast from "./useToast";
 
 export const useIngredientsData = () => {
-	const {
-		data,
-		isLoading,
-		isSuccess,
-		isError,
-		isFetching,
-		isRefetching,
-		refetch,
-	} = useQuery(["ingredients"], () => fetchIngredients({}));
-	return {
-		data,
-		isLoading,
-		isSuccess,
-		isError,
-		isFetching,
-		isRefetching,
-		refetch,
-	};
+	return useQuery({
+		queryKey: ["ingredients"],
+		queryFn: () => fetchIngredients({}),
+	});
 };
 
 export const useIngredientData = (id: string) => {
-	const { data, isLoading, isSuccess, isError, isFetching } = useQuery(
-		[`ingredient-${id}`],
-		() => fetchIngredient(id)
-	);
+	const { data, isLoading, isSuccess, isError, isFetching } = useQuery({
+		queryKey: [`ingredient-${id}`],
+		queryFn: () => fetchIngredient(id),
+	});
 	return { data, isLoading, isSuccess, isError, isFetching };
 };
 
 export const useCreateIngredient = () => {
 	const queryClient = useQueryClient();
-	return useMutation(createIngredient, {
+	return useMutation({
+		mutationFn: createIngredient,
 		onSuccess: () => {
-			return queryClient.invalidateQueries(["ingredients"]);
+			return queryClient.invalidateQueries([
+				"ingredients",
+			] as InvalidateQueryFilters);
 		},
 	});
 };
 
 export const useAddIngredient = () => {
 	const queryClient = useQueryClient();
-	return useMutation(createIngredient, {
+	return useMutation({
+		mutationFn: addIngredientToMeal,
 		onSuccess: () => {
-			return queryClient.invalidateQueries(["ingredients"]);
+			return queryClient.invalidateQueries([
+				"ingredients",
+			] as InvalidateQueryFilters);
 		},
 	});
 };
@@ -62,9 +60,12 @@ export const useUpdateIngredient = ({
 }) => {
 	const queryClient = useQueryClient();
 	const toast = useToast();
-	return useMutation(updateIngredient, {
+	return useMutation({
+		mutationFn: (data: any) => updateIngredient({ id: ingredientId, data }),
 		onMutate: async ({ data }) => {
-			await queryClient.cancelQueries([`ingredient-${ingredientId}`]);
+			await queryClient.cancelQueries([
+				`ingredient-${ingredientId}`,
+			] as QueryFilters);
 			const previousIngredient = queryClient.getQueryData([
 				`ingredient-${ingredientId}}`,
 			]) as any;
@@ -82,8 +83,12 @@ export const useUpdateIngredient = ({
 			});
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries([`ingredients`]);
-			queryClient.invalidateQueries([`ingredients-${ingredientId}`]);
+			queryClient.invalidateQueries([
+				`ingredients`,
+			] as InvalidateQueryFilters);
+			queryClient.invalidateQueries([
+				`ingredients-${ingredientId}`,
+			] as InvalidateQueryFilters);
 		},
 	});
 };

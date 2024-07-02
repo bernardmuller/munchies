@@ -16,12 +16,11 @@ export const createApp = () => {
       origin: [
         'https://munchiesapp.co.za',
         'http://localhost:3000',
-        'http://192.168.8.176:19006',
+        'http://192.168.8.160:19006',
         'http://localhost:19006',
         'http://localhost:4000',
         'https://munchies.bernardmuller.dev',
         'https://munchies.bernardmuller.co.za',
-        
       ],
     }),
   );

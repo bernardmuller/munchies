@@ -23,13 +23,12 @@ import { format } from "date-fns";
 export default function IngredientDetail({ route }: { route: any }) {
 	const { ingredientId } = route.params;
 	const { data, isLoading } = useIngredientData(ingredientId);
-	const updateIngredient = useUpdateIngredient(ingredientId);
-	console.log(data);
+	const updateIngredient = useUpdateIngredient({ ingredientId });
 
 	const handleUpdateName = (updateData: { name: string }) => {
 		updateIngredient.mutate({
 			id: ingredientId,
-			data: { ...updateData },
+			...updateData,
 		});
 	};
 
@@ -38,7 +37,7 @@ export default function IngredientDetail({ route }: { route: any }) {
 		<Stack px={4} pt={4}>
 			<Name name={data.name} onUpdateName={handleUpdateName} />
 			<Text color="gray.400">
-				Created: {format(new Date(data.createdAt), "qo MMMM uuu")}
+				{/* Created: {format(new Date(data.createdAt), "qo MMMM uuu")} */}
 			</Text>
 			<FormControl isInvalid mt={3}>
 				<FormControl.Label>Category</FormControl.Label>

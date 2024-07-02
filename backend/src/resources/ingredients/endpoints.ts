@@ -11,6 +11,7 @@ const endpoints = [
     method: 'post',
     path: '/ingredients',
     handler: async (req: Request, res: Response) => {
+      console.log('req.body', req.body);
       const ingredient = await createIngredient({ ...req.body });
       return res.send(ingredient);
     },
@@ -49,6 +50,7 @@ const endpoints = [
     path: '/ingredients/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
+
       const params = {
         name: req.body.name,
         categoryId: req.body.categoryId,

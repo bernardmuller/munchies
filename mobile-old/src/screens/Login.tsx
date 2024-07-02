@@ -2,7 +2,7 @@ import { View, StyleSheet, ActivityIndicator } from "react-native";
 import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import TextInput from "../components/inputs/text";
 import { AuthContext } from "../contexts/AuthContext";
 import { login } from "../api/auth";

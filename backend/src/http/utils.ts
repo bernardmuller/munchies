@@ -3,7 +3,7 @@ import { authenticateUser, extractRequestOrigin } from '../shared/utils';
 import path from 'path';
 import { router } from './routes';
 
-type Endpoint = {
+export type Endpoint = {
   method: 'get' | 'post' | 'put' | 'delete';
   path: string;
   handler: (req: Request, res: Response) => void;
