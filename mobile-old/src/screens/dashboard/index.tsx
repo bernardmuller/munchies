@@ -1,275 +1,147 @@
 import {
-	useCreateMenu,
-	useCurrentMenuData,
-	useMenuData,
-	useRemoveMealFromMenu,
-	useUpdateMenu,
-} from "../../hooks/menusHooks";
-import { View } from "../../components/common";
-import {
 	ActivityIndicator,
+	RefreshControl,
 	SafeAreaView,
-	ScrollView,
 	TouchableOpacity,
 } from "react-native";
 import {
 	Box,
 	Button,
 	FormControl,
-	IconButton,
-	Input,
 	Stack,
-	WarningOutlineIcon,
 	Text,
-	CloseIcon,
 	CheckIcon,
 	FlatList,
-	ChevronDownIcon,
 	Divider,
+	Select,
 } from "native-base";
 import { useState } from "react";
-import { categories, Category } from "../../constants/ingredientCategories";
-import { useCheckItem, useUnCheckItem } from "../../hooks/items";
+import { Category } from "../../constants/ingredientCategories";
+import { useCheckItem, useCreateItem, useUnCheckItem } from "../../hooks/items";
 import { AntDesign } from "@expo/vector-icons";
-import { useGrocerylistData } from "../../hooks/grocerylistHooks";
+import { useNewestGrocerylist } from "../../hooks/grocerylistHooks";
+import { useIngredientsData } from "src/hooks/ingredientsHooks";
+import Colors from "src/constants/Colors";
+import { Item } from "src/lib/http/endpoints/getAllGrocerylists";
 
 export default function MealplanDetail({ route }: { route: any }) {
-	const { data, isLoading } = useCurrentMenuData();
-	// const updateMenu = useUpdateMenu(data?.id);
-	// const createMenu = useCreateMenu();
-	const removeRecipe = useRemoveMealFromMenu({ menuId: "" });
-	const [activeTab, setActiveTab] = useState<"menu" | "grocerylist">("menu");
-	// const grocerylistData = useGrocerylistData(data?.grocerylistId);
+	const [newItem, setNewItem] = useState(false);
+	const { data: grocerylist, isRefetching, refetch } = useNewestGrocerylist();
 
-	if (isLoading) return <ActivityIndicator size={30} />;
+	const createItemMutation = useCreateItem(grocerylist?.data?.id as string);
+	const ingredients = useIngredientsData();
+	const checkItemMutation = useCheckItem(grocerylist?.data?.id as string);
+	const unCheckItemMutation = useUnCheckItem(grocerylist?.data?.id as string);
 
-	const items = categories?.map((category: Category) => {
-		return {
-			id: category.id,
-			items: data?.grocerylist?.items?.filter(
-				(i: any) => i.ingredient.categoryId === category.id
-			),
-		};
-	});
-	// ?.filter((i: any) => i.items.length > 0);
-
+	if (!grocerylist?.data || isRefetching)
+		return <ActivityIndicator size={30} />;
 	return (
 		<SafeAreaView>
-			<Stack px={4} py={2}>
-				<Text>Dashboard</Text>
-				{/* <Name
-					// name={data.name}
-					onUpdateName={(updateData: { name: string }) => {
-						// updateMenu.mutate({
-						// 	id: "",
-						// 	data: { ...updateData },
-						// });
-					}}
-				/> */}
-				<Text color="gray.400">Created at: {data?.createdAt}</Text>
-				{activeTab === "menu" ? (
-					<>
-						<Stack py={3} pt={6}>
-							<Text fontSize="md">Recipes:</Text>
-							{data?.meals?.map((meal: any) => (
-								<Stack
-									direction="row"
-									key={meal.id}
-									height="20"
-									bgColor="white"
-									borderRadius={10}
-									p={2}
-									px={4}
-									shadow="2"
-									my={1}
-									justifyContent={"space-between"}
-									alignItems={"center"}
-								>
-									<Stack justifyContent="space-evenly">
-										<Text fontSize="xl">{meal.name}</Text>
-										<Text fontSize="sm" color="gray.400">
-											Ingredients:{" "}
-											{meal?.ingredients?.length || "0"}
-										</Text>
-									</Stack>
-									<IconButton
-										height={10}
-										borderRadius="50%"
-										icon={<CloseIcon name="close" />}
-										onPress={() => {
-											// removeRecipe.mutate({
-											// 	mealId: meal.id,
-											// 	menuId: "",
-											// });
-										}}
-									/>
-								</Stack>
-							))}
-						</Stack>
-						<Button
-							mb={2}
-							onPress={() =>
-								// navigation.navigate("AddRecipes", {
-								// 	mealplanId: data.id,
-								// })
-								{}
-							}
-						>
-							Add Recipe
-						</Button>
-					</>
+			<Stack p={2} height={"full"} justifyContent="space-between">
+				{grocerylist?.data?.items?.length === 0 ? (
+					// <Box
+					// 	display="flex"
+					// 	justifyContent="center"
+					// 	textAlign="center"
+					// >
+					<Text color={"gray.500"} width="full" textAlign="center">
+						No items in this grocerylist
+					</Text>
 				) : (
-					<Stack p={2}>
-						<Text fontSize="2xl" fontWeight="semibold">
-							{data?.menu?.name} Grocerylist
-						</Text>
-						<Text fontSize="xl">Items</Text>
-
-						<FlatList
-							data={items}
-							renderItem={({ item }) => {
-								return (
-									<CategoryItem
-										item={item}
-										grocerylistId={data?.grocerylistId}
-									/>
-								);
+					// </Box>
+					<FlatList
+						data={grocerylist?.data?.items?.sort(
+							(a: Item, b: Item) => {
+								if (a.check && !b.check) {
+									return 1;
+								} else if (!a.check && b.check) {
+									return -1;
+								} else {
+									return 1;
+								}
+							}
+						)}
+						refreshControl={
+							<RefreshControl
+								refreshing={isRefetching}
+								onRefresh={() => {
+									refetch();
+								}}
+							/>
+						}
+						renderItem={({ item }: any) => (
+							<ListItem
+								key={item.id}
+								item={item}
+								onPress={() => {
+									if (item.check) {
+										unCheckItemMutation.mutate(item.id);
+									} else {
+										checkItemMutation.mutate(item.id);
+									}
+								}}
+							/>
+						)}
+					/>
+				)}
+				{newItem ? (
+					<FormControl isInvalid mt={3}>
+						<FormControl.Label>
+							Add an item to your grocerylist
+						</FormControl.Label>
+						<Select
+							accessibilityLabel="- Select Ingredient -"
+							placeholder="- Select Ingredient -"
+							_selectedItem={{
+								bg: "teal.600",
+								endIcon: <CheckIcon size={5} />,
 							}}
-							keyExtractor={(item: any) => item?.id}
-							mb={20}
-						/>
-					</Stack>
+							mt="1"
+							onValueChange={(itemValue) => {
+								createItemMutation.mutate({
+									ingredientId: itemValue,
+									grocerylistId: grocerylist?.data
+										?.id as string,
+								});
+								setNewItem(false);
+							}}
+							height={16}
+							fontSize="md"
+						>
+							{ingredients?.data.map((category: Category) => (
+								<Select.Item
+									key={category.id}
+									label={category.name}
+									value={String(category.id)}
+								/>
+							))}
+						</Select>
+					</FormControl>
+				) : (
+					<Box>
+						<Button
+							height={16}
+							my={2}
+							rounded="full"
+							bgColor={Colors.light.CTA}
+							onPress={() => setNewItem(true)}
+						>
+							<Text
+								color="white"
+								fontWeight="semibold"
+								fontSize={16}
+							>
+								Add Item
+							</Text>
+						</Button>
+					</Box>
 				)}
 			</Stack>
 		</SafeAreaView>
 	);
 }
 
-const Name = ({ name, onUpdateName }: any) => {
-	const [edit, setEdit] = useState(false);
-	const [text, setText] = useState(name || "");
-	const [error, setError] = useState(false);
-
-	const toggleEdit = () => {
-		setEdit(!edit);
-	};
-
-	const handleChange = (e: any) => {
-		setError(false);
-		setText(e.nativeEvent.text);
-	};
-
-	const handleSave = () => {
-		if (!text) {
-			setError(true);
-			return;
-		}
-		toggleEdit();
-		onUpdateName({ name: text });
-	};
-
-	if (!edit) {
-		return (
-			<View className="flex flex-col">
-				<Text fontSize="2xl" fontWeight="semibold" onPress={toggleEdit}>
-					{text}
-				</Text>
-			</View>
-		);
-	}
-
-	return (
-		<Box alignItems="center py-2">
-			<FormControl isInvalid={error}>
-				<Input
-					type="text"
-					w="100%"
-					h="16"
-					mb={1}
-					px={4}
-					fontSize="md"
-					variant="outline"
-					rounded={10}
-					defaultValue={text}
-					onChange={handleChange}
-					onBlur={handleSave}
-					InputRightElement={
-						<IconButton
-							mr={2}
-							icon={
-								<CheckIcon
-									size="lg"
-									rounded="full"
-									w="1/6"
-									h="full"
-								></CheckIcon>
-							}
-							onPress={handleSave}
-						/>
-					}
-					placeholder="Enter name..."
-				/>
-				{error && (
-					<FormControl.ErrorMessage
-						leftIcon={<WarningOutlineIcon size="xs" />}
-					>
-						Please enter a valid name.
-					</FormControl.ErrorMessage>
-				)}
-			</FormControl>
-		</Box>
-	);
-};
-
-const CategoryItem = ({ item, grocerylistId }: any) => {
-	const [expanded, setExpanded] = useState(false);
-	const checkItemMutation = useCheckItem(grocerylistId);
-	const unCheckItemMutation = useUnCheckItem(grocerylistId);
-
-	return (
-		<Stack>
-			<TouchableOpacity onPress={() => setExpanded((prev) => !prev)}>
-				<Stack
-					direction="row"
-					key={item.id}
-					height="20"
-					bgColor="white"
-					borderRadius={10}
-					p={2}
-					px={6}
-					shadow="2"
-					my={1}
-					mx={1}
-					justifyContent={"space-between"}
-					alignItems={"center"}
-				>
-					<Text>{categories[item?.id - 1]?.name}</Text>
-					<ChevronDownIcon />
-				</Stack>
-			</TouchableOpacity>
-			{expanded && (
-				<FlatList
-					data={item.items}
-					renderItem={({ item }: any) => (
-						<Item
-							key={item.id}
-							item={item}
-							onPress={() => {
-								if (item.check) {
-									unCheckItemMutation.mutate(item.id);
-								} else {
-									checkItemMutation.mutate(item.id);
-								}
-							}}
-						/>
-					)}
-				/>
-			)}
-		</Stack>
-	);
-};
-
-const Item = ({ item, onPress }: any) => {
+const ListItem = ({ item, onPress }: any) => {
 	const [checked, setChecked] = useState(item.check);
 	return (
 		<>
@@ -278,24 +150,32 @@ const Item = ({ item, onPress }: any) => {
 				justifyContent="space-between"
 				alignItems="center"
 				px={4}
-				py={4}
+				py={2}
 			>
-				<Text>{item.ingredient.name}</Text>
+				<Text fontSize={18} strikeThrough={checked}>
+					{item.ingredient.name}
+				</Text>
 				<TouchableOpacity
 					onPress={() => {
 						setChecked((prev: boolean) => !prev);
 						onPress();
 					}}
 				>
-					{checked ? (
-						<AntDesign name="checkcircle" size={24} color="black" />
-					) : (
-						<AntDesign
-							name="checkcircleo"
-							size={24}
-							color="black"
-						/>
-					)}
+					<Box padding={2}>
+						{checked ? (
+							<AntDesign
+								name="checkcircle"
+								size={30}
+								color={Colors.primary[500]}
+							/>
+						) : (
+							<AntDesign
+								name="checkcircleo"
+								size={30}
+								color="black"
+							/>
+						)}
+					</Box>
 				</TouchableOpacity>
 			</Stack>
 			<Divider my={1} />

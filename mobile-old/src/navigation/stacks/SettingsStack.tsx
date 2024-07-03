@@ -23,10 +23,10 @@ function Settings() {
 	return (
 		<SettingsStack.Navigator>
 			<SettingsStack.Screen
-				name="Settings"
+				name="SettingsScreen"
 				component={SettingsScreen}
 				options={{
-					title: "",
+					title: "Settings",
 					headerRight: () => (
 						<>
 							<TouchableOpacity onPress={() => handleLogout()}>

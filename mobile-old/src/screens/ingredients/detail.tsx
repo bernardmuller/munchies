@@ -18,8 +18,6 @@ import {
 import { ActivityIndicator } from "react-native";
 import type { Category } from "../../constants/ingredientCategories";
 import { categories } from "../../constants/ingredientCategories";
-import { format } from "date-fns";
-
 export default function IngredientDetail({ route }: { route: any }) {
 	const { ingredientId } = route.params;
 	const { data, isLoading } = useIngredientData(ingredientId);

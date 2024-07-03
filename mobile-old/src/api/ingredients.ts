@@ -5,7 +5,6 @@ export async function createIngredient(newIngredientData: {
 	name: string;
 	categoryId: number;
 }) {
-	console.log("newIngredientData", newIngredientData);
 	return await axios({
 		method: "POST",
 		url: `${requireBaseURL()}/ingredients`,

@@ -10,6 +10,7 @@ import Mealplans from "../../screens/mealplans";
 import { AddIcon, IconButton, Spinner } from "native-base";
 import MealplanDetail from "../../screens/mealplans/detail";
 import AddRecipes from "../../screens/mealplans/AddRecipes";
+import { FiLogOut } from "react-icons/fi";
 
 function Common({ navigator }: any) {
 	const { clearToken } = React.useContext(AuthContext);
@@ -19,9 +20,9 @@ function Common({ navigator }: any) {
 		clearToken();
 		navigation.navigate("Login");
 	};
-	const createMenu = useCreateMenu();
+	// const createMenu = useCreateMenu();
 
-	const { isFetching } = useMenusData();
+	// const { isFetching } = useMenusData();
 
 	return (
 		<>
@@ -34,7 +35,7 @@ function Common({ navigator }: any) {
 					headerRight: () => (
 						<>
 							<TouchableOpacity onPress={() => handleLogout()}>
-								{/* <FiLogOut size={18} /> */}
+								<FiLogOut size={18} />
 								<Feather
 									name="log-out"
 									size={24}
@@ -45,7 +46,7 @@ function Common({ navigator }: any) {
 					),
 				}}
 			/>
-			<navigator.Screen
+			{/* <navigator.Screen
 				name="Mealplans"
 				component={Mealplans}
 				options={{
@@ -63,17 +64,17 @@ function Common({ navigator }: any) {
 						</>
 					),
 				}}
-			/>
-			<navigator.Screen
+			/> */}
+			{/* <navigator.Screen
 				name="MealplanDetail"
 				component={MealplanDetail}
 				options={{ title: "" }}
-			/>
-			<navigator.Screen
+			/> */}
+			{/* <navigator.Screen
 				name="AddRecipes"
 				component={AddRecipes}
 				options={{ title: "Add Recipes" }}
-			/>
+			/> */}
 		</>
 	);
 }

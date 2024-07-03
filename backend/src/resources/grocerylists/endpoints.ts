@@ -5,6 +5,7 @@ import {
   getGrocerylist,
   updateGrocerylist,
   getGrocerylistsByUserId,
+  getNewestGrocerylist,
 } from './actions';
 
 const endpoints = [
@@ -12,7 +13,10 @@ const endpoints = [
     method: 'post',
     path: '/grocerylists',
     handler: async (req: Request, res: Response) => {
-      const grocerylist = await createGrocerylist({ ...req.body });
+      const params = {
+        createdBy: res.locals.userId,
+      };
+      const grocerylist = await createGrocerylist(params);
       return res.send(grocerylist);
     },
     authenticate: true,
@@ -58,6 +62,15 @@ const endpoints = [
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
       const grocerylist = await deleteGrocerylist(id);
+      return res.send(grocerylist);
+    },
+    authenticate: true,
+  },
+  {
+    method: 'get',
+    path: '/newest-grocerylist',
+    handler: async (req: Request, res: Response) => {
+      const grocerylist = await getNewestGrocerylist();
       return res.send(grocerylist);
     },
     authenticate: true,

@@ -15,6 +15,7 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { Box } from "native-base";
 import Colors from "../constants/Colors";
 import DashboardStack from "./stacks/DashboardStack";
+import { FiSettings } from "react-icons/fi";
 
 const PrivateStack = createBottomTabNavigator();
 const PublicStack = createNativeStackNavigator();
@@ -90,12 +91,11 @@ function AppStack() {
 										/>
 									</Icon>
 								);
-							case "RecipesStack":
+							case "SettingsStack":
 								return (
-									<Icon focused={focused} name="book-open">
-										<Feather
-											name="book-open"
-											focused={focused}
+									<Icon focused={focused} name="settings">
+										<Ionicons
+											name="settings-sharp"
 											size={24}
 											color={
 												focused
@@ -134,34 +134,34 @@ function AppStack() {
 					}}
 				/>
 				<PrivateStack.Screen
-					name="RecipesStack"
-					component={RecipeStack}
-					options={{
-						title: "",
-					}}
-				/>
-				<PrivateStack.Screen
 					name="IngredientsStack"
 					component={IngredientsStack}
 					options={{ title: "" }}
+				/>
+				<PrivateStack.Screen
+					name="SettingsStack"
+					component={SettingsStack}
+					options={{
+						title: "",
+					}}
 				/>
 			</PrivateStack.Navigator>
 		</>
 	);
 }
 
-const Admin = () => {
-	return (
-		<>
-			<AdminStack.Navigator>
-				<AdminStack.Screen
-					name="SettingsStack"
-					component={SettingsStack}
-				/>
-			</AdminStack.Navigator>
-		</>
-	);
-};
+// const Admin = () => {
+// 	return (
+// 		<>
+// 			<AdminStack.Navigator>
+// 				<AdminStack.Screen
+// 					name="SettingsStack"
+// 					component={SettingsStack}
+// 				/>
+// 			</AdminStack.Navigator>
+// 		</>
+// 	);
+// };
 
 function AppNavigation() {
 	const { authToken } = useContext(AuthContext);

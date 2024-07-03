@@ -16,3 +16,15 @@ export async function unCheckItem(id: string) {
 		headers: await requireHeaders(),
 	}).then((response) => response.data);
 }
+
+export async function createItem(data: {
+	grocerylistId: string;
+	ingredientId: string;
+}) {
+	return await axios({
+		method: "POST",
+		url: `${requireBaseURL()}/items`,
+		headers: await requireHeaders(),
+		data: data,
+	}).then((response) => response.data);
+}

@@ -5,13 +5,16 @@ import Dashboard from "../../screens/dashboard";
 import headerOptions from "../HeaderOptions";
 import { useCreateMenu } from "../../hooks/menusHooks";
 import { useCurrentMenuData } from "../../hooks/menusHooks";
-import { AddIcon, IconButton, Spinner } from "native-base";
+import { Box, IconButton, Spinner } from "native-base";
 import Common from "./CommonStack";
+import { useCreateGrocerylist } from "src/hooks/grocerylistHooks";
+import Colors from "src/constants/Colors";
+import { AntDesign } from "@expo/vector-icons";
 
 const DashboardStack = createNativeStackNavigator();
 
 function DashboardRoute() {
-	const createMealplan = useCreateMenu();
+	const createGroceryList = useCreateGrocerylist();
 	const { isFetching } = useCurrentMenuData();
 	return (
 		<DashboardStack.Navigator screenOptions={headerOptions}>
@@ -22,12 +25,20 @@ function DashboardRoute() {
 					headerLeft: () => {
 						return (
 							<>
-								{createMealplan.isLoading || isFetching ? (
+								{isFetching ? (
 									<Spinner />
 								) : (
 									<IconButton
-										icon={<AddIcon />}
-										onPress={() => createMealplan.mutate()}
+										icon={
+											<AntDesign
+												name="pluscircleo"
+												size={28}
+												color={Colors.dark.background}
+											/>
+										}
+										onPress={() =>
+											createGroceryList.mutateAsync()
+										}
 									/>
 								)}
 							</>
