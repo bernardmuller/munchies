@@ -13,11 +13,11 @@ export default function ListItem({ onPress, label, key }: ListItemProps) {
 			<Stack
 				direction="row"
 				key={key}
-				height="20"
+				height="16"
 				bgColor="white"
 				borderRadius={10}
 				p={2}
-				px={6}
+				px={4}
 				shadow="2"
 				my={1}
 				mx={2}

@@ -6,16 +6,19 @@ export const createItem = async (data: {
   ingredientId: string;
   grocerylistId: string;
   typeId?: number;
+  createdBy: string;
 }) => {
-  const itemData = { ...data, typeId: data.typeId || 1, id: getUuid() };
+  const itemData = {
+    typeId: data.typeId || 1,
+    id: getUuid(),
+    createdAt: new Date(),
+    createdBy: data.createdBy,
+    groceryListId: data.grocerylistId,
+    ingredientId: data.ingredientId,
+  };
 
   const res = await db.item.create({
-    data: {
-      groceryListId: itemData.grocerylistId,
-      ingredientId: itemData.ingredientId,
-      typeId: itemData.typeId,
-      id: itemData.id,
-    },
+    data: itemData,
   });
   const newItem = ItemModel.parse(res);
   return newItem;
@@ -69,17 +72,19 @@ export const deleteAllItems = async () => {
 };
 
 export const checkItem = async (id: string) => {
-  const item = await getItems({ filters: { id } });
-  if (!item) {
-    throw new Error('Item not found');
-  }
+  setTimeout(async () => {
+    const item = await getItems({ filters: { id } });
+    if (!item) {
+      throw new Error('Item not found');
+    }
 
-  const updatedItem = await db.item.update({
-    where: { id },
-    data: { check: true },
-  });
+    const updatedItem = await db.item.update({
+      where: { id },
+      data: { check: true },
+    });
 
-  return updatedItem;
+    return updatedItem;
+  }, 4000);
 };
 
 export const unCheckItem = async (id: string) => {

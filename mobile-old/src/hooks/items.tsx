@@ -11,7 +11,7 @@ export const useCheckItem = (groceryListId: string) => {
 		mutationFn: checkItem,
 		onSuccess: () => {
 			return queryClient.invalidateQueries([
-				`list-${groceryListId}`,
+				`grocerylist`,
 			] as InvalidateQueryFilters);
 		},
 	});
@@ -24,7 +24,7 @@ export const useUnCheckItem = (groceryListId: string) => {
 		onMutate: async (item: any) => {},
 		onSuccess: () => {
 			return queryClient.invalidateQueries([
-				`list-${groceryListId}`,
+				`grocerylist`,
 			] as InvalidateQueryFilters);
 		},
 	});
@@ -37,7 +37,7 @@ export const useCreateItem = (grocerylistId: string) => {
 		mutationKey: ["createItem"],
 		onSuccess: () => {
 			return queryClient.invalidateQueries([
-				`list-${grocerylistId}`,
+				`grocerylist`,
 			] as InvalidateQueryFilters);
 		},
 	});

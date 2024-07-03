@@ -14,7 +14,11 @@ const endpoints = [
     path: '/items',
     handler: async (req: Request, res: Response) => {
       const { ingredientId, grocerylistId } = req.body;
-      const item = await createItem({ ingredientId, grocerylistId });
+      const item = await createItem({
+        ingredientId,
+        grocerylistId,
+        createdBy: res.locals.userId,
+      });
       return res.send(item);
     },
     authenticate: true,

@@ -1,12 +1,11 @@
 import { ActivityIndicator, RefreshControl, SafeAreaView } from "react-native";
 import { useIngredientsData } from "../../hooks/ingredientsHooks";
-import { FlatList } from "native-base";
+import { Box, FlatList } from "native-base";
 import ListItem from "../../components/common/ListItem";
 
 function Ingredients({ navigation }: { navigation: any }) {
-	const { data, isRefetching, refetch } = useIngredientsData();
+	const { data, refetch } = useIngredientsData();
 
-	if (!data) return <ActivityIndicator size={30} />;
 	return (
 		<SafeAreaView>
 			<FlatList
@@ -14,7 +13,7 @@ function Ingredients({ navigation }: { navigation: any }) {
 				height="100%"
 				refreshControl={
 					<RefreshControl
-						refreshing={isRefetching}
+						refreshing={false}
 						onRefresh={() => {
 							refetch();
 						}}
@@ -32,7 +31,7 @@ function Ingredients({ navigation }: { navigation: any }) {
 						key={item.item.id}
 					/>
 				)}
-				mb={10}
+				mb={16}
 			/>
 		</SafeAreaView>
 	);

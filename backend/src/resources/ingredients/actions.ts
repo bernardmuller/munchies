@@ -8,7 +8,6 @@ export const createIngredient = async (data: {
   categoryId: number;
   name: string;
 }) => {
-  console.log('data', data);
   if (!ingredientCategories.find((category) => category.id === data.categoryId))
     throw new Error('Invalid ingredient category id');
   const IngredientData = { ...data, id: data.id || getUuid() };
@@ -34,8 +33,6 @@ export const getIngredients = async (params?: {
   }
 
   let options: any = {
-    skip: params?.offset || 0,
-    take: params?.limit || 10,
     orderBy: {
       createdAt: 'desc',
     },

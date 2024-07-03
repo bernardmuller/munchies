@@ -7,12 +7,12 @@ import ListItem from "../../components/common/ListItem";
 function Settings({ navigation }: { navigation: any }) {
 	return (
 		<View className="grid gap-1 mt-1">
-			<ListItem
+			{/* <ListItem
 				onPress={() => {
 					navigation.navigate("Mealplans");
 				}}
 				label="Mealplans"
-			/>
+			/> */}
 		</View>
 	);
 }

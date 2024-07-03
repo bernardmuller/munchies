@@ -24,9 +24,7 @@ export async function fetchIngredients({
 }) {
 	return await axios({
 		method: "GET",
-		url: `${requireBaseURL()}/ingredients?&searchTerm=${
-			searchTerm || ""
-		}&limit=10`,
+		url: `${requireBaseURL()}/ingredients`,
 		headers: await requireHeaders(),
 	}).then((response) => response.data);
 }

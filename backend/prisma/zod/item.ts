@@ -6,6 +6,8 @@ export const ItemModel = z.object({
   check: z.boolean(),
   typeId: z.number().int(),
   description: z.string().nullish(),
+  createdAt: z.date(),
+  createdBy: z.string().nullish(),
   groceryListId: z.string(),
   ingredientId: z.string().nullish(),
 })

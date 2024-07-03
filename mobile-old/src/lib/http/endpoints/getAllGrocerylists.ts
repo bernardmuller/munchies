@@ -9,6 +9,7 @@ const itemSchema = z.object({
 	description: z.string().nullish(),
 	groceryListId: z.string(),
 	ingredientId: z.string().nullish(),
+	createdAt: z.string(),
 });
 
 const grocerylistSchema = z.object({

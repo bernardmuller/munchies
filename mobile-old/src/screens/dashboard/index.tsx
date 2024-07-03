@@ -33,37 +33,32 @@ export default function MealplanDetail({ route }: { route: any }) {
 	const checkItemMutation = useCheckItem(grocerylist?.data?.id as string);
 	const unCheckItemMutation = useUnCheckItem(grocerylist?.data?.id as string);
 
-	if (!grocerylist?.data || isRefetching)
+	if (!grocerylist) return <></>;
+	if (!grocerylist?.data && isRefetching)
 		return <ActivityIndicator size={30} />;
 	return (
 		<SafeAreaView>
 			<Stack p={2} height={"full"} justifyContent="space-between">
 				{grocerylist?.data?.items?.length === 0 ? (
-					// <Box
-					// 	display="flex"
-					// 	justifyContent="center"
-					// 	textAlign="center"
-					// >
 					<Text color={"gray.500"} width="full" textAlign="center">
 						No items in this grocerylist
 					</Text>
 				) : (
-					// </Box>
 					<FlatList
 						data={grocerylist?.data?.items?.sort(
 							(a: Item, b: Item) => {
-								if (a.check && !b.check) {
+								if (a.createdAt > b.createdAt) {
 									return 1;
-								} else if (!a.check && b.check) {
+								} else if (a.createdAt < b.createdAt) {
 									return -1;
 								} else {
-									return 1;
+									return 0;
 								}
 							}
 						)}
 						refreshControl={
 							<RefreshControl
-								refreshing={isRefetching}
+								refreshing={false}
 								onRefresh={() => {
 									refetch();
 								}}
@@ -100,7 +95,7 @@ export default function MealplanDetail({ route }: { route: any }) {
 							onValueChange={(itemValue) => {
 								createItemMutation.mutate({
 									ingredientId: itemValue,
-									grocerylistId: grocerylist?.data
+									grocerylistId: grocerylist.data
 										?.id as string,
 								});
 								setNewItem(false);
@@ -118,10 +113,9 @@ export default function MealplanDetail({ route }: { route: any }) {
 						</Select>
 					</FormControl>
 				) : (
-					<Box>
+					<Box py={2}>
 						<Button
 							height={16}
-							my={2}
 							rounded="full"
 							bgColor={Colors.light.CTA}
 							onPress={() => setNewItem(true)}
@@ -153,7 +147,7 @@ const ListItem = ({ item, onPress }: any) => {
 				py={2}
 			>
 				<Text fontSize={18} strikeThrough={checked}>
-					{item.ingredient.name}
+					{item?.ingredient?.name}
 				</Text>
 				<TouchableOpacity
 					onPress={() => {

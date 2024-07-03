@@ -131,6 +131,9 @@ model Item {
   typeId      Int
   description String?
 
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  createdBy String?  @db.Uuid
+
   groceryListId String      @db.Uuid
   groceryList   Grocerylist @relation(fields: [groceryListId], references: [id], onDelete: SetNull)
 
