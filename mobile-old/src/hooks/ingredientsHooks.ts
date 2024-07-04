@@ -13,11 +13,12 @@ import {
 } from "../api/ingredients";
 import { addIngredientToMeal, removeIngredientFromMeal } from "../api/meals";
 import useToast from "./useToast";
+import { getAllIngredients } from "src/lib/http/endpoints/getAllIngredients";
 
 export const useIngredientsData = () => {
 	return useQuery({
 		queryKey: ["ingredients"],
-		queryFn: () => fetchIngredients({}),
+		queryFn: () => getAllIngredients(),
 	});
 };
 

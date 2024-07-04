@@ -16,6 +16,7 @@ import { Box } from "native-base";
 import Colors from "../constants/Colors";
 import DashboardStack from "./stacks/DashboardStack";
 import { FiSettings } from "react-icons/fi";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 const PrivateStack = createBottomTabNavigator();
 const PublicStack = createNativeStackNavigator();
@@ -166,15 +167,17 @@ function AppStack() {
 function AppNavigation() {
 	const { authToken } = useContext(AuthContext);
 	return (
-		<NavigationContainer>
-			{authToken !== "" ? (
-				<>
-					<AppStack />
-				</>
-			) : (
-				<AuthStack />
-			)}
-		</NavigationContainer>
+		<BottomSheetModalProvider>
+			<NavigationContainer>
+				{authToken !== "" ? (
+					<>
+						<AppStack />
+					</>
+				) : (
+					<AuthStack />
+				)}
+			</NavigationContainer>
+		</BottomSheetModalProvider>
 	);
 }
 

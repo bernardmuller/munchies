@@ -13,4 +13,8 @@ export const routes = {
 		const base_url = requireBaseURL();
 		return `${base_url}/newest-grocerylist`;
 	},
+	getAllIngredients: () => {
+		const base_url = requireBaseURL();
+		return `${base_url}/ingredients`;
+	},
 };
