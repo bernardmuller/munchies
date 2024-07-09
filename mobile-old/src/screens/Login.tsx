@@ -1,6 +1,4 @@
-import { View, StyleSheet, ActivityIndicator } from "react-native";
-import React, { useContext, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useContext, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import TextInput from "../components/inputs/text";
@@ -10,16 +8,12 @@ import { z } from "zod";
 import {
 	Button,
 	FormControl,
-	IconButton,
-	Input,
 	Link,
 	Stack,
 	Text,
 	WarningOutlineIcon,
 } from "native-base";
 import Colors from "../constants/Colors";
-import { TiEye } from "react-icons/ti";
-import { AntDesign, Feather } from "@expo/vector-icons";
 
 const validationSchema = z.object({
 	email: z.string().min(1, { message: "Email is required" }).email({
@@ -29,8 +23,6 @@ const validationSchema = z.object({
 		.string()
 		.min(6, { message: "Password must be at least 6 characters" }),
 });
-
-type ValidationSchema = z.infer<typeof validationSchema>;
 
 const useLoginHandler = () => {
 	const [loading, setLoading] = useState(false);

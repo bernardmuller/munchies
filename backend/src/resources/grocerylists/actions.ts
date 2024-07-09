@@ -2,7 +2,10 @@ import { db } from '../../db/db';
 import { getUuid } from '../../shared/utils';
 import { GrocerylistModel } from '../../../prisma/zod';
 
-export const createGrocerylist = async (data: { createdBy: string }) => {
+export const createGrocerylist = async (data: {
+  createdBy: string;
+  householdId: string;
+}) => {
   const grocerylistData = { id: getUuid(), ...data };
 
   const res = await db.grocerylist
@@ -12,7 +15,6 @@ export const createGrocerylist = async (data: { createdBy: string }) => {
       throw new Error('Could not create grocerylist');
     });
 
-  console.log('res: ', res);
   return res;
 };
 
@@ -97,17 +99,19 @@ export const deleteGrocerylists = async () => {
   await db.grocerylist.deleteMany();
 };
 
-export const getNewestGrocerylist = async () => {
+export const getNewestGrocerylist = async (userId: string) => {
   const grocerylist = await db.grocerylist
     .findFirst({
       orderBy: {
         createdAt: 'desc',
       },
+      where: { AND: { createdBy: userId, householdId: null } },
     })
     .catch((err) => {
       console.log('err: ', err);
       throw new Error('Could not find newest grocerylist');
     });
+  console.log('grocerylist: ', grocerylist);
   if (!grocerylist) throw new Error('Could not find newest grocerylist');
   const items = await db.item
     .findMany({

@@ -15,6 +15,7 @@ const endpoints = [
     handler: async (req: Request, res: Response) => {
       const params = {
         createdBy: res.locals.userId,
+        householdId: req.body.householdId,
       };
       const grocerylist = await createGrocerylist(params);
       return res.send(grocerylist);
@@ -25,7 +26,6 @@ const endpoints = [
     method: 'get',
     path: '/grocerylists',
     handler: async (req: Request, res: Response) => {
-      console.log('res.locals.userId', res.locals.userId);
       const grocerylists = await getGrocerylistsByUserId(res.locals.userId);
       return res.send(grocerylists);
     },
@@ -70,7 +70,8 @@ const endpoints = [
     method: 'get',
     path: '/newest-grocerylist',
     handler: async (req: Request, res: Response) => {
-      const grocerylist = await getNewestGrocerylist();
+      const userId = res.locals.userId;
+      const grocerylist = await getNewestGrocerylist(userId);
       return res.send(grocerylist);
     },
     authenticate: true,

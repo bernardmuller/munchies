@@ -20,11 +20,16 @@ export async function unCheckItem(id: string) {
 export async function createItem(data: {
 	grocerylistId: string;
 	ingredientId: string;
+	name: string;
+	check: boolean;
 }) {
 	return await axios({
 		method: "POST",
 		url: `${requireBaseURL()}/items`,
 		headers: await requireHeaders(),
-		data: data,
+		data: {
+			grocerylistId: data.grocerylistId,
+			ingredientId: data.ingredientId,
+		},
 	}).then((response) => response.data);
 }

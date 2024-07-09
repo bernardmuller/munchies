@@ -22,11 +22,8 @@ import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import type { Category } from "../../constants/ingredientCategories";
 import { categories } from "../../constants/ingredientCategories";
 import BackdropComponent from "../../components/backdrop";
-import { useRecoilState, useRecoilValue } from "recoil";
-import {
-	newIngredientSheetState,
-	newIngredientSheetStateSelector,
-} from "src/lib/store/atoms/newIngredient";
+import { useRecoilState } from "recoil";
+import { newIngredientSheetState } from "src/lib/store/atoms/newIngredient";
 
 function Ingredients({ navigation }: { navigation: any }) {
 	const bottomSheetModalRef = useRef<BottomSheetModal>(null);

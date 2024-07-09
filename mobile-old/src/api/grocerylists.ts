@@ -25,6 +25,17 @@ export async function fetchGrocerylist(id: string) {
 		.catch((err) => console.log(err));
 }
 
-export async function createGrocerylist() {
-	return httpRequest<Grocerylist, null>(routes.grocerylists(), "POST");
+export async function createGrocerylist({
+	householdId,
+}: {
+	householdId: string | null;
+}) {
+	return httpRequest<
+		Grocerylist,
+		{
+			householdId: string | null;
+		}
+	>(routes.grocerylists(), "POST", {
+		householdId,
+	});
 }

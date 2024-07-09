@@ -8,6 +8,7 @@ import { FiLogOut } from "react-icons/fi";
 import { TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import Common from "./CommonStack";
+import HouseholdManagementScreen from "src/screens/household-management";
 
 const SettingsStack = createNativeStackNavigator();
 
@@ -41,6 +42,7 @@ function Settings() {
 					),
 				}}
 			/>
+
 			{Common({ navigator: SettingsStack })}
 		</SettingsStack.Navigator>
 	);

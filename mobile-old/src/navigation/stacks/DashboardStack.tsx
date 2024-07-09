@@ -10,12 +10,16 @@ import Common from "./CommonStack";
 import { useCreateGrocerylist } from "src/hooks/grocerylistHooks";
 import Colors from "src/constants/Colors";
 import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { useCurrentUserHousold } from "src/hooks/householdHooks";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const DashboardStack = createNativeStackNavigator();
 
 function DashboardRoute() {
 	const createGroceryList = useCreateGrocerylist();
 	const { isFetching } = useCurrentMenuData();
+	const household = useCurrentUserHousold();
 	return (
 		<DashboardStack.Navigator screenOptions={headerOptions}>
 			<DashboardStack.Screen
@@ -36,9 +40,43 @@ function DashboardRoute() {
 												color={Colors.dark.background}
 											/>
 										}
-										onPress={() =>
-											createGroceryList.mutateAsync()
-										}
+										onPress={async () => {
+											await AsyncStorage.getItem(
+												"lastDashboardTab"
+											)
+												.then((value) => {
+													console.log(
+														"val => ",
+														value
+													);
+													return value;
+												})
+												.then((value) => {
+													if (value === "1") {
+														if (
+															!household.data
+																?.data?.id
+														)
+															return;
+														createGroceryList.mutateAsync(
+															{
+																householdId:
+																	household
+																		.data
+																		?.data
+																		?.id as string,
+															}
+														);
+													} else if (value === "0") {
+														createGroceryList.mutateAsync(
+															{
+																householdId:
+																	null,
+															}
+														);
+													}
+												});
+										}}
 									/>
 								)}
 							</>

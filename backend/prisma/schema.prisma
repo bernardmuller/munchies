@@ -117,12 +117,14 @@ model MealIngredient {
 }
 
 model Grocerylist {
-  id        String   @id @db.Uuid
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  createdBy String?  @db.Uuid
-  menuId    String?  @unique @db.Uuid
-  menu      Menu?    @relation(fields: [menuId], references: [id])
-  Item      Item[]
+  id          String     @id @db.Uuid
+  createdAt   DateTime   @default(now()) @db.Timestamptz()
+  createdBy   String?    @db.Uuid
+  menuId      String?    @unique @db.Uuid
+  menu        Menu?      @relation(fields: [menuId], references: [id])
+  Item        Item[]
+  householdId String?    @db.Uuid
+  household   Household? @relation(fields: [householdId], references: [id])
 }
 
 model Item {
@@ -152,6 +154,7 @@ model Household {
   users           User[]
   menus           Menu[]
   HouseholdInvite HouseholdInvite[]
+  Grocerylist     Grocerylist[]
 }
 
 model HouseholdInvite {

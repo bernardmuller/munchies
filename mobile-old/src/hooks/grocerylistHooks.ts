@@ -34,10 +34,10 @@ export const useCreateGrocerylist = () => {
 		mutationFn: createGrocerylist,
 		mutationKey: ["createGrocerylist"],
 		onSuccess: () => {
-			Toast.show({
-				title: "Grocerylist created",
-				duration: 3000,
-			});
+			// Toast.show({
+			// 	title: "Grocerylist created",
+			// 	duration: 3000,
+			// });
 			queryClient.invalidateQueries([
 				"grocerylists",
 			] as InvalidateQueryFilters);
@@ -53,7 +53,6 @@ export const useGrocerylists = () => {
 };
 
 export const useGrocerylistById = (id: string) => {
-	console.log("id updated");
 	return useQuery({
 		queryKey: ["grocerylist", [id]],
 		queryFn: () => getGrocerylistById(id),
@@ -62,7 +61,7 @@ export const useGrocerylistById = (id: string) => {
 
 export const useNewestGrocerylist = () => {
 	return useQuery({
-		queryKey: ["grocerylist"],
+		queryKey: ["newest-grocerylist"],
 		queryFn: () => getNewestGrocerylist(),
 	});
 };

@@ -3,6 +3,7 @@ import { getUuid } from '../../shared/utils';
 import { HouseholdModel } from '../../../prisma/zod';
 import { getUser, updateUser } from '../users/actions';
 import { NotFoundError } from '../../shared/errors';
+import { Item } from '@prisma/client';
 
 export const createHousehold = async ({ userId }: { userId: string }) => {
   const householdData = { createdBy: userId, id: getUuid() };
@@ -27,8 +28,48 @@ export const getHouseholds = async (params?: { filters?: { id?: string } }) => {
     const row = await db.household.findUnique({
       where: { id: params.filters.id },
     });
-    const household = HouseholdModel.parse(row);
-    return household;
+
+    const users = await db.user.findMany({
+      where: { householdId: row?.id },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        householdId: true,
+      },
+    });
+
+    const latestGrocerylist = await db.grocerylist.findFirst({
+      orderBy: {
+        createdAt: 'desc',
+      },
+      where: { householdId: row?.id },
+    });
+
+    const items = await db.item
+      .findMany({
+        where: { groceryListId: latestGrocerylist?.id },
+        include: { ingredient: true },
+      })
+      .then((items) =>
+        items.map((item: Item) => {
+          return {
+            ...item,
+            createdBy: users.find((user) => user.id === item.createdBy)
+              ?.firstName,
+          };
+        }),
+      );
+
+    return {
+      ...row,
+      members: users,
+      grocerylist: {
+        ...latestGrocerylist,
+        items,
+      },
+    };
   }
   const rows = await db.household.findMany();
   const households = rows.map((row) => HouseholdModel.parse(row));
@@ -71,14 +112,38 @@ export const removeUserFromHousehold = async (
   });
   if (!household) throw new NotFoundError();
 
-  if (household.createdBy === user.id) {
-    await deleteHousehold(householdId);
-    return;
-  } else {
-    await updateUser(user.id, {
-      householdId: null,
-    });
-  }
+  // if (household.createdBy === user.id) {
+  //   await deleteHousehold(householdId);
+  //   return;
+  // } else {
+  await updateUser(user.id, {
+    householdId: null,
+  });
+  // }
+};
+
+export const addUserToHousehold = async (
+  userId: string,
+  householdId: string,
+) => {
+  const user = await db.user.findFirst({
+    where: { id: userId },
+  });
+  if (!user) throw new NotFoundError('user not found');
+
+  const household = await db.household.findFirst({
+    where: { id: householdId },
+  });
+  if (!household) throw new NotFoundError();
+
+  // if (household.createdBy === user.id) {
+  //   await deleteHousehold(householdId);
+  //   return;
+  // } else {
+  await updateUser(user.id, {
+    householdId: householdId,
+  });
+  // }
 };
 
 export const inviteUserToHousehold = async ({
@@ -92,6 +157,8 @@ export const inviteUserToHousehold = async ({
 }) => {
   const user = await getUser(userId);
   const household = await getHousehold(householdId);
+
+  if (!household) throw new NotFoundError();
 
   if (user && household) {
     const newInvite = await db.householdInvite.create({

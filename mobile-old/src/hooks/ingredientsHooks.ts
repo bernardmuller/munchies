@@ -77,11 +77,11 @@ export const useUpdateIngredient = ({
 			return { previousIngredient };
 		},
 		onSuccess: () => {
-			toast.show({
-				title: "Ingredient updated successfully",
-				placement: "top",
-				variant: "success",
-			});
+			// toast.show({
+			// 	title: "Ingredient updated successfully",
+			// 	placement: "top",
+			// 	variant: "success",
+			// });
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries([

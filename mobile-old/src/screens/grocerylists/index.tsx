@@ -2,9 +2,11 @@ import { ActivityIndicator, RefreshControl, SafeAreaView } from "react-native";
 import { useGrocerylistsData } from "../../hooks/grocerylistHooks";
 import { FlatList } from "native-base";
 import ListItem from "../../components/common/ListItem";
+import { useCurrentUserHousold } from "src/hooks/householdHooks";
 
 function Grocerylists({ navigation }: { navigation: any }) {
 	const { data, isLoading, refetch, isRefetching } = useGrocerylistsData();
+	const householdGrocerylist = useCurrentUserHousold();
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
 
 	return (
