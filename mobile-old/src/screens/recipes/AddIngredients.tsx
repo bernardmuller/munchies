@@ -24,8 +24,6 @@ export default function AddIngredients({ route }: { route: any }) {
 	const removeIngredient = useRemoveIngredientFromMeal({ mealId: recipeId });
 	if (!data && isLoading) return <ActivityIndicator size={30} />;
 
-	console.log(JSON.stringify(meal.data, null, 2));
-	console.log(JSON.stringify(data, null, 2));
 	return (
 		<View className="px-2 py-2" pb={6}>
 			<FlatList

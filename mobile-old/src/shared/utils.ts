@@ -8,7 +8,6 @@ export const requireBaseURL = () => {
 
 export const requireAuthHeader = async () => {
 	const token = await AsyncStorage.getItem("token");
-	console.log("token", token);
 	return "Bearer " + token;
 };
 

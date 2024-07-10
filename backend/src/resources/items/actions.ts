@@ -72,19 +72,17 @@ export const deleteAllItems = async () => {
 };
 
 export const checkItem = async (id: string) => {
-  setTimeout(async () => {
-    const item = await getItems({ filters: { id } });
-    if (!item) {
-      throw new Error('Item not found');
-    }
+  const item = await getItems({ filters: { id } });
+  if (!item) {
+    throw new Error('Item not found');
+  }
 
-    const updatedItem = await db.item.update({
-      where: { id },
-      data: { check: true },
-    });
+  const updatedItem = await db.item.update({
+    where: { id },
+    data: { check: true },
+  });
 
-    return updatedItem;
-  }, 4000);
+  return updatedItem;
 };
 
 export const unCheckItem = async (id: string) => {

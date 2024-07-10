@@ -52,12 +52,8 @@ const HouseholdTab = ({
 		household?.grocerylist?.id as string
 	);
 	const ingredients = useIngredientsData();
-	const checkItemMutation = useCheckItem(
-		household?.grocerylist?.id as string
-	);
-	const unCheckItemMutation = useUnCheckItem(
-		household?.grocerylist?.id as string
-	);
+	const checkItemMutation = useCheckItem("h");
+	const unCheckItemMutation = useUnCheckItem("h");
 
 	useEffect(() => {
 		if (show) {
@@ -240,7 +236,7 @@ const HouseholdTab = ({
 					{!!household.grocerylist && (
 						<Box py={2}>
 							<Button
-								height={16}
+								height={12}
 								rounded="full"
 								bgColor={Colors.light.CTA}
 								onPress={() => setShow(true)}
@@ -272,8 +268,8 @@ const GrocerylistTab = ({
 
 	const createItemMutation = useCreateItem(grocerylist?.id as string);
 	const ingredients = useIngredientsData();
-	const checkItemMutation = useCheckItem(grocerylist?.id as string);
-	const unCheckItemMutation = useUnCheckItem(grocerylist?.id as string);
+	const checkItemMutation = useCheckItem("g");
+	const unCheckItemMutation = useUnCheckItem("g");
 
 	useEffect(() => {
 		if (show) {
@@ -436,7 +432,7 @@ const GrocerylistTab = ({
 					{!!grocerylist && (
 						<Box py={2}>
 							<Button
-								height={16}
+								height={12}
 								rounded="full"
 								bgColor={Colors.light.CTA}
 								onPress={() => setShow(true)}
@@ -457,7 +453,7 @@ const GrocerylistTab = ({
 	);
 };
 
-export default function MealplanDetail({ navigation }: { navigation: any }) {
+export default function Dashboard({ navigation }: { navigation: any }) {
 	const [mounted, setMounted] = useState(false);
 	const layout = useWindowDimensions();
 	const [index, setIndex] = useState(0);
@@ -466,11 +462,8 @@ export default function MealplanDetail({ navigation }: { navigation: any }) {
 		{ key: "second", title: "Household" },
 	]);
 
-	const {
-		data: grocerylist,
-		isRefetching,
-		refetch: grocerylistRefetch,
-	} = useNewestGrocerylist();
+	const { data: grocerylist, refetch: grocerylistRefetch } =
+		useNewestGrocerylist();
 	const household = useCurrentUserHousold();
 
 	useEffect(() => {
@@ -538,7 +531,6 @@ export default function MealplanDetail({ navigation }: { navigation: any }) {
 							>
 								<Pressable
 									onPress={() => {
-										console.log(i);
 										setIndex(i);
 									}}
 								>

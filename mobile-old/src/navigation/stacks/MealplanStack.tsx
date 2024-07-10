@@ -10,12 +10,10 @@ const MealPlanStack = createNativeStackNavigator();
 
 function MealplanStack() {
 	const createMenu = useCreateMenu();
-	
+
 	const { isFetching } = useMenusData();
 	return (
 		<MealPlanStack.Navigator>
-			
-
 			<MealPlanStack.Screen
 				name="MealplanDetail"
 				component={MealplanDetail}

@@ -22,12 +22,11 @@ import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import type { Category } from "../../constants/ingredientCategories";
 import { categories } from "../../constants/ingredientCategories";
 import BackdropComponent from "../../components/backdrop";
-import { useRecoilState } from "recoil";
-import { newIngredientSheetState } from "src/lib/store/atoms/newIngredient";
+import { AntDesign } from "@expo/vector-icons";
 
 function Ingredients({ navigation }: { navigation: any }) {
 	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-	const [show, setShow] = useRecoilState(newIngredientSheetState);
+	const [show, setShow] = useState(false);
 	const createIngredient = useCreateIngredient();
 	const [ingredientError, setIngredientError] = useState({
 		name: false,
@@ -146,26 +145,40 @@ function Ingredients({ navigation }: { navigation: any }) {
 				</BottomSheetView>
 			</BottomSheetModal>
 			<SafeAreaView>
-				<HStack p={2} py={4} bgColor="white" shadow="lg" zIndex={1}>
+				<HStack p={2} py={2} bgColor="white" shadow="lg" zIndex={1}>
+					<Button
+						onPress={() => {
+							setShow(true);
+						}}
+						width={10}
+						rounded="full"
+						backgroundColor={Colors.primary[500]}
+					>
+						<AntDesign name="plus" size={16} color="white" />
+					</Button>
 					<Input
 						placeholder="Search ingredient..."
-						height={16}
+						height={10}
 						flex={1}
-						mr={2}
+						mx={1}
 						value={search}
 						onChange={(e) => setSearch(e.nativeEvent.text)}
-						fontSize={16}
+						fontSize={14}
+						rounded="full"
+						paddingLeft={4}
+						borderColor="gray.300"
 					/>
 					<Button
-						color={Colors.light.background}
-						bgColor={Colors.secondary[700]}
 						onPress={() => {
 							setSearch("");
 						}}
-						width={20}
-						rounded="lg"
+						width={10}
+						rounded="full"
+						backgroundColor="white"
+						borderColor="gray.300"
+						borderWidth={1}
 					>
-						Clear
+						<AntDesign name="close" size={14} />
 					</Button>
 				</HStack>
 				<FlatList

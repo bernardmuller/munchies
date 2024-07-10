@@ -111,7 +111,6 @@ export const getNewestGrocerylist = async (userId: string) => {
       console.log('err: ', err);
       throw new Error('Could not find newest grocerylist');
     });
-  console.log('grocerylist: ', grocerylist);
   if (!grocerylist) throw new Error('Could not find newest grocerylist');
   const items = await db.item
     .findMany({

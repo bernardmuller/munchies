@@ -64,7 +64,6 @@ export default function HouseholdManagementScreen({ route }: { route: any }) {
 					setShowJoin(false);
 				},
 				onError: (error) => {
-					console.log("errrorrrr");
 					setJoinError(error.message);
 				},
 			}

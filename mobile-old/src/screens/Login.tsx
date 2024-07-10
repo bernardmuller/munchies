@@ -34,7 +34,6 @@ const useLoginHandler = () => {
 			email: data.email,
 			password: data.password,
 		});
-		console.log(response);
 		if (response?.token) {
 			await saveToken(response.token);
 		}

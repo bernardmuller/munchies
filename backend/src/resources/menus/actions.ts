@@ -13,7 +13,6 @@ export const createMenu = async (data: {
   meals: { id: string }[];
   extraItems?: { id: string }[];
 }) => {
-  console.log({ data });
   const existingMenus = await db.menu.findMany({
     where: { createdBy: data.createdBy },
   });

@@ -46,49 +46,49 @@ function IngredientsStack({ navigation }: { navigation: any }) {
 				component={Ingredients}
 				options={{
 					title: "Ingredients",
-					headerLeft: () => (
-						<>
-							{/* <Modal
-								isOpen={dialogOpen}
-								onClose={() => setDialogOpen(false)}
-							>
-								<Modal.Content>
-									<Modal.CloseButton />
-									<Modal.Header>
-										Create Ingredient
-									</Modal.Header>
-									<Modal.Body>
-										
-									</Modal.Body>
-									<Modal.Footer>
-										<Button>Submit</Button>
-									</Modal.Footer>
-								</Modal.Content>
-							</Modal> */}
-							{createIngredient.isPending || isFetching ? (
-								<Spinner />
-							) : (
-								<IconButton
-									icon={
-										<AntDesign
-											name="pluscircleo"
-											size={28}
-											color={Colors.dark.background}
-										/>
-									}
-									onPress={
-										() =>
-											// createIngredient.mutate({
-											// name: "New Ingredient",
-											// categoryId: 1,
-											// })
-											setShow(true)
-										// setDialogOpen(true)
-									}
-								/>
-							)}
-						</>
-					),
+					// headerLeft: () => (
+					// <>
+					// 	{/* <Modal
+					// 		isOpen={dialogOpen}
+					// 		onClose={() => setDialogOpen(false)}
+					// 	>
+					// 		<Modal.Content>
+					// 			<Modal.CloseButton />
+					// 			<Modal.Header>
+					// 				Create Ingredient
+					// 			</Modal.Header>
+					// 			<Modal.Body>
+
+					// 			</Modal.Body>
+					// 			<Modal.Footer>
+					// 				<Button>Submit</Button>
+					// 			</Modal.Footer>
+					// 		</Modal.Content>
+					// 	</Modal> */}
+					// 	{createIngredient.isPending || isFetching ? (
+					// 		<Spinner />
+					// 	) : (
+					// 		<IconButton
+					// 			icon={
+					// 				<AntDesign
+					// 					name="pluscircleo"
+					// 					size={28}
+					// 					color={Colors.dark.background}
+					// 				/>
+					// 			}
+					// 			onPress={
+					// 				() =>
+					// 					// createIngredient.mutate({
+					// 					// name: "New Ingredient",
+					// 					// categoryId: 1,
+					// 					// })
+					// 					setShow(true)
+					// 				// setDialogOpen(true)
+					// 			}
+					// 		/>
+					// 	)}
+					// </>
+					// ),
 				}}
 			/>
 			<IngredientStack.Screen

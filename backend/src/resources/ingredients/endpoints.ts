@@ -11,7 +11,6 @@ const endpoints = [
     method: 'post',
     path: '/ingredients',
     handler: async (req: Request, res: Response) => {
-      console.log('req.body', req.body);
       const ingredient = await createIngredient({ ...req.body });
       return res.send(ingredient);
     },

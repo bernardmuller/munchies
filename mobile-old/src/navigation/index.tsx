@@ -11,16 +11,18 @@ import SettingsStack from "./stacks/SettingsStack";
 import GroceriesStack from "./stacks/GroceriesStack";
 import IngredientsStack from "./stacks/IngredientsStack";
 import Icons from "../constants/Icons";
-import { Feather, Ionicons } from "@expo/vector-icons";
-import { Box } from "native-base";
+import { Feather, Ionicons, Octicons } from "@expo/vector-icons";
+import { Box, Text } from "native-base";
 import Colors from "../constants/Colors";
 import DashboardStack from "./stacks/DashboardStack";
-import { FiSettings } from "react-icons/fi";
+import { FiFeather, FiSettings } from "react-icons/fi";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 const PrivateStack = createBottomTabNavigator();
 const PublicStack = createNativeStackNavigator();
 const AdminStack = createNativeStackNavigator();
+
+const ICON_SIZE = 26;
 
 function AuthStack() {
 	return (
@@ -35,8 +37,8 @@ const Icon = ({ name, focused, children }: any) => {
 		<Box
 			rounded="full"
 			bg={focused ? Colors.light.CTA : "none"}
-			height={16}
-			width={16}
+			height={10}
+			width={10}
 			alignItems="center"
 			justifyContent="center"
 		>
@@ -55,27 +57,32 @@ function AppStack() {
 						backgroundColor: Colors.secondary["900"],
 						borderTopWidth: 0,
 						borderTopColor: "transparent",
-						height: 100,
-						paddingTop: 35,
-						paddingLeft: 10,
-						paddingRight: 10,
+						height: 90,
+						paddingTop: 25,
+						paddingLeft: 60,
+						paddingRight: 60,
 					},
 					tabBarIcon: ({ focused, color, size }) => {
 						switch (route.name) {
 							case "DashboardStack":
 								return (
-									<Icon focused={focused} name="home">
-										<Feather
-											name="home"
-											focused={focused}
-											size={24}
-											color={
-												focused
-													? Colors.white
-													: Colors.secondary[400]
-											}
-										/>
-									</Icon>
+									<>
+										<Icon focused={focused} name="home">
+											<Octicons
+												name="home"
+												focused={focused}
+												size={ICON_SIZE}
+												color={
+													focused
+														? Colors.white
+														: Colors.secondary[400]
+												}
+											/>
+										</Icon>
+										<Text color="white" fontSize={12}>
+											Home
+										</Text>
+									</>
 								);
 							case "MealplansStack":
 								return (
@@ -83,7 +90,7 @@ function AppStack() {
 										<Ionicons
 											name="fast-food"
 											focused={focused}
-											size={24}
+											size={ICON_SIZE}
 											color={
 												focused
 													? Colors.white
@@ -94,32 +101,42 @@ function AppStack() {
 								);
 							case "SettingsStack":
 								return (
-									<Icon focused={focused} name="settings">
-										<Ionicons
-											name="settings-sharp"
-											size={24}
-											color={
-												focused
-													? Colors.white
-													: Colors.secondary[400]
-											}
-										/>
-									</Icon>
+									<>
+										<Icon focused={focused} name="settings">
+											<Ionicons
+												name="settings-sharp"
+												size={ICON_SIZE}
+												color={
+													focused
+														? Colors.white
+														: Colors.secondary[400]
+												}
+											/>
+										</Icon>
+										<Text color="white" fontSize={12}>
+											Settings
+										</Text>
+									</>
 								);
 							case "IngredientsStack":
 								return (
-									<Icon focused={focused} name="list">
-										<Feather
-											name="list"
-											focused={focused}
-											size={24}
-											color={
-												focused
-													? Colors.white
-													: Colors.secondary[400]
-											}
-										/>
-									</Icon>
+									<>
+										<Icon focused={focused} name="list">
+											<Feather
+												name="list"
+												focused={focused}
+												size={ICON_SIZE}
+												color={
+													focused
+														? Colors.white
+														: Colors.secondary[400]
+												}
+											/>
+										</Icon>
+										<Text color="white" fontSize={12}>
+											Items
+										</Text>
+									</>
 								);
 							default:
 								break;
