@@ -12,14 +12,18 @@ import {
 	FlatList,
 	Divider,
 	Input,
-	View,
 	Pressable,
 	useColorModeValue,
+	HStack,
+	IconButton,
 } from "native-base";
 import { useEffect, useRef, useState } from "react";
 import { useCheckItem, useCreateItem, useUnCheckItem } from "../../hooks/items";
 import { AntDesign } from "@expo/vector-icons";
-import { useNewestGrocerylist } from "../../hooks/grocerylistHooks";
+import {
+	useCreateGrocerylist,
+	useNewestGrocerylist,
+} from "../../hooks/grocerylistHooks";
 import { useIngredientsData } from "src/hooks/ingredientsHooks";
 import Colors from "src/constants/Colors";
 import { Grocerylist, Item } from "src/lib/http/endpoints/getAllGrocerylists";
@@ -30,6 +34,9 @@ import { TabView, SceneMap } from "react-native-tab-view";
 import Animated from "react-native-reanimated";
 import { Household } from "src/lib/http/endpoints/getHousholdById";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "src/hooks/useThemeProvider";
+import AppBar from "src/components/app-bar/Appbar";
+import { Ingredient } from "src/lib/http/endpoints/getAllIngredients";
 
 type MyGrocerylistTabProps = {
 	grocerylist: Grocerylist | null;
@@ -39,11 +46,107 @@ type MyGrocerylistTabProps = {
 	navigation: any;
 };
 
+type AddItemListProps = {
+	search: string;
+	setSearch: (value: string) => void;
+	createItemMutation: any;
+	ingredients: Ingredient[];
+	grocerylist: Grocerylist | null;
+	bottomSheetModalRef: any;
+};
+
+function AddItemList({
+	search,
+	setSearch,
+	createItemMutation,
+	ingredients,
+	grocerylist,
+	bottomSheetModalRef,
+}: AddItemListProps) {
+	const { theme } = useTheme();
+	return (
+		<Box p={4}>
+			<Input
+				height={12}
+				fontSize={14}
+				onFocus={() => {
+					bottomSheetModalRef.current?.snapToIndex(2);
+				}}
+				onBlur={() => {
+					bottomSheetModalRef.current?.snapToIndex(1);
+				}}
+				rounded="full"
+				pl={4}
+				borderColor={theme.colors.text.muted}
+				color={theme.colors.text.contrast}
+				value={search}
+				onChange={(e) => setSearch(e.nativeEvent.text)}
+				placeholder="Search item..."
+				mb={2}
+			/>
+			<FlatList
+				data={ingredients?.filter((item) =>
+					item.name.toLowerCase().includes(search.toLowerCase())
+				)}
+				ListEmptyComponent={() => {
+					return (
+						<Box
+							borderBottomColor={theme.colors.text.muted}
+							borderBottomWidth={1}
+						>
+							<Text
+								color={theme.colors.text.muted}
+								width="full"
+								textAlign="center"
+								py={4}
+								fontSize={16}
+							>
+								No items found
+							</Text>
+						</Box>
+					);
+				}}
+				renderItem={({ item, index }) => {
+					return (
+						<Button
+							key={item.id}
+							textAlign="center"
+							width="full"
+							rounded={0}
+							borderTopColor={theme.colors.text.muted}
+							borderTopWidth={index === 0 ? 1 : 0}
+							borderBottomColor={theme.colors.text.muted}
+							borderBottomWidth={1}
+							bgColor={"white"}
+							_focus={{
+								bg: theme.colors.text.muted,
+							}}
+							onPress={async () => {
+								await createItemMutation.mutateAsync({
+									name: item.name,
+									check: false,
+									ingredientId: item.id,
+									grocerylistId: grocerylist?.id as string,
+								});
+							}}
+						>
+							<Text color={theme.colors.text.contrast}>
+								{item.name}
+							</Text>
+						</Button>
+					);
+				}}
+			/>
+		</Box>
+	);
+}
+
 const HouseholdTab = ({
 	household,
 	onRefetch,
 	navigation,
 }: MyGrocerylistTabProps) => {
+	const { theme } = useTheme();
 	const [show, setShow] = useState(false);
 	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 	const [search, setSearch] = useState("");
@@ -65,7 +168,12 @@ const HouseholdTab = ({
 
 	if (!household) {
 		return (
-			<Stack p={4} space={4}>
+			<Stack
+				p={4}
+				space={4}
+				h="full"
+				backgroundColor={theme.colors.background_dark}
+			>
 				<Text textAlign="center" py={3} px={8} color="gray.400">
 					You can create and share a grocerylist with your household
 				</Text>
@@ -74,7 +182,7 @@ const HouseholdTab = ({
 						navigation.navigate("HouseholdManagement");
 					}}
 				>
-					Go to Household Management
+					Manage Household
 				</Button>
 			</Stack>
 		);
@@ -82,9 +190,11 @@ const HouseholdTab = ({
 
 	if (!household.grocerylist)
 		return (
-			<Text textAlign="center" py={3} color="gray.400">
-				No Grocerylist found
-			</Text>
+			<Stack backgroundColor={theme.colors.background_dark}>
+				<Text textAlign="center" py={3} color="gray.400">
+					No Grocerylist found
+				</Text>
+			</Stack>
 		);
 
 	// if (!grocerylist?.data && isRefetching)
@@ -101,85 +211,23 @@ const HouseholdTab = ({
 				}}
 			>
 				<BottomSheetView>
-					<Box p={4}>
-						<Input
-							value={search}
-							onChange={(e) => setSearch(e.nativeEvent.text)}
-							onFocus={() => {
-								bottomSheetModalRef.current?.snapToIndex(2);
-							}}
-							onBlur={() => {
-								bottomSheetModalRef.current?.snapToIndex(1);
-							}}
-							placeholder="Search item..."
-							height={16}
-							fontSize={16}
-							mb={2}
-						/>
-						<FlatList
-							data={ingredients?.data?.data?.filter((item) =>
-								item.name
-									.toLowerCase()
-									.includes(search.toLowerCase())
-							)}
-							ListEmptyComponent={() => {
-								return (
-									<Box
-										borderBottomColor={"gray.200"}
-										borderBottomWidth={1}
-									>
-										<Text
-											color={"gray.500"}
-											width="full"
-											textAlign="center"
-											py={4}
-											fontSize={16}
-										>
-											No items found
-										</Text>
-									</Box>
-								);
-							}}
-							renderItem={({ item, index }) => {
-								return (
-									<Button
-										key={item.id}
-										p={4}
-										textAlign="center"
-										width="full"
-										rounded={0}
-										borderTopColor={"gray.200"}
-										borderTopWidth={index === 0 ? 1 : 0}
-										borderBottomColor={"gray.200"}
-										borderBottomWidth={1}
-										bgColor={"white"}
-										onPress={async () => {
-											await createItemMutation.mutateAsync(
-												{
-													name: item.name,
-													check: false,
-													ingredientId: item.id,
-													grocerylistId: household
-														?.grocerylist
-														?.id as string,
-												}
-											);
-										}}
-									>
-										<Box width="full">
-											<Text fontSize={18}>
-												{item.name}
-											</Text>
-										</Box>
-									</Button>
-								);
-							}}
-						/>
-					</Box>
+					<AddItemList
+						search={search}
+						setSearch={setSearch}
+						createItemMutation={createItemMutation}
+						ingredients={ingredients?.data?.data ?? []}
+						grocerylist={household.grocerylist}
+						bottomSheetModalRef={bottomSheetModalRef}
+					/>
 				</BottomSheetView>
 			</BottomSheetModal>
 			<SafeAreaView>
-				<Stack p={2} height={"full"} justifyContent="space-between">
+				<Stack
+					p={2}
+					height={"full"}
+					justifyContent="space-between"
+					bgColor={theme.colors.background_dark}
+				>
 					<FlatList
 						data={household?.grocerylist?.items?.sort(
 							(a: Item, b: Item) => {
@@ -234,18 +282,9 @@ const HouseholdTab = ({
 						)}
 					/>
 					{!!household.grocerylist && (
-						<Box py={2}>
-							<Button
-								height={12}
-								rounded="full"
-								bgColor={Colors.light.CTA}
-								onPress={() => setShow(true)}
-							>
-								<Text
-									color="white"
-									fontWeight="semibold"
-									fontSize={16}
-								>
+						<Box py={1} px={4}>
+							<Button onPress={() => setShow(true)}>
+								<Text fontWeight="semibold" fontSize={16}>
 									Add Item
 								</Text>
 							</Button>
@@ -265,6 +304,8 @@ const GrocerylistTab = ({
 	const [show, setShow] = useState(false);
 	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 	const [search, setSearch] = useState("");
+
+	const { theme } = useTheme();
 
 	const createItemMutation = useCreateItem(grocerylist?.id as string);
 	const ingredients = useIngredientsData();
@@ -300,84 +341,23 @@ const GrocerylistTab = ({
 				}}
 			>
 				<BottomSheetView>
-					<Box p={4}>
-						<Input
-							value={search}
-							onChange={(e) => setSearch(e.nativeEvent.text)}
-							onFocus={() => {
-								bottomSheetModalRef.current?.snapToIndex(2);
-							}}
-							onBlur={() => {
-								bottomSheetModalRef.current?.snapToIndex(1);
-							}}
-							placeholder="Search item..."
-							height={16}
-							fontSize={16}
-							mb={2}
-						/>
-						<FlatList
-							data={ingredients?.data?.data?.filter((item) =>
-								item.name
-									.toLowerCase()
-									.includes(search.toLowerCase())
-							)}
-							ListEmptyComponent={() => {
-								return (
-									<Box
-										borderBottomColor={"gray.200"}
-										borderBottomWidth={1}
-									>
-										<Text
-											color={"gray.500"}
-											width="full"
-											textAlign="center"
-											py={4}
-											fontSize={16}
-										>
-											No items found
-										</Text>
-									</Box>
-								);
-							}}
-							renderItem={({ item, index }) => {
-								return (
-									<Button
-										key={item.id}
-										p={4}
-										textAlign="center"
-										width="full"
-										rounded={0}
-										borderTopColor={"gray.200"}
-										borderTopWidth={index === 0 ? 1 : 0}
-										borderBottomColor={"gray.200"}
-										borderBottomWidth={1}
-										bgColor={"white"}
-										onPress={async () => {
-											await createItemMutation.mutateAsync(
-												{
-													name: item.name,
-													check: false,
-													ingredientId: item.id,
-													grocerylistId:
-														grocerylist?.id as string,
-												}
-											);
-										}}
-									>
-										<Box width="full">
-											<Text fontSize={18}>
-												{item.name}
-											</Text>
-										</Box>
-									</Button>
-								);
-							}}
-						/>
-					</Box>
+					<AddItemList
+						search={search}
+						setSearch={setSearch}
+						createItemMutation={createItemMutation}
+						ingredients={ingredients?.data?.data ?? []}
+						grocerylist={grocerylist}
+						bottomSheetModalRef={bottomSheetModalRef}
+					/>
 				</BottomSheetView>
 			</BottomSheetModal>
 			<SafeAreaView>
-				<Stack p={2} height={"full"} justifyContent="space-between">
+				<Stack
+					p={2}
+					height={"full"}
+					justifyContent="space-between"
+					backgroundColor={theme.colors.background_dark}
+				>
 					<FlatList
 						data={grocerylist?.items?.sort((a: Item, b: Item) => {
 							if (a.createdAt < b.createdAt) {
@@ -399,11 +379,11 @@ const GrocerylistTab = ({
 						ListEmptyComponent={() => {
 							return (
 								<Box
-									borderBottomColor={"gray.200"}
+									borderBottomColor={theme.colors.text.muted}
 									borderBottomWidth={1}
 								>
 									<Text
-										color={"gray.500"}
+										color={theme.colors.text.muted}
 										width="full"
 										textAlign="center"
 										py={4}
@@ -430,11 +410,9 @@ const GrocerylistTab = ({
 						)}
 					/>
 					{!!grocerylist && (
-						<Box py={2}>
+						<Box py={1} px={4}>
 							<Button
-								height={12}
 								rounded="full"
-								bgColor={Colors.light.CTA}
 								onPress={() => setShow(true)}
 							>
 								<Text
@@ -454,6 +432,7 @@ const GrocerylistTab = ({
 };
 
 export default function Dashboard({ navigation }: { navigation: any }) {
+	const { theme } = useTheme();
 	const [mounted, setMounted] = useState(false);
 	const layout = useWindowDimensions();
 	const [index, setIndex] = useState(0);
@@ -465,6 +444,7 @@ export default function Dashboard({ navigation }: { navigation: any }) {
 	const { data: grocerylist, refetch: grocerylistRefetch } =
 		useNewestGrocerylist();
 	const household = useCurrentUserHousold();
+	const createGroceryList = useCreateGrocerylist();
 
 	useEffect(() => {
 		AsyncStorage.getItem("lastDashboardTab").then((value) => {
@@ -503,6 +483,7 @@ export default function Dashboard({ navigation }: { navigation: any }) {
 	const renderTabBar = (props: {
 		navigationState: { routes: { title: string }[] };
 	}) => {
+		const { theme } = useTheme();
 		return (
 			<Box flexDirection="row">
 				{props.navigationState.routes.map(
@@ -514,18 +495,28 @@ export default function Dashboard({ navigation }: { navigation: any }) {
 					) => {
 						const color =
 							index === i
-								? useColorModeValue("#000", "#e5e5e5")
-								: useColorModeValue("#1f2937", "#a1a1aa");
+								? useColorModeValue(
+										theme.colors.text.default,
+										theme.colors.text.muted
+								  )
+								: useColorModeValue(
+										theme.colors.text.muted,
+										theme.colors.text.default
+								  );
 						const borderColor =
 							index === i
 								? Colors.primary[500]
-								: useColorModeValue("coolGray.200", "gray.400");
+								: useColorModeValue(
+										theme.colors.secondary[700],
+										theme.colors.text.muted
+								  );
 						return (
 							<Box
 								borderBottomWidth="3"
+								borderTopWidth="0"
 								borderColor={borderColor}
 								flex={1}
-								bgColor={"white"}
+								bgColor={theme.colors.background}
 								alignItems="center"
 								p="3"
 							>
@@ -553,13 +544,54 @@ export default function Dashboard({ navigation }: { navigation: any }) {
 	if (!mounted) return null;
 
 	return (
-		<TabView
-			navigationState={{ index, routes }}
-			renderScene={renderScene}
-			onIndexChange={setIndex}
-			initialLayout={{ width: layout.width }}
-			renderTabBar={renderTabBar}
-		/>
+		<>
+			<AppBar>
+				<HStack
+					w="full"
+					justifyContent="space-between"
+					alignItems="center"
+				>
+					<Text fontSize={20} fontWeight="bold">
+						Dashboard
+					</Text>
+					<IconButton
+						icon={
+							<AntDesign
+								name="pluscircleo"
+								size={28}
+								color={theme.colors.white}
+							/>
+						}
+						onPress={async () => {
+							await AsyncStorage.getItem("lastDashboardTab")
+								.then((value) => {
+									return value;
+								})
+								.then((value) => {
+									if (value === "1") {
+										if (!household.data?.data?.id) return;
+										createGroceryList.mutateAsync({
+											householdId: household.data?.data
+												?.id as string,
+										});
+									} else if (value === "0") {
+										createGroceryList.mutateAsync({
+											householdId: null,
+										});
+									}
+								});
+						}}
+					/>
+				</HStack>
+			</AppBar>
+			<TabView
+				navigationState={{ index, routes }}
+				renderScene={renderScene}
+				onIndexChange={setIndex}
+				initialLayout={{ width: layout.width }}
+				renderTabBar={renderTabBar}
+			/>
+		</>
 	);
 }
 
@@ -573,6 +605,7 @@ const ListItem = ({
 	type: "h" | "g";
 }) => {
 	const [checked, setChecked] = useState(item.check);
+	const { theme } = useTheme();
 	return (
 		<>
 			<Stack
@@ -587,7 +620,7 @@ const ListItem = ({
 						<Text fontSize={18} strikeThrough={checked}>
 							{item?.ingredient?.name}
 						</Text>
-						<Text fontSize={13} color="gray.400">
+						<Text fontSize={13} color="muted">
 							Added by: {item.createdBy}
 						</Text>
 					</Stack>
@@ -604,19 +637,15 @@ const ListItem = ({
 					}}
 				>
 					<Box padding={1}>
-						{checked ? (
-							<AntDesign
-								name="checkcircle"
-								size={24}
-								color={Colors.primary[500]}
-							/>
-						) : (
-							<AntDesign
-								name="checkcircleo"
-								size={24}
-								color="black"
-							/>
-						)}
+						<AntDesign
+							name={checked ? "checkcircle" : "checkcircleo"}
+							size={24}
+							color={
+								checked
+									? theme.colors.primary[500]
+									: theme.colors.text.muted
+							}
+						/>
 					</Box>
 				</TouchableOpacity>
 			</Stack>

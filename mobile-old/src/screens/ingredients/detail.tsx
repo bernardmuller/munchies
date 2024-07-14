@@ -7,6 +7,7 @@ import {
 	Select,
 	Stack,
 	Text,
+	VStack,
 	WarningOutlineIcon,
 } from "native-base";
 import { useState } from "react";
@@ -18,8 +19,13 @@ import {
 import { ActivityIndicator } from "react-native";
 import type { Category } from "../../constants/ingredientCategories";
 import { categories } from "../../constants/ingredientCategories";
-export default function IngredientDetail({ route }: { route: any }) {
+import AppBar from "src/components/app-bar/Appbar";
+import { AntDesign } from "@expo/vector-icons";
+import { useTheme } from "src/hooks/useThemeProvider";
+
+export default function IngredientDetail({ navigation, route }: any) {
 	const { ingredientId } = route.params;
+	const { theme } = useTheme();
 	const { data, isLoading } = useIngredientData(ingredientId);
 	const updateIngredient = useUpdateIngredient({ ingredientId });
 
@@ -32,43 +38,77 @@ export default function IngredientDetail({ route }: { route: any }) {
 
 	if (isLoading) return <ActivityIndicator />;
 	return (
-		<Stack px={4} pt={4}>
-			<Name name={data.name} onUpdateName={handleUpdateName} />
-			<Text color="gray.400">
-				{/* Created: {format(new Date(data.createdAt), "qo MMMM uuu")} */}
-			</Text>
-			<FormControl isInvalid mt={3}>
-				<FormControl.Label>Category</FormControl.Label>
-				<Select
-					accessibilityLabel="- Select Category -"
-					placeholder="- Select Category -"
-					_selectedItem={{
-						bg: "teal.600",
-						endIcon: <CheckIcon size={5} />,
-					}}
-					mt="1"
-					defaultValue={String(
-						categories.find((c) => c.id === data.categoryId)?.id!
-					)}
-					onValueChange={(itemValue) => {
-						updateIngredient.mutate({
-							id: ingredientId,
-							data: { categoryId: Number(itemValue) },
-						});
-					}}
-					height={16}
-					fontSize="md"
-				>
-					{categories.map((category: Category) => (
-						<Select.Item
-							key={category.id}
-							label={category.name}
-							value={String(category.id)}
+		<>
+			<AppBar>
+				<IconButton
+					icon={
+						<AntDesign
+							name="arrowleft"
+							size={24}
+							color={theme.colors.text.default}
 						/>
-					))}
-				</Select>
-			</FormControl>
-		</Stack>
+					}
+					onPress={() => navigation.goBack()}
+				/>
+			</AppBar>
+			<Stack
+				px={4}
+				pt={4}
+				backgroundColor={theme.colors.background_dark}
+				h="full"
+			>
+				<Name name={data.name} onUpdateName={handleUpdateName} />
+				<Text color="gray.400">
+					{/* Created: {format(new Date(data.createdAt), "qo MMMM uuu")} */}
+				</Text>
+				<FormControl mt={3} zIndex={100}>
+					<FormControl.Label>Category</FormControl.Label>
+					<Select
+						accessibilityLabel="- Select Category -"
+						placeholder="- Select Category -"
+						_selectedItem={{
+							endIcon: <CheckIcon size={5} />,
+							color: theme.colors.text.default,
+						}}
+						_actionSheetContent={{
+							backgroundColor: theme.colors.white,
+							color: theme.colors.text.default,
+						}}
+						_actionSheetBody={{
+							color: theme.colors.text.default,
+						}}
+						_light={{
+							backgroundColor: theme.colors.background_light,
+							color: theme.colors.text.default,
+							borderColor: theme.colors.background_dark,
+						}}
+						mt="1"
+						defaultValue={String(
+							categories.find((c) => c.id === data.categoryId)
+								?.id!
+						)}
+						onValueChange={(itemValue) => {
+							updateIngredient.mutate({
+								id: ingredientId,
+								data: { categoryId: Number(itemValue) },
+							});
+						}}
+						height={16}
+						fontSize="md"
+						zIndex={100}
+						color={theme.colors.text.default}
+					>
+						{categories.map((category: Category) => (
+							<Select.Item
+								key={category.id}
+								label={category.name}
+								value={String(category.id)}
+							/>
+						))}
+					</Select>
+				</FormControl>
+			</Stack>
+		</>
 	);
 }
 
@@ -76,6 +116,7 @@ const Name = ({ name, onUpdateName }: any) => {
 	const [edit, setEdit] = useState(false);
 	const [text, setText] = useState(name || "");
 	const [error, setError] = useState(false);
+	const { theme } = useTheme();
 
 	const toggleEdit = () => {
 		setEdit(!edit);
@@ -110,6 +151,7 @@ const Name = ({ name, onUpdateName }: any) => {
 			<FormControl isInvalid={error}>
 				{edit && <FormControl.Label>Ingredient Name</FormControl.Label>}
 				<Input
+					color={theme.colors.text.default}
 					type="text"
 					w="100%"
 					h={16}

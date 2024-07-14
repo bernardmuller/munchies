@@ -41,3 +41,16 @@ export default {
 		CTA: colors.primary[500],
 	},
 };
+
+// {
+//   "primary50": "#d1f3c7",
+//   "primary100": "#b5e8a7",
+//   "primary200": "#9bdb8a",
+//   "primary300": "#83ca6f",
+//   "primary400": "#68bf50",
+//   "primary500": "#5fab4a",
+//   "primary600": "#599249",
+//   "primary700": "#527b47",
+//   "primary800": "#4b6543",
+//   "primary900": "#42513e"
+// }

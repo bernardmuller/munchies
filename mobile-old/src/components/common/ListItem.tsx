@@ -1,5 +1,6 @@
 import { ChevronRightIcon, Stack, Text } from "native-base";
 import { TouchableOpacity } from "react-native";
+import { useTheme } from "src/hooks/useThemeProvider";
 
 export type ListItemProps = {
 	onPress: () => void;
@@ -8,24 +9,22 @@ export type ListItemProps = {
 };
 
 export default function ListItem({ onPress, label, key }: ListItemProps) {
+	const { theme } = useTheme();
 	return (
 		<TouchableOpacity onPress={onPress}>
 			<Stack
 				direction="row"
 				key={key}
-				height="16"
-				bgColor="white"
 				borderRadius={10}
-				p={2}
-				px={4}
+				p={4}
 				shadow="2"
-				my={1}
-				mx={2}
 				justifyContent={"space-between"}
 				alignItems={"center"}
+				backgroundColor={theme.colors.background_light}
+				mb={2}
 			>
-				<Text fontSize="xl">{label}</Text>
-				<ChevronRightIcon />
+				<Text fontSize={14}>{label}</Text>
+				<ChevronRightIcon color={theme.colors.text.default} size={4} />
 			</Stack>
 		</TouchableOpacity>
 	);

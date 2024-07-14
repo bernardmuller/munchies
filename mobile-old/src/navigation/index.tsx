@@ -1,26 +1,21 @@
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { NavigationContainer } from "@react-navigation/native";
-import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "../screens/Login";
-import MealplanStack from "./stacks/MealplanStack";
-import RecipeStack from "./stacks/RecipeStack";
 import SettingsStack from "./stacks/SettingsStack";
-import GroceriesStack from "./stacks/GroceriesStack";
 import IngredientsStack from "./stacks/IngredientsStack";
-import Icons from "../constants/Icons";
 import { Feather, Ionicons, Octicons } from "@expo/vector-icons";
-import { Box, Text } from "native-base";
+import { Box, NativeBaseProvider } from "native-base";
 import Colors from "../constants/Colors";
 import DashboardStack from "./stacks/DashboardStack";
-import { FiFeather, FiSettings } from "react-icons/fi";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { useTheme } from "src/hooks/useThemeProvider";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const PrivateStack = createBottomTabNavigator();
 const PublicStack = createNativeStackNavigator();
-const AdminStack = createNativeStackNavigator();
 
 const ICON_SIZE = 26;
 
@@ -32,13 +27,13 @@ function AuthStack() {
 	);
 }
 
-const Icon = ({ name, focused, children }: any) => {
+const Icon = ({ focused, children }: any) => {
 	return (
 		<Box
 			rounded="full"
 			bg={focused ? Colors.light.CTA : "none"}
-			height={10}
-			width={10}
+			height={12}
+			width={12}
 			alignItems="center"
 			justifyContent="center"
 		>
@@ -48,13 +43,19 @@ const Icon = ({ name, focused, children }: any) => {
 };
 
 function AppStack() {
+	const { theme } = useTheme();
 	return (
 		<>
 			<PrivateStack.Navigator
 				screenOptions={({ route }) => ({
 					headerShown: false,
+					headerStyle: {
+						backgroundColor: theme.colors.background,
+						headerShadowVisible: false,
+						borderBottomWidth: 0,
+					},
 					tabBarStyle: {
-						backgroundColor: Colors.secondary["900"],
+						backgroundColor: theme.colors.background_dark,
 						borderTopWidth: 0,
 						borderTopColor: "transparent",
 						height: 90,
@@ -62,7 +63,7 @@ function AppStack() {
 						paddingLeft: 60,
 						paddingRight: 60,
 					},
-					tabBarIcon: ({ focused, color, size }) => {
+					tabBarIcon: ({ focused }) => {
 						switch (route.name) {
 							case "DashboardStack":
 								return (
@@ -74,14 +75,12 @@ function AppStack() {
 												size={ICON_SIZE}
 												color={
 													focused
-														? Colors.white
-														: Colors.secondary[400]
+														? theme.colors.white
+														: theme.colors
+																.secondary[400]
 												}
 											/>
 										</Icon>
-										<Text color="white" fontSize={12}>
-											Home
-										</Text>
 									</>
 								);
 							case "MealplansStack":
@@ -93,8 +92,9 @@ function AppStack() {
 											size={ICON_SIZE}
 											color={
 												focused
-													? Colors.white
-													: Colors.secondary[400]
+													? theme.colors.white
+													: theme.colors
+															.secondary[400]
 											}
 										/>
 									</Icon>
@@ -108,14 +108,12 @@ function AppStack() {
 												size={ICON_SIZE}
 												color={
 													focused
-														? Colors.white
-														: Colors.secondary[400]
+														? theme.colors.white
+														: theme.colors
+																.secondary[400]
 												}
 											/>
 										</Icon>
-										<Text color="white" fontSize={12}>
-											Settings
-										</Text>
 									</>
 								);
 							case "IngredientsStack":
@@ -128,14 +126,12 @@ function AppStack() {
 												size={ICON_SIZE}
 												color={
 													focused
-														? Colors.white
-														: Colors.secondary[400]
+														? theme.colors.white
+														: theme.colors
+																.secondary[400]
 												}
 											/>
 										</Icon>
-										<Text color="white" fontSize={12}>
-											Items
-										</Text>
 									</>
 								);
 							default:
@@ -168,33 +164,25 @@ function AppStack() {
 	);
 }
 
-// const Admin = () => {
-// 	return (
-// 		<>
-// 			<AdminStack.Navigator>
-// 				<AdminStack.Screen
-// 					name="SettingsStack"
-// 					component={SettingsStack}
-// 				/>
-// 			</AdminStack.Navigator>
-// 		</>
-// 	);
-// };
-
 function AppNavigation() {
 	const { authToken } = useContext(AuthContext);
+	const { theme } = useTheme();
 	return (
-		<BottomSheetModalProvider>
-			<NavigationContainer>
-				{authToken !== "" ? (
-					<>
-						<AppStack />
-					</>
-				) : (
-					<AuthStack />
-				)}
-			</NavigationContainer>
-		</BottomSheetModalProvider>
+		<NavigationContainer>
+			<NativeBaseProvider theme={theme}>
+				<GestureHandlerRootView>
+					<BottomSheetModalProvider>
+						{authToken !== "" ? (
+							<>
+								<AppStack />
+							</>
+						) : (
+							<AuthStack />
+						)}
+					</BottomSheetModalProvider>
+				</GestureHandlerRootView>
+			</NativeBaseProvider>
+		</NavigationContainer>
 	);
 }
 

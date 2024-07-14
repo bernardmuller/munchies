@@ -160,7 +160,7 @@ export const useCreateItem = (grocerylistId: string) => {
 
 		onSuccess: () => {
 			Toast.show({
-				title: "Item added to grocerylist",
+				title: "Item added to grocery list",
 				duration: 1000,
 			});
 			return queryClient.invalidateQueries([

@@ -1,7 +1,7 @@
 import * as React from "react";
 import SettingsScreen from "../../screens/settings";
 import { AuthContext } from "../../contexts/AuthContext";
-import { useNavigation } from "@react-navigation/native";
+import { TypedNavigator, useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { FiLogOut } from "react-icons/fi";
@@ -23,7 +23,6 @@ function Common({ navigator }: any) {
 				component={SettingsScreen}
 				options={{
 					title: "",
-
 					headerRight: () => (
 						<>
 							<TouchableOpacity onPress={() => handleLogout()}>
@@ -42,7 +41,7 @@ function Common({ navigator }: any) {
 				name="HouseholdManagement"
 				component={HouseholdManagementScreen}
 				options={{
-					title: "",
+					headerShown: false,
 				}}
 			/>
 		</>

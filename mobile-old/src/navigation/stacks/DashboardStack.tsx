@@ -1,28 +1,29 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Dashboard from "../../screens/dashboard";
-import headerOptions from "../HeaderOptions";
 import { IconButton } from "native-base";
 import Common from "./CommonStack";
 import { useCreateGrocerylist } from "src/hooks/grocerylistHooks";
-import Colors from "src/constants/Colors";
 import { AntDesign } from "@expo/vector-icons";
 
 import { useCurrentUserHousold } from "src/hooks/householdHooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "src/hooks/useThemeProvider";
 
 const DashboardStack = createNativeStackNavigator();
 
 function DashboardRoute() {
 	const createGroceryList = useCreateGrocerylist();
+	const { theme } = useTheme();
 
 	const household = useCurrentUserHousold();
 	return (
-		<DashboardStack.Navigator screenOptions={headerOptions}>
+		<DashboardStack.Navigator>
 			<DashboardStack.Screen
 				name="Home"
 				component={Dashboard}
 				options={{
+					headerShown: false,
 					headerLeft: () => {
 						return (
 							<>
@@ -31,7 +32,7 @@ function DashboardRoute() {
 										<AntDesign
 											name="pluscircleo"
 											size={28}
-											color={Colors.dark.background}
+											color={theme.colors.white}
 										/>
 									}
 									onPress={async () => {

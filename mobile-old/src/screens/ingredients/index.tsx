@@ -9,6 +9,7 @@ import {
 	FlatList,
 	FormControl,
 	HStack,
+	IconButton,
 	Input,
 	Select,
 	Stack,
@@ -23,9 +24,12 @@ import type { Category } from "../../constants/ingredientCategories";
 import { categories } from "../../constants/ingredientCategories";
 import BackdropComponent from "../../components/backdrop";
 import { AntDesign } from "@expo/vector-icons";
+import AppBar from "src/components/app-bar/Appbar";
+import { useTheme } from "src/hooks/useThemeProvider";
 
 function Ingredients({ navigation }: { navigation: any }) {
 	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+	const { theme } = useTheme();
 	const [show, setShow] = useState(false);
 	const createIngredient = useCreateIngredient();
 	const [ingredientError, setIngredientError] = useState({
@@ -76,14 +80,19 @@ function Ingredients({ navigation }: { navigation: any }) {
 			>
 				<BottomSheetView>
 					<Stack px={4}>
-						<Text fontSize={24} fontWeight="bold" py={2}>
+						<Text
+							fontSize={24}
+							fontWeight="bold"
+							py={2}
+							color={theme.colors.black}
+						>
 							Create Ingredient
 						</Text>
 						<FormControl isInvalid={ingredientError.name}>
 							<FormControl.Label>Name</FormControl.Label>
 							<Input
-								height={16}
-								fontSize={16}
+								height={12}
+								fontSize={14}
 								value={newIngredient.name}
 								onChange={(e) => {
 									setNewIngredient({
@@ -98,6 +107,10 @@ function Ingredients({ navigation }: { navigation: any }) {
 								onBlur={() => {
 									bottomSheetModalRef.current?.snapToIndex(1);
 								}}
+								rounded="full"
+								pl={4}
+								borderColor={theme.colors.text.muted}
+								color={theme.colors.text.contrast}
 							/>
 							<FormControl.ErrorMessage>
 								Please enter a valid ingredient name
@@ -119,8 +132,16 @@ function Ingredients({ navigation }: { navigation: any }) {
 										categoryId: parseInt(itemValue),
 									});
 								}}
-								height={16}
-								fontSize="md"
+								height={12}
+								fontSize={14}
+								rounded="full"
+								pl={4}
+								_actionSheetContent={{
+									backgroundColor: theme.colors.white,
+								}}
+								_actionSheetBody={{
+									backgroundColor: theme.colors.white,
+								}}
 							>
 								{categories.map((category: Category) => (
 									<Select.Item
@@ -133,81 +154,107 @@ function Ingredients({ navigation }: { navigation: any }) {
 						</FormControl>
 					</Stack>
 					<Stack p={4} pt={8}>
-						<Button
-							height={16}
-							rounded="full"
-							backgroundColor={Colors.primary[500]}
-							onPress={handleNewIngredient}
-						>
+						<Button rounded="full" onPress={handleNewIngredient}>
 							Create
 						</Button>
 					</Stack>
 				</BottomSheetView>
 			</BottomSheetModal>
-			<SafeAreaView>
-				<HStack p={2} py={2} bgColor="white" shadow="lg" zIndex={1}>
-					<Button
-						onPress={() => {
+			<AppBar>
+				<HStack
+					w="full"
+					justifyContent="space-between"
+					alignItems="center"
+				>
+					<Text fontSize={20} fontWeight="bold">
+						Ingredients
+					</Text>
+					<IconButton
+						icon={
+							<AntDesign
+								name="pluscircleo"
+								size={28}
+								color={theme.colors.white}
+							/>
+						}
+						onPress={async () => {
 							setShow(true);
 						}}
-						width={10}
-						rounded="full"
-						backgroundColor={Colors.primary[500]}
-					>
-						<AntDesign name="plus" size={16} color="white" />
-					</Button>
-					<Input
-						placeholder="Search ingredient..."
-						height={10}
-						flex={1}
-						mx={1}
-						value={search}
-						onChange={(e) => setSearch(e.nativeEvent.text)}
-						fontSize={14}
-						rounded="full"
-						paddingLeft={4}
-						borderColor="gray.300"
 					/>
-					<Button
-						onPress={() => {
-							setSearch("");
-						}}
-						width={10}
-						rounded="full"
-						backgroundColor="white"
-						borderColor="gray.300"
-						borderWidth={1}
-					>
-						<AntDesign name="close" size={14} />
-					</Button>
 				</HStack>
-				<FlatList
-					pt={1}
-					height="100%"
-					refreshControl={
-						<RefreshControl
-							refreshing={false}
-							onRefresh={() => {
-								refetch();
-							}}
-						/>
-					}
-					data={data?.data?.filter((i: Ingredient) =>
-						i.name.toLowerCase().includes(search.toLowerCase())
-					)}
-					renderItem={(item) => (
-						<ListItem
-							onPress={() =>
-								navigation.navigate("IngredientDetail", {
-									ingredientId: item.item.id,
-								})
-							}
-							label={item.item.name}
-							key={item.item.id}
-						/>
-					)}
-					mb={16}
-				/>
+			</AppBar>
+			<SafeAreaView>
+				<Stack backgroundColor={theme.colors.background_dark}>
+					<HStack
+						p={1}
+						px={3}
+						pb={3}
+						backgroundColor={theme.colors.background}
+						zIndex={1}
+					>
+						<HStack width="full" position="relative">
+							<Input
+								placeholder="Search ingredient..."
+								height={12}
+								flex={1}
+								mx={1}
+								value={search}
+								onChange={(e) => setSearch(e.nativeEvent.text)}
+								fontSize={14}
+								rounded="full"
+								paddingLeft={4}
+								borderColor={theme.colors.background_light}
+								backgroundColor={theme.colors.background_dark}
+								color={theme.colors.text.default}
+							/>
+							{search.length > 0 && (
+								<IconButton
+									position={"absolute"}
+									right={0}
+									mr={3}
+									mt="2px"
+									icon={
+										<AntDesign
+											name="close"
+											size={16}
+											color={theme.colors.text.muted}
+										/>
+									}
+									onPress={() => {
+										setSearch("");
+									}}
+								/>
+							)}
+						</HStack>
+					</HStack>
+					<FlatList
+						p={3}
+						height="100%"
+						refreshControl={
+							<RefreshControl
+								refreshing={false}
+								onRefresh={() => {
+									refetch();
+								}}
+							/>
+						}
+						data={data?.data?.filter((i: Ingredient) =>
+							i.name.toLowerCase().includes(search.toLowerCase())
+						)}
+						renderItem={(item) => (
+							<ListItem
+								onPress={() =>
+									navigation.navigate("IngredientDetail", {
+										ingredientId: item.item.id,
+									})
+								}
+								label={item.item.name}
+								key={item.item.id}
+							/>
+						)}
+						mb={16}
+					/>
+				</Stack>
 			</SafeAreaView>
 		</>
 	);
