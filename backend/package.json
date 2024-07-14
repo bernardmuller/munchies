@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run start:dev",
+    "start": "ts-node ./src/index.ts",
     "start:dev": "ts-node-dev --respawn --transpile-only --exit-child --log-error -- ./src/index.ts",
     "lint": "eslint ./",
     "lint:fix": "eslint ./ --fix",

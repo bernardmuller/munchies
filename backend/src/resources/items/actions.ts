@@ -105,6 +105,7 @@ export const createExtraItem = async ({
   description: string;
 }) => {
   const item = await db.item.create({
+    // @ts-ignore
     data: {
       id: getUuid(),
       description: description,

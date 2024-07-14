@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { authenticate, forgotPassword, login, register } from './actions';
+import { authenticate, login, register } from './actions';
 
 const endpoints = [
   {

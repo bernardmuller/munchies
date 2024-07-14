@@ -29,6 +29,7 @@ export const createMenu = async (data: {
   const res = await db.menu.create({ data: menuData });
 
   const newGroceryList = await createGrocerylist({
+    // @ts-ignore
     menuId: res.id,
     createdBy: data.createdBy,
   });
@@ -43,6 +44,7 @@ export const createMenu = async (data: {
 
   if (data.extraItems) {
     for (const ingredient of data.extraItems) {
+      // @ts-ignore
       await createItem({
         ingredientId: ingredient.id,
         grocerylistId: newGroceryList.id,
@@ -202,6 +204,7 @@ export const addMealslistToMenu = async ({
 
     if (mealIngredients.length > 0) {
       for (const ingredient of mealIngredients) {
+        // @ts-ignore
         await createItem({
           ingredientId: ingredient.id,
           grocerylistId: grocerylist?.id,
@@ -249,6 +252,7 @@ export const addMealToMenu = async ({
 
   if (dbMeal.ingredients.length > 0 && grocerylist) {
     for (const ingredient of dbMeal.ingredients) {
+      // @ts-ignore
       await createItem({
         ingredientId: ingredient.id,
         grocerylistId: grocerylist.id,
