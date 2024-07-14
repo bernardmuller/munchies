@@ -2,7 +2,7 @@ name: Munchies Deployment Pipeline
 on:
     push:
         branches:
-            - main
+            - master
 jobs:
     push_docker_images:
         name: Push Docker images to Dockerhub
