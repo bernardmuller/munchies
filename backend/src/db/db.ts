@@ -4,8 +4,6 @@ import { requireEnvVar } from './utils';
 
 export const DATABASE_URL = requireEnvVar('DATABASE_URL');
 
-console.log('DATABASE_URL', DATABASE_URL);
-
 export const db = new PrismaClient({
   datasources: { db: { url: DATABASE_URL } },
 });
