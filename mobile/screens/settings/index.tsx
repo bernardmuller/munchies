@@ -16,7 +16,6 @@ function Settings() {
 
 	const handleLogout = () => {
 		clearToken();
-		navigation.navigate("Login");
 	};
 
 	return (

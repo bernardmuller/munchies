@@ -322,9 +322,18 @@ const GrocerylistTab = ({
 
 	if (!grocerylist)
 		return (
-			<Text textAlign="center" py={3} color="gray.400">
-				No Grocerylist found
-			</Text>
+			<Stack
+				p={4}
+				h="full"
+				backgroundColor={theme.colors.background_dark}
+			>
+				<Text textAlign="center" py={3} color="gray.400">
+					No Grocerylist found
+				</Text>
+				<Text textAlign="center" py={3} color="gray.400">
+					Click on the + button to create a new grocerylist
+				</Text>
+			</Stack>
 		);
 
 	// if (!grocerylist?.data && isRefetching)
@@ -354,12 +363,8 @@ const GrocerylistTab = ({
 			<SafeAreaView>
 				<Stack
 					p={2}
-					height={"full"}
 					justifyContent="space-between"
 					backgroundColor={theme.colors.background_dark}
-					style={{
-						backgroundColor: theme.colors.background_dark,
-					}}
 				>
 					<FlatList
 						data={grocerylist?.items?.sort((a: Item, b: Item) => {
@@ -387,6 +392,8 @@ const GrocerylistTab = ({
 									backgroundColor={
 										theme.colors.background_dark
 									}
+									height="full"
+									width={"full"}
 								>
 									<Text
 										color={theme.colors.text.muted}

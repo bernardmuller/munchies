@@ -7,17 +7,18 @@ import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@/hooks/useThemeProvider";
 import { TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
+import { useAuth } from "@clerk/clerk-expo";
 
 function Settings() {
 	const { theme } = useTheme();
+	const { signOut } = useAuth();
 
 	const { clearToken } = useContext(AuthContext);
-	const navigation = useNavigation();
 
 	const handleLogout = () => {
 		clearToken();
-		navigation.navigate("Login");
+		signOut();
 	};
 
 	return (
