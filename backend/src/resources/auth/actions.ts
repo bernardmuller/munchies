@@ -45,8 +45,7 @@ type User = z.infer<typeof UserModel>;
 type RegisterData = z.infer<typeof registerSchema>;
 
 export const register = async (data: RegisterData) => {
-  registerSchema.parse(data);
-  const existingUser = await db.user.findUnique({
+  const existingUser = await db.user.findFirst({
     where: {
       email: data.email,
     },
