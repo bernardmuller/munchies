@@ -81,7 +81,7 @@ const CLERK_PUBLISHABLE_KEY =
 	"pk_test_Y2hhcm1lZC1za3Vuay01OS5jbGVyay5hY2NvdW50cy5kZXYk";
 
 const InitialLayout = () => {
-	const { isLoaded, isSignedIn } = useAuth();
+	const { isLoaded, isSignedIn,  } = useAuth();
 	const segments = useSegments();
 	const router = useRouter();
 

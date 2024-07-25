@@ -3,14 +3,13 @@ package main
 import (
 	"fmt"
 
-	"github.com/bernardmuller/plantpal/internal/module"
-	"github.com/bernardmuller/plantpal/services/plants-service/internal/infrastructure"
+	"github.com/bernardmuller/munchies/internal/module"
+	"github.com/bernardmuller/munchies/monolith/modules/users/infrastructure"
 )
 
 func main() {
 	port := module.PORT{
 		HTTP: ":8001",
-		GRPC: ":9001",
 	}
 
 	moduleConfig, err := module.CreateConfig(port)
