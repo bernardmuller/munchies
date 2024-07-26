@@ -17,7 +17,7 @@ const Login = () => {
 	const { signOut } = useAuth();
 
 	const [emailAddress, setEmailAddress] = useState("me@bernardmuller.co.za");
-	const [password, setPassword] = useState("@1996MUller!@#");
+	const [password, setPassword] = useState("!@#Tester123");
 	const [loading, setLoading] = useState(false);
 
 	const onSignInPress = async () => {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { requireBaseURL } from "../shared/utils";
+import { requireBaseURL, requireHeaders } from "../shared/utils";
 
 const processAxiosErrorResponse = (res: any) => {
 	return {
@@ -35,4 +35,20 @@ export async function authenticate(inputs: { token: string }) {
 	} catch (err: any) {
 		return processAxiosErrorResponse(err.response);
 	}
+}
+
+type RegisterUserInputs = {
+	userId: string;
+};
+
+export async function registerUser({ userId }: RegisterUserInputs) {
+	return await axios({
+		method: "POST",
+		// TODO: Change this to the correct URL
+		url: `http://192.168.8.160:8001/users/register`,
+		headers: await requireHeaders(),
+		data: {
+			userId,
+		},
+	}).then((response) => response.data);
 }

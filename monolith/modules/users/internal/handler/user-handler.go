@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/bernardmuller/munchies/monolith/modules/users/internal/service"
@@ -29,7 +30,7 @@ func NewHttpUsersHandler(userService *service.UsersService) *UsersHttpHandler {
 func (h *UsersHttpHandler) RegisterRouter(router *echo.Echo) {
 	router.POST("/users", h.CreateUser)
 	router.GET("/users", h.GetUsers)
-	router.GET("/users/:id", h.GetUserById)
+	router.POST("/users/register", h.RegisterUser)
 }
 
 func (h *UsersHttpHandler) CreateUser(c echo.Context) error {
@@ -68,18 +69,18 @@ func (h *UsersHttpHandler) GetUsers(c echo.Context) error {
 		return c.String(http.StatusNoContent, err.Error())
 	}
 
-	// usersSlice := make([]*service.User, len(ps))
-	// for i, p := range ps {
-	// 	usersSlice[i] = &postgres.User{
-	// 		ID:        p.ID,
-	// 		Firstname: p.Firstname,
-	// 		Lastname:  p.Lastname,
-	// 	}
-	// }
+	usersSlice := make([]*service.User, len(ps))
+	for i, p := range ps {
+		usersSlice[i] = &service.User{
+			ID:        p.ID,
+			Firstname: p.Firstname.String,
+			Lastname:  p.Lastname.String,
+		}
+	}
 
 	res := &UserResponse{
 		Status: "success",
-		Data:   ps,
+		Data:   usersSlice,
 	}
 	// utils.WriteJSON(w, http.StatusOK, res)
 	return c.JSON(http.StatusOK, res)
@@ -94,4 +95,23 @@ func (h *UsersHttpHandler) GetUserById(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, p)
+}
+
+type RegisterUserRequest struct {
+	UserId string `json:"userId"`
+}
+
+func (h *UsersHttpHandler) RegisterUser(c echo.Context) error {
+	fmt.Println("RegisterUser")
+	var user RegisterUserRequest
+
+	err := json.NewDecoder(c.Request().Body).Decode(&user)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error decoding request body users")
+	}
+
+	fmt.Println("user => ", user)
+
+	return c.String(http.StatusOK, "Success")
+
 }

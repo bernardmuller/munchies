@@ -18,3 +18,9 @@ export const requireHeaders = async () => {
 		Authorization: "Bearer " + token,
 	};
 };
+
+export const requirePublicHeaders = async () => {
+	return {
+		ContentType: "Application/json",
+	};
+};

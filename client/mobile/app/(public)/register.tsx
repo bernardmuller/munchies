@@ -1,15 +1,17 @@
 import { Button, TextInput, View, StyleSheet } from "react-native";
-import { useSignUp } from "@clerk/clerk-expo";
+import { useAuth, useSignUp } from "@clerk/clerk-expo";
 import Spinner from "react-native-loading-spinner-overlay";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Stack } from "expo-router";
 import React from "react";
+import { registerUser } from "@/api/auth";
 
 const Register = () => {
 	const { isLoaded, signUp, setActive } = useSignUp();
+	const { getToken, userId } = useAuth();
 
-	const [emailAddress, setEmailAddress] = useState("");
-	const [password, setPassword] = useState("");
+	const [emailAddress, setEmailAddress] = useState("me@bernardmuller.co.za");
+	const [password, setPassword] = useState("!@#Tester123");
 	const [pendingVerification, setPendingVerification] = useState(false);
 	const [code, setCode] = useState("");
 	const [loading, setLoading] = useState(false);
@@ -23,13 +25,13 @@ const Register = () => {
 
 		try {
 			// Create the user on Clerk
-			await signUp.create({
+			const signUpRes = await signUp.create({
 				emailAddress,
 				password,
 			});
 
 			// Send verification Email
-			await signUp.prepareEmailAddressVerification({
+			const prep = await signUp.prepareEmailAddressVerification({
 				strategy: "email_code",
 			});
 
@@ -55,6 +57,12 @@ const Register = () => {
 					code,
 				}
 			);
+
+			const registerUserOnBackend = await registerUser({
+				userId: completeSignUp.createdUserId as string,
+			});
+
+			console.log("registerUserOnBackend => ", registerUserOnBackend);
 
 			await setActive({ session: completeSignUp.createdSessionId });
 		} catch (err: any) {
