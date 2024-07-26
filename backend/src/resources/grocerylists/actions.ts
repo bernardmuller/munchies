@@ -1,6 +1,6 @@
 import { db } from '../../db/db';
 import { getUuid } from '../../shared/utils';
-import { GrocerylistModel } from '../../../prisma/zod';
+import { grocerylistsModel } from '../../../prisma/zod';
 
 export const createGrocerylist = async (data: {
   createdBy: string;
@@ -8,7 +8,7 @@ export const createGrocerylist = async (data: {
 }) => {
   const grocerylistData = { id: getUuid(), ...data };
 
-  const res = await db.grocerylist
+  const res = await db.grocerylists
     .create({ data: grocerylistData })
     .catch((err) => {
       console.log('err: ', err);
@@ -19,7 +19,7 @@ export const createGrocerylist = async (data: {
 };
 
 export const getGrocerylists = async () => {
-  const rows = await db.grocerylist.findMany({
+  const rows = await db.grocerylists.findMany({
     include: { menu: true },
     orderBy: {
       createdAt: 'desc',
@@ -29,7 +29,7 @@ export const getGrocerylists = async () => {
 };
 
 export const getGrocerylistsByUserId = async (userId: string) => {
-  const rows = await db.grocerylist.findMany({
+  const rows = await db.grocerylists.findMany({
     where: { createdBy: userId },
     include: { menu: true },
     orderBy: {
@@ -40,27 +40,27 @@ export const getGrocerylistsByUserId = async (userId: string) => {
 };
 
 export const getGrocerylist = async (id: string) => {
-  const row = await db.grocerylist.findUnique({
+  const row = await db.grocerylists.findUnique({
     where: { id },
   });
-  const menu = await db.menu.findUnique({
+  const menu = await db.menus.findUnique({
     where: { id: row?.menuId as string },
   });
   if (!row) throw new Error('Could not find grocerylist');
-  const items = await db.item.findMany({
+  const items = await db.items.findMany({
     where: { groceryListId: id },
     include: { ingredient: true },
   });
-  const grocerylist = GrocerylistModel.parse(row);
+  const grocerylist = grocerylistsModel.parse(row);
   return { ...grocerylist, menu: menu, items };
 };
 
 export const getGrocerylistByMenuId = async (menuId: string) => {
-  const row = await db.grocerylist.findUnique({
+  const row = await db.grocerylists.findUnique({
     where: { menuId },
   });
   if (!row) throw new Error('Could not find grocerylist');
-  const grocerylist = GrocerylistModel.parse(row);
+  const grocerylist = grocerylistsModel.parse(row);
   return grocerylist;
 };
 
@@ -73,13 +73,13 @@ export const updateGrocerylist = async (
     throw new Error('User not found');
   }
 
-  const updatedGrocerylistData = await db.grocerylist.update({
+  const updatedGrocerylistData = await db.grocerylists.update({
     where: { id },
     data: { ...data },
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const updatedGrocerylist = GrocerylistModel.parse(updatedGrocerylistData);
+  const updatedGrocerylist = grocerylistsModel.parse(updatedGrocerylistData);
 
   return updatedGrocerylist;
 };
@@ -88,7 +88,7 @@ export const deleteGrocerylist = async (id: string) => {
   const grocerylist = await getGrocerylist(id);
   if (!grocerylist) throw new Error('User not found');
 
-  await db.grocerylist.delete({
+  await db.grocerylists.delete({
     where: {
       id,
     },
@@ -96,11 +96,11 @@ export const deleteGrocerylist = async (id: string) => {
 };
 
 export const deleteGrocerylists = async () => {
-  await db.grocerylist.deleteMany();
+  await db.grocerylists.deleteMany();
 };
 
 export const getNewestGrocerylist = async (userId: string) => {
-  const grocerylist = await db.grocerylist
+  const grocerylist = await db.grocerylists
     .findFirst({
       orderBy: {
         createdAt: 'desc',
@@ -112,7 +112,7 @@ export const getNewestGrocerylist = async (userId: string) => {
       throw new Error('Could not find newest grocerylist');
     });
   if (!grocerylist) throw new Error('Could not find newest grocerylist');
-  const items = await db.item
+  const items = await db.items
     .findMany({
       where: { groceryListId: grocerylist.id },
       include: { ingredient: true },
@@ -139,13 +139,13 @@ export const getNewestGrocerylist = async (userId: string) => {
 //   menuId: string,
 // ): Promise<void> {
 //   // create menu_meal
-//   const menuMeal = await db.menuMeals.create({
+//   const menuMeal = await db.menusMeals.create({
 //     mealId: mealId,
 //     menuId: menuId,
 //   });
 
 //   // get menu's grocery list ID
-//   const menu = await db.menu.findByPk(menuId);
+//   const menu = await db.menus.findByPk(menuId);
 //   const groceryListId = menu.groceryListId;
 
 //   // loop through meal_ingredients
@@ -163,7 +163,7 @@ export const getNewestGrocerylist = async (userId: string) => {
 //     });
 
 //     // add item to grocery list
-//     await db.grocerylist_item.create({
+//     await db.grocerylists_item.create({
 //       groceryListId,
 //       itemId: groceryItem.id,
 //     });

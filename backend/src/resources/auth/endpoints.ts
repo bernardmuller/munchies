@@ -21,14 +21,14 @@ const endpoints = [
     method: 'post',
     path: '/auth/register',
     handler: async (req: Request, res: Response) => {
-      const { email, password, firstName, lastName } = req.body;
+      const { email, password, firstname, lastname } = req.body;
       if (!email || !password)
         throw new Error("'Email' and 'Password' required");
       const response = await register({
         email,
         password,
-        firstName,
-        lastName,
+        firstname,
+        lastname,
       });
       return res.send(response);
     },

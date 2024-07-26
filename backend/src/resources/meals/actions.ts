@@ -1,12 +1,12 @@
 import { db } from '../../db/db';
 import { createSuccessMessage, getUuid } from '../../shared/utils';
-import { MealModel } from '../../../prisma/zod';
+import { mealsModel } from '../../../prisma/zod';
 import { getIngredients } from '../ingredients/actions';
 import { NotFoundError } from '../../shared/errors';
-import { Ingredient, Meal } from '@prisma/client';
+import { ingredients, meals } from '@prisma/client';
 
 type CreateMealArgs = Pick<
-  Meal,
+  meals,
   | 'name'
   | 'directions'
   | 'cuisine'
@@ -19,7 +19,7 @@ type CreateMealArgs = Pick<
   | 'notes'
   | 'createdBy'
 > & {
-  ingredients: Ingredient[];
+  ingredients: ingredients[];
   directions: string[];
 };
 
@@ -40,10 +40,10 @@ export const createMeal = async (data: CreateMealArgs) => {
     createdBy: data.createdBy,
   };
 
-  const res = await db.meal.create({ data: mealData });
+  const res = await db.meals.create({ data: mealData });
 
   for (const ingredient of data.ingredients) {
-    await db.mealIngredient.create({
+    await db.meal_ingredients.create({
       data: {
         id: getUuid(),
         mealId: res.id,
@@ -56,7 +56,7 @@ export const createMeal = async (data: CreateMealArgs) => {
 };
 
 export const getMeals = async () => {
-  const rows = await db.meal.findMany({
+  const rows = await db.meals.findMany({
     where: {
       deleted: false,
     },
@@ -71,7 +71,7 @@ export const getMeals = async () => {
 
 export const getMealsByUserId = async (id: string) => {
   if (!id) throw new Error('No user id provided');
-  const rows = await db.meal.findMany({
+  const rows = await db.meals.findMany({
     where: { createdBy: id, deleted: false },
     include: {
       ingredients: {
@@ -83,13 +83,13 @@ export const getMealsByUserId = async (id: string) => {
 };
 
 export const getMeal = async (id: string) => {
-  let uniqueMeal = await db.meal.findUnique({
+  let uniqueMeal = await db.meals.findUnique({
     where: { id: id },
   });
   if (!uniqueMeal || uniqueMeal.deleted)
     throw new NotFoundError('Meal not found');
 
-  const mealIngredients = await db.mealIngredient.findMany({
+  const mealIngredients = await db.meal_ingredients.findMany({
     where: { mealId: id },
     include: { ingredient: true },
   });
@@ -125,7 +125,7 @@ export const updateMeal = async (
     throw new NotFoundError();
   }
 
-  const updatedMealData = await db.meal.update({
+  const updatedMealData = await db.meals.update({
     where: { id },
     data: {
       ...data,
@@ -134,7 +134,7 @@ export const updateMeal = async (
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const updatedMeal = MealModel.parse(updatedMealData);
+  const updatedMeal = mealsModel.parse(updatedMealData);
 
   return updatedMeal;
 };
@@ -143,7 +143,7 @@ export const deleteMeal = async (id: string) => {
   const meal = await getMeal(id);
   if (!meal) throw new Error('Meal not found');
 
-  const updatedMealData = await db.meal.update({
+  const updatedMealData = await db.meals.update({
     where: { id },
     data: {
       deleted: true,
@@ -154,7 +154,7 @@ export const deleteMeal = async (id: string) => {
 };
 
 export const deleteMeals = async () => {
-  await db.meal.deleteMany();
+  await db.meals.deleteMany();
 };
 
 export const addIngredientToMeal = async ({
@@ -170,7 +170,7 @@ export const addIngredientToMeal = async ({
   const ingredient = await getIngredients({ filters: { id: ingredientId } });
   if (!ingredient) throw new NotFoundError('Ingredient not found.');
 
-  const existingMealIngredient = await db.mealIngredient.findFirst({
+  const existingMealIngredient = await db.meal_ingredients.findFirst({
     where: { AND: [{ mealId }, { ingredientId }] },
   });
 
@@ -178,7 +178,7 @@ export const addIngredientToMeal = async ({
 
   // throw new Error('Ingredient already exists in meal.');
 
-  await db.mealIngredient.create({
+  await db.meal_ingredients.create({
     data: {
       id: getUuid(),
       mealId,
@@ -186,7 +186,7 @@ export const addIngredientToMeal = async ({
     },
   });
 
-  const mealIngredients = await db.mealIngredient.findMany();
+  const mealIngredients = await db.meal_ingredients.findMany();
 
   return createSuccessMessage();
 };
@@ -204,10 +204,10 @@ export const removeIngredientFromMeal = async ({
   const ingredient = await getIngredients({ filters: { id: ingredientId } });
   if (!ingredient) throw new NotFoundError('Ingredient not found.');
 
-  const mealIngredient = await db.mealIngredient.findFirst({
+  const mealIngredient = await db.meal_ingredients.findFirst({
     where: { AND: [{ mealId }, { ingredientId }] },
   });
-  await db.mealIngredient.delete({ where: { id: mealIngredient?.id } });
+  await db.meal_ingredients.delete({ where: { id: mealIngredient?.id } });
 
   return createSuccessMessage();
 };
@@ -227,10 +227,10 @@ export const addQuantityToMealIngredient = async ({
   const ingredient = await getIngredients({ filters: { id: ingredientId } });
   if (!ingredient) throw new NotFoundError('Ingredient not found.');
 
-  const mealIngredient = await db.mealIngredient.findFirst({
+  const mealIngredient = await db.meal_ingredients.findFirst({
     where: { AND: [{ mealId }, { ingredientId }] },
   });
-  await db.mealIngredient.update({
+  await db.meal_ingredients.update({
     where: { id: mealIngredient?.id },
     data: { quantity },
   });
@@ -250,7 +250,7 @@ export const addDirectionToMeal = async ({
 
   const directions = [...meal.directions, direction];
 
-  await db.meal.update({
+  await db.meals.update({
     where: { id: mealId },
     data: {
       directions: directions,
@@ -274,7 +274,7 @@ export const removeDirectionFromMeal = async ({
     (_, index) => index !== directionIndex,
   );
 
-  await db.meal.update({
+  await db.meals.update({
     where: { id: mealId },
     data: {
       directions: directions,

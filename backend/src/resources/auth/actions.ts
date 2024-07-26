@@ -6,7 +6,7 @@ import {
   tradeTokenForUser,
 } from '../../shared/utils';
 import { db } from '../../db/db';
-import { UserModel } from '../../../prisma/zod';
+import { usersModel } from '../../../prisma/zod';
 import { createUser, getUser } from '../users/actions';
 import { AuthenticationError } from '../../shared/errors';
 
@@ -19,7 +19,7 @@ type LoginData = z.infer<typeof loginSchema>;
 
 export const login = async (data: LoginData) => {
   loginSchema.parse(data);
-  const user = await db.user.findUnique({
+  const user = await db.users.findUnique({
     where: {
       email: data.email,
     },
@@ -36,16 +36,16 @@ export const login = async (data: LoginData) => {
 const registerSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
+  firstname: z.string().min(1),
+  lastname: z.string().min(1),
 });
 
-type User = z.infer<typeof UserModel>;
+type User = z.infer<typeof usersModel>;
 
 type RegisterData = z.infer<typeof registerSchema>;
 
 export const register = async (data: RegisterData) => {
-  const existingUser = await db.user.findFirst({
+  const existingUser = await db.users.findFirst({
     where: {
       email: data.email,
     },

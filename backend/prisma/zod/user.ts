@@ -1,7 +1,14 @@
-import * as z from "zod"
-import { CompleteSession, RelatedSessionModel, CompleteHousehold, RelatedHouseholdModel, CompleteHouseholdInvite, RelatedHouseholdInviteModel } from "./index"
+import * as z from 'zod';
+import {
+  CompleteSession,
+  RelatedSessionModel,
+  CompleteHousehold,
+  RelatedHouseholdModel,
+  CompleteHouseholdInvite,
+  RelatedHouseholdInviteModel,
+} from './index';
 
-export const UserModel = z.object({
+export const usersModel = z.object({
   id: z.string(),
   email: z.string(),
   password: z.string(),
@@ -15,21 +22,23 @@ export const UserModel = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   householdId: z.string().nullish(),
-})
+});
 
-export interface CompleteUser extends z.infer<typeof UserModel> {
-  session: CompleteSession[]
-  household?: CompleteHousehold | null
-  HouseholdInvite: CompleteHouseholdInvite[]
+export interface CompleteUser extends z.infer<typeof usersModel> {
+  session: CompleteSession[];
+  household?: CompleteHousehold | null;
+  HouseholdInvite: CompleteHouseholdInvite[];
 }
 
 /**
- * RelatedUserModel contains all relations on your model in addition to the scalars
+ * RelatedusersModel contains all relations on your model in addition to the scalars
  *
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
-export const RelatedUserModel: z.ZodSchema<CompleteUser> = z.lazy(() => UserModel.extend({
-  session: RelatedSessionModel.array(),
-  household: RelatedHouseholdModel.nullish(),
-  HouseholdInvite: RelatedHouseholdInviteModel.array(),
-}))
+export const RelatedusersModel: z.ZodSchema<CompleteUser> = z.lazy(() =>
+  usersModel.extend({
+    session: RelatedSessionModel.array(),
+    household: RelatedHouseholdModel.nullish(),
+    HouseholdInvite: RelatedHouseholdInviteModel.array(),
+  }),
+);

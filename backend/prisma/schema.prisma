@@ -18,50 +18,50 @@ model untitled_table {
   id Int @id @default(autoincrement())
 }
 
-model User {
+model users {
   id          String     @id @db.Uuid
   email       String     @unique
   password    String
-  firstName   String?
-  lastName    String?
-  dateOfBirth DateTime?
+  firstname   String?
+  lastname    String?
+  dateofbirth DateTime?
   role        String?
   bio         String?
   image       String?
   status      String?
-  session     Session[]
-  household   Household? @relation(fields: [householdId], references: [id])
+  session     sessions[]
+  household   households? @relation(fields: [householdid], references: [id])
 
-  createdAt       DateTime          @default(now()) @db.Timestamptz()
-  updatedAt       DateTime          @updatedAt @db.Timestamptz()
-  householdId     String?           @db.Uuid
-  HouseholdInvite HouseholdInvite[]
+  createdat       DateTime          @default(now()) @db.Timestamptz()
+  updatedat       DateTime          @updatedAt @db.Timestamptz()
+  householdid     String?           @db.Uuid
+  Householdinvite household_invites[]
 }
 
-model Session {
+model sessions {
   id     String @id @db.Uuid
-  user   User   @relation(fields: [userId], references: [id])
+  user   users   @relation(fields: [userId], references: [id])
   userId String @db.Uuid
 }
 
-model Menu {
+model menus {
   id          String     @id @db.Uuid
   name        String?    @default("New Menu")
   startDate   DateTime?
   endDate     DateTime?
   createdAt   DateTime   @default(now()) @db.Timestamptz()
   householdId String?    @db.Uuid
-  Household   Household? @relation(fields: [householdId], references: [id])
+  Household   households? @relation(fields: [householdId], references: [id])
   createdBy   String?    @db.Uuid
   archived    Boolean?   @default(false)
 
   grocerylistId String? @unique @db.Uuid
 
-  meals       MenuMeals[]
-  Grocerylist Grocerylist?
+  meals       menu_meals[]
+  Grocerylist grocerylists?
 }
 
-model Meal {
+model meals {
   id         String   @id @db.Uuid
   name       String?  @default("New Meal")
   seasons    String?
@@ -78,56 +78,56 @@ model Meal {
   createdAt  DateTime @default(now()) @db.Timestamptz()
   createdBy  String?  @db.Uuid
 
-  menu        MenuMeals[]
-  ingredients MealIngredient[]
+  menu        menu_meals[]
+  ingredients meal_ingredients[]
 }
 
-model MenuMeals {
+model menu_meals {
   id String @id @db.Uuid
 
   menuId String @db.Uuid
-  menu   Menu   @relation(fields: [menuId], references: [id])
+  menu   menus   @relation(fields: [menuId], references: [id])
 
   mealId String @db.Uuid
-  meal   Meal   @relation(fields: [mealId], references: [id])
+  meal   meals   @relation(fields: [mealId], references: [id])
 }
 
-model Ingredient {
+model ingredients {
   id         String   @id @db.Uuid
   name       String
   categoryId Int      @default(0)
   createdAt  DateTime @default(now()) @db.Timestamptz()
   createdBy  String?  @db.Uuid
 
-  meal   MealIngredient[]
+  meal   meal_ingredients[]
   mealId String?          @db.Uuid
 
-  item Item[]
+  item items[]
 }
 
-model MealIngredient {
+model meal_ingredients {
   id String @id @db.Uuid
 
   mealId String @db.Uuid
-  meal   Meal   @relation(fields: [mealId], references: [id])
+  meal   meals   @relation(fields: [mealId], references: [id])
 
   ingredientId String     @db.Uuid
-  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredient   ingredients @relation(fields: [ingredientId], references: [id])
   quantity     String?
 }
 
-model Grocerylist {
+model grocerylists {
   id          String     @id @db.Uuid
   createdAt   DateTime   @default(now()) @db.Timestamptz()
   createdBy   String?    @db.Uuid
   menuId      String?    @unique @db.Uuid
-  menu        Menu?      @relation(fields: [menuId], references: [id])
-  Item        Item[]
+  menu        menus?      @relation(fields: [menuId], references: [id])
+  Item        items[]
   householdId String?    @db.Uuid
-  household   Household? @relation(fields: [householdId], references: [id])
+  household   households? @relation(fields: [householdId], references: [id])
 }
 
-model Item {
+model items {
   id          String  @id @db.Uuid
   check       Boolean @default(false)
   typeId      Int
@@ -137,49 +137,49 @@ model Item {
   createdBy String?  @db.Uuid
 
   groceryListId String      @db.Uuid
-  groceryList   Grocerylist @relation(fields: [groceryListId], references: [id], onDelete: SetNull)
+  groceryList   grocerylists @relation(fields: [groceryListId], references: [id], onDelete: SetNull)
 
   ingredientId String?     @db.Uuid
-  ingredient   Ingredient? @relation(fields: [ingredientId], references: [id], onDelete: SetNull)
+  ingredient   ingredients? @relation(fields: [ingredientId], references: [id], onDelete: SetNull)
 
-  Listing Listing[]
+  Listing listings[]
 }
 
-model Household {
+model households {
   id        String @id @db.Uuid
   createdBy String @db.Uuid
 
   createdAt DateTime @default(now()) @db.Timestamptz()
 
-  users           User[]
-  menus           Menu[]
-  HouseholdInvite HouseholdInvite[]
-  Grocerylist     Grocerylist[]
+  users           users[]
+  menus           menus[]
+  HouseholdInvite household_invites[]
+  Grocerylist     grocerylists[]
 }
 
-model HouseholdInvite {
+model household_invites {
   id        String   @id @db.Uuid
   createdBy String   @db.Uuid
   createdAt DateTime @default(now()) @db.Timestamptz()
 
   householdId String    @db.Uuid
-  household   Household @relation(fields: [householdId], references: [id], onDelete: SetNull)
+  household   households @relation(fields: [householdId], references: [id], onDelete: SetNull)
 
   userId String @db.Uuid
-  user   User   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user   users   @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
-model Listing {
+model listings {
   id        String   @id @db.Uuid
   createdAt DateTime @default(now()) @db.Timestamptz()
 
   itemId String @db.Uuid
-  item   Item   @relation(fields: [itemId], references: [id], onDelete: SetNull)
+  item   items   @relation(fields: [itemId], references: [id], onDelete: SetNull)
 
   price String
 }
 
-model Category {
+model categories {
   id   Int    @id @default(autoincrement())
   name String
 }

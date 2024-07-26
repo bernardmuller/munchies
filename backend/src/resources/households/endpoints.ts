@@ -93,12 +93,12 @@ const endpoints = [
 
       const user = await getUser(currentUser);
 
-      if (!user.householdId) {
+      if (!user.householdid) {
         return res.send({ message: 'User is not part of a household' });
       }
 
       const household = await getHouseholds({
-        filters: { id: user.householdId },
+        filters: { id: user.householdid },
       });
 
       return res.send(household);

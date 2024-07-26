@@ -1,5 +1,10 @@
-import * as z from "zod"
-import { CompleteHousehold, RelatedHouseholdModel, CompleteUser, RelatedUserModel } from "./index"
+import * as z from 'zod';
+import {
+  CompleteHousehold,
+  RelatedHouseholdModel,
+  CompleteUser,
+  RelatedusersModel,
+} from './index';
 
 export const HouseholdInviteModel = z.object({
   id: z.string(),
@@ -7,11 +12,12 @@ export const HouseholdInviteModel = z.object({
   createdAt: z.date(),
   householdId: z.string(),
   userId: z.string(),
-})
+});
 
-export interface CompleteHouseholdInvite extends z.infer<typeof HouseholdInviteModel> {
-  household: CompleteHousehold
-  user: CompleteUser
+export interface CompleteHouseholdInvite
+  extends z.infer<typeof HouseholdInviteModel> {
+  household: CompleteHousehold;
+  user: CompleteUser;
 }
 
 /**
@@ -19,7 +25,10 @@ export interface CompleteHouseholdInvite extends z.infer<typeof HouseholdInviteM
  *
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
-export const RelatedHouseholdInviteModel: z.ZodSchema<CompleteHouseholdInvite> = z.lazy(() => HouseholdInviteModel.extend({
-  household: RelatedHouseholdModel,
-  user: RelatedUserModel,
-}))
+export const RelatedHouseholdInviteModel: z.ZodSchema<CompleteHouseholdInvite> =
+  z.lazy(() =>
+    HouseholdInviteModel.extend({
+      household: RelatedHouseholdModel,
+      user: RelatedusersModel,
+    }),
+  );

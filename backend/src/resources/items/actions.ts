@@ -1,6 +1,6 @@
 import { db } from '../../db/db';
 import { getUuid } from '../../shared/utils';
-import { ItemModel } from '../../../prisma/zod';
+import { itemsModel } from '../../../prisma/zod';
 
 export const createItem = async (data: {
   ingredientId: string;
@@ -17,21 +17,21 @@ export const createItem = async (data: {
     ingredientId: data.ingredientId,
   };
 
-  const res = await db.item.create({
+  const res = await db.items.create({
     data: itemData,
   });
-  const newItem = ItemModel.parse(res);
+  const newItem = itemsModel.parse(res);
   return newItem;
 };
 
 export const getItems = async (params?: { filters?: { id?: string } }) => {
   if (params?.filters?.id) {
-    const row = await db.item.findUnique({ where: { id: params.filters.id } });
-    const Item = ItemModel.parse(row);
+    const row = await db.items.findUnique({ where: { id: params.filters.id } });
+    const Item = itemsModel.parse(row);
     return Item;
   }
-  const rows = await db.item.findMany();
-  const Items = rows.map((row) => ItemModel.parse(row));
+  const rows = await db.items.findMany();
+  const Items = rows.map((row) => itemsModel.parse(row));
   return Items;
 };
 
@@ -44,12 +44,12 @@ export const updateItem = async (
     throw new Error('Item not found');
   }
 
-  const updatedItemData = await db.item.update({
+  const updatedItemData = await db.items.update({
     where: { id },
     data: { ...data },
   });
 
-  const updatedItem = ItemModel.parse(updatedItemData);
+  const updatedItem = itemsModel.parse(updatedItemData);
 
   return updatedItem;
 };
@@ -58,7 +58,7 @@ export const deleteItem = async (id: string) => {
   const Item = await getItems({ filters: { id } });
   if (!Item) throw new Error('Item not found');
 
-  await db.item.delete({
+  await db.items.delete({
     where: {
       id,
     },
@@ -68,7 +68,7 @@ export const deleteItem = async (id: string) => {
 };
 
 export const deleteAllItems = async () => {
-  await db.item.deleteMany();
+  await db.items.deleteMany();
 };
 
 export const checkItem = async (id: string) => {
@@ -77,7 +77,7 @@ export const checkItem = async (id: string) => {
     throw new Error('Item not found');
   }
 
-  const updatedItem = await db.item.update({
+  const updatedItem = await db.items.update({
     where: { id },
     data: { check: true },
   });
@@ -91,7 +91,7 @@ export const unCheckItem = async (id: string) => {
     throw new Error('Item not found');
   }
 
-  const updatedItem = await db.item.update({
+  const updatedItem = await db.items.update({
     where: { id },
     data: { check: false },
   });
@@ -104,7 +104,7 @@ export const createExtraItem = async ({
 }: {
   description: string;
 }) => {
-  const item = await db.item.create({
+  const item = await db.items.create({
     // @ts-ignore
     data: {
       id: getUuid(),

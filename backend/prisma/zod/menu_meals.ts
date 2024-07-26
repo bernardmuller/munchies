@@ -1,23 +1,23 @@
 import * as z from "zod"
-import { CompleteMenu, RelatedMenuModel, CompleteMeal, RelatedMealModel } from "./index"
+import { Completemenus, RelatedmenusModel, Completemeals, RelatedmealsModel } from "./index"
 
-export const Menu_MealsModel = z.object({
+export const menu_mealsModel = z.object({
   id: z.string(),
   menuId: z.string(),
   mealId: z.string(),
 })
 
-export interface CompleteMenu_Meals extends z.infer<typeof Menu_MealsModel> {
-  menu: CompleteMenu
-  meal: CompleteMeal
+export interface Completemenu_meals extends z.infer<typeof menu_mealsModel> {
+  menu: Completemenus
+  meal: Completemeals
 }
 
 /**
- * RelatedMenu_MealsModel contains all relations on your model in addition to the scalars
+ * Relatedmenu_mealsModel contains all relations on your model in addition to the scalars
  *
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
-export const RelatedMenu_MealsModel: z.ZodSchema<CompleteMenu_Meals> = z.lazy(() => Menu_MealsModel.extend({
-  menu: RelatedMenuModel,
-  meal: RelatedMealModel,
+export const Relatedmenu_mealsModel: z.ZodSchema<Completemenu_meals> = z.lazy(() => menu_mealsModel.extend({
+  menu: RelatedmenusModel,
+  meal: RelatedmealsModel,
 }))

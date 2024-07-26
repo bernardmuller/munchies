@@ -14,7 +14,6 @@ import (
 type User struct {
 	ID          uuid.UUID
 	Email       string
-	ClerkID     sql.NullString
 	Firstname   sql.NullString
 	Lastname    sql.NullString
 	Dateofbirth sql.NullTime
@@ -25,4 +24,5 @@ type User struct {
 	Createdat   time.Time
 	Updatedat   time.Time
 	Householdid uuid.NullUUID
+	ClerkID     uuid.NullUUID
 }

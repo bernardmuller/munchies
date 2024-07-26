@@ -1,6 +1,6 @@
 import { db } from '../../db/db';
 import { getUuid } from '../../shared/utils';
-import { IngredientModel } from '../../../prisma/zod';
+import { ingredientsModel } from '../../../prisma/zod';
 import { ingredientCategories } from '../../shared/constants';
 
 export const createIngredient = async (data: {
@@ -12,8 +12,8 @@ export const createIngredient = async (data: {
     throw new Error('Invalid ingredient category id');
   const IngredientData = { ...data, id: data.id || getUuid() };
 
-  const res = await db.ingredient.create({ data: IngredientData });
-  const newIngredient = IngredientModel.parse(res);
+  const res = await db.ingredients.create({ data: IngredientData });
+  const newIngredient = ingredientsModel.parse(res);
   return newIngredient;
 };
 
@@ -24,11 +24,11 @@ export const getIngredients = async (params?: {
   searchTerm?: string;
 }) => {
   if (params?.filters?.id) {
-    const row = await db.ingredient.findUnique({
+    const row = await db.ingredients.findUnique({
       where: { id: params.filters.id },
     });
     if (!row) throw new Error(`Could not find`);
-    const Ingredient = IngredientModel.parse(row);
+    const Ingredient = ingredientsModel.parse(row);
     return Ingredient;
   }
 
@@ -49,17 +49,17 @@ export const getIngredients = async (params?: {
     };
   }
 
-  const rows = await db.ingredient.findMany({ ...options });
-  const Ingredients = rows.map((row) => IngredientModel.parse(row));
+  const rows = await db.ingredients.findMany({ ...options });
+  const Ingredients = rows.map((row) => ingredientsModel.parse(row));
   return Ingredients;
 };
 
 export const getIngredientbyId = async (id: string) => {
-  const row = await db.ingredient.findUnique({
+  const row = await db.ingredients.findUnique({
     where: { id },
   });
   if (!row) throw new Error(`Could not find`);
-  const Ingredient = IngredientModel.parse(row);
+  const Ingredient = ingredientsModel.parse(row);
   return Ingredient;
 };
 
@@ -67,7 +67,7 @@ export const deleteIngredient = async (id: string) => {
   const ingredient = await getIngredients({ filters: { id } });
   if (!ingredient) throw new Error('Ingredient not found');
 
-  await db.ingredient.delete({
+  await db.ingredients.delete({
     where: {
       id,
     },
@@ -75,7 +75,7 @@ export const deleteIngredient = async (id: string) => {
 };
 
 export const deleteAllIngredients = async () => {
-  await db.ingredient.deleteMany();
+  await db.ingredients.deleteMany();
 };
 
 export const updateIngredient = async (
@@ -94,12 +94,12 @@ export const updateIngredient = async (
       throw new Error('Invalid ingredient category id');
   }
 
-  const updatedIngredientData = await db.ingredient.update({
+  const updatedIngredientData = await db.ingredients.update({
     where: { id },
     data: { ...data },
   });
 
-  const updatedIngredient = IngredientModel.parse(updatedIngredientData);
+  const updatedIngredient = ingredientsModel.parse(updatedIngredientData);
 
   return updatedIngredient;
 };

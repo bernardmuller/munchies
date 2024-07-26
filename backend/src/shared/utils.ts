@@ -6,7 +6,7 @@ import { requireEnvVar } from '../db/utils';
 import { AuthenticationError } from './errors';
 import { NextFunction, Request, Response } from 'express';
 import { add, formatISO } from 'date-fns';
-import { User } from '@prisma/client';
+import { users } from '@prisma/client';
 
 export const getUuid = () => {
   return uuid();
@@ -20,14 +20,14 @@ export const isValidPassword = (str: string) => {
     );
 };
 
-export const createJwtToken = async ({ user }: { user: User }) => {
+export const createJwtToken = async ({ user }: { user: users }) => {
   const ONE_DAY = 60 * 60 * 24;
   const tomorrow = add(new Date(), { days: 1 });
   const expiryDate = formatISO(tomorrow);
 
   const token = jwt.sign(
     {
-      username: `${user.firstName} ${user.lastName}`,
+      username: `${user.firstname} ${user.lastname}`,
       userId: user.id,
       expiresAt: expiryDate,
     },

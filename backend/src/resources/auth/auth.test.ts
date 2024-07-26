@@ -11,10 +11,10 @@ const UserDTO = {
 
 describe('AUTH - register', async () => {
   it('should register a new user to the database', async () => {
-    await db.user.deleteMany();
+    await db.users.deleteMany();
     const user = await register(UserDTO);
     expect(
-      await db.user.findUnique({
+      await db.users.findUnique({
         where: {
           id: user.id,
         },
@@ -23,10 +23,10 @@ describe('AUTH - register', async () => {
   });
 
   it('should throw an error if the user already exists', async () => {
-    await db.user.deleteMany();
+    await db.users.deleteMany();
     const user = await register(UserDTO);
     expect(
-      await db.user.findUnique({
+      await db.users.findUnique({
         where: {
           id: user.id,
         },
@@ -37,7 +37,7 @@ describe('AUTH - register', async () => {
   });
 
   it('should throw an error if the password is not provided', async () => {
-    await db.user.deleteMany();
+    await db.users.deleteMany();
     await expect(
       register({
         ...UserDTO,
@@ -47,7 +47,7 @@ describe('AUTH - register', async () => {
   });
 
   it('should throw an error if the password is not valid', async () => {
-    await db.user.deleteMany();
+    await db.users.deleteMany();
     await expect(
       register({
         ...UserDTO,
@@ -57,7 +57,7 @@ describe('AUTH - register', async () => {
   });
 
   it('should throw an error if the email is not valid', async () => {
-    await db.user.deleteMany();
+    await db.users.deleteMany();
     await expect(
       register({
         ...UserDTO,
@@ -67,7 +67,7 @@ describe('AUTH - register', async () => {
   });
 
   it('should throw an error if the provided data is incomplete', async () => {
-    await db.user.deleteMany();
+    await db.users.deleteMany();
     await expect(
       register({
         ...UserDTO,
@@ -81,7 +81,7 @@ describe('AUTH - register', async () => {
 
 describe('AUTH - login', async () => {
   it('should return a token if the user exists', async () => {
-    await db.user.deleteMany();
+    await db.users.deleteMany();
     const user = await register(UserDTO);
     const response = await login({
       email: user.email,
@@ -90,5 +90,5 @@ describe('AUTH - login', async () => {
     expect(response.token).toBeTruthy();
   });
 
-  await db.user.deleteMany();
+  await db.users.deleteMany();
 });

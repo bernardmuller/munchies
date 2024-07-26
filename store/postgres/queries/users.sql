@@ -1,21 +1,21 @@
 -- name: GetUserByEmail :one
-SELECT * FROM User
+SELECT * FROM users 
 WHERE email = $1;
 
 -- name: CreateUser :one
-INSERT INTO User (id, firstname, lastname, email, clerk_id, dateOfBirth, role, bio, image, status, householdId)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+INSERT INTO users(id, firstname, lastname, email, clerk_id, dateOfBirth, role, bio, image, status, createdAt, updatedAt, householdId)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
 RETURNING *;
 
 -- name: GetUserById :one
-SELECT * FROM User
+SELECT * FROM users 
 WHERE id = $1;
 
 -- name: GetAllUsers :many
-SELECT * FROM User;
+SELECT * FROM users;
 
 -- name: UpdateUser :one
-UPDATE User
+UPDATE users
 SET firstname = $2,
     lastname = $3,
     email = $4,
@@ -30,5 +30,5 @@ WHERE id = $1
 RETURNING *;
 
 -- name: GetUserByClerkId :one
-SELECT * FROM User
+SELECT * FROM users
 WHERE clerk_id = $1;

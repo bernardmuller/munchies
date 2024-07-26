@@ -8,14 +8,15 @@ package postgres
 import (
 	"context"
 	"database/sql"
+	"time"
 
 	"github.com/google/uuid"
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (id, firstname, lastname, email, clerk_id, dateOfBirth, role, bio, image, status, householdId)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-RETURNING id, email, clerk_id, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid
+INSERT INTO users(id, firstname, lastname, email, clerk_id, dateOfBirth, role, bio, image, status, createdAt, updatedAt, householdId)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+RETURNING id, email, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid, clerk_id
 `
 
 type CreateUserParams struct {
@@ -23,12 +24,14 @@ type CreateUserParams struct {
 	Firstname   sql.NullString
 	Lastname    sql.NullString
 	Email       string
-	ClerkID     sql.NullString
+	ClerkID     uuid.NullUUID
 	Dateofbirth sql.NullTime
 	Role        sql.NullString
 	Bio         sql.NullString
 	Image       sql.NullString
 	Status      sql.NullString
+	Createdat   time.Time
+	Updatedat   time.Time
 	Householdid uuid.NullUUID
 }
 
@@ -44,13 +47,14 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		arg.Bio,
 		arg.Image,
 		arg.Status,
+		arg.Createdat,
+		arg.Updatedat,
 		arg.Householdid,
 	)
 	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
-		&i.ClerkID,
 		&i.Firstname,
 		&i.Lastname,
 		&i.Dateofbirth,
@@ -61,12 +65,13 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.Createdat,
 		&i.Updatedat,
 		&i.Householdid,
+		&i.ClerkID,
 	)
 	return i, err
 }
 
 const getAllUsers = `-- name: GetAllUsers :many
-SELECT id, email, clerk_id, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid FROM users
+SELECT id, email, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid, clerk_id FROM users
 `
 
 func (q *Queries) GetAllUsers(ctx context.Context) ([]User, error) {
@@ -81,7 +86,6 @@ func (q *Queries) GetAllUsers(ctx context.Context) ([]User, error) {
 		if err := rows.Scan(
 			&i.ID,
 			&i.Email,
-			&i.ClerkID,
 			&i.Firstname,
 			&i.Lastname,
 			&i.Dateofbirth,
@@ -92,6 +96,7 @@ func (q *Queries) GetAllUsers(ctx context.Context) ([]User, error) {
 			&i.Createdat,
 			&i.Updatedat,
 			&i.Householdid,
+			&i.ClerkID,
 		); err != nil {
 			return nil, err
 		}
@@ -107,17 +112,16 @@ func (q *Queries) GetAllUsers(ctx context.Context) ([]User, error) {
 }
 
 const getUserByClerkId = `-- name: GetUserByClerkId :one
-SELECT id, email, clerk_id, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid FROM users
+SELECT id, email, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid, clerk_id FROM users
 WHERE clerk_id = $1
 `
 
-func (q *Queries) GetUserByClerkId(ctx context.Context, clerkID sql.NullString) (User, error) {
+func (q *Queries) GetUserByClerkId(ctx context.Context, clerkID uuid.NullUUID) (User, error) {
 	row := q.db.QueryRowContext(ctx, getUserByClerkId, clerkID)
 	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
-		&i.ClerkID,
 		&i.Firstname,
 		&i.Lastname,
 		&i.Dateofbirth,
@@ -128,12 +132,13 @@ func (q *Queries) GetUserByClerkId(ctx context.Context, clerkID sql.NullString) 
 		&i.Createdat,
 		&i.Updatedat,
 		&i.Householdid,
+		&i.ClerkID,
 	)
 	return i, err
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, email, clerk_id, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid FROM users
+SELECT id, email, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid, clerk_id FROM users 
 WHERE email = $1
 `
 
@@ -143,7 +148,6 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
-		&i.ClerkID,
 		&i.Firstname,
 		&i.Lastname,
 		&i.Dateofbirth,
@@ -154,12 +158,13 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 		&i.Createdat,
 		&i.Updatedat,
 		&i.Householdid,
+		&i.ClerkID,
 	)
 	return i, err
 }
 
 const getUserById = `-- name: GetUserById :one
-SELECT id, email, clerk_id, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid FROM users
+SELECT id, email, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid, clerk_id FROM users 
 WHERE id = $1
 `
 
@@ -169,7 +174,6 @@ func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (User, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
-		&i.ClerkID,
 		&i.Firstname,
 		&i.Lastname,
 		&i.Dateofbirth,
@@ -180,6 +184,7 @@ func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (User, error) {
 		&i.Createdat,
 		&i.Updatedat,
 		&i.Householdid,
+		&i.ClerkID,
 	)
 	return i, err
 }
@@ -197,7 +202,7 @@ SET firstname = $2,
     status = $10,
     householdId = $11
 WHERE id = $1
-RETURNING id, email, clerk_id, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid
+RETURNING id, email, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid, clerk_id
 `
 
 type UpdateUserParams struct {
@@ -205,7 +210,7 @@ type UpdateUserParams struct {
 	Firstname   sql.NullString
 	Lastname    sql.NullString
 	Email       string
-	ClerkID     sql.NullString
+	ClerkID     uuid.NullUUID
 	Dateofbirth sql.NullTime
 	Role        sql.NullString
 	Bio         sql.NullString
@@ -232,7 +237,6 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
-		&i.ClerkID,
 		&i.Firstname,
 		&i.Lastname,
 		&i.Dateofbirth,
@@ -243,6 +247,7 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		&i.Createdat,
 		&i.Updatedat,
 		&i.Householdid,
+		&i.ClerkID,
 	)
 	return i, err
 }

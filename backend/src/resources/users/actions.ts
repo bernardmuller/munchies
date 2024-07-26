@@ -1,6 +1,6 @@
 import { db } from '../../db/db';
 import { getUuid } from '../../shared/utils';
-import { UserModel } from '../../../prisma/zod';
+import { usersModel } from '../../../prisma/zod';
 import { NotFoundError } from '../../shared/errors';
 
 export const createUser = async (data: {
@@ -12,20 +12,20 @@ export const createUser = async (data: {
 }) => {
   const userData = { ...data, id: data.id || getUuid() };
 
-  const res = await db.user.create({ data: userData });
-  const newUser = UserModel.parse(res);
+  const res = await db.users.create({ data: userData });
+  const newUser = usersModel.parse(res);
   return newUser;
 };
 
 export const getUsers = async () => {
-  const rows = await db.user.findMany();
-  const users = rows.map((row) => UserModel.parse(row));
+  const rows = await db.users.findMany();
+  const users = rows.map((row) => usersModel.parse(row));
   return users;
 };
 
 export const getUser = async (id: string) => {
   if (!id) throw new Error('No id provided');
-  const user = await db.user.findUnique({ where: { id } });
+  const user = await db.users.findUnique({ where: { id } });
   if (!user) throw new Error(`User with id: ${id} not found`);
   return user;
 };
@@ -33,10 +33,10 @@ export const getUser = async (id: string) => {
 export const updateUser = async (
   id: string,
   data: {
-    firstName?: string;
-    lastName?: string;
-    dateOfBirth?: Date;
-    householdId?: string | null;
+    firstname?: string;
+    lastname?: string;
+    dateofbirth?: Date;
+    householdid?: string | null;
   },
 ) => {
   const user = await getUsers();
@@ -44,12 +44,12 @@ export const updateUser = async (
     throw new Error('User not found');
   }
 
-  const updatedUserData = await db.user.update({
+  const updatedUserData = await db.users.update({
     where: { id },
     data,
   });
 
-  const updatedUser = UserModel.parse(updatedUserData);
+  const updatedUser = usersModel.parse(updatedUserData);
   return updatedUser;
 };
 
@@ -57,7 +57,7 @@ export const deleteUser = async (id: string) => {
   const user = await getUsers();
   if (!user) throw new Error('User not found');
 
-  await db.user.delete({
+  await db.users.delete({
     where: {
       id,
     },
@@ -66,5 +66,5 @@ export const deleteUser = async (id: string) => {
 };
 
 export const deleteAllUsers = async () => {
-  await db.user.deleteMany();
+  await db.users.deleteMany();
 };

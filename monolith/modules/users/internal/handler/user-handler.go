@@ -68,18 +68,18 @@ func (h *UsersHttpHandler) GetUsers(c echo.Context) error {
 		return c.String(http.StatusNoContent, err.Error())
 	}
 
-	usersSlice := make([]*service.User, len(ps))
-	for i, p := range ps {
-		usersSlice[i] = &service.User{
-			ID:        p.ID,
-			Firstname: p.Firstname,
-			Lastname:  p.Lastname,
-		}
-	}
+	// usersSlice := make([]*service.User, len(ps))
+	// for i, p := range ps {
+	// 	usersSlice[i] = &postgres.User{
+	// 		ID:        p.ID,
+	// 		Firstname: p.Firstname,
+	// 		Lastname:  p.Lastname,
+	// 	}
+	// }
 
 	res := &UserResponse{
 		Status: "success",
-		Data:   usersSlice,
+		Data:   ps,
 	}
 	// utils.WriteJSON(w, http.StatusOK, res)
 	return c.JSON(http.StatusOK, res)
