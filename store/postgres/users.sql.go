@@ -24,7 +24,7 @@ type CreateUserParams struct {
 	Firstname   sql.NullString
 	Lastname    sql.NullString
 	Email       string
-	ClerkID     uuid.NullUUID
+	ClerkID     sql.NullString
 	Dateofbirth sql.NullTime
 	Role        sql.NullString
 	Bio         sql.NullString
@@ -116,7 +116,7 @@ SELECT id, email, firstname, lastname, dateofbirth, role, bio, image, status, cr
 WHERE clerk_id = $1
 `
 
-func (q *Queries) GetUserByClerkId(ctx context.Context, clerkID uuid.NullUUID) (User, error) {
+func (q *Queries) GetUserByClerkId(ctx context.Context, clerkID sql.NullString) (User, error) {
 	row := q.db.QueryRowContext(ctx, getUserByClerkId, clerkID)
 	var i User
 	err := row.Scan(
@@ -210,7 +210,7 @@ type UpdateUserParams struct {
 	Firstname   sql.NullString
 	Lastname    sql.NullString
 	Email       string
-	ClerkID     uuid.NullUUID
+	ClerkID     sql.NullString
 	Dateofbirth sql.NullTime
 	Role        sql.NullString
 	Bio         sql.NullString

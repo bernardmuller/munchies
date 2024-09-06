@@ -24,5 +24,5 @@ type User struct {
 	Createdat   time.Time
 	Updatedat   time.Time
 	Householdid uuid.NullUUID
-	ClerkID     uuid.NullUUID
+	ClerkID     sql.NullString
 }

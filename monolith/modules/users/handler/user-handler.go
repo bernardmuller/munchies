@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/bernardmuller/munchies/monolith/modules/users/service"
@@ -105,7 +104,6 @@ type RegisterUserRequest struct {
 }
 
 func (h *UsersHttpHandler) ImportUser(c echo.Context) error {
-	fmt.Println("RegisterUser")
 	var user RegisterUserRequest
 
 	err := json.NewDecoder(c.Request().Body).Decode(&user)
@@ -121,10 +119,24 @@ func (h *UsersHttpHandler) ImportUser(c echo.Context) error {
 		return c.String(http.StatusNotFound, err.Error())
 	}
 
-	fmt.Println("usr => ", usr)
+	newDBUser := service.User{
+		ID:        uuid.New(),
+		Firstname: *usr.FirstName,
+		Lastname:  *usr.LastName,
+		Email:     *usr.PrimaryEmailAddressID,
+		ClerkID:   usr.ID,
+	}
 
-	return c.JSON(http.StatusOK, usr)
+	_, err = h.usersService.CreateUser(c.Request().Context(), newDBUser)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
 
+	res := &UserResponse{
+		Status: "success",
+		Data:   &newDBUser,
+	}
+	return c.JSON(http.StatusCreated, res)
 }
 
 // sk_test_QHX2uBzr3J6aCQAEkgoB6MT5arX4TOXeWxakadF806

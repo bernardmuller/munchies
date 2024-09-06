@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"errors"
+	"database/sql"
 	"fmt"
 	"time"
 
@@ -37,16 +37,20 @@ func NewUsersService(db *postgres.Queries) *UsersService {
 }
 
 func (s *UsersService) CreateUser(c context.Context, user User) (postgres.User, error) {
-	// params := postgres.CreateUserParams{
-	// 	ID:        user.ID,
-	// 	Firstname: user.Firstname,
-	// 	Lastname:  user.Lastname,
-	// }
-	// newUser, createErr := s.DB.CreateUser(c, params)
-	// if createErr != nil {
-	// 	return postgres.User{}, createErr
-	// }
-	return postgres.User{}, errors.New("not implemented")
+	params := postgres.CreateUserParams{
+		ID:        user.ID,
+		Firstname: sql.NullString{String: user.Firstname, Valid: true},
+		Lastname:  sql.NullString{String: user.Lastname, Valid: true},
+		ClerkID:   sql.NullString{String: user.ClerkID, Valid: true},
+		Email:     user.Email,
+	}
+
+	newUser, createErr := s.DB.CreateUser(c, params)
+	if createErr != nil {
+		return postgres.User{}, createErr
+	}
+
+	return newUser, nil
 }
 
 func (s *UsersService) GetAllUsers(ctx context.Context) ([]postgres.User, error) {
@@ -85,7 +89,6 @@ func (s *UsersService) GetAllUsers(ctx context.Context) ([]postgres.User, error)
 }
 
 func (s *UsersService) GetUserById(ctx context.Context, id string) (postgres.User, error) {
-	parsedId, _ := uuid.Parse(id)
-	user, _ := s.DB.GetUserByClerkId(ctx, uuid.NullUUID{parsedId, true})
+	user, _ := s.DB.GetUserByClerkId(ctx, sql.NullString{String: id, Valid: true})
 	return user, nil
 }
