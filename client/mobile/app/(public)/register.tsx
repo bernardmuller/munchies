@@ -62,6 +62,9 @@ const Register = () => {
 				userId: completeSignUp.createdUserId as string,
 			});
 
+			const token = await getToken();
+			console.log("token => ", token);
+
 			console.log("registerUserOnBackend => ", registerUserOnBackend);
 
 			await setActive({ session: completeSignUp.createdSessionId });

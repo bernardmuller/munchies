@@ -2,10 +2,14 @@ package module
 
 import (
 	"errors"
+	"log"
 	"os"
+  "net/http"
 
 	"github.com/bernardmuller/munchies/internal/utils"
 	"github.com/bernardmuller/munchies/store/postgres"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type PORT struct {
@@ -13,12 +17,13 @@ type PORT struct {
 	GRPC string
 }
 
-type ModuleConfig struct {
+type Module struct {
 	Database *postgres.Queries
 	PORT     PORT
 }
 
-func CreateConfig(port PORT) (*ModuleConfig, error) {
+
+func CreateModule(port PORT) (*Module, error) {
 	if os.Getenv("ENV") != "production" {
 		err := utils.InitEnv()
 		if err != nil {
@@ -36,12 +41,45 @@ func CreateConfig(port PORT) (*ModuleConfig, error) {
 		return nil, errors.New("Error connecting to Database.")
 	}
 
-	config := ModuleConfig{
+	config := Module{
 		Database: database,
 		PORT:     port,
 	}
 	return &config, nil
 }
+
+func CreateRouter() *echo.Echo {
+	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
+		AllowHeaders: []string{
+			echo.HeaderOrigin,
+			echo.HeaderContentType,
+			echo.HeaderAccept,
+			echo.HeaderAccessControlAllowOrigin,
+			echo.HeaderAccessControlAllowCredentials,
+		},
+	}))
+	e.Static("/static/images", "images")
+	e.Static("/static/css", "css")
+
+	return e
+}
+
+func (m *Module) Start() error {
+	router := CreateRouter()
+
+	// userService := service.NewUsersService(m.Database)
+	// userHandler := handler.NewHttpUsersHandler(userService)
+	// userHandler.RegisterRouter(router)
+
+	log.Println("Starting server on", m.PORT.HTTP)
+
+	return http.ListenAndServe(m.PORT.HTTP, router)
+}
+
 
 //
 //type (

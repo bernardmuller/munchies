@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/bernardmuller/munchies/internal/module"
-	"github.com/bernardmuller/munchies/monolith/modules/users/infrastructure"
 )
 
 func main() {
@@ -12,14 +11,10 @@ func main() {
 		HTTP: ":8001",
 	}
 
-	moduleConfig, err := module.CreateConfig(port)
+	module, err := module.CreateModule(port)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	httpServer := infrastructure.NewHttpServer(moduleConfig)
-	httpServer.Start()
-
-	// grpcServer := infrastructure.NewGrpcServer(moduleConfig)
-	// grpcServer.Start()
+	module.Start()
 }

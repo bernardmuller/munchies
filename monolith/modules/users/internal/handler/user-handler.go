@@ -6,6 +6,9 @@ import (
 	"net/http"
 
 	"github.com/bernardmuller/munchies/monolith/modules/users/internal/service"
+	clerk "github.com/clerk/clerk-sdk-go/v2"
+
+	clerk_users "github.com/clerk/clerk-sdk-go/v2/user"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
@@ -30,7 +33,7 @@ func NewHttpUsersHandler(userService *service.UsersService) *UsersHttpHandler {
 func (h *UsersHttpHandler) RegisterRouter(router *echo.Echo) {
 	router.POST("/users", h.CreateUser)
 	router.GET("/users", h.GetUsers)
-	router.POST("/users/register", h.RegisterUser)
+	router.POST("/users/import", h.ImportUser)
 }
 
 func (h *UsersHttpHandler) CreateUser(c echo.Context) error {
@@ -101,7 +104,7 @@ type RegisterUserRequest struct {
 	UserId string `json:"userId"`
 }
 
-func (h *UsersHttpHandler) RegisterUser(c echo.Context) error {
+func (h *UsersHttpHandler) ImportUser(c echo.Context) error {
 	fmt.Println("RegisterUser")
 	var user RegisterUserRequest
 
@@ -109,9 +112,19 @@ func (h *UsersHttpHandler) RegisterUser(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error decoding request body users")
 	}
+	clerk.SetKey("sk_test_QHX2uBzr3J6aCQAEkgoB6MT5arX4TOXeWxakadF806")
 
-	fmt.Println("user => ", user)
+	usr, err := clerk_users.Get(c.Request().Context(), user.UserId)
+	if err != nil {
+		// handle the error
+		// panic(err)
+		return c.String(http.StatusNotFound, err.Error())
+	}
 
-	return c.String(http.StatusOK, "Success")
+	fmt.Println("usr => ", usr)
+
+	return c.JSON(http.StatusOK, usr)
 
 }
+
+// sk_test_QHX2uBzr3J6aCQAEkgoB6MT5arX4TOXeWxakadF806
