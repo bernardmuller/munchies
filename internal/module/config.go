@@ -3,8 +3,8 @@ package module
 import (
 	"errors"
 	"log"
+	"net/http"
 	"os"
-  "net/http"
 
 	"github.com/bernardmuller/munchies/internal/utils"
 	"github.com/bernardmuller/munchies/store/postgres"
@@ -22,6 +22,17 @@ type Module struct {
 	PORT     PORT
 }
 
+func corsMiddleware(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, Access-Control-Allow-Origin")
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		handler.ServeHTTP(w, r)
+	})
+}
 
 func CreateModule(port PORT) (*Module, error) {
 	if os.Getenv("ENV") != "production" {
@@ -79,7 +90,6 @@ func (m *Module) Start() error {
 
 	return http.ListenAndServe(m.PORT.HTTP, router)
 }
-
 
 //
 //type (
