@@ -7,6 +7,8 @@ import (
 	"os"
 
 	"github.com/bernardmuller/munchies/internal/utils"
+	"github.com/bernardmuller/munchies/monolith/modules/users/handler"
+	"github.com/bernardmuller/munchies/monolith/modules/users/service"
 	"github.com/bernardmuller/munchies/store/postgres"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -82,9 +84,9 @@ func CreateRouter() *echo.Echo {
 func (m *Module) Start() error {
 	router := CreateRouter()
 
-	// userService := service.NewUsersService(m.Database)
-	// userHandler := handler.NewHttpUsersHandler(userService)
-	// userHandler.RegisterRouter(router)
+	userService := service.NewUsersService(m.Database)
+	userHandler := handler.NewHttpUsersHandler(userService)
+	userHandler.RegisterRouter(router)
 
 	log.Println("Starting server on", m.PORT.HTTP)
 
