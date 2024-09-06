@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/bernardmuller/munchies/monolith/modules/users/internal/service"
+	"github.com/bernardmuller/munchies/monolith/modules/users/service"
 	clerk "github.com/clerk/clerk-sdk-go/v2"
 
 	clerk_users "github.com/clerk/clerk-sdk-go/v2/user"
