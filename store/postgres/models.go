@@ -11,6 +11,14 @@ import (
 	"github.com/google/uuid"
 )
 
+type Ingredient struct {
+	ID         uuid.UUID
+	Name       sql.NullString
+	Categoryid sql.NullString
+	Createdat  time.Time
+	Updatedat  time.Time
+}
+
 type User struct {
 	ID          uuid.UUID
 	Email       string

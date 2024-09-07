@@ -83,7 +83,6 @@ func (s *UsersService) GetAllUsers(ctx context.Context) ([]postgres.User, error)
 		fmt.Println(err)
 		return nil, err
 	}
-	fmt.Println(users)
 	return users, nil
 
 }
