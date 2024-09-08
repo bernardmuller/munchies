@@ -1,9 +1,9 @@
 -- +goose Up
-CREATE TABLE IF NOT EXISTS ingredients
+CREATE TABLE IF NOT EXISTS "ingredients"
 (
     id         UUID PRIMARY KEY,
     name       TEXT,
-    categoryId   TEXT,
+    category_id   TEXT,
     createdat  TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updatedat  TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
