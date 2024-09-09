@@ -9,12 +9,12 @@ import (
 )
 
 type Ingredient struct {
-	ID         uuid.UUID
-	Name       string
-	CategoryId string
-	CreatedAt  time.Time
-	Createdby  string
-	UpdatedAd  time.Time
+	ID         uuid.UUID `json:"id"`
+	Name       string    `json:"name"`
+	CategoryId string    `json:"categoryId"`
+	CreatedAt  time.Time `json:"createdAt"`
+	Createdby  string    `json:"createdBy"`
+	UpdatedAd  time.Time `json:"updatedAt"`
 }
 
 type IngredientsService struct {
