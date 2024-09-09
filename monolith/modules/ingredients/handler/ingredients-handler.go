@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -35,6 +36,7 @@ func NewIngredientsHandler(ingredientsService *service.IngredientsService) *Ingr
 func (h *IngredientsHandler) RegisterRouter(router *echo.Echo) {
 	router.GET("/ingredients", h.GetAllIngredients)
 	router.GET("/ingredients/:id", h.GetIngredientById)
+	router.POST("/ingredients", h.CreateIngredient)
 }
 
 func (h *IngredientsHandler) GetAllIngredients(c echo.Context) error {
@@ -58,7 +60,32 @@ func (h *IngredientsHandler) GetAllIngredients(c echo.Context) error {
 }
 
 func (h *IngredientsHandler) CreateIngredient(c echo.Context) error {
-	return c.String(http.StatusOK, "Not Implemented")
+  var ingredient service.Ingredient
+
+	err := json.NewDecoder(c.Request().Body).Decode(&ingredient)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error decoding request body users")
+	}
+
+  if len(ingredient.Name) == 0 {
+		return c.String(http.StatusBadRequest, "Name is required")
+  }
+
+  if len(ingredient.ID) == 0 {
+		return c.String(http.StatusBadRequest, "CategoryID is required")
+  }
+
+  newIngredient, err := h.ingredientsService.CreateIngredient(c.Request().Context(), ingredient)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+  res := &Response{
+		Status: "success",
+		Data:   &newIngredient,
+	}
+	return c.JSON(http.StatusCreated, res)
+
 }
 
 func (h *IngredientsHandler) GetIngredientById(c echo.Context) error {

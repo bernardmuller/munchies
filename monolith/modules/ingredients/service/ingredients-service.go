@@ -37,6 +37,7 @@ func (s *IngredientsService) GetAllIngredients(ctx context.Context) ([]postgres.
 
 func (s *IngredientsService) CreateIngredient(ctx context.Context, ingredient Ingredient) (postgres.Ingredient, error) {
 	createdIngredient, err := s.DB.CreateIngredient(ctx, postgres.CreateIngredientParams{
+		ID:         uuid.New(),
 		Name:       ingredient.Name,
 		CategoryID: uuid.MustParse(ingredient.CategoryId),
 	})
