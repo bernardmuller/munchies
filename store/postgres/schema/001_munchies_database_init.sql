@@ -107,6 +107,14 @@ CREATE TABLE "users" (
     "household_id" UUID
 );
 
+CREATE TABLE "grocerylist_items" (
+    "id" UUID NOT NULL PRIMARY KEY,
+    "grocerylist_id" UUID NOT NULL,
+    "item_id" UUID NOT NULL,
+    "createdat" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdby" UUID
+);
+
 -- Constraints
 ALTER TABLE "users"
     ADD CONSTRAINT "users_role_fkey" 
@@ -247,6 +255,25 @@ ALTER TABLE "role_permissions"
     ADD CONSTRAINT "role_permissions_permission_id_fkey" 
     FOREIGN KEY ("permission_id") 
     REFERENCES "permissions" ("id") 
+    ON DELETE RESTRICT 
+    ON UPDATE CASCADE;
+
+ALTER TABLE "grocerylist_items"
+    ADD CONSTRAINT "grocerylist_items_grocerylist_id_fkey" 
+    FOREIGN KEY ("grocerylist_id") 
+    REFERENCES "grocerylists" ("id") 
+    ON DELETE RESTRICT 
+    ON UPDATE CASCADE,
+
+    ADD CONSTRAINT "grocerylist_items_item_id_fkey" 
+    FOREIGN KEY ("item_id") 
+    REFERENCES "items" ("id") 
+    ON DELETE RESTRICT 
+    ON UPDATE CASCADE,
+
+    ADD CONSTRAINT "grocerylist_items_createdby_fkey" 
+    FOREIGN KEY ("createdby") 
+    REFERENCES "users" ("id") 
     ON DELETE RESTRICT 
     ON UPDATE CASCADE;
 
