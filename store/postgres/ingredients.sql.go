@@ -7,38 +7,37 @@ package postgres
 
 import (
 	"context"
-	"database/sql"
 
 	"github.com/google/uuid"
 )
 
 const createIngredient = `-- name: CreateIngredient :one
-INSERT INTO ingredients(id, name, categoryId)
+INSERT INTO ingredients(id, name, category_id)
 VALUES ($1, $2, $3)
-RETURNING id, name, categoryid, createdat, updatedat
+RETURNING id, name, category_id, createdat, createdby
 `
 
 type CreateIngredientParams struct {
 	ID         uuid.UUID
-	Name       sql.NullString
-	Categoryid sql.NullString
+	Name       string
+	CategoryID uuid.UUID
 }
 
 func (q *Queries) CreateIngredient(ctx context.Context, arg CreateIngredientParams) (Ingredient, error) {
-	row := q.db.QueryRowContext(ctx, createIngredient, arg.ID, arg.Name, arg.Categoryid)
+	row := q.db.QueryRowContext(ctx, createIngredient, arg.ID, arg.Name, arg.CategoryID)
 	var i Ingredient
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
-		&i.Categoryid,
+		&i.CategoryID,
 		&i.Createdat,
-		&i.Updatedat,
+		&i.Createdby,
 	)
 	return i, err
 }
 
 const getAllIngredients = `-- name: GetAllIngredients :many
-SELECT id, name, categoryid, createdat, updatedat FROM ingredients
+SELECT id, name, category_id, createdat, createdby FROM ingredients
 `
 
 func (q *Queries) GetAllIngredients(ctx context.Context) ([]Ingredient, error) {
@@ -53,9 +52,9 @@ func (q *Queries) GetAllIngredients(ctx context.Context) ([]Ingredient, error) {
 		if err := rows.Scan(
 			&i.ID,
 			&i.Name,
-			&i.Categoryid,
+			&i.CategoryID,
 			&i.Createdat,
-			&i.Updatedat,
+			&i.Createdby,
 		); err != nil {
 			return nil, err
 		}
@@ -71,7 +70,7 @@ func (q *Queries) GetAllIngredients(ctx context.Context) ([]Ingredient, error) {
 }
 
 const getIngredientById = `-- name: GetIngredientById :one
-SELECT id, name, categoryid, createdat, updatedat FROM ingredients 
+SELECT id, name, category_id, createdat, createdby FROM ingredients 
 WHERE id = $1
 `
 
@@ -81,35 +80,35 @@ func (q *Queries) GetIngredientById(ctx context.Context, id uuid.UUID) (Ingredie
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
-		&i.Categoryid,
+		&i.CategoryID,
 		&i.Createdat,
-		&i.Updatedat,
+		&i.Createdby,
 	)
 	return i, err
 }
 
 const updateIngredient = `-- name: UpdateIngredient :one
 UPDATE ingredients
-SET id = $1, name = $2, categoryId = $3
+SET id = $1, name = $2, category_id = $3
 WHERE id = $1
-RETURNING id, name, categoryid, createdat, updatedat
+RETURNING id, name, category_id, createdat, createdby
 `
 
 type UpdateIngredientParams struct {
 	ID         uuid.UUID
-	Name       sql.NullString
-	Categoryid sql.NullString
+	Name       string
+	CategoryID uuid.UUID
 }
 
 func (q *Queries) UpdateIngredient(ctx context.Context, arg UpdateIngredientParams) (Ingredient, error) {
-	row := q.db.QueryRowContext(ctx, updateIngredient, arg.ID, arg.Name, arg.Categoryid)
+	row := q.db.QueryRowContext(ctx, updateIngredient, arg.ID, arg.Name, arg.CategoryID)
 	var i Ingredient
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
-		&i.Categoryid,
+		&i.CategoryID,
 		&i.Createdat,
-		&i.Updatedat,
+		&i.Createdby,
 	)
 	return i, err
 }

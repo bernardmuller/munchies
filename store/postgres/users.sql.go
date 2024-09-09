@@ -8,70 +8,57 @@ package postgres
 import (
 	"context"
 	"database/sql"
-	"time"
 
 	"github.com/google/uuid"
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users(id, firstname, lastname, email, clerk_id, dateOfBirth, role, bio, image, status, createdAt, updatedAt, householdId)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-RETURNING id, email, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid, clerk_id
+INSERT INTO users(id, clerk_id, email, firstname, lastname, role_id, image, status)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+RETURNING id, clerk_id, email, firstname, lastname, role_id, image, status, createdat, updatedat, household_id
 `
 
 type CreateUserParams struct {
-	ID          uuid.UUID
-	Firstname   sql.NullString
-	Lastname    sql.NullString
-	Email       string
-	ClerkID     sql.NullString
-	Dateofbirth sql.NullTime
-	Role        sql.NullString
-	Bio         sql.NullString
-	Image       sql.NullString
-	Status      sql.NullString
-	Createdat   time.Time
-	Updatedat   time.Time
-	Householdid uuid.NullUUID
+	ID        uuid.UUID
+	ClerkID   string
+	Email     string
+	Firstname sql.NullString
+	Lastname  sql.NullString
+	RoleID    uuid.UUID
+	Image     sql.NullString
+	Status    sql.NullString
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
 	row := q.db.QueryRowContext(ctx, createUser,
 		arg.ID,
+		arg.ClerkID,
+		arg.Email,
 		arg.Firstname,
 		arg.Lastname,
-		arg.Email,
-		arg.ClerkID,
-		arg.Dateofbirth,
-		arg.Role,
-		arg.Bio,
+		arg.RoleID,
 		arg.Image,
 		arg.Status,
-		arg.Createdat,
-		arg.Updatedat,
-		arg.Householdid,
 	)
 	var i User
 	err := row.Scan(
 		&i.ID,
+		&i.ClerkID,
 		&i.Email,
 		&i.Firstname,
 		&i.Lastname,
-		&i.Dateofbirth,
-		&i.Role,
-		&i.Bio,
+		&i.RoleID,
 		&i.Image,
 		&i.Status,
 		&i.Createdat,
 		&i.Updatedat,
-		&i.Householdid,
-		&i.ClerkID,
+		&i.HouseholdID,
 	)
 	return i, err
 }
 
 const getAllUsers = `-- name: GetAllUsers :many
-SELECT id, email, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid, clerk_id FROM users
+SELECT id, clerk_id, email, firstname, lastname, role_id, image, status, createdat, updatedat, household_id FROM users
 `
 
 func (q *Queries) GetAllUsers(ctx context.Context) ([]User, error) {
@@ -85,18 +72,16 @@ func (q *Queries) GetAllUsers(ctx context.Context) ([]User, error) {
 		var i User
 		if err := rows.Scan(
 			&i.ID,
+			&i.ClerkID,
 			&i.Email,
 			&i.Firstname,
 			&i.Lastname,
-			&i.Dateofbirth,
-			&i.Role,
-			&i.Bio,
+			&i.RoleID,
 			&i.Image,
 			&i.Status,
 			&i.Createdat,
 			&i.Updatedat,
-			&i.Householdid,
-			&i.ClerkID,
+			&i.HouseholdID,
 		); err != nil {
 			return nil, err
 		}
@@ -112,33 +97,31 @@ func (q *Queries) GetAllUsers(ctx context.Context) ([]User, error) {
 }
 
 const getUserByClerkId = `-- name: GetUserByClerkId :one
-SELECT id, email, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid, clerk_id FROM users
+SELECT id, clerk_id, email, firstname, lastname, role_id, image, status, createdat, updatedat, household_id FROM users
 WHERE clerk_id = $1
 `
 
-func (q *Queries) GetUserByClerkId(ctx context.Context, clerkID sql.NullString) (User, error) {
+func (q *Queries) GetUserByClerkId(ctx context.Context, clerkID string) (User, error) {
 	row := q.db.QueryRowContext(ctx, getUserByClerkId, clerkID)
 	var i User
 	err := row.Scan(
 		&i.ID,
+		&i.ClerkID,
 		&i.Email,
 		&i.Firstname,
 		&i.Lastname,
-		&i.Dateofbirth,
-		&i.Role,
-		&i.Bio,
+		&i.RoleID,
 		&i.Image,
 		&i.Status,
 		&i.Createdat,
 		&i.Updatedat,
-		&i.Householdid,
-		&i.ClerkID,
+		&i.HouseholdID,
 	)
 	return i, err
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, email, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid, clerk_id FROM users 
+SELECT id, clerk_id, email, firstname, lastname, role_id, image, status, createdat, updatedat, household_id FROM users 
 WHERE email = $1
 `
 
@@ -147,24 +130,22 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 	var i User
 	err := row.Scan(
 		&i.ID,
+		&i.ClerkID,
 		&i.Email,
 		&i.Firstname,
 		&i.Lastname,
-		&i.Dateofbirth,
-		&i.Role,
-		&i.Bio,
+		&i.RoleID,
 		&i.Image,
 		&i.Status,
 		&i.Createdat,
 		&i.Updatedat,
-		&i.Householdid,
-		&i.ClerkID,
+		&i.HouseholdID,
 	)
 	return i, err
 }
 
 const getUserById = `-- name: GetUserById :one
-SELECT id, email, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid, clerk_id FROM users 
+SELECT id, clerk_id, email, firstname, lastname, role_id, image, status, createdat, updatedat, household_id FROM users 
 WHERE id = $1
 `
 
@@ -173,81 +154,62 @@ func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (User, error) {
 	var i User
 	err := row.Scan(
 		&i.ID,
+		&i.ClerkID,
 		&i.Email,
 		&i.Firstname,
 		&i.Lastname,
-		&i.Dateofbirth,
-		&i.Role,
-		&i.Bio,
+		&i.RoleID,
 		&i.Image,
 		&i.Status,
 		&i.Createdat,
 		&i.Updatedat,
-		&i.Householdid,
-		&i.ClerkID,
+		&i.HouseholdID,
 	)
 	return i, err
 }
 
 const updateUser = `-- name: UpdateUser :one
 UPDATE users
-SET firstname = $2,
-    lastname = $3,
-    email = $4,
-    clerk_id = $5,
-    dateOfBirth = $6,
-    role = $7,
-    bio = $8,
-    image = $9,
-    status = $10,
-    householdId = $11
+SET id = $1, clerk_id = $2, email = $3, firstname = $4, lastname = $5, role_id = $6, image = $7, status = $8
 WHERE id = $1
-RETURNING id, email, firstname, lastname, dateofbirth, role, bio, image, status, createdat, updatedat, householdid, clerk_id
+RETURNING id, clerk_id, email, firstname, lastname, role_id, image, status, createdat, updatedat, household_id
 `
 
 type UpdateUserParams struct {
-	ID          uuid.UUID
-	Firstname   sql.NullString
-	Lastname    sql.NullString
-	Email       string
-	ClerkID     sql.NullString
-	Dateofbirth sql.NullTime
-	Role        sql.NullString
-	Bio         sql.NullString
-	Image       sql.NullString
-	Status      sql.NullString
-	Householdid uuid.NullUUID
+	ID        uuid.UUID
+	ClerkID   string
+	Email     string
+	Firstname sql.NullString
+	Lastname  sql.NullString
+	RoleID    uuid.UUID
+	Image     sql.NullString
+	Status    sql.NullString
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
 	row := q.db.QueryRowContext(ctx, updateUser,
 		arg.ID,
+		arg.ClerkID,
+		arg.Email,
 		arg.Firstname,
 		arg.Lastname,
-		arg.Email,
-		arg.ClerkID,
-		arg.Dateofbirth,
-		arg.Role,
-		arg.Bio,
+		arg.RoleID,
 		arg.Image,
 		arg.Status,
-		arg.Householdid,
 	)
 	var i User
 	err := row.Scan(
 		&i.ID,
+		&i.ClerkID,
 		&i.Email,
 		&i.Firstname,
 		&i.Lastname,
-		&i.Dateofbirth,
-		&i.Role,
-		&i.Bio,
+		&i.RoleID,
 		&i.Image,
 		&i.Status,
 		&i.Createdat,
 		&i.Updatedat,
-		&i.Householdid,
-		&i.ClerkID,
+		&i.HouseholdID,
 	)
 	return i, err
 }

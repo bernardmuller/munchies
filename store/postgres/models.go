@@ -11,26 +11,118 @@ import (
 	"github.com/google/uuid"
 )
 
+type Category struct {
+	ID        uuid.UUID
+	Name      string
+	Createdat time.Time
+	Updatedat time.Time
+}
+
+type Grocerylist struct {
+	ID          uuid.UUID
+	Createdat   time.Time
+	Createdby   uuid.NullUUID
+	MenuID      uuid.NullUUID
+	HouseholdID uuid.NullUUID
+}
+
+type GrocerylistItem struct {
+	ID            uuid.UUID
+	GrocerylistID uuid.UUID
+	ItemID        uuid.UUID
+	Createdat     time.Time
+	Createdby     uuid.NullUUID
+}
+
+type Household struct {
+	ID        uuid.UUID
+	Createdby uuid.UUID
+	Createdat time.Time
+}
+
 type Ingredient struct {
 	ID         uuid.UUID
-	Name       sql.NullString
-	Categoryid sql.NullString
+	Name       string
+	CategoryID uuid.UUID
 	Createdat  time.Time
-	Updatedat  time.Time
+	Createdby  uuid.NullUUID
+}
+
+type Item struct {
+	ID            uuid.UUID
+	Check         bool
+	Typeid        int32
+	Description   sql.NullString
+	Createdat     time.Time
+	Createdby     uuid.NullUUID
+	GrocerylistID uuid.UUID
+	IngredientID  uuid.NullUUID
+}
+
+type Meal struct {
+	ID        uuid.UUID
+	Name      sql.NullString
+	Deleted   sql.NullBool
+	Createdat time.Time
+	Createdby uuid.NullUUID
+}
+
+type MealIngredient struct {
+	ID           uuid.UUID
+	MealID       uuid.UUID
+	IngredientID uuid.UUID
+	Createdat    time.Time
+	Createdby    uuid.NullUUID
+}
+
+type Menu struct {
+	ID            uuid.UUID
+	Name          sql.NullString
+	Createdat     time.Time
+	HouseholdID   uuid.NullUUID
+	Createdby     uuid.NullUUID
+	Archived      sql.NullBool
+	GrocerylistID uuid.NullUUID
+}
+
+type MenuMeal struct {
+	ID     uuid.UUID
+	MenuID uuid.UUID
+	MealID uuid.UUID
+}
+
+type Permission struct {
+	ID          uuid.UUID
+	Name        string
+	Description sql.NullString
+	Createdat   time.Time
+	Updatedat   time.Time
+}
+
+type Role struct {
+	ID        uuid.UUID
+	Name      string
+	Createdat time.Time
+	Updatedat time.Time
+}
+
+type RolePermission struct {
+	RoleID       uuid.UUID
+	PermissionID uuid.UUID
+	Createdat    time.Time
+	Updatedat    time.Time
 }
 
 type User struct {
 	ID          uuid.UUID
+	ClerkID     string
 	Email       string
 	Firstname   sql.NullString
 	Lastname    sql.NullString
-	Dateofbirth sql.NullTime
-	Role        sql.NullString
-	Bio         sql.NullString
+	RoleID      uuid.UUID
 	Image       sql.NullString
 	Status      sql.NullString
 	Createdat   time.Time
 	Updatedat   time.Time
-	Householdid uuid.NullUUID
-	ClerkID     sql.NullString
+	HouseholdID uuid.NullUUID
 }

@@ -16,7 +16,6 @@ type User struct {
 	ClerkID     string
 	Firstname   string
 	Lastname    string
-	Dateofbirth string
 	Role        string
 	Bio         string
 	Image       string
@@ -41,7 +40,7 @@ func (s *UsersService) CreateUser(c context.Context, user User) (postgres.User, 
 		ID:        user.ID,
 		Firstname: sql.NullString{String: user.Firstname, Valid: true},
 		Lastname:  sql.NullString{String: user.Lastname, Valid: true},
-		ClerkID:   sql.NullString{String: user.ClerkID, Valid: true},
+		ClerkID:   user.ClerkID,
 		Email:     user.Email,
 	}
 
@@ -88,6 +87,6 @@ func (s *UsersService) GetAllUsers(ctx context.Context) ([]postgres.User, error)
 }
 
 func (s *UsersService) GetUserById(ctx context.Context, id string) (postgres.User, error) {
-	user, _ := s.DB.GetUserByClerkId(ctx, sql.NullString{String: id, Valid: true})
+	user, _ := s.DB.GetUserByClerkId(ctx, id)
 	return user, nil
 }

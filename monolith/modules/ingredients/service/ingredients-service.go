@@ -34,3 +34,22 @@ func (s *IngredientsService) GetAllIngredients(ctx context.Context) ([]postgres.
 	}
 	return ingredients, nil
 }
+
+func (s *IngredientsService) CreateIngredient(ctx context.Context, ingredient Ingredient) (postgres.Ingredient, error) {
+	createdIngredient, err := s.DB.CreateIngredient(ctx, postgres.CreateIngredientParams{
+		Name:       ingredient.Name,
+		CategoryID: uuid.MustParse(ingredient.CategoryId),
+	})
+	if err != nil {
+		return postgres.Ingredient{}, err
+	}
+	return createdIngredient, nil
+}
+
+func (s *IngredientsService) GetIngredientById(ctx context.Context, id uuid.UUID) (postgres.Ingredient, error) {
+	ingredient, err := s.DB.GetIngredientById(ctx, id)
+	if err != nil {
+		return postgres.Ingredient{}, err
+	}
+	return ingredient, nil
+}
