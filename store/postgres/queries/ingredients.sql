@@ -8,7 +8,15 @@ SELECT * FROM ingredients
 WHERE id = $1;
 
 -- name: GetAllIngredients :many
-SELECT * FROM ingredients;
+SELECT 
+	ingredients.id, 
+	ingredients.name, 
+	categories.name AS category_name 
+FROM 
+	ingredients
+LEFT JOIN 
+	categories 
+ON categories.id = ingredients.category_id;
 
 -- name: UpdateIngredient :one
 UPDATE ingredients

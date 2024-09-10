@@ -62,7 +62,7 @@ const Header = () => {
   }, [pathname]);
 
   return (
-    <div className="bg-header dark:bg-header pb-32">
+    <div className="bg-header dark:bg-header pb-48">
       {/* @ts-ignore */}
       <Disclosure as="nav" className="bg-header">
         {({ open }: any) => (
@@ -312,9 +312,10 @@ const Header = () => {
           </>
         )}
       </Disclosure>
-      <header className="py-10">
+      <div className="py-0" />
+      <header className="pt-3 pb-4 pl-3">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-2xl font-bold text-white">
             {pageName}
           </h1>
         </div>

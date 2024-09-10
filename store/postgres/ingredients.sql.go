@@ -7,6 +7,7 @@ package postgres
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/google/uuid"
 )
@@ -37,25 +38,33 @@ func (q *Queries) CreateIngredient(ctx context.Context, arg CreateIngredientPara
 }
 
 const getAllIngredients = `-- name: GetAllIngredients :many
-SELECT id, name, category_id, createdat, createdby FROM ingredients
+SELECT 
+	ingredients.id, 
+	ingredients.name, 
+	categories.name AS category_name 
+FROM 
+	ingredients
+LEFT JOIN 
+	categories 
+ON categories.id = ingredients.category_id
 `
 
-func (q *Queries) GetAllIngredients(ctx context.Context) ([]Ingredient, error) {
+type GetAllIngredientsRow struct {
+	ID           uuid.UUID
+	Name         string
+	CategoryName sql.NullString
+}
+
+func (q *Queries) GetAllIngredients(ctx context.Context) ([]GetAllIngredientsRow, error) {
 	rows, err := q.db.QueryContext(ctx, getAllIngredients)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Ingredient
+	var items []GetAllIngredientsRow
 	for rows.Next() {
-		var i Ingredient
-		if err := rows.Scan(
-			&i.ID,
-			&i.Name,
-			&i.CategoryID,
-			&i.Createdat,
-			&i.Createdby,
-		); err != nil {
+		var i GetAllIngredientsRow
+		if err := rows.Scan(&i.ID, &i.Name, &i.CategoryName); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

@@ -27,11 +27,12 @@ func NewIngredientsService(db *postgres.Queries) *IngredientsService {
 	}
 }
 
-func (s *IngredientsService) GetAllIngredients(ctx context.Context) ([]postgres.Ingredient, error) {
+func (s *IngredientsService) GetAllIngredients(ctx context.Context) ([]postgres.GetAllIngredientsRow, error) {
 	ingredients, err := s.DB.GetAllIngredients(ctx)
 	if err != nil {
 		return nil, err
 	}
+
 	return ingredients, nil
 }
 

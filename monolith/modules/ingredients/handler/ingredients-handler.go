@@ -12,13 +12,19 @@ import (
 )
 
 type ErrorResponse struct {
-  Error string
-  Message string
+	Error   string `json:"error"`
+	Message string `json:"message"`
 }
 
 type Response struct {
-	Status string
-	Data   interface{}
+	Status string      `json:"status"`
+	Data   interface{} `json:"data"`
+}
+
+type Ingredient struct {
+	ID           string `json:"id"`
+	Name         string `json:"name"`
+	CategoryName string `json:"categoryName"`
 }
 
 type IngredientsHandler struct {
@@ -45,12 +51,12 @@ func (h *IngredientsHandler) GetAllIngredients(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	ingredientsSlice := make([]*service.Ingredient, len(ps))
+	ingredientsSlice := make([]*Ingredient, len(ps))
 	for i, p := range ps {
-		ingredientsSlice[i] = &service.Ingredient{
-			ID:         p.ID,
-			Name:       p.Name,
-			CategoryId: p.CategoryID.String(),
+		ingredientsSlice[i] = &Ingredient{
+			ID:           p.ID.String(),
+			Name:         p.Name,
+			CategoryName: p.CategoryName.String,
 		}
 	}
 
@@ -60,27 +66,27 @@ func (h *IngredientsHandler) GetAllIngredients(c echo.Context) error {
 }
 
 func (h *IngredientsHandler) CreateIngredient(c echo.Context) error {
-  var ingredient service.Ingredient
+	var ingredient service.Ingredient
 
 	err := json.NewDecoder(c.Request().Body).Decode(&ingredient)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error decoding request body users")
 	}
 
-  if len(ingredient.Name) == 0 {
+	if len(ingredient.Name) == 0 {
 		return c.String(http.StatusBadRequest, "Name is required")
-  }
+	}
 
-  if len(ingredient.ID) == 0 {
+	if len(ingredient.ID) == 0 {
 		return c.String(http.StatusBadRequest, "CategoryID is required")
-  }
+	}
 
-  newIngredient, err := h.ingredientsService.CreateIngredient(c.Request().Context(), ingredient)
+	newIngredient, err := h.ingredientsService.CreateIngredient(c.Request().Context(), ingredient)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
-  res := &Response{
+	res := &Response{
 		Status: "success",
 		Data:   &newIngredient,
 	}
@@ -90,14 +96,14 @@ func (h *IngredientsHandler) CreateIngredient(c echo.Context) error {
 
 func (h *IngredientsHandler) GetIngredientById(c echo.Context) error {
 	id := c.Param("id")
-  parsedId, err := uuid.Parse(id)
-  if err != nil {
-    return c.JSON(http.StatusNotFound, ErrorResponse{
-      Error: "Ingredient not Found",
-      Message: fmt.Sprintf("Ingredient with ID: %s could not be found.", id),
-    })
-  }
-  
+	parsedId, err := uuid.Parse(id)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, ErrorResponse{
+			Error:   "Ingredient not Found",
+			Message: fmt.Sprintf("Ingredient with ID: %s could not be found.", id),
+		})
+	}
+
 	ingredient, err := h.ingredientsService.GetIngredientById(c.Request().Context(), parsedId)
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())

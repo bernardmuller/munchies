@@ -3,32 +3,34 @@ import httpClient from "../httpClient";
 // import { requireBaseURL, requireHeaders } from "../shared/utils";
 
 export async function createIngredient(newIngredientData: {
-	name: string;
-	categoryId: number;
+  name: string;
+  categoryId: number;
 }) {
-	return await httpClient
-		.post(`/ingredients`, newIngredientData)
-		.then((response) => {
-			return response.data;
-		});
+  return await httpClient
+    .post(`/ingredients`, newIngredientData)
+    .then((response) => {
+      return response.data;
+    });
 }
 
+type Ingredient = {
+  id: string;
+  name: string;
+  categoryName: string;
+};
+
 export async function fetchIngredients({
-	page,
-	searchTerm,
-	limit,
+  page,
+  searchTerm,
+  limit,
 }: {
-	page?: string;
-	searchTerm?: string;
-	limit?: string;
-}) {
-	return await httpClient
-		.get(
-			`/ingredients?&searchTerm=${searchTerm || ""}&limit=${
-				limit || 10
-			}&page=${page || 0}}`
-		)
-		.then((response) => response.data);
+  page?: string;
+  searchTerm?: string;
+  limit?: string;
+}): Promise<Ingredient[]> {
+  return await axios
+    .get(`http://localhost:8001/ingredients`)
+    .then((response) => response.data);
 }
 
 // export async function fetchIngredient(id: string) {

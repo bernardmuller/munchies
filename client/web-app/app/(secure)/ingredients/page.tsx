@@ -1,7 +1,7 @@
-export default function IngredientsPage() {
-  return (
-    <div className="flex flex-col lg:flex-row gap-8  w-full min-h-[50vh]">
-      Ingredients
-    </div>
-  );
+import { fetchIngredients } from "@/api/endpoints/ingredients";
+import Ingredients from "./Ingredients";
+
+export default async function IngredientsPage() {
+  const ingredients = await fetchIngredients({});
+  return <Ingredients data={ingredients} />;
 }
