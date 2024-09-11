@@ -66,18 +66,18 @@ func (h *IngredientsHandler) GetAllIngredients(c echo.Context) error {
 }
 
 func (h *IngredientsHandler) CreateIngredient(c echo.Context) error {
-	var ingredient service.Ingredient
+	var ingredient service.CreateIngredient
 
 	err := json.NewDecoder(c.Request().Body).Decode(&ingredient)
 	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error decoding request body users")
+		return c.String(http.StatusInternalServerError, "Error decoding request body")
 	}
 
 	if len(ingredient.Name) == 0 {
 		return c.String(http.StatusBadRequest, "Name is required")
 	}
 
-	if len(ingredient.ID) == 0 {
+	if len(ingredient.CategoryId) == 0 {
 		return c.String(http.StatusBadRequest, "CategoryID is required")
 	}
 

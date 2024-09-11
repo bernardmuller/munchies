@@ -6,8 +6,8 @@ export async function createIngredient(newIngredientData: {
   name: string;
   categoryId: number;
 }) {
-  return await httpClient
-    .post(`/ingredients`, newIngredientData)
+  return await axios
+    .post(`http://localhost:8001/ingredients`, newIngredientData)
     .then((response) => {
       return response.data;
     });

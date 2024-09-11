@@ -7,10 +7,12 @@ import (
 	"os"
 
 	"github.com/bernardmuller/munchies/internal/utils"
-	uh "github.com/bernardmuller/munchies/monolith/modules/users/handler"
+	ch "github.com/bernardmuller/munchies/monolith/modules/categories/handler"
+	cs "github.com/bernardmuller/munchies/monolith/modules/categories/service"
 	ih "github.com/bernardmuller/munchies/monolith/modules/ingredients/handler"
-	us "github.com/bernardmuller/munchies/monolith/modules/users/service"
 	is "github.com/bernardmuller/munchies/monolith/modules/ingredients/service"
+	uh "github.com/bernardmuller/munchies/monolith/modules/users/handler"
+	us "github.com/bernardmuller/munchies/monolith/modules/users/service"
 	"github.com/bernardmuller/munchies/store/postgres"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -24,18 +26,6 @@ type PORT struct {
 type Module struct {
 	Database *postgres.Queries
 	PORT     PORT
-}
-
-func corsMiddleware(handler http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, Access-Control-Allow-Origin")
-		if r.Method == "OPTIONS" {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-
-		handler.ServeHTTP(w, r)
-	})
 }
 
 func CreateModule(port PORT) (*Module, error) {
@@ -66,17 +56,18 @@ func CreateModule(port PORT) (*Module, error) {
 func CreateRouter() *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.Logger())
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
-		AllowHeaders: []string{
-			echo.HeaderOrigin,
-			echo.HeaderContentType,
-			echo.HeaderAccept,
-			echo.HeaderAccessControlAllowOrigin,
-			echo.HeaderAccessControlAllowCredentials,
-		},
-	}))
+	e.Use(middleware.CORS())
+	// e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	// 	AllowOrigins: []string{"http://localhost:4000/"},
+	// 	AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
+	// 	AllowHeaders: []string{
+	// 		echo.HeaderOrigin,
+	// 		echo.HeaderContentType,
+	// 		echo.HeaderAccept,
+	// 		echo.HeaderAccessControlAllowOrigin,
+	// 		echo.HeaderAccessControlAllowCredentials,
+	// 	},
+	// }))
 	e.Static("/static/images", "images")
 	e.Static("/static/css", "css")
 
@@ -90,9 +81,13 @@ func (m *Module) Start() error {
 	userHandler := uh.NewHttpUsersHandler(userService)
 	userHandler.RegisterRouter(router)
 
-  ingredientsService := is.NewIngredientsService(m.Database)
+	ingredientsService := is.NewIngredientsService(m.Database)
 	ingredientsHandler := ih.NewIngredientsHandler(ingredientsService)
 	ingredientsHandler.RegisterRouter(router)
+
+	categoriesService := cs.NewCategoriesService(m.Database)
+	categoriesHandler := ch.NewCategoriesHandler(categoriesService)
+	categoriesHandler.RegisterRouter(router)
 
 	log.Println("Starting server on", m.PORT.HTTP)
 

@@ -17,6 +17,11 @@ type Ingredient struct {
 	UpdatedAd  time.Time `json:"updatedAt"`
 }
 
+type CreateIngredient struct {
+	Name       string `json:"name"`
+	CategoryId string `json:"categoryId"`
+}
+
 type IngredientsService struct {
 	DB *postgres.Queries
 }
@@ -36,7 +41,7 @@ func (s *IngredientsService) GetAllIngredients(ctx context.Context) ([]postgres.
 	return ingredients, nil
 }
 
-func (s *IngredientsService) CreateIngredient(ctx context.Context, ingredient Ingredient) (postgres.Ingredient, error) {
+func (s *IngredientsService) CreateIngredient(ctx context.Context, ingredient CreateIngredient) (postgres.Ingredient, error) {
 	createdIngredient, err := s.DB.CreateIngredient(ctx, postgres.CreateIngredientParams{
 		ID:         uuid.New(),
 		Name:       ingredient.Name,

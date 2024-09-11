@@ -1,12 +1,12 @@
 -- name: CreateMeal :one
-INSERT INTO meals (name, description, price, createdat, updatedat)
-VALUES ($1, $2, $3, now(), now())
+INSERT INTO meals (name,  createdat, updatedat)
+VALUES ($1, now(), now())
 RETURNING *;
 
 -- name: UpdateMeal :exec
 UPDATE meals
-SET name = $1, description = $2, price = $3, updatedat = now()
-WHERE id = $4
+SET name = $1, updatedat = now()
+WHERE id = $2
 RETURNING *;
 
 -- name: DeleteMeal :exec
