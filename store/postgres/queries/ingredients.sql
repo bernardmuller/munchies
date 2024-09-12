@@ -16,10 +16,20 @@ FROM
 	ingredients
 LEFT JOIN 
 	categories 
-ON categories.id = ingredients.category_id;
+ON categories.id = ingredients.category_id
+WHERE 
+	ingredients.deleted = false
+ORDER BY 
+	ingredients.createdat DESC;
 
 -- name: UpdateIngredient :one
 UPDATE ingredients
 SET id = $1, name = $2, category_id = $3
+WHERE id = $1
+RETURNING *;
+
+-- name: DeleteIngredient :one
+UPDATE ingredients
+SET deleted = true
 WHERE id = $1
 RETURNING *;

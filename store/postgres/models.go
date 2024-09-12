@@ -46,6 +46,7 @@ type Ingredient struct {
 	CategoryID uuid.UUID
 	Createdat  time.Time
 	Createdby  uuid.NullUUID
+	Deleted    bool
 }
 
 type Item struct {

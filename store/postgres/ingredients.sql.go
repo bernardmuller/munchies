@@ -15,7 +15,7 @@ import (
 const createIngredient = `-- name: CreateIngredient :one
 INSERT INTO ingredients(id, name, category_id)
 VALUES ($1, $2, $3)
-RETURNING id, name, category_id, createdat, createdby
+RETURNING id, name, category_id, createdat, createdby, deleted
 `
 
 type CreateIngredientParams struct {
@@ -33,6 +33,28 @@ func (q *Queries) CreateIngredient(ctx context.Context, arg CreateIngredientPara
 		&i.CategoryID,
 		&i.Createdat,
 		&i.Createdby,
+		&i.Deleted,
+	)
+	return i, err
+}
+
+const deleteIngredient = `-- name: DeleteIngredient :one
+UPDATE ingredients
+SET deleted = true
+WHERE id = $1
+RETURNING id, name, category_id, createdat, createdby, deleted
+`
+
+func (q *Queries) DeleteIngredient(ctx context.Context, id uuid.UUID) (Ingredient, error) {
+	row := q.db.QueryRowContext(ctx, deleteIngredient, id)
+	var i Ingredient
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.CategoryID,
+		&i.Createdat,
+		&i.Createdby,
+		&i.Deleted,
 	)
 	return i, err
 }
@@ -47,6 +69,10 @@ FROM
 LEFT JOIN 
 	categories 
 ON categories.id = ingredients.category_id
+WHERE 
+	ingredients.deleted = false
+ORDER BY 
+	ingredients.createdat DESC
 `
 
 type GetAllIngredientsRow struct {
@@ -79,7 +105,7 @@ func (q *Queries) GetAllIngredients(ctx context.Context) ([]GetAllIngredientsRow
 }
 
 const getIngredientById = `-- name: GetIngredientById :one
-SELECT id, name, category_id, createdat, createdby FROM ingredients 
+SELECT id, name, category_id, createdat, createdby, deleted FROM ingredients 
 WHERE id = $1
 `
 
@@ -92,6 +118,7 @@ func (q *Queries) GetIngredientById(ctx context.Context, id uuid.UUID) (Ingredie
 		&i.CategoryID,
 		&i.Createdat,
 		&i.Createdby,
+		&i.Deleted,
 	)
 	return i, err
 }
@@ -100,7 +127,7 @@ const updateIngredient = `-- name: UpdateIngredient :one
 UPDATE ingredients
 SET id = $1, name = $2, category_id = $3
 WHERE id = $1
-RETURNING id, name, category_id, createdat, createdby
+RETURNING id, name, category_id, createdat, createdby, deleted
 `
 
 type UpdateIngredientParams struct {
@@ -118,6 +145,7 @@ func (q *Queries) UpdateIngredient(ctx context.Context, arg UpdateIngredientPara
 		&i.CategoryID,
 		&i.Createdat,
 		&i.Createdby,
+		&i.Deleted,
 	)
 	return i, err
 }
