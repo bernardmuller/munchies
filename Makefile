@@ -57,6 +57,12 @@ db_generate_queries:
 	@echo "Generating queries..."
 	@sqlc generate
 
+run-api: 
+	@go run ./monolith/main.go
+
+run-client:
+	@cd ./client/web-app && npm run dev
+
 # Live Reload
 #watch:
 #	@if command -v air > /dev/null; then \
