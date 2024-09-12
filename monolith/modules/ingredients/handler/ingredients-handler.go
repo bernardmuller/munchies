@@ -43,6 +43,7 @@ func (h *IngredientsHandler) RegisterRouter(router *echo.Echo) {
 	router.GET("/ingredients", h.GetAllIngredients)
 	router.GET("/ingredients/:id", h.GetIngredientById)
 	router.POST("/ingredients", h.CreateIngredient)
+	router.DELETE("/ingredients/:id", h.DeleteIngredient)
 }
 
 func (h *IngredientsHandler) GetAllIngredients(c echo.Context) error {
@@ -109,4 +110,22 @@ func (h *IngredientsHandler) GetIngredientById(c echo.Context) error {
 		return c.String(http.StatusNotFound, err.Error())
 	}
 	return c.JSON(http.StatusOK, ingredient)
+}
+
+func (h *IngredientsHandler) DeleteIngredient(c echo.Context) error {
+	id := c.Param("id")
+	parsedId, err := uuid.Parse(id)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, ErrorResponse{
+			Error:   "Ingredient not Found",
+			Message: fmt.Sprintf("Ingredient with ID: %s could not be found.", id),
+		})
+	}
+
+	err = h.ingredientsService.DeleteIngredient(c.Request().Context(), parsedId)
+	if err != nil {
+		return c.String(http.StatusNotFound, err.Error())
+	}
+
+	return c.NoContent(http.StatusNoContent)
 }

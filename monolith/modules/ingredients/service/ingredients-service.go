@@ -60,3 +60,11 @@ func (s *IngredientsService) GetIngredientById(ctx context.Context, id uuid.UUID
 	}
 	return ingredient, nil
 }
+
+func (s *IngredientsService) DeleteIngredient(ctx context.Context, id uuid.UUID) error {
+	_, err := s.DB.DeleteIngredient(ctx, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
