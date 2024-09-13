@@ -11,7 +11,8 @@ WHERE id = $1;
 SELECT 
 	ingredients.id, 
 	ingredients.name, 
-	categories.name AS category_name 
+	categories.name AS category_name,
+	categories.id AS category_id 
 FROM 
 	ingredients
 LEFT JOIN 

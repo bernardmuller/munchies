@@ -63,7 +63,8 @@ const getAllIngredients = `-- name: GetAllIngredients :many
 SELECT 
 	ingredients.id, 
 	ingredients.name, 
-	categories.name AS category_name 
+	categories.name AS category_name,
+	categories.id AS category_id 
 FROM 
 	ingredients
 LEFT JOIN 
@@ -79,6 +80,7 @@ type GetAllIngredientsRow struct {
 	ID           uuid.UUID
 	Name         string
 	CategoryName sql.NullString
+	CategoryID   uuid.NullUUID
 }
 
 func (q *Queries) GetAllIngredients(ctx context.Context) ([]GetAllIngredientsRow, error) {
@@ -90,7 +92,12 @@ func (q *Queries) GetAllIngredients(ctx context.Context) ([]GetAllIngredientsRow
 	var items []GetAllIngredientsRow
 	for rows.Next() {
 		var i GetAllIngredientsRow
-		if err := rows.Scan(&i.ID, &i.Name, &i.CategoryName); err != nil {
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.CategoryName,
+			&i.CategoryID,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

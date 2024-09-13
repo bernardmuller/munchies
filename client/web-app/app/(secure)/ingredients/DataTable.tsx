@@ -99,21 +99,27 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="icon"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <ArrowLeftIcon />
-        </Button>
-        <Button
-          variant="icon"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <ArrowRightIcon />
-        </Button>
+      <div className="flex justify-between pt-4">
+        <span>
+          page {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount()}
+        </span>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="icon"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <ArrowLeftIcon />
+          </Button>
+          <Button
+            variant="icon"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <ArrowRightIcon />
+          </Button>
+        </div>
       </div>
     </div>
   );

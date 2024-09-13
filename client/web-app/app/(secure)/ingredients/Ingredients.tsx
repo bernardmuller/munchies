@@ -5,12 +5,14 @@ import { Input } from "@/components/ui/input";
 import {
   ArrowUpDown,
   EllipsisIcon,
+  Filter,
+  FilterXIcon,
   Loader2,
   PlusIcon,
   Trash,
 } from "lucide-react";
 import { DataTable } from "./DataTable";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   Dialog,
   DialogHeader,
@@ -30,6 +32,7 @@ import { keys } from "@/lib/http/keys";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useDeleteIngredient from "@/lib/http/hooks/ingredients/useDeleteIngredient";
@@ -168,6 +171,18 @@ function NewIngredientForm({
   );
 }
 
+type CategoryFilter =
+  | "Fruits"
+  | "Vegetables"
+  | "Legumes & Beans"
+  | "Fish & Seafood"
+  | "Grains"
+  | "Meats & Poultry"
+  | "Dairy"
+  | "Fats & Oils"
+  | "Nuts & Seeds"
+  | "Herbs & Vegetables";
+
 export default function Ingredients({
   ingredients: data,
   categories,
@@ -179,6 +194,9 @@ export default function Ingredients({
   });
   const [open, setOpen] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState("");
+  const [filteredCategory, setFilteredCategory] = React.useState<
+    string | null
+  >(null);
   const queryClient = useQueryClient();
   const handleDeleteIngredient = (id: string) => {
     deleteIngredient.mutate(id, {
@@ -252,6 +270,23 @@ export default function Ingredients({
     },
   ];
 
+  useEffect(() => {
+    const data = ingredientsData
+      .filter((i) => {
+        if (filteredCategory !== null) {
+          return i.categoryId === filteredCategory;
+        }
+        return true; // Keep the item if no category filter is applied
+      })
+      .filter((ingredient) =>
+        ingredient.name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()),
+      );
+
+    console.log(data);
+  }, [ingredientsData, filteredCategory, setSearchTerm]);
+
   return (
     <>
       <div className="flex flex-col  gap-4  w-full min-h-[50vh]">
@@ -263,33 +298,79 @@ export default function Ingredients({
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <Dialog open={open} onOpenChange={setOpen}>
-            <Button onClick={() => setOpen(true)}>
-              <PlusIcon />
-              Add ingredient
+          <div className="flex items-center gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button variant="icon" className="">
+                  <Filter />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="px-2">
+                {categories.map((c) => (
+                  <DropdownMenuItem>
+                    <Button
+                      className="flex gap-1 hover:bg-gray-50"
+                      variant="ghost"
+                      onClick={() =>
+                        setFilteredCategory(c.id)
+                      }
+                    >
+                      {c.name}
+                    </Button>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button
+              variant="icon"
+              onClick={() => {
+                setSearchTerm("");
+                setFilteredCategory(null);
+              }}
+              disabled={!filteredCategory}
+            >
+              <FilterXIcon />
             </Button>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>New Ingredient</DialogTitle>
-              </DialogHeader>
-              <NewIngredientForm
-                categories={categories}
-                onClose={() => setOpen(false)}
-                onInvalidate={() => {
-                  queryClient.invalidateQueries(
-                    keys.ingredients,
-                  );
-                }}
-              />
-            </DialogContent>
-          </Dialog>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <Button onClick={() => setOpen(true)}>
+                <PlusIcon />
+                Add ingredient
+              </Button>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>New Ingredient</DialogTitle>
+                </DialogHeader>
+                <NewIngredientForm
+                  categories={categories}
+                  onClose={() => setOpen(false)}
+                  onInvalidate={() => {
+                    queryClient.invalidateQueries(
+                      keys.ingredients,
+                    );
+                  }}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
         {!isFetching && (
           <DataTable
             columns={columns}
-            data={ingredientsData.filter((ingredient) =>
-              ingredient.name.toLowerCase().includes(searchTerm),
-            )}
+            data={ingredientsData
+              .filter((i) => {
+                if (filteredCategory !== null) {
+                  console.log(
+                    i.categoryId === filteredCategory,
+                  );
+                  return i.categoryId === filteredCategory;
+                }
+                return true; // Keep the item if no category filter is applied
+              })
+              .filter((ingredient) =>
+                ingredient.name
+                  .toLowerCase()
+                  .includes(searchTerm.toLowerCase()),
+              )}
           />
         )}
       </div>

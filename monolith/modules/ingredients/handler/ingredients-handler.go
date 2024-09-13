@@ -25,6 +25,7 @@ type Ingredient struct {
 	ID           string `json:"id"`
 	Name         string `json:"name"`
 	CategoryName string `json:"categoryName"`
+	CategoryID   string `json:"categoryId"`
 }
 
 type IngredientsHandler struct {
@@ -58,6 +59,7 @@ func (h *IngredientsHandler) GetAllIngredients(c echo.Context) error {
 			ID:           p.ID.String(),
 			Name:         p.Name,
 			CategoryName: p.CategoryName.String,
+			CategoryID:   p.CategoryID.UUID.String(),
 		}
 	}
 
