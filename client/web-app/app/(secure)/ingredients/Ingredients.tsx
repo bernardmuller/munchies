@@ -12,7 +12,7 @@ import {
   Trash,
 } from "lucide-react";
 import { DataTable } from "./DataTable";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Dialog,
   DialogHeader,
@@ -171,18 +171,6 @@ function NewIngredientForm({
   );
 }
 
-type CategoryFilter =
-  | "Fruits"
-  | "Vegetables"
-  | "Legumes & Beans"
-  | "Fish & Seafood"
-  | "Grains"
-  | "Meats & Poultry"
-  | "Dairy"
-  | "Fats & Oils"
-  | "Nuts & Seeds"
-  | "Herbs & Vegetables";
-
 export default function Ingredients({
   ingredients: data,
   categories,
@@ -249,7 +237,7 @@ export default function Ingredients({
                   <EllipsisIcon className="rotate-90" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="px-2">
+              <DropdownMenuContent className="px-2" align="end">
                 <Button
                   className="flex gap-1 hover:bg-gray-50"
                   variant="ghost"
@@ -305,7 +293,7 @@ export default function Ingredients({
                   <Filter />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="px-2">
+              <DropdownMenuContent className="px-2" align="end">
                 {categories.map((c) => (
                   <DropdownMenuItem>
                     <Button
