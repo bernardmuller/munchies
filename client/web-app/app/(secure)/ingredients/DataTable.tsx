@@ -100,7 +100,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex justify-between pt-4">
-        <span>
+        <span className="text-sm text-gray-400">
           page {table.getState().pagination.pageIndex + 1} of{" "}
           {table.getPageCount()}
         </span>
