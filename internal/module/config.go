@@ -11,6 +11,8 @@ import (
 	cs "github.com/bernardmuller/munchies/monolith/modules/categories/service"
 	ih "github.com/bernardmuller/munchies/monolith/modules/ingredients/handler"
 	is "github.com/bernardmuller/munchies/monolith/modules/ingredients/service"
+	rph "github.com/bernardmuller/munchies/monolith/modules/roles_permissions/handler"
+	rps "github.com/bernardmuller/munchies/monolith/modules/roles_permissions/service"
 	uh "github.com/bernardmuller/munchies/monolith/modules/users/handler"
 	us "github.com/bernardmuller/munchies/monolith/modules/users/service"
 	"github.com/bernardmuller/munchies/store/postgres"
@@ -77,8 +79,12 @@ func CreateRouter() *echo.Echo {
 func (m *Module) Start() error {
 	router := CreateRouter()
 
+	rolesPermissionsService := rps.NewRolesPermissionsService(m.Database)
+	rolesPermissionsHandler := rph.NewRolesPermissionsHandler(rolesPermissionsService)
+	rolesPermissionsHandler.RegisterRouter(router)
+
 	userService := us.NewUsersService(m.Database)
-	userHandler := uh.NewHttpUsersHandler(userService)
+	userHandler := uh.NewUsersHandler(userService, rolesPermissionsService)
 	userHandler.RegisterRouter(router)
 
 	ingredientsService := is.NewIngredientsService(m.Database)

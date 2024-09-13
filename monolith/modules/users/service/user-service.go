@@ -4,25 +4,20 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"time"
 
 	"github.com/bernardmuller/munchies/store/postgres"
 	"github.com/google/uuid"
 )
 
 type User struct {
-	ID          uuid.UUID
-	Email       string
-	ClerkID     string
-	Firstname   string
-	Lastname    string
-	Role        string
-	Bio         string
-	Image       string
-	Status      string
-	Createdat   time.Time
-	Updatedat   time.Time
-	Householdid uuid.UUID
+	ID        uuid.UUID
+	ClerkID   string
+	Email     string
+	Firstname string
+	Lastname  string
+	RoleID    uuid.UUID
+	Image     string
+	Status    string
 }
 
 type UsersService struct {
@@ -42,6 +37,7 @@ func (s *UsersService) CreateUser(c context.Context, user User) (postgres.User, 
 		Lastname:  sql.NullString{String: user.Lastname, Valid: true},
 		ClerkID:   user.ClerkID,
 		Email:     user.Email,
+    RoleID:    user.RoleID,
 	}
 
 	newUser, createErr := s.DB.CreateUser(c, params)
@@ -90,3 +86,4 @@ func (s *UsersService) GetUserById(ctx context.Context, id string) (postgres.Use
 	user, _ := s.DB.GetUserByClerkId(ctx, id)
 	return user, nil
 }
+

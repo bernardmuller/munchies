@@ -13,8 +13,8 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users(id, clerk_id, email, firstname, lastname, role_id, image, status)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+INSERT INTO users(id, clerk_id, email, firstname, lastname, role_id, image, status, updatedat)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, now())
 RETURNING id, clerk_id, email, firstname, lastname, role_id, image, status, createdat, updatedat, household_id
 `
 
@@ -170,7 +170,7 @@ func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (User, error) {
 
 const updateUser = `-- name: UpdateUser :one
 UPDATE users
-SET id = $1, clerk_id = $2, email = $3, firstname = $4, lastname = $5, role_id = $6, image = $7, status = $8
+SET id = $1, clerk_id = $2, email = $3, firstname = $4, lastname = $5, role_id = $6, image = $7, status = $8, updatedat = now()
 WHERE id = $1
 RETURNING id, clerk_id, email, firstname, lastname, role_id, image, status, createdat, updatedat, household_id
 `

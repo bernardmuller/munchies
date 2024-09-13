@@ -2,18 +2,22 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
+	rs "github.com/bernardmuller/munchies/monolith/modules/roles_permissions/service"
 	"github.com/bernardmuller/munchies/monolith/modules/users/service"
 	clerk "github.com/clerk/clerk-sdk-go/v2"
 
 	clerk_users "github.com/clerk/clerk-sdk-go/v2/user"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 )
 
-type UsersHttpHandler struct {
+type UsersHandler struct {
 	usersService service.UsersService
+  rolesPermissionsService rs.RolesPermissionsService
 }
 
 type UserResponse struct {
@@ -21,21 +25,28 @@ type UserResponse struct {
 	Data   interface{}
 }
 
-func NewHttpUsersHandler(userService *service.UsersService) *UsersHttpHandler {
-	var ps service.UsersService
-	ps = *userService
-	return &UsersHttpHandler{
-		usersService: ps,
+type ErrorResponse struct {
+	Status string `json:"status"`
+	Error  string `json:"error"`
+}
+
+func NewUsersHandler(
+  userService *service.UsersService, 
+  rolesPermissionsService *rs.RolesPermissionsService,
+) *UsersHandler {
+	return &UsersHandler{
+		usersService:             *userService,
+		rolesPermissionsService:  *rolesPermissionsService,
 	}
 }
 
-func (h *UsersHttpHandler) RegisterRouter(router *echo.Echo) {
+func (h *UsersHandler) RegisterRouter(router *echo.Echo) {
 	router.POST("/users", h.CreateUser)
 	router.GET("/users", h.GetUsers)
 	router.POST("/users/import", h.ImportUser)
 }
 
-func (h *UsersHttpHandler) CreateUser(c echo.Context) error {
+func (h *UsersHandler) CreateUser(c echo.Context) error {
 	var user service.User
 
 	err := json.NewDecoder(c.Request().Body).Decode(&user)
@@ -65,7 +76,7 @@ func (h *UsersHttpHandler) CreateUser(c echo.Context) error {
 	return c.JSON(http.StatusCreated, res)
 }
 
-func (h *UsersHttpHandler) GetUsers(c echo.Context) error {
+func (h *UsersHandler) GetUsers(c echo.Context) error {
 	ps, err := h.usersService.GetAllUsers(c.Request().Context())
 	if err != nil {
 		return c.String(http.StatusNoContent, err.Error())
@@ -88,7 +99,7 @@ func (h *UsersHttpHandler) GetUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-func (h *UsersHttpHandler) GetUserById(c echo.Context) error {
+func (h *UsersHandler) GetUserById(c echo.Context) error {
 	userId := c.Param("id")
 
 	p, err := h.usersService.GetUserById(c.Request().Context(), userId)
@@ -103,7 +114,7 @@ type RegisterUserRequest struct {
 	UserId string `json:"userId"`
 }
 
-func (h *UsersHttpHandler) ImportUser(c echo.Context) error {
+func (h *UsersHandler) ImportUser(c echo.Context) error {
 	var user RegisterUserRequest
 
 	err := json.NewDecoder(c.Request().Body).Decode(&user)
@@ -114,10 +125,18 @@ func (h *UsersHttpHandler) ImportUser(c echo.Context) error {
 
 	usr, err := clerk_users.Get(c.Request().Context(), user.UserId)
 	if err != nil {
-		// handle the error
-		// panic(err)
 		return c.String(http.StatusNotFound, err.Error())
 	}
+  
+  dbUser, err := h.usersService.GetUserById(c.Request().Context(), user.UserId)
+  if dbUser.ClerkID != "" {
+    return c.JSON(http.StatusOK, &UserResponse{
+      Status: "success",
+      Data: "User already exists",
+    })
+  }
+
+  userRoles, _ := h.rolesPermissionsService.GetAllRoles(c)
 
 	newDBUser := service.User{
 		ID:        uuid.New(),
@@ -125,11 +144,18 @@ func (h *UsersHttpHandler) ImportUser(c echo.Context) error {
 		Lastname:  *usr.LastName,
 		Email:     *usr.PrimaryEmailAddressID,
 		ClerkID:   usr.ID,
+    RoleID:   userRoles[0].ID,
 	}
+
+  fmt.Println(newDBUser)
 
 	_, err = h.usersService.CreateUser(c.Request().Context(), newDBUser)
 	if err != nil {
-		return c.String(http.StatusInternalServerError, err.Error())
+		log.Print(err.Error())
+		return c.JSON(http.StatusInternalServerError, ErrorResponse{
+			Status: "error",
+			Error:  "Failed to create new user",
+		})
 	}
 
 	res := &UserResponse{
