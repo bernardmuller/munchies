@@ -2,16 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowUpDown, Loader2, PlusIcon } from "lucide-react";
+import {
+  ArrowUpDown,
+  EllipsisIcon,
+  Loader2,
+  PlusIcon,
+  Trash,
+} from "lucide-react";
 import { DataTable } from "./DataTable";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Dialog,
   DialogHeader,
   DialogContent,
-  DialogDescription,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,7 +27,12 @@ import { Category } from "@/lib/http/client/categories/getAllCategories";
 import useIngredients from "@/lib/http/hooks/ingredients/useIngredients";
 import { useQueryClient } from "@tanstack/react-query";
 import { keys } from "@/lib/http/keys";
-import { Ingredient } from "@/lib/http/client/ingredients/getAllIngredients";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import useDeleteIngredient from "@/lib/http/hooks/ingredients/useDeleteIngredient";
 
 type IngredientsProps = {
   ingredients: any[];
@@ -40,12 +49,13 @@ const formSchema = z.object({
 function NewIngredientForm({
   categories,
   onClose,
+  onInvalidate,
 }: {
   categories: Category[];
   onClose: () => void;
+  onInvalidate: () => void;
 }) {
   const createIngredient = useCreateIngredient();
-  const queryClient = useQueryClient();
   const { toast } = useToast();
   const {
     register,
@@ -71,8 +81,8 @@ function NewIngredientForm({
     createIngredient.mutate(ingredientDTO, {
       onSuccess: () => {
         reset();
-        queryClient.invalidateQueries(keys.ingredients);
         onClose();
+        onInvalidate();
         toast({
           variant: "success",
           title: "Success",
@@ -162,16 +172,31 @@ export default function Ingredients({
   ingredients: data,
   categories,
 }: IngredientsProps) {
+  const deleteIngredient = useDeleteIngredient();
+  const { toast } = useToast();
   const { data: ingredientsData, isFetching } = useIngredients({
     initialData: data,
   });
   const [open, setOpen] = React.useState(false);
-  const [ingredients, setIngredients] =
-    React.useState<Ingredient[]>(ingredientsData);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const queryClient = useQueryClient();
+  const handleDeleteIngredient = (id: string) => {
+    deleteIngredient.mutate(id, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(keys.ingredients);
+        toast({
+          variant: "success",
+          title: "Success",
+          description: "Ingredient deleted successfully",
+        });
+      },
+    });
+  };
+
   const columns = [
     {
       accessorKey: "name",
-      header: ({ column }) => {
+      header: ({ column }: any) => {
         return (
           <Button
             variant="ghost"
@@ -184,7 +209,7 @@ export default function Ingredients({
           </Button>
         );
       },
-      cell: ({ row }) => {
+      cell: ({ row }: any) => {
         return <div className="w-full">{row.original.name}</div>;
       },
     },
@@ -192,11 +217,40 @@ export default function Ingredients({
       accessorKey: "categoryName",
       header: "Category",
     },
+    {
+      accessorKey: "action",
+      header: () => {
+        return <div className="w-full flex justify-end ">Action</div>;
+      },
+      cell: ({ cell }: any) => {
+        return (
+          <div className="w-full flex justify-end">
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button variant="ghost" className="h-8">
+                  <EllipsisIcon className="rotate-90" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="px-2">
+                <Button
+                  className="flex gap-1 hover:bg-gray-50"
+                  variant="ghost"
+                  onClick={() =>
+                    handleDeleteIngredient(
+                      cell.row.original.id,
+                    )
+                  }
+                >
+                  <Trash className="h-4 w-4" />
+                  <span>Delete</span>
+                </Button>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+      },
+    },
   ];
-
-  useEffect(() => {
-    setIngredients(ingredientsData);
-  }, [ingredientsData]);
 
   return (
     <>
@@ -205,17 +259,8 @@ export default function Ingredients({
           <div>
             <Input
               placeholder="Search ingredients"
-              onChange={(e) =>
-                setIngredients(
-                  ingredientsData.filter((ingredient) =>
-                    ingredient.name
-                      .toLowerCase()
-                      .includes(
-                        e.target.value.toLowerCase(),
-                      ),
-                  ),
-                )
-              }
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
@@ -230,12 +275,22 @@ export default function Ingredients({
               <NewIngredientForm
                 categories={categories}
                 onClose={() => setOpen(false)}
+                onInvalidate={() => {
+                  queryClient.invalidateQueries(
+                    keys.ingredients,
+                  );
+                }}
               />
             </DialogContent>
           </Dialog>
         </div>
         {!isFetching && (
-          <DataTable columns={columns} data={ingredients} />
+          <DataTable
+            columns={columns}
+            data={ingredientsData.filter((ingredient) =>
+              ingredient.name.toLowerCase().includes(searchTerm),
+            )}
+          />
         )}
       </div>
     </>
