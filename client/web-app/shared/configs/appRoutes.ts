@@ -36,6 +36,10 @@ const appRoutes = [
     path: "/meals/:id",
     name: "Edit Meal",
   },
+  {
+    path: "/something-went-wrong",
+    name: "Something Went Wrong",
+  },
 ];
 
 export default appRoutes;

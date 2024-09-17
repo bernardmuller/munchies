@@ -48,14 +48,16 @@ const Header = () => {
   const currentUser = getCurrentSession();
   const avatar = useAvatar(currentUser.username);
 
+  console.log(pathname);
+
   const pageName = useMemo(() => {
     const route = appRoutes.find((route) => {
-      if (route?.path.includes("meals") && !route?.path.includes("new")) {
-        return {
-          path: pathname,
-          name: "Meal",
-        };
-      }
+      // if (route?.path.includes("meals") && !route?.path.includes("new")) {
+      //   return {
+      //     path: pathname,
+      //     name: "Meal",
+      //   };
+      // }
       return route?.path === pathname;
     });
     return route?.name;
