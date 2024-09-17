@@ -16,8 +16,8 @@ import (
 )
 
 type UsersHandler struct {
-	usersService service.UsersService
-  rolesPermissionsService rs.RolesPermissionsService
+	usersService            service.UsersService
+	rolesPermissionsService rs.RolesPermissionsService
 }
 
 type UserResponse struct {
@@ -31,12 +31,12 @@ type ErrorResponse struct {
 }
 
 func NewUsersHandler(
-  userService *service.UsersService, 
-  rolesPermissionsService *rs.RolesPermissionsService,
+	userService *service.UsersService,
+	rolesPermissionsService *rs.RolesPermissionsService,
 ) *UsersHandler {
 	return &UsersHandler{
-		usersService:             *userService,
-		rolesPermissionsService:  *rolesPermissionsService,
+		usersService:            *userService,
+		rolesPermissionsService: *rolesPermissionsService,
 	}
 }
 
@@ -121,22 +121,24 @@ func (h *UsersHandler) ImportUser(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error decoding request body users")
 	}
+	// TODO: Extract this to a service method //
 	clerk.SetKey("sk_test_QHX2uBzr3J6aCQAEkgoB6MT5arX4TOXeWxakadF806")
 
 	usr, err := clerk_users.Get(c.Request().Context(), user.UserId)
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}
-  
-  dbUser, err := h.usersService.GetUserById(c.Request().Context(), user.UserId)
-  if dbUser.ClerkID != "" {
-    return c.JSON(http.StatusOK, &UserResponse{
-      Status: "success",
-      Data: "User already exists",
-    })
-  }
+	// --------------------------------------//
 
-  userRoles, _ := h.rolesPermissionsService.GetAllRoles(c)
+	dbUser, err := h.usersService.GetUserById(c.Request().Context(), user.UserId)
+	if dbUser.ClerkID != "" {
+		return c.JSON(http.StatusOK, &UserResponse{
+			Status: "success",
+			Data:   "User already exists",
+		})
+	}
+
+	userRoles, _ := h.rolesPermissionsService.GetAllRoles(c)
 
 	newDBUser := service.User{
 		ID:        uuid.New(),
@@ -144,10 +146,10 @@ func (h *UsersHandler) ImportUser(c echo.Context) error {
 		Lastname:  *usr.LastName,
 		Email:     *usr.PrimaryEmailAddressID,
 		ClerkID:   usr.ID,
-    RoleID:   userRoles[0].ID,
+		RoleID:    userRoles[0].ID,
 	}
 
-  fmt.Println(newDBUser)
+	fmt.Println(newDBUser)
 
 	_, err = h.usersService.CreateUser(c.Request().Context(), newDBUser)
 	if err != nil {
@@ -165,4 +167,6 @@ func (h *UsersHandler) ImportUser(c echo.Context) error {
 	return c.JSON(http.StatusCreated, res)
 }
 
-// sk_test_QHX2uBzr3J6aCQAEkgoB6MT5arX4TOXeWxakadF806
+func (h *UsersHandler) AuthenticateUserWithClerkJWT(c echo.Context) error {
+	return nil
+}

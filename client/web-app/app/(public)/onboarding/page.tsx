@@ -24,9 +24,11 @@ export default function OnboardingPage() {
   const { getToken, userId } = useAuth();
   const router = useRouter();
 
+  getToken().then((r) => console.log(r));
   const registerUserOnBackend = async () => {
     if (!userId) return;
     const res = await registerUser({ userId });
+
     if (res.Status === "success") {
       // save JWT
       // figure out how to send it to server

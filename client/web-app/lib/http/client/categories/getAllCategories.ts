@@ -9,13 +9,13 @@ const categorySchema = z.object({
 
 export type Category = z.infer<typeof categorySchema>;
 
-export async function getAllCategories() {
+export async function getAllCategories(token: string) {
   return await httpRequest<Category[], void>(
     apiRoutes.getAllCategories(),
     "GET",
     undefined,
     {
-      accessToken: "",
+      accessToken: token,
     },
   );
 }

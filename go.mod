@@ -11,7 +11,8 @@ require (
 )
 
 require (
-	github.com/clerk/clerk-sdk-go/v2 v2.0.4 // indirect
+	github.com/clerk/clerk-sdk-go/v2 v2.0.8 // indirect
+	github.com/clerkinc/clerk-sdk-go v1.49.1 // indirect
 	github.com/go-jose/go-jose/v3 v3.0.3 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/labstack/gommon v0.4.2 // indirect

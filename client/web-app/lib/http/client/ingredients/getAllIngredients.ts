@@ -10,13 +10,13 @@ const ingredientSchema = z.object({
 
 export type Ingredient = z.infer<typeof ingredientSchema>;
 
-export async function getAllIngredients() {
+export async function getAllIngredients(token: string) {
   return await httpRequest<Ingredient[], void>(
     apiRoutes.ingredients(),
     "GET",
     undefined,
     {
-      accessToken: "",
+      accessToken: token,
     },
   );
 }

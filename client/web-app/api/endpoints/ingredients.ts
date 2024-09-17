@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import httpClient from "../httpClient";
 // import { requireBaseURL, requireHeaders } from "../shared/utils";
 
@@ -30,7 +31,10 @@ export async function fetchIngredients({
 }): Promise<Ingredient[]> {
   return await axios
     .get(`http://localhost:8001/ingredients`)
-    .then((response) => response.data);
+    .then((response) => {
+      console.log(response);
+      return response.data;
+    });
 }
 
 // export async function fetchIngredient(id: string) {

@@ -234,7 +234,7 @@ export default function Ingredients({
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Button variant="ghost" className="h-8">
-                  <EllipsisIcon className="rotate-90" />
+                  <EllipsisIcon className="rotate-90 dark:stroke-white" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="px-2" align="end">

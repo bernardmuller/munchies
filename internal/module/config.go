@@ -2,9 +2,11 @@ package module
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/bernardmuller/munchies/internal/utils"
 	ch "github.com/bernardmuller/munchies/monolith/modules/categories/handler"
@@ -18,6 +20,8 @@ import (
 	"github.com/bernardmuller/munchies/store/postgres"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
+	"github.com/clerkinc/clerk-sdk-go/clerk"
 )
 
 type PORT struct {
@@ -28,6 +32,8 @@ type PORT struct {
 type Module struct {
 	Database *postgres.Queries
 	PORT     PORT
+	Auth     interface{}
+	Session  interface{}
 }
 
 func CreateModule(port PORT) (*Module, error) {
@@ -59,6 +65,7 @@ func CreateRouter() *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.CORS())
+
 	// e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 	// 	AllowOrigins: []string{"http://localhost:4000/"},
 	// 	AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
@@ -76,14 +83,102 @@ func CreateRouter() *echo.Echo {
 	return e
 }
 
+type ErrorResponse struct {
+	Status int    `json:"status"`
+	Error  string `json:"error"`
+}
+
+// func authenticationMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+// 	return func(c echo.Context) error {
+// 		if c.Request().URL.RequestURI() != "/users/authenticate" {
+// 			authorization := c.Request().Header.Get("Authorization")
+// 			bearerToken := strings.Split(authorization, " ")
+// 			if len(bearerToken) < 2 {
+// 				return c.JSON(http.StatusUnauthorized, &ErrorResponse{
+// 					Status: http.StatusUnauthorized,
+// 					Error:  "Unauthorized",
+// 				})
+// 			}
+// 			authToken := bearerToken[1]
+//
+// 			if authToken != "Test" {
+// 				return c.JSON(http.StatusUnauthorized, &ErrorResponse{
+// 					Status: http.StatusUnauthorized,
+// 					Error:  "Unauthorized",
+// 				})
+// 			}
+// 		}
+// 		err := next(c)
+// 		return err
+// 	}
+// }
+
+func authenticationMiddleware(userService *us.UsersService) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			if c.Request().URL.RequestURI() != "/users/authenticate" {
+				authorization := c.Request().Header.Get("Authorization")
+				bearerToken := strings.Split(authorization, " ")
+				if len(bearerToken) < 2 {
+					return c.JSON(http.StatusUnauthorized, &ErrorResponse{
+						Status: http.StatusUnauthorized,
+						Error:  "Unauthorized: No Token found.",
+					})
+				}
+				authToken := bearerToken[1]
+
+				// Use the user service to authenticate the user with the third-party service
+				user, err := userService.AuthenticateUser(c.Request().Context(), authToken)
+				if err != nil || user == nil {
+					return c.JSON(http.StatusUnauthorized, &ErrorResponse{
+						Status: http.StatusUnauthorized,
+						Error:  fmt.Sprintf("Unauthorized: %s", err.Error()),
+					})
+				}
+			}
+
+			return next(c)
+		}
+	}
+}
+
+func adaptHTTPMiddleware(httpMiddleware func(http.Handler) http.Handler) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			// Create a custom http.Handler to wrap the Echo context
+			handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				c.SetRequest(r)         // Set request from Echo context
+				c.Response().Writer = w // Set response writer
+				err := next(c)          // Call next handler
+				if err != nil {
+					c.Error(err) // Handle errors from next handler
+				}
+			})
+
+			// Apply the http middleware to the handler
+			httpMiddleware(handler).ServeHTTP(c.Response(), c.Request())
+			return nil // Return nil since we're handling errors within the middleware
+		}
+	}
+}
+
 func (m *Module) Start() error {
 	router := CreateRouter()
+
+	client, err := clerk.NewClient("sk_test_QHX2uBzr3J6aCQAEkgoB6MT5arX4TOXeWxakadF806")
+	if err != nil {
+		return errors.New("Unable to create new clerk client.")
+	}
+
+	m.Auth = client
+
+	userService := us.NewUsersService(m.Database)
+	router.Use(authenticationMiddleware(userService))
 
 	rolesPermissionsService := rps.NewRolesPermissionsService(m.Database)
 	rolesPermissionsHandler := rph.NewRolesPermissionsHandler(rolesPermissionsService)
 	rolesPermissionsHandler.RegisterRouter(router)
 
-	userService := us.NewUsersService(m.Database)
 	userHandler := uh.NewUsersHandler(userService, rolesPermissionsService)
 	userHandler.RegisterRouter(router)
 
