@@ -17,6 +17,14 @@ export default async function IngredientsPage() {
   const ingredients = await getAllIngredients(token!);
   const categories = await getAllCategories(token!);
 
+  if (
+    !ingredients.ok ||
+    (!categories.ok && ingredients.status >= 500) ||
+    categories.status >= 500
+  ) {
+    redirect("/something-went-wrong");
+  }
+
   if (!ingredients.data || !categories.data) return null;
   return (
     <Ingredients

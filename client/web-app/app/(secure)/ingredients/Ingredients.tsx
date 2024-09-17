@@ -201,6 +201,25 @@ export default function Ingredients({
 
   const columns = [
     {
+      accessorKey: "test",
+      header: ({ column }: any) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() =>
+              column.toggleSorting(column.getIsSorted() === "asc")
+            }
+          >
+            <span className="text-gray-500">#</span>
+            <ArrowUpDown className="ml-2 h-4 w-4 text-gray-500" />
+          </Button>
+        );
+      },
+      cell: ({ row }: any) => {
+        return <div className="w-8 max-w-8">{row.index + 1}</div>;
+      },
+    },
+    {
       accessorKey: "name",
       header: ({ column }: any) => {
         return (
@@ -239,7 +258,7 @@ export default function Ingredients({
               </DropdownMenuTrigger>
               <DropdownMenuContent className="px-2" align="end">
                 <Button
-                  className="flex gap-1 hover:bg-gray-50"
+                  className="flex gap-1 hover:bg-gray-50 w-full justify-start px-2"
                   variant="ghost"
                   onClick={() =>
                     handleDeleteIngredient(
@@ -289,15 +308,15 @@ export default function Ingredients({
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Button variant="icon" className="">
+                <Button variant="icon">
                   <Filter />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="px-2" align="end">
                 {categories.map((c) => (
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="p-0">
                     <Button
-                      className="flex gap-1 hover:bg-gray-50"
+                      className="flex gap-1 hover:bg-gray-50 w-full"
                       variant="ghost"
                       onClick={() =>
                         setFilteredCategory(c.id)
