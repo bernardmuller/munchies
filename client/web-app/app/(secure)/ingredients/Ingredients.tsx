@@ -201,7 +201,7 @@ export default function Ingredients({
 
   const columns = [
     {
-      accessorKey: "test",
+      accessorKey: "#",
       header: ({ column }: any) => {
         return (
           <Button
@@ -216,7 +216,7 @@ export default function Ingredients({
         );
       },
       cell: ({ row }: any) => {
-        return <div className="w-8 max-w-8">{row.index + 1}</div>;
+        return <div className="w-8">{row.index + 1}</div>;
       },
     },
     {

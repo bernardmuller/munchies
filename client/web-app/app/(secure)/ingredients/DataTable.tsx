@@ -76,14 +76,21 @@ export function DataTable<TData, TValue>({
                     row.getIsSelected() && "selected"
                   }
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
+                  {row
+                    .getVisibleCells()
+                    .map((cell, index) => (
+                      <TableCell
+                        key={cell.id}
+                        className={
+                          index === 0 ? "w-4" : ""
+                        }
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
                 </TableRow>
               ))
             ) : (
