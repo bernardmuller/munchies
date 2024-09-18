@@ -15,10 +15,10 @@ const buttonVariants = cva(
         secondary:
           "text-black h-10 px-8 min-w-[130px] py-2 bg-slate-200 hover:bg-slate-200/80",
         destructive:
-          "text-white h-10 px-8 min-w-[130px] py-2 bg-red hover:bg-red/90",
+          "text-white h-10 px-8 min-w-[130px] py-2 bg-red-500 hover:bg-red-500/90",
         icon: "max-w-10 max-h-10 h-10 w-10 p-2.5 text-black bg-slate-200 hover:bg-slate-200/80 dark:bg-slate-800 dark:hover:bg-slate-800 dark:text-white",
         outline:
-          "text-primary h-10 px-8 py-2 bg-transparent border-2 border-primary hover:bg-white/10 ",
+          "text-black h-10 px-8 py-2 bg-transparent border-2 border-slate-200 hover:bg-white/10 ",
         link: "text-purple/80 h-10 py-2 bg-transparent hover:bg-white/10 hover:underline",
         ghost: "text-black h-10 bg-transparent hover:bg-white/10",
       },

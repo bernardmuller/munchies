@@ -48,8 +48,6 @@ const Header = () => {
   const currentUser = getCurrentSession();
   const avatar = useAvatar(currentUser.username);
 
-  console.log(pathname);
-
   const pageName = useMemo(() => {
     const route = appRoutes.find((route) => {
       // if (route?.path.includes("meals") && !route?.path.includes("new")) {
@@ -141,7 +139,7 @@ const Header = () => {
                       <Menu
                         as="div"
                         // @ts-ignore
-                        className="ml-3 relative"
+                        className="ml-3 relative z-50"
                       >
                         <div>
                           <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -175,7 +173,7 @@ const Header = () => {
                           leaveFrom="transform opacity-100 scale-100"
                           leaveTo="transform opacity-0 scale-95"
                         >
-                          <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-2 px-2 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                             {userNavigation.map(
                               (item) => (
                                 <Menu.Item
@@ -205,9 +203,13 @@ const Header = () => {
                                 </Menu.Item>
                               ),
                             )}
+                            <div className="w-full h-[1px] bg-gray-200 mb-2" />
 
                             <Menu.Item>
-                              <Button>
+                              <Button
+                                className="w-full h-8"
+                                variant="destructive"
+                              >
                                 <SignOutButton />
                               </Button>
                             </Menu.Item>

@@ -16,6 +16,10 @@ const appRoutes = [
     name: "Settings",
   },
   {
+    path: "/settings/household",
+    name: "Settings",
+  },
+  {
     path: "/settings/preferences",
     name: "Settings",
   },
