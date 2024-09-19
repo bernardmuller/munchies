@@ -38,6 +38,7 @@ type Household struct {
 	ID        uuid.UUID
 	Createdby uuid.UUID
 	Createdat time.Time
+	Active    sql.NullBool
 }
 
 type Ingredient struct {
