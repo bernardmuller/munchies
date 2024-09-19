@@ -89,17 +89,22 @@ func (s *UsersService) GetUserById(ctx context.Context, id string) (postgres.Use
 	return user, nil
 }
 
-func (s *UsersService) AuthenticateUser(ctx context.Context, jwt string) (interface{}, error) {
+func (s *UsersService) AuthenticateUser(ctx context.Context, token string) (string, error) {
   client, err := clerk.NewClient("sk_test_QHX2uBzr3J6aCQAEkgoB6MT5arX4TOXeWxakadF806")
   if err != nil {
         return "", errors.New("Unable to create new clerk client.")
   }
-  sessClaims, err := clerk.Client.VerifyToken(client, jwt)
+
+  sessClaims, err := clerk.Client.VerifyToken(client, token)
     if err != nil {
         return "", err 
     }
 
-  fmt.Println(sessClaims.ID)
-  return sessClaims.Audience.MarshalJSON, nil
+  user, err := s.GetUserById(ctx, sessClaims.Subject)
+	if err != nil {
+        return "", errors.New("Unable to find user by Clerk Id")
+	}
 
+
+  return user.ID.String(), nil
 }

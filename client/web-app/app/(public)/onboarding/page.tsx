@@ -29,6 +29,8 @@ export default function OnboardingPage() {
     if (!userId) return;
     const res = await registerUser({ userId });
 
+    console.log(res);
+
     if (res.Status === "success") {
       // save JWT
       // figure out how to send it to server

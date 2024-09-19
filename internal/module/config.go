@@ -1,6 +1,7 @@
 package module
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -11,6 +12,8 @@ import (
 	"github.com/bernardmuller/munchies/internal/utils"
 	ch "github.com/bernardmuller/munchies/monolith/modules/categories/handler"
 	cs "github.com/bernardmuller/munchies/monolith/modules/categories/service"
+	hh "github.com/bernardmuller/munchies/monolith/modules/households/handler"
+	hs "github.com/bernardmuller/munchies/monolith/modules/households/service"
 	ih "github.com/bernardmuller/munchies/monolith/modules/ingredients/handler"
 	is "github.com/bernardmuller/munchies/monolith/modules/ingredients/service"
 	rph "github.com/bernardmuller/munchies/monolith/modules/roles_permissions/handler"
@@ -116,7 +119,7 @@ type ErrorResponse struct {
 func authenticationMiddleware(userService *us.UsersService) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			if c.Request().URL.RequestURI() != "/users/authenticate" {
+			if c.Request().URL.RequestURI() != "/users/authenticate" && c.Request().URL.RequestURI() != "/users/import" {
 				authorization := c.Request().Header.Get("Authorization")
 				bearerToken := strings.Split(authorization, " ")
 				if len(bearerToken) < 2 {
@@ -128,13 +131,16 @@ func authenticationMiddleware(userService *us.UsersService) echo.MiddlewareFunc 
 				authToken := bearerToken[1]
 
 				// Use the user service to authenticate the user with the third-party service
-				user, err := userService.AuthenticateUser(c.Request().Context(), authToken)
-				if err != nil || user == nil {
+				userId, err := userService.AuthenticateUser(c.Request().Context(), authToken)
+				if err != nil {
 					return c.JSON(http.StatusUnauthorized, &ErrorResponse{
 						Status: http.StatusUnauthorized,
 						Error:  fmt.Sprintf("Unauthorized: %s", err.Error()),
 					})
 				}
+
+				ctx := context.WithValue(c.Request().Context(), "userId", userId)
+				c.SetRequest(c.Request().WithContext(ctx))
 			}
 
 			return next(c)
@@ -189,6 +195,10 @@ func (m *Module) Start() error {
 	categoriesService := cs.NewCategoriesService(m.Database)
 	categoriesHandler := ch.NewCategoriesHandler(categoriesService)
 	categoriesHandler.RegisterRouter(router)
+
+	householdsService := hs.NewHouseholdsService(m.Database)
+	householdsHandler := hh.NewHouseholdsHandler(householdsService, userService)
+	householdsHandler.RegisterRouter(router)
 
 	log.Println("Starting server on", m.PORT.HTTP)
 

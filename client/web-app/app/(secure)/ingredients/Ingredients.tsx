@@ -277,23 +277,6 @@ export default function Ingredients({
     },
   ];
 
-  useEffect(() => {
-    const data = ingredientsData
-      .filter((i) => {
-        if (filteredCategory !== null) {
-          return i.categoryId === filteredCategory;
-        }
-        return true; // Keep the item if no category filter is applied
-      })
-      .filter((ingredient) =>
-        ingredient.name
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()),
-      );
-
-    console.log(data);
-  }, [ingredientsData, filteredCategory, setSearchTerm]);
-
   return (
     <>
       <div className="flex flex-col  gap-4  w-full min-h-[50vh]">
@@ -360,7 +343,7 @@ export default function Ingredients({
             </Dialog>
           </div>
         </div>
-        {!isFetching && (
+        {!isFetching && ingredientsData.length && (
           <DataTable
             columns={columns}
             data={ingredientsData
@@ -371,7 +354,7 @@ export default function Ingredients({
                   );
                   return i.categoryId === filteredCategory;
                 }
-                return true; // Keep the item if no category filter is applied
+                return true;
               })
               .filter((ingredient) =>
                 ingredient.name
