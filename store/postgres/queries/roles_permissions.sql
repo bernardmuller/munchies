@@ -41,8 +41,8 @@ RETURNING *;
 
 -- name: CreateRole :one
 INSERT INTO "roles"
-(name, description, createdat, updatedat)
-VALUES ($1, $2, $3, $4)
+(name, createdat, updatedat)
+VALUES ($1, now(), now())
 RETURNING *;
 
 -- name: DeleteRole :exec
@@ -57,7 +57,7 @@ WHERE id = $1;
 DELETE FROM "role_permissions"
 WHERE role_id = $1 AND permission_id = $2;
 
---name: GetRoleByUserId :many
+-- name: GetRoleByUserId :many
 SELECT 
 	r.*,
 	u.id as user_id
