@@ -23,3 +23,9 @@ RETURNING *;
 -- name: GetUserByClerkId :one
 SELECT * FROM users
 WHERE clerk_id = $1;
+
+-- name: UpdateUserHouseholdId :one
+UPDATE users
+SET household_id = $2
+WHERE id = $1
+RETURNING *;

@@ -12,8 +12,8 @@ import (
 )
 
 const createHousehold = `-- name: CreateHousehold :one
-INSERT INTO households(id, createdby, createdat)
-VALUES ($1, $2, now())
+INSERT INTO households(id, createdby, createdat, active)
+VALUES ($1, $2, now(), true)
 RETURNING id, createdby, createdat, active
 `
 

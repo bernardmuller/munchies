@@ -99,10 +99,10 @@ func (h *UsersHandler) GetUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-func (h *UsersHandler) GetUserById(c echo.Context) error {
+func (h *UsersHandler) GetUserByClerkId(c echo.Context) error {
 	userId := c.Param("id")
 
-	p, err := h.usersService.GetUserById(c.Request().Context(), userId)
+	p, err := h.usersService.GetUserByClerkId(c.Request().Context(), userId)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
@@ -130,7 +130,7 @@ func (h *UsersHandler) ImportUser(c echo.Context) error {
 	}
 	// --------------------------------------//
 
-	dbUser, err := h.usersService.GetUserById(c.Request().Context(), user.UserId)
+	dbUser, err := h.usersService.GetUserByClerkId(c.Request().Context(), user.UserId)
 	if dbUser.ClerkID != "" {
 		return c.JSON(http.StatusOK, &UserResponse{
 			Status: "success",

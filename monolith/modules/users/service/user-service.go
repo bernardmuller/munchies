@@ -39,7 +39,7 @@ func (s *UsersService) CreateUser(c context.Context, user User) (postgres.User, 
 		Lastname:  sql.NullString{String: user.Lastname, Valid: true},
 		ClerkID:   user.ClerkID,
 		Email:     user.Email,
-    RoleID:    user.RoleID,
+		RoleID:    user.RoleID,
 	}
 
 	newUser, createErr := s.DB.CreateUser(c, params)
@@ -51,30 +51,6 @@ func (s *UsersService) CreateUser(c context.Context, user User) (postgres.User, 
 }
 
 func (s *UsersService) GetAllUsers(ctx context.Context) ([]postgres.User, error) {
-	// var usersList []User
-	// connStr := "host=localhost port=5432 user=postgres password=password dbname=munchies-database-1 sslmode=disable"
-	// db, err := sql.Open("postgres", connStr)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// query := "SELECT * FROM users"
-
-	// rows, err := db.QueryContext(ctx, query)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// defer rows.Close()
-	// for rows.Next() {
-	// 	var user User
-	// 	err = rows.Scan(&user.ID, &user.Firstname, &user.Lastname, &user.Email, &user.ClerkID, &user.Dateofbirth, &user.Role, &user.Bio, &user.Image, &user.Status, &user.Createdat, &user.Updatedat, &user.Householdid)
-	// 	if err != nil {
-	// 		log.Fatal(err)
-	// 	}
-	// 	usersList = append(usersList, user)
-	// }
-
-	// return usersList, nil
 	users, err := s.DB.GetAllUsers(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -84,27 +60,44 @@ func (s *UsersService) GetAllUsers(ctx context.Context) ([]postgres.User, error)
 
 }
 
-func (s *UsersService) GetUserById(ctx context.Context, id string) (postgres.User, error) {
+func (s *UsersService) GetUserById(ctx context.Context, id uuid.UUID) (postgres.User, error) {
+	user, _ := s.DB.GetUserById(ctx, id)
+	return user, nil
+}
+
+func (s *UsersService) GetUserByClerkId(ctx context.Context, id string) (postgres.User, error) {
 	user, _ := s.DB.GetUserByClerkId(ctx, id)
 	return user, nil
 }
 
-func (s *UsersService) AuthenticateUser(ctx context.Context, token string) (string, error) {
-  client, err := clerk.NewClient("sk_test_QHX2uBzr3J6aCQAEkgoB6MT5arX4TOXeWxakadF806")
-  if err != nil {
-        return "", errors.New("Unable to create new clerk client.")
-  }
-
-  sessClaims, err := clerk.Client.VerifyToken(client, token)
-    if err != nil {
-        return "", err 
-    }
-
-  user, err := s.GetUserById(ctx, sessClaims.Subject)
+func (s *UsersService) AuthenticateUser(ctx context.Context, token string) (uuid.UUID, error) {
+	client, err := clerk.NewClient("sk_test_QHX2uBzr3J6aCQAEkgoB6MT5arX4TOXeWxakadF806")
 	if err != nil {
-        return "", errors.New("Unable to find user by Clerk Id")
+		return uuid.Nil, errors.New("Unable to create new clerk client.")
 	}
 
+	sessClaims, err := clerk.Client.VerifyToken(client, token)
+	if err != nil {
+		return uuid.Nil, err
+	}
 
-  return user.ID.String(), nil
+	user, err := s.GetUserByClerkId(ctx, sessClaims.Subject)
+	if err != nil {
+		return uuid.Nil, errors.New("Unable to find user by Clerk Id")
+	}
+
+	return user.ID, nil
+}
+
+func (s *UsersService) UpdateUserHousoldId(ctx context.Context, userId uuid.UUID, householdId uuid.UUID) (postgres.User, error) {
+	params := postgres.UpdateUserHouseholdIdParams{
+		ID:          userId,
+		HouseholdID: uuid.NullUUID{UUID: householdId, Valid: true},
+	}
+	user, err := s.DB.UpdateUserHouseholdId(ctx, params)
+	if err != nil {
+		return postgres.User{}, err
+	}
+
+	return user, nil
 }

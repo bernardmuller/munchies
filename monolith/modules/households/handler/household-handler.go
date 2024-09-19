@@ -1,13 +1,22 @@
 package handler
 
 import (
-	"fmt"
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/bernardmuller/munchies/monolith/modules/households/service"
 	us "github.com/bernardmuller/munchies/monolith/modules/users/service"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
+
+type Household struct {
+	ID         uuid.UUID `json:"id"`
+	Createdby  uuid.UUID `json:"createdBy"`
+	Createdat  time.Time `json:"createdAt"`
+	Active     bool      `json:"active"`
+}
 
 // TODO: extract to internal util type
 type ErrorResponse struct {
@@ -43,37 +52,48 @@ func (h *HouseholdsHandler) RegisterRouter(router *echo.Echo) {
 }
 
 func (h *HouseholdsHandler) CreateHousehold(c echo.Context) error {
-	// const householdData = { createdBy: userId, id: getUuid() };
-
-	// TODO: extract to internal util function
-	userId := c.Request().Context().Value("userId").(string)
-	if userId == "" {
+	// TODO: extract to internal util function //
+	userId := c.Request().Context().Value("userId").(uuid.UUID)
+	if userId == uuid.Nil {
 		return c.JSON(http.StatusUnauthorized, &ErrorResponse{
 			Error:   "Unauthorized: User ID not found",
 			Message: "No User Id found in the Authorization JWT.",
 		})
 	}
+  // ----------------------------------------//
 
-	fmt.Println("--------------------")
-	fmt.Println("userId => %s", userId)
-	fmt.Println("--------------------")
+	user, err := h.usersService.GetUserById(c.Request().Context(), userId)
+	if err == nil && user.HouseholdID.UUID.String() != "" {
+		return c.JSON(http.StatusForbidden, &ErrorResponse{
+			Error:   "Forbidden",
+			Message: "User is already part of a household.",
+		})
+	}
 
-	// const user = await getUser(userId);
-	// if (user?.householdid) {
-	//   throw new Error('You are already part of a household');
-	// }
-	//
-	// const res = await db.households.create({ data: householdData });
-	//
-	// await updateUser(res.createdBy, {
-	//   householdid: res.id,
-	// });
-	//
-	// const newHousehold = householdsModel.parse(res);
-	// return newHousehold;
+	household, err := h.householdsService.CreateHousehold(c.Request().Context(), user.ID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, &ErrorResponse{
+			Error:   "Internal Server Error",
+			Message: "Error creating household.",
+		})
+	}
+
+	_, err = h.usersService.UpdateUserHousoldId(c.Request().Context(), user.ID, household.ID)
+    if err != nil {
+        log.Println(err)
+        return c.JSON(http.StatusInternalServerError, &ErrorResponse{
+            Error:   "Internal Server Error",
+            Message: "Error updating user household id.",
+        })
+    }
+
 	return c.JSON(http.StatusOK, &Response{
 		Status: http.StatusOK,
-		Data:   userId,
+		Data:   &Household{
+      ID: household.ID, 
+      Createdby: household.Createdby, 
+      Createdat: household.Createdat, 
+      Active: household.Active.Bool,
+    },
 	})
-	return nil
 }

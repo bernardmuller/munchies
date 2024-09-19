@@ -2,8 +2,9 @@ package service
 
 import (
 	"context"
+	"log"
 	"time"
-  
+
 	"github.com/bernardmuller/munchies/store/postgres"
 	"github.com/google/uuid"
 )
@@ -18,8 +19,6 @@ type Household struct {
 }
 
 type CreateHousehold struct {
-	Name       string `json:"name"`
-	CategoryId string `json:"categoryId"`
 }
 
 type HouseholdsService struct {
@@ -32,7 +31,17 @@ func NewHouseholdsService(db *postgres.Queries) *HouseholdsService {
 	}
 }
 
-func (s *HouseholdsService) CreateHousehold(ctx context.Context) (postgres.Household, error) {
-  return postgres.Household{}, nil
-}
+func (s *HouseholdsService) CreateHousehold(ctx context.Context, userId uuid.UUID) (postgres.Household, error) {
+	params := postgres.CreateHouseholdParams{
+		ID: uuid.New(),
+    Createdby: userId,
+	}
 
+	newHousehold, createErr := s.DB.CreateHousehold(ctx, params)
+  if createErr != nil {
+    log.Println(createErr)
+    return postgres.Household{}, createErr
+  }
+
+	return newHousehold, nil
+}
