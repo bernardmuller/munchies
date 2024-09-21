@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	rs "github.com/bernardmuller/munchies/monolith/modules/roles_permissions/service"
@@ -26,7 +25,7 @@ type UserResponse struct {
 }
 
 type ErrorResponse struct {
-	Status string `json:"status"`
+	Status int`json:"status"`
 	Error  string `json:"error"`
 }
 
@@ -138,24 +137,34 @@ func (h *UsersHandler) ImportUser(c echo.Context) error {
 		})
 	}
 
-	userRoles, _ := h.rolesPermissionsService.GetAllRoles(c)
+	userRoles, roleErr := h.rolesPermissionsService.GetAllRoles(c)
+  if roleErr != nil {
+		return c.JSON(http.StatusOK, &ErrorResponse{
+			Status: http.StatusInternalServerError,
+			Error:   "Failed to assign user to role",
+		})
+	}
 
 	newDBUser := service.User{
 		ID:        uuid.New(),
-		Firstname: *usr.FirstName,
-		Lastname:  *usr.LastName,
 		Email:     *usr.PrimaryEmailAddressID,
 		ClerkID:   usr.ID,
 		RoleID:    userRoles[0].ID,
 	}
 
-	fmt.Println(newDBUser)
+  if len(*usr.FirstName) > 0 {
+		newDBUser.Firstname = *usr.FirstName
+	}
+
+  if len(*usr.LastName) > 0 {
+		newDBUser.Lastname = *usr.LastName
+	}
 
 	_, err = h.usersService.CreateUser(c.Request().Context(), newDBUser)
 	if err != nil {
 		log.Print(err.Error())
 		return c.JSON(http.StatusInternalServerError, ErrorResponse{
-			Status: "error",
+			Status: http.StatusInternalServerError,
 			Error:  "Failed to create new user",
 		})
 	}

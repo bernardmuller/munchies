@@ -43,6 +43,7 @@ export default function OnboardingPage() {
   };
 
   useEffect(() => {
+    if (!userId) return;
     registerUserOnBackend();
   }, [userId]);
 

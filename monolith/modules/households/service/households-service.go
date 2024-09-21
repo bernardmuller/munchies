@@ -33,15 +33,31 @@ func NewHouseholdsService(db *postgres.Queries) *HouseholdsService {
 
 func (s *HouseholdsService) CreateHousehold(ctx context.Context, userId uuid.UUID) (postgres.Household, error) {
 	params := postgres.CreateHouseholdParams{
-		ID: uuid.New(),
-    Createdby: userId,
+		ID:        uuid.New(),
+		Createdby: userId,
 	}
 
 	newHousehold, createErr := s.DB.CreateHousehold(ctx, params)
-  if createErr != nil {
-    log.Println(createErr)
-    return postgres.Household{}, createErr
-  }
+	if createErr != nil {
+		log.Println(createErr)
+		return postgres.Household{}, createErr
+	}
 
 	return newHousehold, nil
+}
+
+func (s *HouseholdsService) GetHousehold(ctx context.Context, id uuid.UUID) (postgres.Household, error) {
+	household, err := s.DB.GetHouseholdById(ctx, id)
+	if err != nil {
+		return postgres.Household{}, err
+	}
+	return household, nil
+}
+
+func (s *HouseholdsService) GetHouseholdDetailsByUserId(ctx context.Context, id uuid.UUID) (postgres.GetHouseholdDetailsByUserIdRow, error) {
+	household, err := s.DB.GetHouseholdDetailsByUserId(ctx, id)
+	if err != nil {
+		return postgres.GetHouseholdDetailsByUserIdRow{}, err
+	}
+	return household, nil
 }

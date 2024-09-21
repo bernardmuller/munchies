@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -12,10 +14,19 @@ import (
 )
 
 type Household struct {
-	ID         uuid.UUID `json:"id"`
-	Createdby  uuid.UUID `json:"createdBy"`
-	Createdat  time.Time `json:"createdAt"`
-	Active     bool      `json:"active"`
+	ID        uuid.UUID `json:"id"`
+	Createdby uuid.UUID `json:"createdBy"`
+	Createdat time.Time `json:"createdAt"`
+	Active    bool      `json:"active"`
+}
+
+type HouseholdDetails struct {
+	ID          string          `json:"id"`
+	CreatedBy   string          `json:"createdBy"`
+	CreatedAt   string          `json:"createdAt"`
+	Active      bool            `json:"active"`
+	Members     json.RawMessage `json:"members"`
+	GroceryList json.RawMessage `json:"grocerylist"`
 }
 
 // TODO: extract to internal util type
@@ -49,6 +60,7 @@ func NewHouseholdsHandler(householdsService *service.HouseholdsService, usersSer
 
 func (h *HouseholdsHandler) RegisterRouter(router *echo.Echo) {
 	router.POST("/households", h.CreateHousehold)
+	router.GET("/households/current", h.GetHousehold)
 }
 
 func (h *HouseholdsHandler) CreateHousehold(c echo.Context) error {
@@ -60,7 +72,7 @@ func (h *HouseholdsHandler) CreateHousehold(c echo.Context) error {
 			Message: "No User Id found in the Authorization JWT.",
 		})
 	}
-  // ----------------------------------------//
+	// ----------------------------------------//
 
 	user, err := h.usersService.GetUserById(c.Request().Context(), userId)
 	if err == nil && user.HouseholdID.UUID.String() != "" {
@@ -79,21 +91,53 @@ func (h *HouseholdsHandler) CreateHousehold(c echo.Context) error {
 	}
 
 	_, err = h.usersService.UpdateUserHousoldId(c.Request().Context(), user.ID, household.ID)
-    if err != nil {
-        log.Println(err)
-        return c.JSON(http.StatusInternalServerError, &ErrorResponse{
-            Error:   "Internal Server Error",
-            Message: "Error updating user household id.",
-        })
-    }
+	if err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusInternalServerError, &ErrorResponse{
+			Error:   "Internal Server Error",
+			Message: "Error updating user household id.",
+		})
+	}
 
 	return c.JSON(http.StatusOK, &Response{
 		Status: http.StatusOK,
-		Data:   &Household{
-      ID: household.ID, 
-      Createdby: household.Createdby, 
-      Createdat: household.Createdat, 
-      Active: household.Active.Bool,
-    },
+		Data: &Household{
+			ID:        household.ID,
+			Createdby: household.Createdby,
+			Createdat: household.Createdat,
+			Active:    household.Active.Bool,
+		},
 	})
+}
+
+func (h *HouseholdsHandler) GetHousehold(c echo.Context) error {
+	// TODO: extract to internal util function //
+	userId := c.Request().Context().Value("userId").(uuid.UUID)
+	fmt.Println(userId)
+	if userId == uuid.Nil {
+		return c.JSON(http.StatusUnauthorized, &ErrorResponse{
+			Error:   "Unauthorized: User ID not found",
+			Message: "No User Id found in the Authorization JWT.",
+		})
+	}
+	// ----------------------------------------//
+
+	hh, err := h.householdsService.GetHouseholdDetailsByUserId(c.Request().Context(), userId)
+	if err != nil {
+		return c.JSON(http.StatusNoContent, &ErrorResponse{
+			Error:   "No Content",
+			Message: "Could not find household for current user.",
+		})
+	}
+
+	res := HouseholdDetails{
+		ID:          hh.ID.String(),
+		CreatedBy:   hh.Createdby.String(),
+		CreatedAt:   hh.Createdat.String(),
+		Active:      hh.Active.Bool,
+		Members:     hh.Members,
+		GroceryList: hh.Grocerylist,
+	}
+
+	return c.JSON(http.StatusOK, res)
 }

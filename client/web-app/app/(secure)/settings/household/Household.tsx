@@ -13,8 +13,15 @@ import {
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Clipboard, LogOut, UserPlus, Home } from "lucide-react";
+import { Household } from "@/lib/http/client/households/getCurrentUserHouseholdDetails";
 
-export default function HouseholdDashboard() {
+type Props = {
+  household: Household | null;
+};
+
+export default function HouseholdDashboard({ household }: Props) {
+  console.log(household);
+
   const [isInHousehold, setIsInHousehold] = useState(false);
   const [householdId, setHouseholdId] = useState("");
   const [members, setMembers] = useState([
@@ -79,7 +86,7 @@ export default function HouseholdDashboard() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (!isInHousehold) {
+  if (!household?.id) {
     return (
       <div className=" mx-auto p-4 max-w-md">
         <h2 className="text-2xl font-bold text-center mb-1">
@@ -191,25 +198,22 @@ export default function HouseholdDashboard() {
         <div>
           <h3 className="text-lg font-semibold mb-3">Members</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {members.map((member) => (
+            {household.members.map((member) => (
               <div
                 key={member.id}
                 className="flex items-center space-x-3 bg-gray-50 p-3 rounded-md"
               >
                 <Avatar>
                   <AvatarImage
-                    src={member.avatar}
-                    alt={member.name}
+                    src={member.firstname[0]}
+                    alt={member.firstname}
                   />
                   <AvatarFallback>
-                    {member.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
+                    {member.firstname[0]}
                   </AvatarFallback>
                 </Avatar>
                 <span className="font-medium">
-                  {member.name}
+                  {member.firstname} {member.lastname}
                 </span>
               </div>
             ))}

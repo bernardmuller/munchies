@@ -7,6 +7,9 @@ package postgres
 
 import (
 	"context"
+	"database/sql"
+	"encoding/json"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -79,6 +82,83 @@ func (q *Queries) GetHouseholdById(ctx context.Context, id uuid.UUID) (Household
 		&i.Createdby,
 		&i.Createdat,
 		&i.Active,
+	)
+	return i, err
+}
+
+const getHouseholdDetailsByUserId = `-- name: GetHouseholdDetailsByUserId :one
+WITH user_household As (
+	SELECT household_id
+	FROM users 
+	WHERE users.id = $1
+),
+household_row AS (
+    SELECT id, createdby, createdat, active
+    FROM households
+    WHERE id = (SELECT household_id FROM user_household)
+),
+users AS (
+    SELECT id, firstname, lastname, household_id
+    FROM users
+    WHERE household_id = (SELECT id FROM household_row)
+),
+latest_grocerylist AS (
+    SELECT id, createdat, createdby, menu_id, household_id
+    FROM grocerylists
+    WHERE household_id = (SELECT id FROM household_row)
+    ORDER BY createdat DESC
+    LIMIT 1
+)
+SELECT
+    h.id as "id",
+    h.createdby as "createdby",
+    h.createdat as "createdat",
+    h.active as "active",
+    json_agg(u) AS "members",
+    json_build_object(
+        'id', gl.id,
+        'createdat', gl."createdat",
+        'items', (
+            SELECT json_agg(
+                json_build_object(
+                    'id', i.id,
+                    'type', i.typeid,
+                    'check', i.check,
+                    'ingredient', ing.*,
+                    'createdby', u.firstname
+                )
+            )
+            FROM items i
+            LEFT JOIN ingredients ing ON i.ingredient_id = ing.id
+            LEFT JOIN users u ON i.createdby = u.id
+            WHERE i.grocerylist_id = gl.id
+        )
+    ) AS grocerylist
+FROM household_row h
+LEFT JOIN users u ON h.id = u.household_id
+LEFT JOIN latest_grocerylist gl ON h.id = gl.household_id
+GROUP BY h.id, gl.id, h.createdby, h.createdat, h.active, gl.createdat
+`
+
+type GetHouseholdDetailsByUserIdRow struct {
+	ID          uuid.UUID
+	Createdby   uuid.UUID
+	Createdat   time.Time
+	Active      sql.NullBool
+	Members     json.RawMessage
+	Grocerylist json.RawMessage
+}
+
+func (q *Queries) GetHouseholdDetailsByUserId(ctx context.Context, id uuid.UUID) (GetHouseholdDetailsByUserIdRow, error) {
+	row := q.db.QueryRowContext(ctx, getHouseholdDetailsByUserId, id)
+	var i GetHouseholdDetailsByUserIdRow
+	err := row.Scan(
+		&i.ID,
+		&i.Createdby,
+		&i.Createdat,
+		&i.Active,
+		&i.Members,
+		&i.Grocerylist,
 	)
 	return i, err
 }
