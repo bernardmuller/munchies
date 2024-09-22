@@ -3,80 +3,50 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Clipboard, LogOut, UserPlus, Home } from "lucide-react";
-import { Household } from "@/lib/http/client/households/getCurrentUserHouseholdDetails";
+import {
+  Household,
+  Member,
+} from "@/lib/http/client/households/getCurrentUserHouseholdDetails";
+import useCurrentUserHouseholdDetails from "@/lib/http/hooks/households/useCurrentUserHouseholdDetails";
+import { FieldValues } from "react-hook-form";
+import JoinHouseholdDialog from "./JoinHouseholdDialog";
+import useJoinHousehold from "@/lib/http/hooks/households/useJoinHousehold";
 
 type Props = {
   household: Household | null;
 };
 
 export default function HouseholdDashboard({ household }: Props) {
-  console.log(household);
+  const { data: householdData, isLoading } = useCurrentUserHouseholdDetails({
+    initialData: household!,
+  });
+  const joinHoushold = useJoinHousehold();
 
-  const [isInHousehold, setIsInHousehold] = useState(false);
+  const handleJoinHousehold = async (data: FieldValues) => {
+    await joinHoushold.mutateAsync({
+      householdId: data.householdId,
+    });
+  };
+
   const [householdId, setHouseholdId] = useState("");
-  const [members, setMembers] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 3,
-      name: "Mike Johnson",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-  ]);
-
-  // States for Household Actions
-  const [joinHouseholdId, setJoinHouseholdId] = useState("");
   const [newHouseholdName, setNewHouseholdName] = useState("");
-  const [joinError, setJoinError] = useState("");
 
   // States for Household Management
   const [copied, setCopied] = useState(false);
-
-  const handleJoinHousehold = (e: React.FormEvent) => {
-    e.preventDefault();
-    setJoinError("");
-    if (joinHouseholdId.trim() === "") {
-      setJoinError("Please enter a valid Household ID");
-      return;
-    }
-    // Here you would typically send a request to your backend to join the household
-    console.log(`Joining household with ID: ${joinHouseholdId}`);
-    setHouseholdId(joinHouseholdId);
-    setIsInHousehold(true);
-    setJoinHouseholdId("");
-  };
 
   const handleCreateHousehold = (e: React.FormEvent) => {
     e.preventDefault();
     // Here you would typically send a request to your backend to create the household
     console.log(`Creating new household: ${newHouseholdName}`);
     setHouseholdId(`HH-${Math.random().toString(36).substr(2, 9)}`);
-    setIsInHousehold(true);
     setNewHouseholdName("");
   };
 
   const handleLeaveHousehold = () => {
     // Here you would typically send a request to your backend to leave the household
     console.log("Leaving household");
-    setIsInHousehold(false);
     setHouseholdId("");
   };
 
@@ -86,7 +56,7 @@ export default function HouseholdDashboard({ household }: Props) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (!household?.id) {
+  if (!householdData && !householdData?.id) {
     return (
       <div className=" mx-auto p-4 max-w-md">
         <h2 className="text-2xl font-bold text-center mb-1">
@@ -98,86 +68,19 @@ export default function HouseholdDashboard({ household }: Props) {
           other members.
         </h4>
         <div className="space-y-4">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="w-full">
-                <Home className="mr-2 h-4 w-4" /> Create
-                Household
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  Create a New Household
-                </DialogTitle>
-              </DialogHeader>
-              <form
-                onSubmit={handleCreateHousehold}
-                className="space-y-4"
-              >
-                <div className="space-y-2">
-                  <Label htmlFor="household-name">
-                    Household Name
-                  </Label>
-                  <Input
-                    id="household-name"
-                    value={newHouseholdName}
-                    onChange={(e) =>
-                      setNewHouseholdName(e.target.value)
-                    }
-                    placeholder="Enter household name"
-                    required
-                  />
-                </div>
-                <Button type="submit" className="w-full">
-                  Create Household
-                </Button>
-              </form>
-            </DialogContent>
-          </Dialog>
+          <Button className="w-full">
+            <Home className="mr-2 h-4 w-4" /> Create Household
+          </Button>
 
-          <Dialog>
-            <DialogTrigger asChild>
+          <JoinHouseholdDialog
+            trigger={
               <Button variant="outline" className="w-full">
                 <UserPlus className="mr-2 h-4 w-4" /> Join
                 Household
               </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  Join an Existing Household
-                </DialogTitle>
-              </DialogHeader>
-              <form
-                onSubmit={handleJoinHousehold}
-                className="space-y-4"
-              >
-                <div className="space-y-2">
-                  <Label htmlFor="household-id">
-                    Household ID
-                  </Label>
-                  <Input
-                    id="household-id"
-                    value={joinHouseholdId}
-                    onChange={(e) =>
-                      setJoinHouseholdId(e.target.value)
-                    }
-                    placeholder="Enter household ID"
-                    required
-                  />
-                  {joinError && (
-                    <p className="text-sm text-red-500">
-                      {joinError}
-                    </p>
-                  )}
-                </div>
-                <Button type="submit" className="w-full">
-                  Join Household
-                </Button>
-              </form>
-            </DialogContent>
-          </Dialog>
+            }
+            onSubmit={handleJoinHousehold}
+          />
         </div>
       </div>
     );
@@ -198,7 +101,7 @@ export default function HouseholdDashboard({ household }: Props) {
         <div>
           <h3 className="text-lg font-semibold mb-3">Members</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {household.members.map((member) => (
+            {householdData.members.map((member: Member) => (
               <div
                 key={member.id}
                 className="flex items-center space-x-3 bg-gray-50 p-3 rounded-md"
@@ -225,7 +128,7 @@ export default function HouseholdDashboard({ household }: Props) {
           </h3>
           <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
             <Input
-              value={householdId}
+              value={householdData.id}
               readOnly
               className="flex-grow"
             />

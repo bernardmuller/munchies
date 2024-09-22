@@ -15,11 +15,9 @@ export default async function HouseholdPage() {
 
   const household = await getCurrentUserHouseholdDetails(token!);
 
-  console.log(household);
-
-  // if (!household.ok || household.status >= 500) {
-  //   redirect("/something-went-wrong");
-  // }
+  if (!household.ok || household.status >= 500) {
+    redirect("/something-went-wrong");
+  }
 
   return <HouseholdManagement household={household.data} />;
 }

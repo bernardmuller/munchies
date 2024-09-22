@@ -12,7 +12,7 @@ export default function useCurrentUserHouseholdDetails({ initialData }: Props) {
   const { getToken } = useAuth();
   const token = getToken().then((t) => t?.toString());
   return useQuery({
-    queryKey: keys.categories,
+    queryKey: keys.currentUserHouseholdDetails,
     queryFn: async () => {
       const response = await getCurrentUserHouseholdDetails(
         (await token) as string,

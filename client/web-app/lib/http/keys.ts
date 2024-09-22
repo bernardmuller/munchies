@@ -3,4 +3,5 @@ export const keys = {
   createIngredient: ["create-ingredient"],
   ingredients: ["ingredients"],
   deleteIngredient: ["delete-ingredient"],
+  currentUserHouseholdDetails: ["current-user-household-details"],
 };

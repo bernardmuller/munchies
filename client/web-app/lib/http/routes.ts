@@ -11,6 +11,12 @@ const apiRoutes = {
   getCurrentUserHouseholdDetails: () => {
     return `${process.env.NEXT_PUBLIC_API_BASE_URL}/households/current`;
   },
+  households: () => {
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/households`;
+  },
+  joinHousehold: () => {
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/households/join`;
+  },
 };
 
 export default apiRoutes;

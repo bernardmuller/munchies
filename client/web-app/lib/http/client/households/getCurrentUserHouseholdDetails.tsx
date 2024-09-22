@@ -9,6 +9,8 @@ const MemberSchema = z.object({
   household_id: z.string().uuid(),
 });
 
+export type Member = z.infer<typeof MemberSchema>;
+
 const IngredientSchema = z.object({
   id: z.string().uuid(),
   name: z.string(),
