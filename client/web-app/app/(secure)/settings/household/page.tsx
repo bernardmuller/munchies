@@ -15,7 +15,9 @@ export default async function HouseholdPage() {
 
   const household = await getCurrentUserHouseholdDetails(token!);
 
-  if (!household.ok || household.status >= 500) {
+  console.log(household);
+
+  if (!household.ok && household.status >= 500) {
     redirect("/something-went-wrong");
   }
 

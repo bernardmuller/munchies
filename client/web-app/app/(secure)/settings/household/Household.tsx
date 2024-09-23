@@ -13,16 +13,28 @@ import useCurrentUserHouseholdDetails from "@/lib/http/hooks/households/useCurre
 import { FieldValues } from "react-hook-form";
 import JoinHouseholdDialog from "./JoinHouseholdDialog";
 import useJoinHousehold from "@/lib/http/hooks/households/useJoinHousehold";
+import useLeaveHousehold from "@/lib/http/hooks/households/useLeaveHousehold";
+import useCreateHousehold from "@/lib/http/hooks/households/useCreateHousehold";
+import { useCopyToClipboard } from "@/lib/utils/copyToClipboard";
 
 type Props = {
   household: Household | null;
 };
 
 export default function HouseholdDashboard({ household }: Props) {
-  const { data: householdData, isLoading } = useCurrentUserHouseholdDetails({
+  const {
+    data: householdData,
+    isLoading,
+    isFetching,
+    isRefetching,
+  } = useCurrentUserHouseholdDetails({
     initialData: household!,
   });
+  const createHoushold = useCreateHousehold();
   const joinHoushold = useJoinHousehold();
+  const leaveHoushold = useLeaveHousehold();
+  const [copied, copy] = useCopyToClipboard();
+  const [hasCopied, setHasCopied] = useState(false);
 
   const handleJoinHousehold = async (data: FieldValues) => {
     await joinHoushold.mutateAsync({
@@ -30,33 +42,19 @@ export default function HouseholdDashboard({ household }: Props) {
     });
   };
 
-  const [householdId, setHouseholdId] = useState("");
-  const [newHouseholdName, setNewHouseholdName] = useState("");
-
-  // States for Household Management
-  const [copied, setCopied] = useState(false);
-
-  const handleCreateHousehold = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Here you would typically send a request to your backend to create the household
-    console.log(`Creating new household: ${newHouseholdName}`);
-    setHouseholdId(`HH-${Math.random().toString(36).substr(2, 9)}`);
-    setNewHouseholdName("");
+  const copyToClipboard = async () => {
+    copy(householdData.id).catch((error) => {
+      console.error("Failed to copy!", error);
+    });
+    setHasCopied(true);
+    setTimeout(() => setHasCopied(false), 2000);
   };
 
-  const handleLeaveHousehold = () => {
-    // Here you would typically send a request to your backend to leave the household
-    console.log("Leaving household");
-    setHouseholdId("");
-  };
+  if (isLoading || isFetching || isRefetching) {
+    return <div>Loading...</div>;
+  }
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(householdId);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  if (!householdData && !householdData?.id) {
+  if (!householdData || !householdData?.id) {
     return (
       <div className=" mx-auto p-4 max-w-md">
         <h2 className="text-2xl font-bold text-center mb-1">
@@ -68,7 +66,11 @@ export default function HouseholdDashboard({ household }: Props) {
           other members.
         </h4>
         <div className="space-y-4">
-          <Button className="w-full">
+          <Button
+            className="w-full"
+            onClick={() => createHoushold.mutateAsync()}
+            isLoading={createHoushold.isLoading}
+          >
             <Home className="mr-2 h-4 w-4" /> Create Household
           </Button>
 
@@ -93,7 +95,8 @@ export default function HouseholdDashboard({ household }: Props) {
           <h2 className="text-2xl font-bold">My Household</h2>
           <Button
             variant="destructive"
-            onClick={handleLeaveHousehold}
+            onClick={() => leaveHoushold.mutateAsync()}
+            isLoading={leaveHoushold.isLoading}
           >
             <LogOut className="mr-2 h-4 w-4" /> Leave
           </Button>
@@ -107,10 +110,12 @@ export default function HouseholdDashboard({ household }: Props) {
                 className="flex items-center space-x-3 bg-gray-50 p-3 rounded-md"
               >
                 <Avatar>
+                  {/*
                   <AvatarImage
                     src={member.firstname[0]}
                     alt={member.firstname}
                   />
+                  */}
                   <AvatarFallback>
                     {member.firstname[0]}
                   </AvatarFallback>
@@ -126,20 +131,22 @@ export default function HouseholdDashboard({ household }: Props) {
           <h3 className="text-lg font-semibold mb-3">
             Invite New Members
           </h3>
-          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-            <Input
-              value={householdData.id}
-              readOnly
-              className="flex-grow"
-            />
-            <Button variant="outline" onClick={copyToClipboard}>
-              {copied ? (
-                <UserPlus className="mr-2 h-4 w-4" />
-              ) : (
-                <Clipboard className="mr-2 h-4 w-4" />
-              )}
-              {copied ? "Copied!" : "Copy"}
-            </Button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+              <Input
+                value={householdData.id}
+                readOnly
+                className="flex-grow"
+              />
+              <Button variant="outline" onClick={copyToClipboard}>
+                {hasCopied ? (
+                  <UserPlus className="mr-2 h-4 w-4" />
+                ) : (
+                  <Clipboard className="mr-2 h-4 w-4" />
+                )}
+                {copied ? "Copied!" : "Copy"}
+              </Button>
+            </div>
           </div>
           <p className="text-sm text-muted-foreground mt-2">
             Share this ID with others to invite them to your

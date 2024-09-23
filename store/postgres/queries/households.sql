@@ -62,3 +62,32 @@ FROM household_row h
 LEFT JOIN users u ON h.id = u.household_id
 LEFT JOIN latest_grocerylist gl ON h.id = gl.household_id
 GROUP BY h.id, gl.id, h.createdby, h.createdat, h.active, gl.createdat;
+
+-- name: AddUserToHousehold :one
+UPDATE users 
+SET household_id = $1
+WHERE id = $2
+RETURNING *;
+
+-- name: RemoveUserFromHousehold :one
+UPDATE users 
+SET household_id = NULL
+WHERE id = $1
+RETURNING *;
+
+-- name: ActivateHousehold :one
+UPDATE households 
+SET active = true
+WHERE id = $1
+RETURNING *;
+
+-- name: DeactivateHousehold :one
+UPDATE households 
+SET active = false
+WHERE id = $1
+RETURNING *;
+
+-- name: GetHouseholdByUserId :one
+SELECT *
+FROM households
+WHERE createdby = $1;

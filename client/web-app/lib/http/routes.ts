@@ -17,6 +17,9 @@ const apiRoutes = {
   joinHousehold: () => {
     return `${process.env.NEXT_PUBLIC_API_BASE_URL}/households/join`;
   },
+  leaveHousehold: () => {
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/households/leave`;
+  },
 };
 
 export default apiRoutes;

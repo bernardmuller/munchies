@@ -14,6 +14,56 @@ import (
 	"github.com/google/uuid"
 )
 
+const activateHousehold = `-- name: ActivateHousehold :one
+UPDATE households 
+SET active = true
+WHERE id = $1
+RETURNING id, createdby, createdat, active
+`
+
+func (q *Queries) ActivateHousehold(ctx context.Context, id uuid.UUID) (Household, error) {
+	row := q.db.QueryRowContext(ctx, activateHousehold, id)
+	var i Household
+	err := row.Scan(
+		&i.ID,
+		&i.Createdby,
+		&i.Createdat,
+		&i.Active,
+	)
+	return i, err
+}
+
+const addUserToHousehold = `-- name: AddUserToHousehold :one
+UPDATE users 
+SET household_id = $1
+WHERE id = $2
+RETURNING id, clerk_id, email, firstname, lastname, role_id, image, status, createdat, updatedat, household_id
+`
+
+type AddUserToHouseholdParams struct {
+	HouseholdID uuid.NullUUID
+	ID          uuid.UUID
+}
+
+func (q *Queries) AddUserToHousehold(ctx context.Context, arg AddUserToHouseholdParams) (User, error) {
+	row := q.db.QueryRowContext(ctx, addUserToHousehold, arg.HouseholdID, arg.ID)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.ClerkID,
+		&i.Email,
+		&i.Firstname,
+		&i.Lastname,
+		&i.RoleID,
+		&i.Image,
+		&i.Status,
+		&i.Createdat,
+		&i.Updatedat,
+		&i.HouseholdID,
+	)
+	return i, err
+}
+
 const createHousehold = `-- name: CreateHousehold :one
 INSERT INTO households(id, createdby, createdat, active)
 VALUES ($1, $2, now(), true)
@@ -27,6 +77,25 @@ type CreateHouseholdParams struct {
 
 func (q *Queries) CreateHousehold(ctx context.Context, arg CreateHouseholdParams) (Household, error) {
 	row := q.db.QueryRowContext(ctx, createHousehold, arg.ID, arg.Createdby)
+	var i Household
+	err := row.Scan(
+		&i.ID,
+		&i.Createdby,
+		&i.Createdat,
+		&i.Active,
+	)
+	return i, err
+}
+
+const deactivateHousehold = `-- name: DeactivateHousehold :one
+UPDATE households 
+SET active = false
+WHERE id = $1
+RETURNING id, createdby, createdat, active
+`
+
+func (q *Queries) DeactivateHousehold(ctx context.Context, id uuid.UUID) (Household, error) {
+	row := q.db.QueryRowContext(ctx, deactivateHousehold, id)
 	var i Household
 	err := row.Scan(
 		&i.ID,
@@ -76,6 +145,24 @@ WHERE id = $1
 
 func (q *Queries) GetHouseholdById(ctx context.Context, id uuid.UUID) (Household, error) {
 	row := q.db.QueryRowContext(ctx, getHouseholdById, id)
+	var i Household
+	err := row.Scan(
+		&i.ID,
+		&i.Createdby,
+		&i.Createdat,
+		&i.Active,
+	)
+	return i, err
+}
+
+const getHouseholdByUserId = `-- name: GetHouseholdByUserId :one
+SELECT id, createdby, createdat, active
+FROM households
+WHERE createdby = $1
+`
+
+func (q *Queries) GetHouseholdByUserId(ctx context.Context, createdby uuid.UUID) (Household, error) {
+	row := q.db.QueryRowContext(ctx, getHouseholdByUserId, createdby)
 	var i Household
 	err := row.Scan(
 		&i.ID,
@@ -159,6 +246,32 @@ func (q *Queries) GetHouseholdDetailsByUserId(ctx context.Context, id uuid.UUID)
 		&i.Active,
 		&i.Members,
 		&i.Grocerylist,
+	)
+	return i, err
+}
+
+const removeUserFromHousehold = `-- name: RemoveUserFromHousehold :one
+UPDATE users 
+SET household_id = NULL
+WHERE id = $1
+RETURNING id, clerk_id, email, firstname, lastname, role_id, image, status, createdat, updatedat, household_id
+`
+
+func (q *Queries) RemoveUserFromHousehold(ctx context.Context, id uuid.UUID) (User, error) {
+	row := q.db.QueryRowContext(ctx, removeUserFromHousehold, id)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.ClerkID,
+		&i.Email,
+		&i.Firstname,
+		&i.Lastname,
+		&i.RoleID,
+		&i.Image,
+		&i.Status,
+		&i.Createdat,
+		&i.Updatedat,
+		&i.HouseholdID,
 	)
 	return i, err
 }

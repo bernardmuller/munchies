@@ -61,3 +61,47 @@ func (s *HouseholdsService) GetHouseholdDetailsByUserId(ctx context.Context, id 
 	}
 	return household, nil
 }
+
+func (s *HouseholdsService) AddUserToHousehold(ctx context.Context, householdId uuid.UUID, userId uuid.UUID) error {
+	params := postgres.AddUserToHouseholdParams{
+		HouseholdID: uuid.NullUUID{UUID: householdId, Valid: true},
+		ID:          userId,
+	}
+	_, err := s.DB.AddUserToHousehold(ctx, params)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *HouseholdsService) RemoveUserFromHousehold(ctx context.Context, userId uuid.UUID) error {
+	_, err := s.DB.RemoveUserFromHousehold(ctx, userId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *HouseholdsService) ActivateHousehold(ctx context.Context, householdId uuid.UUID) error {
+	_, err := s.DB.ActivateHousehold(ctx, householdId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *HouseholdsService) DeactivateHousehold(ctx context.Context, householdId uuid.UUID) error {
+	_, err := s.DB.DeactivateHousehold(ctx, householdId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *HouseholdsService) GetHouseholdByUserId(ctx context.Context, userId uuid.UUID) (postgres.Household, error) {
+	hh, err := s.DB.GetHouseholdByUserId(ctx, userId)
+	if err != nil {
+		return postgres.Household{}, err
+	}
+	return hh, nil
+}
