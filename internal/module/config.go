@@ -20,6 +20,8 @@ import (
 	rps "github.com/bernardmuller/munchies/monolith/modules/roles_permissions/service"
 	uh "github.com/bernardmuller/munchies/monolith/modules/users/handler"
 	us "github.com/bernardmuller/munchies/monolith/modules/users/service"
+	glh "github.com/bernardmuller/munchies/monolith/modules/grocerylists/handler"
+	gls "github.com/bernardmuller/munchies/monolith/modules/grocerylists/service"
 	"github.com/bernardmuller/munchies/store/postgres"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -199,6 +201,10 @@ func (m *Module) Start() error {
 	householdsService := hs.NewHouseholdsService(m.Database)
 	householdsHandler := hh.NewHouseholdsHandler(householdsService, userService)
 	householdsHandler.RegisterRouter(router)
+
+	grocerylistsService := gls.NewGrocerylistsService(m.Database)
+	grocerylistsHandler := glh.NewGrocerylistsHandler(grocerylistsService, householdsService, userService)
+	grocerylistsHandler.RegisterRouter(router)
 
 	log.Println("Starting server on", m.PORT.HTTP)
 
