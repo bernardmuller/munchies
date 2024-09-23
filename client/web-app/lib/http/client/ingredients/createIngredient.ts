@@ -9,7 +9,13 @@ const ingredientSchema = z.object({
 
 export type Ingredient = z.infer<typeof ingredientSchema>;
 
-export async function createIngredient(data: Ingredient, accessToken: string) {
+export async function createIngredient({
+  data,
+  accessToken,
+}: {
+  data: Ingredient;
+  accessToken: string;
+}) {
   return await httpRequest<Ingredient, Ingredient>(
     apiRoutes.ingredients(),
     "POST",
