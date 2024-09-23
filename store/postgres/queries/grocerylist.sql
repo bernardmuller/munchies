@@ -5,7 +5,9 @@ SELECT * FROM grocerylists;
 SELECT * FROM grocerylists ORDER BY createdat DESC LIMIT 1;
 
 -- name: CreateGrocerylist :one
-INSERT INTO grocerylists (id, menu_id, household_id) VALUES ($1, $2, $3) RETURNING *;
+INSERT INTO grocerylists (id, menu_id, household_id, createdat, createdby)
+VALUES ($1, $2, $3, now(), $4)
+RETURNING *;
 
 -- name: GetGrocerylistWithItemsById :one
 SELECT
