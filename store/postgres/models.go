@@ -24,6 +24,7 @@ type Grocerylist struct {
 	Createdby   uuid.NullUUID
 	MenuID      uuid.NullUUID
 	HouseholdID uuid.NullUUID
+	Archived    sql.NullBool
 }
 
 type GrocerylistItem struct {

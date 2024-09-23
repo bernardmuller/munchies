@@ -13,17 +13,25 @@ import (
 )
 
 const createGrocerylist = `-- name: CreateGrocerylist :one
-INSERT INTO grocerylists (id, menu_id, household_id) VALUES ($1, $2, $3) RETURNING id, createdat, createdby, menu_id, household_id
+INSERT INTO grocerylists (id, menu_id, household_id, createdat, createdby)
+VALUES ($1, $2, $3, now(), $4)
+RETURNING id, createdat, createdby, menu_id, household_id, archived
 `
 
 type CreateGrocerylistParams struct {
 	ID          uuid.UUID
 	MenuID      uuid.NullUUID
 	HouseholdID uuid.NullUUID
+	Createdby   uuid.NullUUID
 }
 
 func (q *Queries) CreateGrocerylist(ctx context.Context, arg CreateGrocerylistParams) (Grocerylist, error) {
-	row := q.db.QueryRowContext(ctx, createGrocerylist, arg.ID, arg.MenuID, arg.HouseholdID)
+	row := q.db.QueryRowContext(ctx, createGrocerylist,
+		arg.ID,
+		arg.MenuID,
+		arg.HouseholdID,
+		arg.Createdby,
+	)
 	var i Grocerylist
 	err := row.Scan(
 		&i.ID,
@@ -31,6 +39,7 @@ func (q *Queries) CreateGrocerylist(ctx context.Context, arg CreateGrocerylistPa
 		&i.Createdby,
 		&i.MenuID,
 		&i.HouseholdID,
+		&i.Archived,
 	)
 	return i, err
 }
@@ -165,7 +174,7 @@ func (q *Queries) GetGrocerylistWithItemsByUserId(ctx context.Context, createdby
 }
 
 const getGrocerylists = `-- name: GetGrocerylists :many
-SELECT id, createdat, createdby, menu_id, household_id FROM grocerylists
+SELECT id, createdat, createdby, menu_id, household_id, archived FROM grocerylists
 `
 
 func (q *Queries) GetGrocerylists(ctx context.Context) ([]Grocerylist, error) {
@@ -183,6 +192,7 @@ func (q *Queries) GetGrocerylists(ctx context.Context) ([]Grocerylist, error) {
 			&i.Createdby,
 			&i.MenuID,
 			&i.HouseholdID,
+			&i.Archived,
 		); err != nil {
 			return nil, err
 		}
@@ -198,7 +208,7 @@ func (q *Queries) GetGrocerylists(ctx context.Context) ([]Grocerylist, error) {
 }
 
 const getLatestGrocerylist = `-- name: GetLatestGrocerylist :one
-SELECT id, createdat, createdby, menu_id, household_id FROM grocerylists ORDER BY createdat DESC LIMIT 1
+SELECT id, createdat, createdby, menu_id, household_id, archived FROM grocerylists ORDER BY createdat DESC LIMIT 1
 `
 
 func (q *Queries) GetLatestGrocerylist(ctx context.Context) (Grocerylist, error) {
@@ -210,6 +220,7 @@ func (q *Queries) GetLatestGrocerylist(ctx context.Context) (Grocerylist, error)
 		&i.Createdby,
 		&i.MenuID,
 		&i.HouseholdID,
+		&i.Archived,
 	)
 	return i, err
 }

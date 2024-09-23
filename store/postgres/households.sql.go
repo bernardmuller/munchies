@@ -190,7 +190,7 @@ users AS (
     WHERE household_id = (SELECT id FROM household_row)
 ),
 latest_grocerylist AS (
-    SELECT id, createdat, createdby, menu_id, household_id
+    SELECT id, createdat, createdby, menu_id, household_id, archived
     FROM grocerylists
     WHERE household_id = (SELECT id FROM household_row)
     ORDER BY createdat DESC
