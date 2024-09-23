@@ -22,6 +22,8 @@ import (
 	us "github.com/bernardmuller/munchies/monolith/modules/users/service"
 	glh "github.com/bernardmuller/munchies/monolith/modules/grocerylists/handler"
 	gls "github.com/bernardmuller/munchies/monolith/modules/grocerylists/service"
+	ith "github.com/bernardmuller/munchies/monolith/modules/items/handler"
+	its "github.com/bernardmuller/munchies/monolith/modules/items/service"
 	"github.com/bernardmuller/munchies/store/postgres"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -201,6 +203,10 @@ func (m *Module) Start() error {
 	householdsService := hs.NewHouseholdsService(m.Database)
 	householdsHandler := hh.NewHouseholdsHandler(householdsService, userService)
 	householdsHandler.RegisterRouter(router)
+
+	itemsService := its.NewItemsService(m.Database)
+	itemsHandler := ith.NewItemsHandler(itemsService, userService)
+	itemsHandler.RegisterRouter(router)
 
 	grocerylistsService := gls.NewGrocerylistsService(m.Database)
 	grocerylistsHandler := glh.NewGrocerylistsHandler(grocerylistsService, householdsService, userService)
