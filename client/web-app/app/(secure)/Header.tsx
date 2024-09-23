@@ -15,6 +15,7 @@ import getCurrentSession from "@/shared/utils/getCurrentSession";
 import useAvatar from "@/hooks/useAvatar";
 import { Button } from "@/components/ui/button";
 import { SignOutButton } from "@clerk/nextjs";
+import settingsRoutes from "./settings/settingsRoutes";
 
 const user = {
   email: "tom@example.com",
@@ -27,7 +28,7 @@ const navigation = [
 ];
 const userNavigation = [
   { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "/settings/profile" },
+  { name: "Settings", href: settingsRoutes[0].href },
   // { name: "Sign out", href: "#" },
 ];
 

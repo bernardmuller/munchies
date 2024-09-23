@@ -3,22 +3,22 @@
 import { Nav } from "./nav";
 
 const sidebarNavItems = [
-  {
-    title: "My Profile",
-    href: "/settings/profile",
-  },
+  // {
+  //   title: "My Profile",
+  //   href: "/settings/profile",
+  // },
   {
     title: "My Household",
     href: "/settings/household",
   },
-  {
-    title: "Ingredients",
-    href: "/settings/ingredients",
-  },
-  {
-    title: "Preferences",
-    href: "/settings/preferences",
-  },
+  // {
+  //   title: "Ingredients",
+  //   href: "/settings/ingredients",
+  // },
+  // {
+  //   title: "Preferences",
+  //   href: "/settings/preferences",
+  // },
 ];
 
 interface SettingsLayoutProps {
