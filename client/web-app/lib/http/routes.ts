@@ -20,6 +20,9 @@ const apiRoutes = {
   leaveHousehold: () => {
     return `${process.env.NEXT_PUBLIC_API_BASE_URL}/households/leave`;
   },
+  latestGrocerylistByUserId: () => {
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/grocerylists/user`;
+  },
 };
 
 export default apiRoutes;

@@ -81,25 +81,19 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 				Message: "Could not find grocerylist after creation.",
 			})
 		}
-		return c.JSON(http.StatusOK, Response{
-			Status: "success",
-			Data: Grocerylist{
-				GrocerylistID: gl.GrocerylistID.String(),
-				HouseholdID:   gl.HouseholdID,
-				MenuID:        gl.MenuID,
-				Items:         gl.Items,
-			},
-		})
-	}
-
-	return c.JSON(http.StatusOK, Response{
-		Status: "success",
-		Data: Grocerylist{
+		return c.JSON(http.StatusOK, Grocerylist{
 			GrocerylistID: gl.GrocerylistID.String(),
 			HouseholdID:   gl.HouseholdID,
 			MenuID:        gl.MenuID,
 			Items:         gl.Items,
-		},
+		})
+	}
+
+	return c.JSON(http.StatusOK, Grocerylist{
+		GrocerylistID: gl.GrocerylistID.String(),
+		HouseholdID:   gl.HouseholdID,
+		MenuID:        gl.MenuID,
+		Items:         gl.Items,
 	})
 }
 
