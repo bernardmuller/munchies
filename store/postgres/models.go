@@ -21,7 +21,7 @@ type Category struct {
 type Grocerylist struct {
 	ID          uuid.UUID
 	Createdat   time.Time
-	Createdby   uuid.NullUUID
+	Createdby   uuid.UUID
 	MenuID      uuid.NullUUID
 	HouseholdID uuid.NullUUID
 	Archived    sql.NullBool

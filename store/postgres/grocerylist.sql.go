@@ -22,7 +22,7 @@ type CreateGrocerylistParams struct {
 	ID          uuid.UUID
 	MenuID      uuid.NullUUID
 	HouseholdID uuid.NullUUID
-	Createdby   uuid.NullUUID
+	Createdby   uuid.UUID
 }
 
 func (q *Queries) CreateGrocerylist(ctx context.Context, arg CreateGrocerylistParams) (Grocerylist, error) {
@@ -66,6 +66,9 @@ WHERE
   gl.household_id = $1
 GROUP BY
   gl.id
+ORDER BY
+  gl.createdat DESC
+LIMIT 1
 `
 
 type GetGrocerylistWithItemsByHouseholdIdRow struct {
@@ -135,13 +138,16 @@ SELECT
   gl.id AS grocerylist_id,
   gl.household_id,
   gl.menu_id,
-  JSON_AGG(
-    JSON_BUILD_OBJECT(
-      'item_id', i.id,
-      'check', i.check,
-      'name', ing.name 
-    )
-  ) AS items
+  COALESCE(
+    JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'item_id', i.id,
+          'check', i.check,
+          'name', ing.name
+      )
+    ) FILTER (WHERE i.id IS NOT NULL),
+    '[]'::json
+  )::json AS items
 FROM
   grocerylists gl
 LEFT JOIN
@@ -150,8 +156,13 @@ LEFT JOIN
   ingredients ing ON ing.id = i.ingredient_id
 WHERE
   gl.createdby = $1
+AND
+    gl.archived = false
 GROUP BY
   gl.id
+ORDER BY
+  gl.createdat DESC
+LIMIT 1
 `
 
 type GetGrocerylistWithItemsByUserIdRow struct {
@@ -161,7 +172,7 @@ type GetGrocerylistWithItemsByUserIdRow struct {
 	Items         json.RawMessage
 }
 
-func (q *Queries) GetGrocerylistWithItemsByUserId(ctx context.Context, createdby uuid.NullUUID) (GetGrocerylistWithItemsByUserIdRow, error) {
+func (q *Queries) GetGrocerylistWithItemsByUserId(ctx context.Context, createdby uuid.UUID) (GetGrocerylistWithItemsByUserIdRow, error) {
 	row := q.db.QueryRowContext(ctx, getGrocerylistWithItemsByUserId, createdby)
 	var i GetGrocerylistWithItemsByUserIdRow
 	err := row.Scan(
