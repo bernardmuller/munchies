@@ -149,7 +149,7 @@ export default function HouseholdDashboard({household}: Props) {
                   />
                   */}
                   <AvatarFallback>
-                    {member.firstname[0]}
+                    {member.firstname[0]}{member.lastname[0]}
                   </AvatarFallback>
                 </Avatar>
                 <span className="font-medium">
