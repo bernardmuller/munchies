@@ -64,3 +64,11 @@ func (s *GrocerylistsService) CreateHouseholdGrocerylist(ctx context.Context, us
 	}
 	return newGrocerylist, nil
 }
+
+func (s *GrocerylistsService) GetGrocerylistById(id string) (postgres.Grocerylist, error) {
+	gl, err := s.DB.GetGrocerylistById(context.Background(), uuid.MustParse(id))
+	if err != nil {
+		return postgres.Grocerylist{}, err
+	}
+	return gl, nil
+}

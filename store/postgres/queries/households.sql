@@ -91,3 +91,8 @@ RETURNING *;
 SELECT *
 FROM households
 WHERE createdby = $1;
+
+-- name: GetAllHouseholdMembers :many
+SELECT *
+FROM users
+WHERE household_id = $1;

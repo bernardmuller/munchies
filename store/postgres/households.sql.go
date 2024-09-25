@@ -106,6 +106,47 @@ func (q *Queries) DeactivateHousehold(ctx context.Context, id uuid.UUID) (Househ
 	return i, err
 }
 
+const getAllHouseholdMembers = `-- name: GetAllHouseholdMembers :many
+SELECT id, clerk_id, email, firstname, lastname, role_id, image, status, createdat, updatedat, household_id
+FROM users
+WHERE household_id = $1
+`
+
+func (q *Queries) GetAllHouseholdMembers(ctx context.Context, householdID uuid.NullUUID) ([]User, error) {
+	rows, err := q.db.QueryContext(ctx, getAllHouseholdMembers, householdID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []User
+	for rows.Next() {
+		var i User
+		if err := rows.Scan(
+			&i.ID,
+			&i.ClerkID,
+			&i.Email,
+			&i.Firstname,
+			&i.Lastname,
+			&i.RoleID,
+			&i.Image,
+			&i.Status,
+			&i.Createdat,
+			&i.Updatedat,
+			&i.HouseholdID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getAllHouseholds = `-- name: GetAllHouseholds :many
 SELECT id, createdby, createdat, active FROM households
 `

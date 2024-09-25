@@ -258,7 +258,7 @@ func (h *HouseholdsHandler) RemoveUserFromHousehold(c echo.Context) error {
 		})
 	}
 
-	household, err := h.householdsService.GetHouseholdByUserId(c.Request().Context(), user.ID)
+	household, err := h.householdsService.GetHouseholdDetailsByUserId(c.Request().Context(), user.ID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, &ErrorResponse{
 			Error:   "Internal Server Error",
@@ -271,14 +271,33 @@ func (h *HouseholdsHandler) RemoveUserFromHousehold(c echo.Context) error {
 		if err != nil {
 			log.Printf("Error deactivating household: %s", err)
 		}
-	}
 
-	err = h.householdsService.RemoveUserFromHousehold(c.Request().Context(), userId)
-	if err != nil {
-		return c.JSON(http.StatusNotFound, ErrorResponse{
-			Error:   "Error adding user to household.",
-			Message: "Could not add user to household.",
-		})
+		members, err := h.householdsService.GetAllHouseholdMembers(c.Request().Context(), household.ID)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, ErrorResponse{
+				Error:   "Internal Server Error",
+				Message: "Error getting household members to remove.",
+			})
+		}
+
+		for _, member := range members {
+			err = h.householdsService.RemoveUserFromHousehold(c.Request().Context(), member.ID)
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, ErrorResponse{
+					Error:   "Internal Server Error",
+					Message: fmt.Sprintf("Could not remove user: %s from household.", member.ID),
+				})
+			}
+		}
+
+	} else {
+		err = h.householdsService.RemoveUserFromHousehold(c.Request().Context(), userId)
+		if err != nil {
+			return c.JSON(http.StatusNotFound, ErrorResponse{
+				Error:   "Error adding user to household.",
+				Message: "Could not add user to household.",
+			})
+		}
 	}
 
 	return c.JSON(http.StatusOK, &Response{

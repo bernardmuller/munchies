@@ -105,3 +105,11 @@ func (s *HouseholdsService) GetHouseholdByUserId(ctx context.Context, userId uui
 	}
 	return hh, nil
 }
+
+func (s *HouseholdsService) GetAllHouseholdMembers(ctx context.Context, householdId uuid.UUID) ([]postgres.User, error) {
+	members, err := s.DB.GetAllHouseholdMembers(ctx, uuid.NullUUID{UUID: householdId, Valid: true})
+	if err != nil {
+		return []postgres.User{}, err
+	}
+	return members, nil
+}

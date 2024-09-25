@@ -88,3 +88,6 @@ GROUP BY
 ORDER BY
   gl.createdat DESC
 LIMIT 1;
+
+-- name: GetGrocerylistById :one
+SELECT * FROM grocerylists WHERE id = $1;

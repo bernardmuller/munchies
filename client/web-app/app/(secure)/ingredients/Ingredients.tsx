@@ -1,43 +1,28 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  ArrowUpDown,
-  EllipsisIcon,
-  Filter,
-  FilterXIcon,
-  Loader2,
-  PlusIcon,
-  Trash,
-} from "lucide-react";
-import { DataTable } from "./DataTable";
-import React, { useEffect } from "react";
-import {
-  Dialog,
-  DialogHeader,
-  DialogContent,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {ArrowUpDown, EllipsisIcon, Filter, FilterXIcon, Loader2, PlusIcon, Trash,} from "lucide-react";
+import {DataTable} from "./DataTable";
+import React from "react";
+import {Dialog, DialogContent, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
 import useCreateIngredient from "@/lib/http/hooks/ingredients/useCreateIngredient";
-import { useToast } from "@/components/ui/use-toast";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {useToast} from "@/components/ui/use-toast";
+import {zodResolver} from "@hookform/resolvers/zod";
 import Select from "react-select";
-import { Category } from "@/lib/http/client/categories/getAllCategories";
+import {Category} from "@/lib/http/client/categories/getAllCategories";
 import useIngredients from "@/lib/http/hooks/ingredients/useIngredients";
-import { useQueryClient } from "@tanstack/react-query";
-import { keys } from "@/lib/http/keys";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import {useQueryClient} from "@tanstack/react-query";
+import {keys} from "@/lib/http/keys";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu";
 import useDeleteIngredient from "@/lib/http/hooks/ingredients/useDeleteIngredient";
+import useCreateItem from "@/lib/http/hooks/items/useCreateItem";
 
 type IngredientsProps = {
+  grocerylistId: string;
+  householdGrocerylistId: string;
   ingredients: any[];
   categories: Category[];
 };
@@ -46,7 +31,7 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  categoryId: z.string().nonempty({ message: "Category is required." }),
+  categoryId: z.string().nonempty({message: "Category is required."}),
 });
 
 function NewIngredientForm({
@@ -59,10 +44,10 @@ function NewIngredientForm({
   onInvalidate: () => void;
 }) {
   const createIngredient = useCreateIngredient();
-  const { toast } = useToast();
+  const {toast} = useToast();
   const {
     register,
-    formState: { errors },
+    formState: {errors},
     handleSubmit,
     setValue,
     reset,
@@ -161,7 +146,7 @@ function NewIngredientForm({
         <div className="w-full flex gap-2 justify-end">
           <Button disabled={createIngredient.isLoading} type="submit">
             {createIngredient.isLoading && (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
             )}
             Submit
           </Button>
@@ -172,14 +157,18 @@ function NewIngredientForm({
 }
 
 export default function Ingredients({
+  grocerylistId,
+  householdGrocerylistId,
   ingredients: data,
   categories,
 }: IngredientsProps) {
   const deleteIngredient = useDeleteIngredient();
-  const { toast } = useToast();
-  const { data: ingredientsData, isFetching } = useIngredients({
+  const {toast} = useToast();
+  const {data: ingredientsData, isFetching} = useIngredients({
     initialData: data,
   });
+  const createGroceryItem = useCreateItem(grocerylistId);
+  const createHouseholdGroceryItem = useCreateItem(householdGrocerylistId);
   const [open, setOpen] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [filteredCategory, setFilteredCategory] = React.useState<
@@ -202,7 +191,7 @@ export default function Ingredients({
   const columns = [
     {
       accessorKey: "#",
-      header: ({ column }: any) => {
+      header: ({column}: any) => {
         return (
           <Button
             variant="ghost"
@@ -211,17 +200,17 @@ export default function Ingredients({
             }
           >
             <span className="text-gray-500">#</span>
-            <ArrowUpDown className="ml-2 h-4 w-4 text-gray-500" />
+            <ArrowUpDown className="ml-2 h-4 w-4 text-gray-500"/>
           </Button>
         );
       },
-      cell: ({ row }: any) => {
+      cell: ({row}: any) => {
         return <div className="w-8">{row.index + 1}</div>;
       },
     },
     {
       accessorKey: "name",
-      header: ({ column }: any) => {
+      header: ({column}: any) => {
         return (
           <Button
             variant="ghost"
@@ -230,11 +219,11 @@ export default function Ingredients({
             }
           >
             <span className="text-gray-500">Ingredient Name</span>
-            <ArrowUpDown className="ml-2 h-4 w-4 text-gray-500" />
+            <ArrowUpDown className="ml-2 h-4 w-4 text-gray-500"/>
           </Button>
         );
       },
-      cell: ({ row }: any) => {
+      cell: ({row}: any) => {
         return <div className="w-full">{row.original.name}</div>;
       },
     },
@@ -247,26 +236,52 @@ export default function Ingredients({
       header: () => {
         return <div className="w-full flex justify-end ">Action</div>;
       },
-      cell: ({ cell }: any) => {
+      cell: ({cell}: any) => {
         return (
           <div className="w-full flex justify-end">
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Button variant="ghost" className="h-8">
-                  <EllipsisIcon className="rotate-90 dark:stroke-white" />
+                  <EllipsisIcon className="rotate-90 dark:stroke-white"/>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="px-2" align="end">
+              <DropdownMenuContent className="px-2 space-y-2" align="end">
+                <div className="flex flex-col">
+                  <Button
+                    className="w-full justify-start text-sm"
+                    variant="ghost"
+                    onClick={() =>
+                      createGroceryItem.mutate({
+                        ingredientId: cell.row.original.id,
+                      })
+                    }
+                  >
+                    <PlusIcon className="h-4 w-4"/>
+                    Add to grocery list
+                  </Button>
+                  <Button
+                    className="w-full justify-start"
+                    variant="ghost"
+                    onClick={() =>
+                      createHouseholdGroceryItem.mutate({
+                        ingredientId: cell.row.original.id,
+                      })
+                    }
+                  >
+                    <PlusIcon className="h-4 w-4"/>
+                    Add to household list
+                  </Button>
+                </div>
                 <Button
                   className="flex gap-1 hover:bg-gray-50 w-full justify-start px-2"
-                  variant="ghost"
+                  variant="destructive"
                   onClick={() =>
                     handleDeleteIngredient(
                       cell.row.original.id,
                     )
                   }
                 >
-                  <Trash className="h-4 w-4" />
+                  <Trash className="h-4 w-4"/>
                   <span>Delete</span>
                 </Button>
               </DropdownMenuContent>
@@ -292,7 +307,7 @@ export default function Ingredients({
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Button variant="icon">
-                  <Filter />
+                  <Filter/>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="px-2" align="end">
@@ -319,11 +334,11 @@ export default function Ingredients({
               }}
               disabled={!filteredCategory}
             >
-              <FilterXIcon />
+              <FilterXIcon/>
             </Button>
             <Dialog open={open} onOpenChange={setOpen}>
               <Button onClick={() => setOpen(true)}>
-                <PlusIcon />
+                <PlusIcon/>
                 Add ingredient
               </Button>
               <DialogContent>
@@ -343,7 +358,7 @@ export default function Ingredients({
             </Dialog>
           </div>
         </div>
-        {!isFetching && ingredientsData.length && (
+        {!isFetching && ingredientsData?.length && (
           <DataTable
             columns={columns}
             data={ingredientsData

@@ -5,6 +5,6 @@ SELECT * FROM items;
 SELECT * FROM items WHERE id = $1;
 
 -- name: CreateItem :one
-INSERT INTO items (id, "check", typeid, description, createdat, createdby, grocerylist_id)
-VALUES ($1, $2, $3, $4, $5, $6, $7)
+INSERT INTO items (id, "check", typeid, description, createdat, createdby, grocerylist_id, ingredient_id)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 RETURNING *;

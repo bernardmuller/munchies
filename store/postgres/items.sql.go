@@ -14,8 +14,8 @@ import (
 )
 
 const createItem = `-- name: CreateItem :one
-INSERT INTO items (id, "check", typeid, description, createdat, createdby, grocerylist_id)
-VALUES ($1, $2, $3, $4, $5, $6, $7)
+INSERT INTO items (id, "check", typeid, description, createdat, createdby, grocerylist_id, ingredient_id)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 RETURNING id, "check", typeid, description, createdat, createdby, grocerylist_id, ingredient_id
 `
 
@@ -25,8 +25,9 @@ type CreateItemParams struct {
 	Typeid        int32
 	Description   sql.NullString
 	Createdat     time.Time
-	Createdby     uuid.NullUUID
+	Createdby     uuid.UUID
 	GrocerylistID uuid.UUID
+	IngredientID  uuid.UUID
 }
 
 func (q *Queries) CreateItem(ctx context.Context, arg CreateItemParams) (Item, error) {
@@ -38,6 +39,7 @@ func (q *Queries) CreateItem(ctx context.Context, arg CreateItemParams) (Item, e
 		arg.Createdat,
 		arg.Createdby,
 		arg.GrocerylistID,
+		arg.IngredientID,
 	)
 	var i Item
 	err := row.Scan(

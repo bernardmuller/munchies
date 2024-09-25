@@ -44,6 +44,24 @@ func (q *Queries) CreateGrocerylist(ctx context.Context, arg CreateGrocerylistPa
 	return i, err
 }
 
+const getGrocerylistById = `-- name: GetGrocerylistById :one
+SELECT id, createdat, createdby, menu_id, household_id, archived FROM grocerylists WHERE id = $1
+`
+
+func (q *Queries) GetGrocerylistById(ctx context.Context, id uuid.UUID) (Grocerylist, error) {
+	row := q.db.QueryRowContext(ctx, getGrocerylistById, id)
+	var i Grocerylist
+	err := row.Scan(
+		&i.ID,
+		&i.Createdat,
+		&i.Createdby,
+		&i.MenuID,
+		&i.HouseholdID,
+		&i.Archived,
+	)
+	return i, err
+}
+
 const getGrocerylistWithItemsByHouseholdId = `-- name: GetGrocerylistWithItemsByHouseholdId :one
 SELECT
   gl.id AS grocerylist_id,

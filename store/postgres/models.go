@@ -57,9 +57,9 @@ type Item struct {
 	Typeid        int32
 	Description   sql.NullString
 	Createdat     time.Time
-	Createdby     uuid.NullUUID
+	Createdby     uuid.UUID
 	GrocerylistID uuid.UUID
-	IngredientID  uuid.NullUUID
+	IngredientID  uuid.UUID
 }
 
 type Meal struct {

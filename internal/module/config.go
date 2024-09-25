@@ -12,18 +12,18 @@ import (
 	"github.com/bernardmuller/munchies/internal/utils"
 	ch "github.com/bernardmuller/munchies/monolith/modules/categories/handler"
 	cs "github.com/bernardmuller/munchies/monolith/modules/categories/service"
+	glh "github.com/bernardmuller/munchies/monolith/modules/grocerylists/handler"
+	gls "github.com/bernardmuller/munchies/monolith/modules/grocerylists/service"
 	hh "github.com/bernardmuller/munchies/monolith/modules/households/handler"
 	hs "github.com/bernardmuller/munchies/monolith/modules/households/service"
 	ih "github.com/bernardmuller/munchies/monolith/modules/ingredients/handler"
 	is "github.com/bernardmuller/munchies/monolith/modules/ingredients/service"
+	ith "github.com/bernardmuller/munchies/monolith/modules/items/handler"
+	its "github.com/bernardmuller/munchies/monolith/modules/items/service"
 	rph "github.com/bernardmuller/munchies/monolith/modules/roles_permissions/handler"
 	rps "github.com/bernardmuller/munchies/monolith/modules/roles_permissions/service"
 	uh "github.com/bernardmuller/munchies/monolith/modules/users/handler"
 	us "github.com/bernardmuller/munchies/monolith/modules/users/service"
-	glh "github.com/bernardmuller/munchies/monolith/modules/grocerylists/handler"
-	gls "github.com/bernardmuller/munchies/monolith/modules/grocerylists/service"
-	ith "github.com/bernardmuller/munchies/monolith/modules/items/handler"
-	its "github.com/bernardmuller/munchies/monolith/modules/items/service"
 	"github.com/bernardmuller/munchies/store/postgres"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -209,7 +209,7 @@ func (m *Module) Start() error {
 	itemsHandler.RegisterRouter(router)
 
 	grocerylistsService := gls.NewGrocerylistsService(m.Database)
-	grocerylistsHandler := glh.NewGrocerylistsHandler(grocerylistsService, householdsService, userService)
+	grocerylistsHandler := glh.NewGrocerylistsHandler(grocerylistsService, householdsService, userService, itemsService)
 	grocerylistsHandler.RegisterRouter(router)
 
 	log.Println("Starting server on", m.PORT.HTTP)

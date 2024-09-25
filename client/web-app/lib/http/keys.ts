@@ -6,4 +6,5 @@ export const keys = {
   currentUserHouseholdDetails: ["current-user-household-details"],
   latestGrocerylistByUserId: ["latest-grocerylist-user"],
   latestGrocerylistByHouseholdId: ["latest-grocerylist-household"],
+  createItem: ["create-item"],
 };
