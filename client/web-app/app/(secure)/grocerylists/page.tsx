@@ -4,11 +4,11 @@ import { redirect } from "next/navigation";
 import {getLatestGrocerylistByUserId} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
 import {getLatestGrocerylistByHouseholdId} from "@/lib/http/client/grocerylists/getLatestGrocerylistByHouseholdId";
 
-export default async function IngredientsPage() {
+export default async function GrocerylistsPage() {
   const { getToken } = auth();
   const token = await getToken({ template: "1_HOUR" }).then((t) =>
     t?.toString(),
-  );
+  ).catch(() => redirect(`/sign-in`));
 
   if (!token) {
     redirect(`/sign-in`);

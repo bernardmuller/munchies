@@ -27,29 +27,29 @@ export default function OnboardingPage() {
   getToken().then((r) => console.log(r));
   const registerUserOnBackend = async () => {
     if (!userId) return;
-    const res = await registerUser({ userId });
+    // const res = await registerUser({ userId });
 
-    console.log(res);
+    // console.log(res);
 
-    if (res.Status === "success") {
+    // if (res.Status === "success") {
       // save JWT
       // figure out how to send it to server
       // validate it on the server with middleware
       // create new jwt on server
       // use that to auth users
 
-      router.push("/home");
-    }
+        router.push("/grocerylists");
+    // }
   };
 
   useEffect(() => {
-    if (!userId) return;
+    // if (!userId) return;
     registerUserOnBackend();
   }, [userId]);
 
   return (
     <section className="w-full flex justify-center h-screen items-center bg-header text-white text-2xl font-bold">
-      Getting things ready...
+      Signing in...
     </section>
   );
 }

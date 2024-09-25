@@ -106,7 +106,7 @@ export default function GroceryListPage({
             <TabsTrigger value="household">Household Grocerylist</TabsTrigger>
           )}
         </TabsList>
-        <div className="py-6">
+        <div className="pt-6">
           <TabsContent value="my">
             <div>
               <GroceryList items={grocerylists.myGrocerylist?.items}/>

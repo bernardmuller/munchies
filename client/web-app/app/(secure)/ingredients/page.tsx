@@ -10,11 +10,7 @@ export default async function IngredientsPage() {
   const { getToken } = auth();
   const token = await getToken({ template: "1_HOUR" }).then((t) =>
     t?.toString(),
-  );
-
-  if (!token) {
-    redirect(`/sign-in`);
-  }
+  ).catch(() => redirect(`/sign-in`));
 
   const ingredients = await getAllIngredients(token!);
   const categories = await getAllCategories(token!);
