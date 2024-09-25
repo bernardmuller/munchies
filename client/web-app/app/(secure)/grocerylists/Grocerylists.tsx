@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 type GrocerylistsPageProps = {
   grocerylists: {
     myGrocerylist: GroceryList;
-    myHouseholdGrocerylist: {}
+    myHouseholdGrocerylist: GroceryList;
   };
 };
 
@@ -30,7 +30,8 @@ const GroceryList: React.FC<GroceryListProps> = ({ items }) => {
 
   return (
     <ul className="space-y-2">
-      {groceryItems.map((item) => (
+      {!groceryItems && <span>No items in grocerylist</span>}
+      {groceryItems && groceryItems.map((item) => (
         <li key={item.item_id} className="flex items-center space-x-2">
           <Checkbox
             id={item.item_id}
@@ -56,11 +57,13 @@ export default function GroceryListPage({
 }:GrocerylistsPageProps) {
 
   return (
-    <div className="w-full">
+    <div className="w-full min-h-[50vh]">
       <Tabs defaultValue="my" className="w-full md:w-1/2">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="my">My Grocerylist</TabsTrigger>
-          <TabsTrigger value="household">Household Grocerylist</TabsTrigger>
+          {grocerylists.myHouseholdGrocerylist?.items && (
+            <TabsTrigger value="household">Household Grocerylist</TabsTrigger>
+          )}
         </TabsList>
         <div className="p-6">
           <TabsContent value="my">
@@ -69,12 +72,14 @@ export default function GroceryListPage({
               <GroceryList items={grocerylists.myGrocerylist?.items} />
             </div>
           </TabsContent>
-          <TabsContent value="household">
-            <div>
-              <h2 className="text-lg font-semibold mb-4">Household Grocerylist</h2>
-              <GroceryList items={[]} />
-            </div>
-          </TabsContent>
+          {grocerylists.myHouseholdGrocerylist?.items && (
+            <TabsContent value="household">
+              <div>
+                <h2 className="text-lg font-semibold mb-4">Household Grocerylist</h2>
+                <GroceryList items={grocerylists.myHouseholdGrocerylist?.items} />
+              </div>
+            </TabsContent>
+          )}
         </div>
       </Tabs>
     </div>

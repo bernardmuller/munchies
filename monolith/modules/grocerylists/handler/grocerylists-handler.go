@@ -2,6 +2,7 @@ package handler
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/bernardmuller/munchies/monolith/modules/grocerylists/service"
 	hs "github.com/bernardmuller/munchies/monolith/modules/households/service"
 	us "github.com/bernardmuller/munchies/monolith/modules/users/service"
@@ -49,7 +50,7 @@ func NewGrocerylistsHandler(grocerylistsService *service.GrocerylistsService, ho
 
 func (h *GrocerylistsHandler) RegisterRouter(router *echo.Echo) {
 	router.GET("/grocerylists/user", h.GetLatestOrCreateNewGrocerylistByUserId)
-	router.GET("/grocerylists/household/:householdId", h.GetLatestGrocerylistByHouseholdId)
+	router.GET("/grocerylists/household", h.GetLatestGrocerylistByHouseholdId)
 }
 
 func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Context) error {
@@ -98,5 +99,56 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 }
 
 func (h *GrocerylistsHandler) GetLatestGrocerylistByHouseholdId(c echo.Context) error {
-	return nil
+	// TODO: extract to internal util function //
+	userId := c.Request().Context().Value("userId").(uuid.UUID)
+	if userId == uuid.Nil {
+		return c.JSON(http.StatusUnauthorized, &ErrorResponse{
+			Error:   "Unauthorized: User ID not found",
+			Message: "No User Id found in the Authorization JWT.",
+		})
+	}
+	// ----------------------------------------//
+
+	user, err := h.usersService.GetUserById(c.Request().Context(), userId)
+	if err != nil || user.HouseholdID.UUID.String() == "00000000-0000-0000-0000-000000000000" {
+		return c.JSON(http.StatusForbidden, &ErrorResponse{
+			Error:   "Forbidden",
+			Message: "User is not part of a household.",
+		})
+	}
+
+	gl, err := h.grocerylistsService.GetLatestGrocerylistByHouseholdId(c.Request().Context(), user.HouseholdID.UUID)
+	if err != nil && err == sql.ErrNoRows {
+		log.Println(err.Error())
+
+		_, err := h.grocerylistsService.CreateHouseholdGrocerylist(c.Request().Context(), userId, user.HouseholdID.UUID)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, ErrorResponse{
+				Error:   "Internal Server Error",
+				Message: fmt.Sprintf("Error creating household grocerylist: %s", err),
+			})
+		}
+
+		gl, err := h.grocerylistsService.GetLatestGrocerylistByHouseholdId(c.Request().Context(), user.HouseholdID.UUID)
+		if err != nil {
+			return c.JSON(http.StatusNotFound, ErrorResponse{
+				Error:   "Not Found",
+				Message: "Could not find grocerylist after creation.",
+			})
+		}
+
+		return c.JSON(http.StatusOK, Grocerylist{
+			GrocerylistID: gl.GrocerylistID.String(),
+			HouseholdID:   gl.HouseholdID,
+			MenuID:        gl.MenuID,
+			Items:         gl.Items,
+		})
+	}
+
+	return c.JSON(http.StatusOK, Grocerylist{
+		GrocerylistID: gl.GrocerylistID.String(),
+		HouseholdID:   gl.HouseholdID,
+		MenuID:        gl.MenuID,
+		Items:         gl.Items,
+	})
 }

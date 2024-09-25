@@ -41,10 +41,26 @@ func (s *GrocerylistsService) GetLatestGrocerylistByUserId(ctx context.Context, 
 	return gl, nil
 }
 
-func (s *GrocerylistsService) GetLatestGrocerylistHouseholdId(ctx context.Context, householdId uuid.UUID) (postgres.GetGrocerylistWithItemsByHouseholdIdRow, error) {
+func (s *GrocerylistsService) GetLatestGrocerylistByHouseholdId(ctx context.Context, householdId uuid.UUID) (postgres.GetGrocerylistWithItemsByHouseholdIdRow, error) {
 	gl, err := s.DB.GetGrocerylistWithItemsByHouseholdId(ctx, uuid.NullUUID{UUID: householdId, Valid: true})
 	if err != nil {
 		return postgres.GetGrocerylistWithItemsByHouseholdIdRow{}, err
 	}
 	return gl, nil
+}
+
+func (s *GrocerylistsService) CreateHouseholdGrocerylist(ctx context.Context, userId uuid.UUID, householdId uuid.UUID) (postgres.Grocerylist, error) {
+	params := postgres.CreateGrocerylistParams{
+		ID:          uuid.New(),
+		MenuID:      uuid.NullUUID{UUID: uuid.Nil, Valid: false},
+		HouseholdID: uuid.NullUUID{UUID: householdId, Valid: true},
+		Createdby:   userId,
+	}
+
+	newGrocerylist, createErr := s.DB.CreateGrocerylist(ctx, params)
+	if createErr != nil {
+		log.Println(createErr)
+		return postgres.Grocerylist{}, createErr
+	}
+	return newGrocerylist, nil
 }

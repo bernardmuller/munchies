@@ -23,6 +23,9 @@ const apiRoutes = {
   latestGrocerylistByUserId: () => {
     return `${process.env.NEXT_PUBLIC_API_BASE_URL}/grocerylists/user`;
   },
+  latestGrocerylistByHouseholdId: () => {
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/grocerylists/household`;
+  },
 };
 
 export default apiRoutes;

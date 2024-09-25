@@ -4,5 +4,6 @@ export const keys = {
   ingredients: ["ingredients"],
   deleteIngredient: ["delete-ingredient"],
   currentUserHouseholdDetails: ["current-user-household-details"],
-  latestGrocerylistByUserId: (userId: string) => ["latest-grocerylist", userId],
+  latestGrocerylistByUserId: ["latest-grocerylist-user"],
+  latestGrocerylistByHouseholdId: ["latest-grocerylist-household"],
 };

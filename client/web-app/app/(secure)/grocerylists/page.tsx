@@ -2,6 +2,7 @@ import Grocerylists from "./Grocerylists";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import {getLatestGrocerylistByUserId} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
+import {getLatestGrocerylistByHouseholdId} from "@/lib/http/client/grocerylists/getLatestGrocerylistByHouseholdId";
 
 export default async function IngredientsPage() {
   const { getToken } = auth();
@@ -14,9 +15,11 @@ export default async function IngredientsPage() {
   }
 
   const userGrocerylistResponse = await getLatestGrocerylistByUserId(token!);
+  const householdGrocerylistResponse = await getLatestGrocerylistByHouseholdId(token!);
 
   if (
-    !userGrocerylistResponse.ok && userGrocerylistResponse.status >= 500
+    !userGrocerylistResponse.ok && userGrocerylistResponse.status >= 500 ||
+    !householdGrocerylistResponse.ok && householdGrocerylistResponse.status >= 500
   ) {
     redirect("/something-went-wrong");
   }
@@ -26,7 +29,7 @@ export default async function IngredientsPage() {
     <Grocerylists
       grocerylists={{
         myGrocerylist: userGrocerylistResponse?.data!,
-        myHouseholdGrocerylist: {},
+        myHouseholdGrocerylist: householdGrocerylistResponse?.data!,
       }}
     />
   );
