@@ -109,15 +109,12 @@ export default function GroceryListPage({
         <div className="py-6">
           <TabsContent value="my">
             <div>
-              <h2 className="text-lg font-semibold mb-2">My Grocerylist</h2>
               <GroceryList items={grocerylists.myGrocerylist?.items}/>
             </div>
           </TabsContent>
           {grocerylists.myHouseholdGrocerylist?.items && (
             <TabsContent value="household">
               <div>
-                <h2 className="text-lg font-semibold mb-2">Household Grocerylist</h2>
-
                 <GroceryList items={grocerylists.myHouseholdGrocerylist?.items}/>
               </div>
             </TabsContent>

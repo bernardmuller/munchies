@@ -1,27 +1,25 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clipboard, LogOut, UserPlus, Home } from "lucide-react";
-import {
-  Household,
-  Member,
-} from "@/lib/http/client/households/getCurrentUserHouseholdDetails";
+import {useState} from "react";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Avatar, AvatarFallback} from "@/components/ui/avatar";
+import {Clipboard, Home, LogOut, UserPlus} from "lucide-react";
+import {Household, Member,} from "@/lib/http/client/households/getCurrentUserHouseholdDetails";
 import useCurrentUserHouseholdDetails from "@/lib/http/hooks/households/useCurrentUserHouseholdDetails";
-import { FieldValues } from "react-hook-form";
+import {FieldValues} from "react-hook-form";
 import JoinHouseholdDialog from "./JoinHouseholdDialog";
 import useJoinHousehold from "@/lib/http/hooks/households/useJoinHousehold";
 import useLeaveHousehold from "@/lib/http/hooks/households/useLeaveHousehold";
 import useCreateHousehold from "@/lib/http/hooks/households/useCreateHousehold";
-import { useCopyToClipboard } from "@/lib/utils/copyToClipboard";
+import {useCopyToClipboard} from "@/lib/utils/copyToClipboard";
+import {Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 
 type Props = {
   household: Household | null;
 };
 
-export default function HouseholdDashboard({ household }: Props) {
+export default function HouseholdDashboard({household}: Props) {
   const {
     data: householdData,
     isLoading,
@@ -50,7 +48,7 @@ export default function HouseholdDashboard({ household }: Props) {
     setTimeout(() => setHasCopied(false), 2000);
   };
 
-  if (isLoading || isFetching || isRefetching) {
+  if (isLoading || isFetching || isRefetching || leaveHoushold.isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -71,13 +69,13 @@ export default function HouseholdDashboard({ household }: Props) {
             onClick={() => createHoushold.mutateAsync()}
             isLoading={createHoushold.isLoading}
           >
-            <Home className="mr-2 h-4 w-4" /> Create Household
+            <Home className="mr-2 h-4 w-4"/> Create Household
           </Button>
 
           <JoinHouseholdDialog
             trigger={
               <Button variant="outline" className="w-full">
-                <UserPlus className="mr-2 h-4 w-4" /> Join
+                <UserPlus className="mr-2 h-4 w-4"/> Join
                 Household
               </Button>
             }
@@ -93,13 +91,47 @@ export default function HouseholdDashboard({ household }: Props) {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold">My Household</h2>
-          <Button
-            variant="destructive"
-            onClick={() => leaveHoushold.mutateAsync()}
-            isLoading={leaveHoushold.isLoading}
-          >
-            <LogOut className="mr-2 h-4 w-4" /> Leave
-          </Button>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="destructive"
+                isLoading={leaveHoushold.isLoading}
+              >
+                <LogOut className="mr-2 h-4 w-4"/> Leave
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Leave Household</DialogTitle>
+              </DialogHeader>
+              <div>
+                <div className="mb-8">
+                  <h2 className="text-sm mb-2">
+                    Are you sure you want to leave your household?
+                  </h2>
+                </div>
+                <div className="w-full flex justify-end gap-2 items-center">
+                  <DialogClose>
+                    <Button
+                      variant="outline"
+                    >
+                      No, Cancel
+                    </Button>
+                  </DialogClose>
+                  <DialogClose>
+                    <Button
+                      variant="destructive"
+                      onClick={() => leaveHoushold.mutateAsync()}
+                      isLoading={leaveHoushold.isLoading}
+                    >
+                      <LogOut className="mr-2 h-4 w-4"/> Yes, Leave
+                    </Button>
+                  </DialogClose>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
         <div>
           <h3 className="text-lg font-semibold mb-3">Members</h3>
@@ -140,9 +172,9 @@ export default function HouseholdDashboard({ household }: Props) {
               />
               <Button variant="outline" onClick={copyToClipboard}>
                 {hasCopied ? (
-                  <UserPlus className="mr-2 h-4 w-4" />
+                  <UserPlus className="mr-2 h-4 w-4"/>
                 ) : (
-                  <Clipboard className="mr-2 h-4 w-4" />
+                  <Clipboard className="mr-2 h-4 w-4"/>
                 )}
                 {copied ? "Copied!" : "Copy"}
               </Button>
