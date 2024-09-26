@@ -13,6 +13,29 @@ import (
 	"github.com/google/uuid"
 )
 
+const checkItem = `-- name: CheckItem :one
+UPDATE items
+SET "check" = true
+WHERE id = $1
+RETURNING id, "check", typeid, description, createdat, createdby, grocerylist_id, ingredient_id
+`
+
+func (q *Queries) CheckItem(ctx context.Context, id uuid.UUID) (Item, error) {
+	row := q.db.QueryRowContext(ctx, checkItem, id)
+	var i Item
+	err := row.Scan(
+		&i.ID,
+		&i.Check,
+		&i.Typeid,
+		&i.Description,
+		&i.Createdat,
+		&i.Createdby,
+		&i.GrocerylistID,
+		&i.IngredientID,
+	)
+	return i, err
+}
+
 const createItem = `-- name: CreateItem :one
 INSERT INTO items (id, "check", typeid, description, createdat, createdby, grocerylist_id, ingredient_id)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
@@ -109,4 +132,27 @@ func (q *Queries) GetItems(ctx context.Context) ([]Item, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const unCheckItem = `-- name: UnCheckItem :one
+UPDATE items
+SET "check" = false
+WHERE id = $1
+RETURNING id, "check", typeid, description, createdat, createdby, grocerylist_id, ingredient_id
+`
+
+func (q *Queries) UnCheckItem(ctx context.Context, id uuid.UUID) (Item, error) {
+	row := q.db.QueryRowContext(ctx, unCheckItem, id)
+	var i Item
+	err := row.Scan(
+		&i.ID,
+		&i.Check,
+		&i.Typeid,
+		&i.Description,
+		&i.Createdat,
+		&i.Createdby,
+		&i.GrocerylistID,
+		&i.IngredientID,
+	)
+	return i, err
 }

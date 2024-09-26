@@ -40,3 +40,27 @@ func (s *ItemsService) CreateGrocerylistItem(c echo.Context, item CreateItem) (p
 	}
 	return newItem, nil
 }
+
+func (s *ItemsService) GetItemById(c echo.Context, itemId uuid.UUID) (postgres.Item, error) {
+	item, err := s.DB.GetItemById(c.Request().Context(), itemId)
+	if err != nil {
+		return postgres.Item{}, err
+	}
+	return item, nil
+}
+
+func (s *ItemsService) CheckItem(c echo.Context, itemId uuid.UUID) (postgres.Item, error) {
+	item, err := s.DB.CheckItem(c.Request().Context(), itemId)
+	if err != nil {
+		return postgres.Item{}, err
+	}
+	return item, nil
+}
+
+func (s *ItemsService) UnCheckItem(c echo.Context, itemId uuid.UUID) (postgres.Item, error) {
+	item, err := s.DB.UnCheckItem(c.Request().Context(), itemId)
+	if err != nil {
+		return postgres.Item{}, err
+	}
+	return item, nil
+}

@@ -1,6 +1,5 @@
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
-import Link from "next/link";
 
 export default function Component() {
   return (
@@ -38,12 +37,9 @@ export default function Component() {
                 </li>
               </ul>
             </nav>
-            <Link
-              href="/sign-in"
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              Sign in
-            </Link>
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+              <a href="/login">Sign in</a>
+            </Button>
           </div>
         </div>
       </header>
@@ -66,12 +62,9 @@ export default function Component() {
                   meal plans. Save time, reduce waste, and eat
                   better with Munchies.
                 </p>
-                <Link
-                  href="/sign-up"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90"
-                >
+                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
                   Get Started
-                </Link>
+                </Button>
               </div>
               <div className="w-full bg-background rounded-lg shadow-xl overflow-hidden mt-20 border-[1px] border-white">
                 <div className="aspect-[16/9] flex items-center justify-center relative">
@@ -161,12 +154,9 @@ export default function Component() {
                     <span>Up to 10 meals/month</span>
                   </li>
                 </ul>
-                <Link
-                  href="/sign-up"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 mt-auto"
-                >
+                <Button className="bg-primary text-primary-foreground hover:bg-primary/90 mt-auto">
                   Get Started
-                </Link>
+                </Button>
               </div>
               <div className="bg-background text-foreground p-6 rounded-lg shadow flex-1 flex flex-col">
                 <h3 className="text-xl font-semibold mb-2">
@@ -214,12 +204,9 @@ export default function Component() {
               meals.
             </p>
             <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
-              <Link
-                href="/sign-up"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto"
-              >
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto">
                 Sign Up
-              </Link>
+              </Button>
             </div>
           </div>
         </section>

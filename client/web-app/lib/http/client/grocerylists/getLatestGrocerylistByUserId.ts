@@ -12,6 +12,7 @@ const groceryListSchema = z.object({
   id: z.string(),
   householdId: z.string(),
   mealplanID: z.string().nullable(),
+  createdBy: z.string(),
   items: z.array(groceryItemSchema),
 });
 

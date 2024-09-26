@@ -67,13 +67,17 @@ SELECT
   gl.id AS grocerylist_id,
   gl.household_id,
   gl.menu_id,
-  JSON_AGG(
-    JSON_BUILD_OBJECT(
-      'item_id', i.id,
-      'check', i.check,
-      'name', ing.name 
-    )
-  ) AS items
+  gl.createdby,
+  COALESCE(
+      JSON_AGG(
+          JSON_BUILD_OBJECT(
+              'item_id', i.id,
+              'check', i.check,
+              'name', ing.name
+          ) ORDER BY ing.name ASC
+      ) FILTER (WHERE i.id IS NOT NULL),
+      '[]'::json
+  )::json AS items
 FROM
   grocerylists gl
 LEFT JOIN
@@ -93,6 +97,7 @@ type GetGrocerylistWithItemsByHouseholdIdRow struct {
 	GrocerylistID uuid.UUID
 	HouseholdID   uuid.NullUUID
 	MenuID        uuid.NullUUID
+	Createdby     uuid.UUID
 	Items         json.RawMessage
 }
 
@@ -103,6 +108,7 @@ func (q *Queries) GetGrocerylistWithItemsByHouseholdId(ctx context.Context, hous
 		&i.GrocerylistID,
 		&i.HouseholdID,
 		&i.MenuID,
+		&i.Createdby,
 		&i.Items,
 	)
 	return i, err
@@ -156,13 +162,14 @@ SELECT
   gl.id AS grocerylist_id,
   gl.household_id,
   gl.menu_id,
+  gl.createdby,
   COALESCE(
     JSON_AGG(
         JSON_BUILD_OBJECT(
           'item_id', i.id,
           'check', i.check,
           'name', ing.name
-      )
+      ) ORDER BY ing.name ASC
     ) FILTER (WHERE i.id IS NOT NULL),
     '[]'::json
   )::json AS items
@@ -187,6 +194,7 @@ type GetGrocerylistWithItemsByUserIdRow struct {
 	GrocerylistID uuid.UUID
 	HouseholdID   uuid.NullUUID
 	MenuID        uuid.NullUUID
+	Createdby     uuid.UUID
 	Items         json.RawMessage
 }
 
@@ -197,6 +205,7 @@ func (q *Queries) GetGrocerylistWithItemsByUserId(ctx context.Context, createdby
 		&i.GrocerylistID,
 		&i.HouseholdID,
 		&i.MenuID,
+		&i.Createdby,
 		&i.Items,
 	)
 	return i, err

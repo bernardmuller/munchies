@@ -1,10 +1,14 @@
 "use client";
 
-import React, {useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import type {GroceryItem, GroceryList} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {Checkbox} from "@/components/ui/checkbox"
 import {ScrollArea} from "@/components/ui/scroll-area"
+import useLatestGrocerylistByUserId from "@/lib/http/hooks/grocerylists/useLatestGrocerylistByUserId";
+import useLatestGrocerylistByHouseholdId from "@/lib/http/hooks/grocerylists/useLatestGrocerylistByHouseholdId";
+import useCheckOrUncheckItem from "@/lib/http/hooks/items/useCheckOrUncheckItem";
+import useCheckOrUncheckHouseholdItem from "@/lib/http/hooks/items/useCheckOrUncheckHouseholdItem";
 
 type GrocerylistsPageProps = {
   grocerylists: {
@@ -18,12 +22,12 @@ interface GroceryItemWithQuantity extends GroceryItem {
 }
 
 interface GroceryListProps {
-  items: GroceryItem[]
+  items: GroceryItem[],
+  onCheckOrUncheckItem: (id: string) => void
 }
 
-const GroceryList: React.FC<GroceryListProps> = ({items}) => {
+function GroceryList({items, onCheckOrUncheckItem}: GroceryListProps) {
   const [groceryItems, setGroceryItems] = useState<GroceryItem[]>(items)
-
   const groceryItemsWithQuantity = useMemo(() => {
     const itemCounts = groceryItems.reduce((acc, item) => {
       acc[item.name] = (acc[item.name] || 0) + 1
@@ -38,13 +42,11 @@ const GroceryList: React.FC<GroceryListProps> = ({items}) => {
     }, [] as GroceryItemWithQuantity[])
   }, [groceryItems])
 
-  const toggleItemCheck = (id: string) => {
-    setGroceryItems(prevItems =>
-      prevItems.map(item =>
-        item.item_id === id ? {...item, check: !item.check} : item
-      )
-    )
-  }
+  useEffect(() => {
+    if (items && Array.isArray(items)) {
+      setGroceryItems(items);
+    }
+  }, [items])
 
   return (
     <ScrollArea className="">
@@ -56,7 +58,7 @@ const GroceryList: React.FC<GroceryListProps> = ({items}) => {
               <Checkbox
                 id={item.item_id}
                 checked={item.check}
-                onCheckedChange={() => toggleItemCheck(item.item_id)}
+                onCheckedChange={() => onCheckOrUncheckItem(item.item_id)}
                 className="w-6 h-6 border-2 border-primary"
               />
             </div>
@@ -84,14 +86,33 @@ export default function GroceryListPage({
   grocerylists
 }: GrocerylistsPageProps) {
 
-  console.log(grocerylists)
+  const {data: myGrocerylist} = useLatestGrocerylistByUserId({
+    initialData: grocerylists.myGrocerylist,
+    userId: grocerylists.myGrocerylist?.createdBy
+  })
+  const {data: myHouseholdGrocerylist} = useLatestGrocerylistByHouseholdId({
+    initialData: grocerylists.myGrocerylist,
+  })
+  const checkOrUncheckItem = useCheckOrUncheckItem()
+  const checkOrUncheckHouseholdItem = useCheckOrUncheckHouseholdItem()
+
+  const handleCheckOrUncheckItem = (id: string) => {
+    checkOrUncheckItem.mutateAsync(id)
+  }
+
+  const handleCheckOrUncheckHouseholdItem = (id: string) => {
+    checkOrUncheckHouseholdItem.mutateAsync(id)
+  }
 
   if (!grocerylists.myHouseholdGrocerylist) {
     return (
       <div className="w-full min-h-[50vh]">
         <div className="w-1/2">
           <h2 className="text-lg font-semibold mb-2">My Grocerylist</h2>
-          <GroceryList items={grocerylists.myGrocerylist?.items}/>
+          <GroceryList
+            items={grocerylists.myGrocerylist?.items}
+            onCheckOrUncheckItem={handleCheckOrUncheckItem}
+          />
         </div>
       </div>
     )
@@ -109,13 +130,19 @@ export default function GroceryListPage({
         <div className="pt-6">
           <TabsContent value="my">
             <div>
-              <GroceryList items={grocerylists.myGrocerylist?.items}/>
+              <GroceryList
+                items={myGrocerylist?.items}
+                onCheckOrUncheckItem={handleCheckOrUncheckItem}
+              />
             </div>
           </TabsContent>
           {grocerylists.myHouseholdGrocerylist?.items && (
             <TabsContent value="household">
               <div>
-                <GroceryList items={grocerylists.myHouseholdGrocerylist?.items}/>
+                <GroceryList
+                  items={myHouseholdGrocerylist?.items}
+                  onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}
+                />
               </div>
             </TabsContent>
           )}
@@ -124,5 +151,3 @@ export default function GroceryListPage({
     </div>
   )
 }
-
-// f4e7a58c-9ba2-4a18-9104-aaf5a538cfcf

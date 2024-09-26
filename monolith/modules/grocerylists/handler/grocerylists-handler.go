@@ -34,6 +34,7 @@ type Grocerylist struct {
 	HouseholdID   interface{} `json:"householdId"`
 	MenuID        interface{} `json:"mealplanID"`
 	Items         interface{} `json:"items"`
+	CreatedBy     string      `json:"createdBy"`
 }
 
 type GrocerylistsHandler struct {
@@ -92,6 +93,7 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 			HouseholdID:   gl.HouseholdID,
 			MenuID:        gl.MenuID,
 			Items:         gl.Items,
+			CreatedBy:     gl.Createdby.String(),
 		})
 	}
 
@@ -100,6 +102,7 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 		HouseholdID:   gl.HouseholdID,
 		MenuID:        gl.MenuID,
 		Items:         gl.Items,
+		CreatedBy:     gl.Createdby.String(),
 	})
 }
 
