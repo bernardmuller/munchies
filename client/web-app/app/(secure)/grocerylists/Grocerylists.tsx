@@ -96,12 +96,34 @@ export default function GroceryListPage({
   const checkOrUncheckItem = useCheckOrUncheckItem()
   const checkOrUncheckHouseholdItem = useCheckOrUncheckHouseholdItem()
 
+  const checkOrUncheckItemsWithSameName = (id: string) => {
+    const mutItem = myGrocerylist.items.find(i => i.item_id === id)
+    for (const item of myGrocerylist.items) {
+      if (item.item_id !== id && item.name === mutItem?.name) {
+        checkOrUncheckItem.mutateAsync(item.item_id)
+      }
+    }
+  }
+
+  const checkOrUncheckHouseholdItemsWithSameName = (id: string) => {
+    const mutItem = myHouseholdGrocerylist.items.find(i => i.item_id === id)
+    for (const item of myHouseholdGrocerylist.items) {
+      if (item.item_id !== id && item.name === mutItem?.name) {
+        checkOrUncheckItem.mutateAsync(item.item_id)
+      }
+    }
+  }
+
   const handleCheckOrUncheckItem = (id: string) => {
     checkOrUncheckItem.mutateAsync(id)
+
+    checkOrUncheckItemsWithSameName(id)
   }
 
   const handleCheckOrUncheckHouseholdItem = (id: string) => {
     checkOrUncheckHouseholdItem.mutateAsync(id)
+
+    checkOrUncheckHouseholdItemsWithSameName(id)
   }
 
   if (!grocerylists.myHouseholdGrocerylist) {
