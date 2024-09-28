@@ -218,7 +218,7 @@ export default function Ingredients({
               column.toggleSorting(column.getIsSorted() === "asc")
             }
           >
-            <span className="text-gray-500">Ingredient Name</span>
+            <span className="text-gray-500">Name</span>
             <ArrowUpDown className="ml-2 h-4 w-4 text-gray-500"/>
           </Button>
         );
@@ -339,7 +339,7 @@ export default function Ingredients({
             <Dialog open={open} onOpenChange={setOpen}>
               <Button onClick={() => setOpen(true)}>
                 <PlusIcon/>
-                Add ingredient
+                <span className="hidden md:block">New Ingredient</span>
               </Button>
               <DialogContent>
                 <DialogHeader>

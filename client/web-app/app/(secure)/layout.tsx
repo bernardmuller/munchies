@@ -16,7 +16,7 @@ const App = ({children}: any) => {
       <Navbar/>
       <main className="bg-white md:bg-background">
         <div className="absolute top-0 left-0 right-0 h-[250px] bg-header" aria-hidden="true"/>
-        <div className="relative z-10 max-w-7xl mx-auto md:px-4 sm:px-6 lg:px-8 min-h-full">
+        <div className="relative z-10 max-w-7xl mx-auto md:px-4 lg:px-8 min-h-full">
           <div className="h-14 md:h-20 flex items-center">
             <div>
               <h3 className="text-lg md:text-2xl text-white font-bold px-4 md:px-0">Hi, John Doe</h3>
@@ -24,7 +24,7 @@ const App = ({children}: any) => {
 
           </div>
           <div className="bg-white dark:bg-background md:rounded-lg md:shadow-lg overflow-hidden mb-80">
-            <div className="px-0 py-0 md:px-4 md:py-5 sm:p-6">
+            <div className="px-3 py-3 md:px-4 md:py-5 sm:p-6">
               {children}
             </div>
           </div>
