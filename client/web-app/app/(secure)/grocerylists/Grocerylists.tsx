@@ -26,7 +26,7 @@ interface GroceryListProps {
   onCheckOrUncheckItem: (id: string) => void
 }
 
-function GroceryList({items, onCheckOrUncheckItem}: GroceryListProps) {
+function GroceryList({ items, onCheckOrUncheckItem}: GroceryListProps) {
   const [groceryItems, setGroceryItems] = useState<GroceryItem[]>(items)
   const groceryItemsWithQuantity = useMemo(() => {
     const itemCounts = groceryItems.reduce((acc, item) => {
@@ -49,36 +49,51 @@ function GroceryList({items, onCheckOrUncheckItem}: GroceryListProps) {
   }, [items])
 
   return (
-    <ScrollArea className="">
-      <ul className="space-y-2">
-        {groceryItemsWithQuantity.map((item) => (
-          <li key={item.item_id}
-              className="flex items-center space-x-4 bg-slate-100 p-3 px-5 rounded-lg transition-colors hover:bg-secondary/30">
-            <div className="flex items-center justify-center w-8 h-8">
-              <Checkbox
-                id={item.item_id}
-                checked={item.check}
-                onCheckedChange={() => onCheckOrUncheckItem(item.item_id)}
-                className="w-6 h-6 border-2 border-primary"
-              />
-            </div>
-            <label
-              htmlFor={item.item_id}
-              className={`flex-grow text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${
-                item.check ? 'line-through text-muted-foreground' : ''
-              }`}
-            >
-              {item.name}
-            </label>
-            {item.quantity > 1 && (
-              <span className="text-md font-semibold text-muted-foreground">
+    <div>
+      <h3 className="text-lg py-4 md:hidden">Items:</h3>
+      <ScrollArea className="bg-slate-100 px-3 py-3 rounded-lg h-fit">
+        <ul className="space-y-2">
+          {groceryItemsWithQuantity.map((item) => (
+            <li key={item.item_id}
+                className="flex items-center space-x-4 bg-white p-3 px-5 rounded-lg transition-colors hover:bg-secondary/30">
+              <div className="flex items-center justify-center w-8 h-8">
+                <Checkbox
+                  id={item.item_id}
+                  checked={item.check}
+                  onCheckedChange={() => onCheckOrUncheckItem(item.item_id)}
+                  className="w-6 h-6 border-2 border-primary"
+                />
+              </div>
+              <label
+                htmlFor={item.item_id}
+                className={`flex-grow text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${
+                  item.check ? 'line-through text-muted-foreground' : ''
+                }`}
+              >
+                {item.name}
+              </label>
+              {item.quantity > 1 && (
+                <span className="text-md font-semibold text-muted-foreground">
                 x{item.quantity}
               </span>
-            )}
-          </li>
-        ))}
-      </ul>
-    </ScrollArea>
+              )}
+            </li>
+          ))}
+        </ul>
+      </ScrollArea>
+    </div>
+  )
+}
+
+export function ListMetaData() {
+  return (
+    <div className="w-full bg-slate-100 p-4 rounded-lg h-fit">My List Metadata</div>
+  )
+}
+
+export function HouseholdListMetaData() {
+  return (
+    <div className="w-full bg-slate-100 p-4 rounded-lg h-fit">Household list Metadata</div>
   )
 }
 
@@ -128,48 +143,46 @@ export default function GroceryListPage({
 
   if (!grocerylists.myHouseholdGrocerylist) {
     return (
-      <div className="w-full min-h-[50vh]">
-        <div className="w-1/2">
-          <h2 className="text-lg font-semibold mb-2">My Grocerylist</h2>
-          <GroceryList
-            items={grocerylists.myGrocerylist?.items}
-            onCheckOrUncheckItem={handleCheckOrUncheckItem}
-          />
-        </div>
+      <div>
+        <h2 className="text-lg font-semibold mb-2">My list</h2>
+        <GroceryList
+          items={grocerylists.myGrocerylist?.items}
+          onCheckOrUncheckItem={handleCheckOrUncheckItem}
+        />
       </div>
     )
   }
 
   return (
-    <div className="w-full min-h-[50vh]">
-      <Tabs defaultValue="my" className="w-full md:w-1/2">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="my">My Grocerylist</TabsTrigger>
-          {grocerylists.myHouseholdGrocerylist?.items && (
-            <TabsTrigger value="household">Household Grocerylist</TabsTrigger>
-          )}
-        </TabsList>
-        <div className="pt-6">
-          <TabsContent value="my">
-            <div>
+    <Tabs defaultValue="my" className="w-full">
+      <TabsList className="grid w-full md:w-1/2 grid-cols-2">
+        <TabsTrigger value="my">My list</TabsTrigger>
+        {grocerylists.myHouseholdGrocerylist?.items && (
+          <TabsTrigger value="household">Household list</TabsTrigger>
+        )}
+      </TabsList>
+      <div className="lg:pt-2">
+        <TabsContent value="my">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 md:gap-4">
+            <ListMetaData/>
+            <GroceryList
+              items={myGrocerylist?.items}
+              onCheckOrUncheckItem={handleCheckOrUncheckItem}
+            />
+          </div>
+        </TabsContent>
+        {grocerylists.myHouseholdGrocerylist?.items && (
+          <TabsContent value="household">
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 md:gap-4">
+              <HouseholdListMetaData/>
               <GroceryList
-                items={myGrocerylist?.items}
-                onCheckOrUncheckItem={handleCheckOrUncheckItem}
+                items={myHouseholdGrocerylist?.items}
+                onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}
               />
             </div>
           </TabsContent>
-          {grocerylists.myHouseholdGrocerylist?.items && (
-            <TabsContent value="household">
-              <div>
-                <GroceryList
-                  items={myHouseholdGrocerylist?.items}
-                  onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}
-                />
-              </div>
-            </TabsContent>
-          )}
-        </div>
-      </Tabs>
-    </div>
+        )}
+      </div>
+    </Tabs>
   )
 }
