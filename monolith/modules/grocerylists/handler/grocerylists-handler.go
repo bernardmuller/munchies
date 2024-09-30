@@ -57,6 +57,7 @@ func (h *GrocerylistsHandler) RegisterRouter(router *echo.Echo) {
 	router.GET("/grocerylists/user", h.GetLatestOrCreateNewGrocerylistByUserId)
 	router.GET("/grocerylists/household", h.GetLatestGrocerylistByHouseholdId)
 	router.POST("/grocerylists/:id/add", h.AddItemToGrocerylist)
+	router.POST("/grocerylists", h.CreateNewGrocerylist)
 }
 
 func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Context) error {
@@ -73,7 +74,13 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 	if err != nil && err == sql.ErrNoRows {
 		log.Println(err.Error())
 
-		_, err := h.grocerylistsService.CreateGrocerylist(c.Request().Context(), userId)
+		params := service.CreateListParams{
+			HouseholdId: uuid.Nil,
+			MenuId:      uuid.Nil,
+			UserId:      userId,
+		}
+
+		_, err := h.grocerylistsService.CreateGrocerylist(c.Request().Context(), params)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, ErrorResponse{
 				Error:   "Internal Server Error",
@@ -129,7 +136,13 @@ func (h *GrocerylistsHandler) GetLatestGrocerylistByHouseholdId(c echo.Context) 
 	if err != nil && err == sql.ErrNoRows {
 		log.Println(err.Error())
 
-		_, err := h.grocerylistsService.CreateHouseholdGrocerylist(c.Request().Context(), userId, user.HouseholdID.UUID)
+		params := service.CreateListParams{
+			HouseholdId: user.HouseholdID.UUID,
+			MenuId:      uuid.Nil,
+			UserId:      userId,
+		}
+
+		_, err := h.grocerylistsService.CreateGrocerylist(c.Request().Context(), params)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, ErrorResponse{
 				Error:   "Internal Server Error",
@@ -213,5 +226,75 @@ func (h *GrocerylistsHandler) AddItemToGrocerylist(c echo.Context) error {
 	return c.JSON(http.StatusOK, Response{
 		Status: "success",
 		Data:   newItem,
+	})
+}
+
+func (h *GrocerylistsHandler) CreateNewGrocerylist(c echo.Context) error {
+	// TODO: extract to internal util function //
+	userId := c.Request().Context().Value("userId").(uuid.UUID)
+	if userId == uuid.Nil {
+		return c.JSON(http.StatusUnauthorized, &ErrorResponse{
+			Error:   "Unauthorized: User ID not found",
+			Message: "No User Id found in the Authorization JWT.",
+		})
+	}
+	// ----------------------------------------//
+
+	var ReqBody struct {
+		household bool `json:"household"`
+		menu      bool `json:"menu"`
+	}
+
+	err := json.NewDecoder(c.Request().Body).Decode(&ReqBody)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error decoding request body")
+	}
+
+	user, getErr := h.usersService.GetUserById(c.Request().Context(), userId)
+	if getErr != nil {
+		return c.JSON(http.StatusInternalServerError, &ErrorResponse{
+			Error:   "Internal Server Error",
+			Message: fmt.Sprintf("Error getting user: %s", err),
+		})
+	}
+
+	if ReqBody.household && user.HouseholdID.UUID.String() == "00000000-0000-0000-0000-000000000000" {
+		return c.JSON(http.StatusForbidden, &ErrorResponse{
+			Error:   "Forbidden",
+			Message: "User is not part of a household.",
+		})
+	}
+
+	var householdId uuid.UUID
+	if ReqBody.household {
+		householdId = user.HouseholdID.UUID
+	} else {
+		householdId = uuid.Nil
+	}
+
+	var menuId uuid.UUID
+	if ReqBody.menu {
+		menuId = uuid.Nil
+	} else {
+		menuId = uuid.New()
+	}
+
+	params := service.CreateListParams{
+		HouseholdId: householdId,
+		MenuId:      menuId,
+		UserId:      userId,
+	}
+
+	gl, err := h.grocerylistsService.CreateGrocerylist(c.Request().Context(), params)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, ErrorResponse{
+			Error:   "Internal Server Error",
+			Message: "Error creating grocerylist",
+		})
+	}
+
+	return c.JSON(http.StatusOK, Response{
+		Status: "success",
+		Data:   gl.ID.String(),
 	})
 }

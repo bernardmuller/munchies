@@ -11,18 +11,38 @@ type GrocerylistsService struct {
 	DB *postgres.Queries
 }
 
+type CreateListParams struct {
+	HouseholdId uuid.UUID
+	MenuId      uuid.UUID
+	UserId      uuid.UUID
+}
+
 func NewGrocerylistsService(db *postgres.Queries) *GrocerylistsService {
 	return &GrocerylistsService{
 		DB: db,
 	}
 }
 
-func (s *GrocerylistsService) CreateGrocerylist(ctx context.Context, userId uuid.UUID) (postgres.Grocerylist, error) {
+func (s *GrocerylistsService) CreateGrocerylist(ctx context.Context, createParams CreateListParams) (postgres.Grocerylist, error) {
+	var menuId uuid.NullUUID
+	if createParams.MenuId != uuid.Nil {
+		menuId = uuid.NullUUID{UUID: createParams.MenuId, Valid: true}
+	} else {
+		menuId = uuid.NullUUID{UUID: uuid.Nil, Valid: false}
+	}
+
+	var householdId uuid.NullUUID
+	if createParams.HouseholdId != uuid.Nil {
+		householdId = uuid.NullUUID{UUID: createParams.HouseholdId, Valid: true}
+	} else {
+		householdId = uuid.NullUUID{UUID: uuid.Nil, Valid: false}
+	}
+
 	params := postgres.CreateGrocerylistParams{
 		ID:          uuid.New(),
-		MenuID:      uuid.NullUUID{UUID: uuid.Nil, Valid: false},
-		HouseholdID: uuid.NullUUID{UUID: uuid.Nil, Valid: false},
-		Createdby:   userId,
+		MenuID:      menuId,
+		HouseholdID: householdId,
+		Createdby:   createParams.UserId,
 	}
 
 	newGrocerylist, createErr := s.DB.CreateGrocerylist(ctx, params)
@@ -47,22 +67,6 @@ func (s *GrocerylistsService) GetLatestGrocerylistByHouseholdId(ctx context.Cont
 		return postgres.GetGrocerylistWithItemsByHouseholdIdRow{}, err
 	}
 	return gl, nil
-}
-
-func (s *GrocerylistsService) CreateHouseholdGrocerylist(ctx context.Context, userId uuid.UUID, householdId uuid.UUID) (postgres.Grocerylist, error) {
-	params := postgres.CreateGrocerylistParams{
-		ID:          uuid.New(),
-		MenuID:      uuid.NullUUID{UUID: uuid.Nil, Valid: false},
-		HouseholdID: uuid.NullUUID{UUID: householdId, Valid: true},
-		Createdby:   userId,
-	}
-
-	newGrocerylist, createErr := s.DB.CreateGrocerylist(ctx, params)
-	if createErr != nil {
-		log.Println(createErr)
-		return postgres.Grocerylist{}, createErr
-	}
-	return newGrocerylist, nil
 }
 
 func (s *GrocerylistsService) GetGrocerylistById(id string) (postgres.Grocerylist, error) {
