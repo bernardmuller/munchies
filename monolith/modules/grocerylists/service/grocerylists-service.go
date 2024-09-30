@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"github.com/bernardmuller/munchies/store/postgres"
 	"github.com/google/uuid"
 	"log"
@@ -44,6 +45,10 @@ func (s *GrocerylistsService) CreateGrocerylist(ctx context.Context, createParam
 		HouseholdID: householdId,
 		Createdby:   createParams.UserId,
 	}
+
+	fmt.Println("---------------------------------------------")
+	fmt.Println(params)
+	fmt.Println("---------------------------------------------")
 
 	newGrocerylist, createErr := s.DB.CreateGrocerylist(ctx, params)
 	if createErr != nil {

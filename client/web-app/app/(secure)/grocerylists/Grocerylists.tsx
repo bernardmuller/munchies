@@ -7,21 +7,22 @@ import {Checkbox} from "@/components/ui/checkbox"
 import {ScrollArea} from "@/components/ui/scroll-area"
 import {Button} from "@/components/ui/button"
 import {
-  Dialog, DialogClose,
+  Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog"
-import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group"
-import {Label} from "@/components/ui/label"
 import useLatestGrocerylistByUserId from "@/lib/http/hooks/grocerylists/useLatestGrocerylistByUserId"
 import useLatestGrocerylistByHouseholdId from "@/lib/http/hooks/grocerylists/useLatestGrocerylistByHouseholdId"
 import useCheckOrUncheckItem from "@/lib/http/hooks/items/useCheckOrUncheckItem"
 import useCheckOrUncheckHouseholdItem from "@/lib/http/hooks/items/useCheckOrUncheckHouseholdItem"
-import {ClipboardList, House, Plus, PlusCircle, User, Utensils} from "lucide-react"
+import {ClipboardList, House, Loader2, User} from "lucide-react"
 import {useRouter} from "next/navigation";
+import useCreateList from "@/lib/http/hooks/grocerylists/useCreateList";
+import {useToast} from "@/components/ui/use-toast";
 
 type GrocerylistsPageProps = {
   grocerylists: {
@@ -35,11 +36,13 @@ interface GroceryItemWithQuantity extends GroceryItem {
 }
 
 interface GroceryListProps {
+  id: string,
   items: GroceryItem[],
   onCheckOrUncheckItem: (id: string) => void
 }
 
-function GroceryList({items, onCheckOrUncheckItem}: GroceryListProps) {
+function GroceryList({id, items, onCheckOrUncheckItem}: GroceryListProps) {
+  const router = useRouter()
   const [groceryItems, setGroceryItems] = useState<GroceryItem[]>(items)
   const groceryItemsWithQuantity = useMemo(() => {
     const itemCounts = groceryItems.reduce((acc, item) => {
@@ -66,6 +69,21 @@ function GroceryList({items, onCheckOrUncheckItem}: GroceryListProps) {
       <ScrollArea className="bg-slate-100 px-3 py-3 rounded-b-sm h-fit md:rounded-lg">
         <h3 className="text-lg py-2 md:hidden">Items:</h3>
         <ul className="space-y-2">
+          {!groceryItemsWithQuantity.length && (
+            <div
+              className="flex flex-col gap-2 justify-center items-center bg-white rounded-lg p-3 md:p-4 md:rounded-xl">
+              <span className="text-center text-muted-foreground">
+                No items in list.
+              </span>
+              <Button
+                onClick={() => router.push(`/grocerylist/${id}`)}
+                className="mt-2"
+                variant="outline"
+              >
+                Add items
+              </Button>
+            </div>
+          )}
           {groceryItemsWithQuantity.map((item) => (
             <li key={item.item_id}
                 className="flex items-center space-x-4 bg-white p-3 px-5 rounded-lg transition-colors hover:bg-secondary/30">
@@ -126,23 +144,44 @@ export function HouseholdListMetaData({list}: { list: GroceryList }) {
       <p>Created: {new Date().toLocaleDateString()}</p>
       <p>Total Items: {list.items.length}</p>
       <p>Checked Items: {list.items.filter(item => item.check).length}</p>
-      <p>Household Members: {  'N/A'}</p>
+      <p>Household Members: {'N/A'}</p>
     </MetaDataWrapper>
   )
 }
 
 function CreateListDialog() {
   const router = useRouter()
+  const [creating, setCreating] = useState(false)
   const [step, setStep] = useState<'type' | 'scope'>('type')
   const [listType, setListType] = useState<'shopping' | 'mealplan' | null>(null)
+  const createList = useCreateList()
+  const {toast} = useToast()
 
-  const handleCreateList = (scope: 'me' | 'household') => {
+  const handleCreateList = async (scope: 'me' | 'household') => {
     if (!listType) return
+    setCreating(true)
+
+    const params = {
+      household: scope === 'household',
+      menu: listType === 'mealplan'
+    }
+
+    const res = await createList.mutateAsync(params)
+
+    if (!res.ok || !res.data) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Something went wrong creating the list.",
+      })
+      setCreating(false)
+      return
+    }
 
     const routes = {
       shopping: {
-        me: '/grocerylists/new',
-        household: '/grocerylist/household/new'
+        me: `/grocerylists/${res.data.data}`,
+        household: `/grocerylist/${res.data.data}`
       },
       mealplan: {
         me: '/grocerylist/mealplan/new',
@@ -170,17 +209,27 @@ function CreateListDialog() {
                      flex items-center justify-center"
         >
           {/*<Plus className="h-8 w-8 md:h-4 md:w-4 md:mr-2 text-white" strokeWidth={3} />*/}
-          <span className="text-3xl">+</span>
+          <span className="text-3xl md:hidden">+</span>
           <span className="hidden md:inline">Create List</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-center mb-4">Create a New List</DialogTitle>
-          <DialogDescription className="text-center">
-            {step === 'type' ? 'Select the type of list you want to create.' : 'Choose who this list is for.'}
-          </DialogDescription>
+          {!creating && (
+            <DialogDescription className="text-center">
+              {step === 'type' ? 'Select the type of list you want to create.' : 'Choose who this list is for.'}
+            </DialogDescription>
+          )}
         </DialogHeader>
+        {creating &&
+            <div className="flex flex-col gap-2 justify-center items-center">
+                <Loader2 className="h-6 w-6 animate-spin"/>
+                <span>Creating new list...</span>
+            </div>
+        }
+        {!creating && (
+          <>
         {step === 'type' ? (
           <div className="flex flex-col gap-4">
             <Button
@@ -191,20 +240,20 @@ function CreateListDialog() {
               className={buttonClass}
               variant="outline"
             >
-              <ClipboardList className="mr-2 h-6 w-6" />
+              <ClipboardList className="mr-2 h-6 w-6"/>
               Shopping List
             </Button>
-            <Button
-              onClick={() => {
-                setListType('mealplan')
-                setStep('scope')
-              }}
-              className={buttonClass}
-              variant="outline"
-            >
-              <Utensils className="mr-2 h-6 w-6" />
-              Mealplan List
-            </Button>
+            {/*<Button*/}
+            {/*  onClick={() => {*/}
+            {/*    setListType('mealplan')*/}
+            {/*    setStep('scope')*/}
+            {/*  }}*/}
+            {/*  className={buttonClass}*/}
+            {/*  variant="outline"*/}
+            {/*>*/}
+            {/*  <Utensils className="mr-2 h-6 w-6" />*/}
+            {/*  Mealplan List*/}
+            {/*</Button>*/}
           </div>
         ) : (
           <div className="flex flex-col gap-4">
@@ -213,7 +262,7 @@ function CreateListDialog() {
               className={buttonClass}
               variant="outline"
             >
-              <User className="mr-2 h-6 w-6" />
+              <User className="mr-2 h-6 w-6"/>
               For Me
             </Button>
             <Button
@@ -221,7 +270,7 @@ function CreateListDialog() {
               className={buttonClass}
               variant="outline"
             >
-              <House className="mr-2 h-6 w-6" />
+              <House className="mr-2 h-6 w-6"/>
               For Household
             </Button>
           </div>
@@ -238,6 +287,8 @@ function CreateListDialog() {
           </DialogClose>
 
         )}
+          </>
+        )}
       </DialogContent>
     </Dialog>
   )
@@ -246,6 +297,7 @@ function CreateListDialog() {
 export default function GroceryListPage({
   grocerylists
 }: GrocerylistsPageProps) {
+  const router = useRouter()
 
   const {data: myGrocerylist} = useLatestGrocerylistByUserId({
     initialData: grocerylists.myGrocerylist,
@@ -295,6 +347,7 @@ export default function GroceryListPage({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <ListMetaData list={grocerylists.myGrocerylist}/>
           <GroceryList
+            id={grocerylists.myGrocerylist?.id}
             items={grocerylists.myGrocerylist?.items}
             onCheckOrUncheckItem={handleCheckOrUncheckItem}
           />
@@ -321,6 +374,7 @@ export default function GroceryListPage({
             <div className="w-full grid grid-cols-1 md:grid-cols-2 md:gap-4">
               <ListMetaData list={myGrocerylist}/>
               <GroceryList
+                id={grocerylists.myGrocerylist?.id}
                 items={myGrocerylist?.items}
                 onCheckOrUncheckItem={handleCheckOrUncheckItem}
               />
@@ -331,6 +385,7 @@ export default function GroceryListPage({
               <div className="w-full grid grid-cols-1 md:grid-cols-2 md:gap-4">
                 <HouseholdListMetaData list={myHouseholdGrocerylist}/>
                 <GroceryList
+                  id={grocerylists.myHouseholdGrocerylist?.id}
                   items={myHouseholdGrocerylist?.items}
                   onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}
                 />

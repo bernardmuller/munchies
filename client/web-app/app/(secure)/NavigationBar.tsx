@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import {usePathname, useRouter} from 'next/navigation'
-import {List, LogOut, Menu, Settings, User} from 'lucide-react'
+import {List, Menu, Settings, User} from 'lucide-react'
 import {Button} from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet"
+import {Sheet, SheetClose, SheetContent, SheetTrigger} from "@/components/ui/sheet"
 import getCurrentSession from "@/shared/utils/getCurrentSession"
 import useAvatar from "@/hooks/useAvatar"
 import {SignOutButton} from "@clerk/nextjs"
@@ -143,7 +143,7 @@ function MobileMenu({avatar, username, navigation}: {
 }) {
   return (
     <div className="pt-5 pb-3 space-y-1">
-      <div className="flex items-center px-4 mb-4">
+      <div className="flex items-center px-4 mb-8">
         <div
           className="h-10 w-10 bg-gradient-to-r from-blue-400 to-primary rounded-full flex justify-center items-center">
           <Image
@@ -158,24 +158,32 @@ function MobileMenu({avatar, username, navigation}: {
           <div className="text-base font-medium text-gray-800 dark:text-white">{username}</div>
         </div>
       </div>
-      {navigation.map((item) => (
-        <MobileNavLink key={item.name} href={item.href} icon={<List className="h-6 w-6"/>}>
-          {item.name}
-        </MobileNavLink>
-      ))}
-      <MobileNavLink href="#" icon={<User className="h-6 w-6"/>}>
-        Your Profile
-      </MobileNavLink>
-      <MobileNavLink href={settingsRoutes[0].href} icon={<Settings className="h-6 w-6"/>}>
-        Settings
-      </MobileNavLink>
-      <div className="px-4 pt-4">
-        <Button
-          className="w-full h-8 mt-2"
-          variant="destructive"
-        >
-          <SignOutButton/>
-        </Button>
+      <div className="flex flex-col space-y-1">
+        {navigation.map((item) => (
+          <MobileNavLink key={item.name} href={item.href} icon={<List className="h-6 w-6"/>}>
+            <SheetClose>
+              {item.name}
+            </SheetClose>
+          </MobileNavLink>
+        ))}
+        <SheetClose>
+          <MobileNavLink href="#" icon={<User className="h-6 w-6"/>}>
+            Your Profile
+          </MobileNavLink>
+        </SheetClose>
+        <SheetClose>
+          <MobileNavLink href={settingsRoutes[0].href} icon={<Settings className="h-6 w-6"/>}>
+            Settings
+          </MobileNavLink>
+        </SheetClose>
+        <div className="px-4 pt-4">
+          <Button
+            className="w-full h-10 mt-2"
+            variant="destructive"
+          >
+            <SignOutButton/>
+          </Button>
+        </div>
       </div>
     </div>
   )

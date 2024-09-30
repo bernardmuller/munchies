@@ -274,9 +274,10 @@ func (h *GrocerylistsHandler) CreateNewGrocerylist(c echo.Context) error {
 
 	var menuId uuid.UUID
 	if ReqBody.menu {
+		// TODO: This will need to be changed to a real menu id
 		menuId = uuid.Nil
 	} else {
-		menuId = uuid.New()
+		menuId = uuid.Nil
 	}
 
 	params := service.CreateListParams{
@@ -285,11 +286,11 @@ func (h *GrocerylistsHandler) CreateNewGrocerylist(c echo.Context) error {
 		UserId:      userId,
 	}
 
-	gl, err := h.grocerylistsService.CreateGrocerylist(c.Request().Context(), params)
-	if err != nil {
+	gl, createErr := h.grocerylistsService.CreateGrocerylist(c.Request().Context(), params)
+	if createErr != nil {
 		return c.JSON(http.StatusInternalServerError, ErrorResponse{
 			Error:   "Internal Server Error",
-			Message: "Error creating grocerylist",
+			Message: fmt.Sprintf("Error creating grocerylist: %s", createErr),
 		})
 	}
 

@@ -32,6 +32,9 @@ const apiRoutes = {
   checkItem: (id: string) => {
     return `${process.env.NEXT_PUBLIC_API_BASE_URL}/items/${id}/check`;
   },
+  createList: () => {
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/grocerylists`;
+  },
 };
 
 export default apiRoutes;

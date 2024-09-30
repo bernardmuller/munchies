@@ -8,4 +8,5 @@ export const keys = {
   latestGrocerylistByHouseholdId: ["latest-grocerylist-household"],
   createItem: ["create-item"],
   checkItem: ["check-item"],
+  createList: ["create-list"],
 };
