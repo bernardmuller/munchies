@@ -78,6 +78,17 @@ func (q *Queries) CreateItem(ctx context.Context, arg CreateItemParams) (Item, e
 	return i, err
 }
 
+const deleteItem = `-- name: DeleteItem :exec
+DELETE FROM items
+WHERE id = $1
+RETURNING id, "check", typeid, description, createdat, createdby, grocerylist_id, ingredient_id
+`
+
+func (q *Queries) DeleteItem(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, deleteItem, id)
+	return err
+}
+
 const getItemById = `-- name: GetItemById :one
 SELECT id, "check", typeid, description, createdat, createdby, grocerylist_id, ingredient_id FROM items WHERE id = $1
 `

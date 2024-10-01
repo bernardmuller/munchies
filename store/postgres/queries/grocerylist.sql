@@ -11,16 +11,20 @@ RETURNING *;
 
 -- name: GetGrocerylistWithItemsById :one
 SELECT
-  gl.id AS grocerylist_id,
+  gl.id,
   gl.household_id,
   gl.menu_id,
-  JSON_AGG(
-    JSON_BUILD_OBJECT(
-      'item_id', i.id,
-      'check', i.check,
-      'name', ing.name 
-    )
-  ) AS items
+  COALESCE(
+      JSON_AGG(
+      JSON_BUILD_OBJECT(
+              'item_id', i.id,
+              'check', i.check,
+              'name', ing.name,
+              'ingredient_id', ing.id
+      ) ORDER BY ing.name ASC
+              ) FILTER (WHERE i.id IS NOT NULL),
+      '[]'::json
+  )::json AS items
 FROM
   grocerylists gl
 LEFT JOIN
@@ -58,6 +62,8 @@ WHERE
   gl.createdby = $1
 AND
     gl.archived = false
+AND
+    gl.household_id IS NULL
 GROUP BY
   gl.id
 ORDER BY

@@ -20,3 +20,8 @@ UPDATE items
 SET "check" = false
 WHERE id = $1
 RETURNING *;
+
+-- name: DeleteItem :exec
+DELETE FROM items
+WHERE id = $1
+RETURNING *;
