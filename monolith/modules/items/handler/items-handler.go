@@ -38,6 +38,7 @@ func NewItemsHandler(itemsService *service.ItemsService, usersService *us.UsersS
 
 func (h *ItemsHandler) RegisterRouter(router *echo.Echo) {
 	router.POST("/items/:id/check", h.CheckOrUncheckItem)
+	router.DELETE("/items/:id", h.DeleteItem)
 }
 
 func (h *ItemsHandler) CheckOrUncheckItem(c echo.Context) error {
@@ -95,4 +96,28 @@ func (h *ItemsHandler) CheckOrUncheckItem(c echo.Context) error {
 			Data:   nil,
 		})
 	}
+}
+
+func (h *ItemsHandler) DeleteItem(c echo.Context) error {
+	id := c.Param("id")
+	itemId, err := uuid.Parse(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, ErrorResponse{
+			Error:   "Bad Request",
+			Message: fmt.Sprintf("Unable to parse item ID: %s.", id),
+		})
+	}
+
+	err = h.itemsService.DeleteItem(c, itemId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, ErrorResponse{
+			Error:   "Internal Server Error",
+			Message: fmt.Sprintf("Unable to delete item with ID: %s.", id),
+		})
+	}
+
+	return c.JSON(http.StatusOK, Response{
+		Status: "success",
+		Data:   nil,
+	})
 }

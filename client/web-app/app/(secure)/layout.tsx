@@ -14,7 +14,7 @@ const App = ({children}: any) => {
   return (
     <div className="min-h-screen flex flex-col relative">
       <Navbar/>
-      <main className="bg-white md:bg-background">
+      <main className="bg-background">
         <div className="absolute top-0 left-0 right-0 h-[250px] bg-header" aria-hidden="true"/>
         <div className="relative z-10 max-w-7xl mx-auto md:px-4 lg:px-8 min-h-full">
           <div className="h-14 md:h-20 flex items-center">
@@ -23,8 +23,8 @@ const App = ({children}: any) => {
             </div>
 
           </div>
-          <div className="bg-white dark:bg-background md:rounded-lg md:shadow-lg overflow-hidden mb-80">
-            <div className="px-3 py-3 md:px-4 md:py-5 sm:p-6">
+          <div className="bg-background md:bg-white dark:bg-background md:rounded-lg md:shadow-lg overflow-hidden mb-80">
+            <div className="px-0 py-0 md:px-4 md:py-5 sm:p-6">
               {children}
             </div>
           </div>

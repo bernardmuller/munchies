@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import {usePathname, useRouter} from 'next/navigation'
-import {List, Menu, Settings, User} from 'lucide-react'
+import {ClipboardList, House, List, Menu, Settings, User} from 'lucide-react'
 import {Button} from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -18,6 +18,7 @@ import useAvatar from "@/hooks/useAvatar"
 import {SignOutButton} from "@clerk/nextjs"
 import settingsRoutes from "./settings/settingsRoutes"
 import React from "react";
+import {CgProfile} from "react-icons/cg";
 
 const navigation = [
   {name: "Grocery Lists", href: "/grocerylists"},
@@ -59,12 +60,12 @@ export default function Navbar() {
           <div className="flex items-center md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" className="text-white ml-2 w-10 h-10">
-                  <Menu className="h-6 w-6"/>
+                <Button variant="ghost" size="icon" className="text-white ml-2 w-10 h-10">
+                  <Menu className="min-h-6 min-w-6"/>
                   <span className="sr-only">Open main menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-full sm:max-w-sm">
+              <SheetContent side="right" className="w-full sm:max-w-sm text-white">
                 <MobileMenu
                   avatar={avatar}
                   username={currentUser.username}
@@ -141,6 +142,7 @@ function MobileMenu({avatar, username, navigation}: {
   username: string;
   navigation: { name: string; href: string }[];
 }) {
+  const router = useRouter()
   return (
     <div className="pt-5 pb-3 space-y-1">
       <div className="flex items-center px-4 mb-8">
@@ -159,23 +161,31 @@ function MobileMenu({avatar, username, navigation}: {
         </div>
       </div>
       <div className="flex flex-col space-y-1">
-        {navigation.map((item) => (
-          <MobileNavLink key={item.name} href={item.href} icon={<List className="h-6 w-6"/>}>
-            <SheetClose>
-              {item.name}
-            </SheetClose>
-          </MobileNavLink>
-        ))}
-        <SheetClose>
-          <MobileNavLink href="#" icon={<User className="h-6 w-6"/>}>
-            Your Profile
-          </MobileNavLink>
-        </SheetClose>
-        <SheetClose>
-          <MobileNavLink href={settingsRoutes[0].href} icon={<Settings className="h-6 w-6"/>}>
+        <MobileNavLink href={"/grocerylists"} icon={<ClipboardList className="h-6 w-6"/>}>
+          <SheetClose>
+            Lists
+          </SheetClose>
+        </MobileNavLink>
+        <MobileNavLink href={"/ingredients"} icon={<List className="h-6 w-6"/>}>
+          <SheetClose>
+            Ingredients
+          </SheetClose>
+        </MobileNavLink>
+        <MobileNavLink href={settingsRoutes[0].href} icon={<Settings className="h-6 w-6"/>}>
+          <SheetClose>
             Settings
-          </MobileNavLink>
-        </SheetClose>
+          </SheetClose>
+        </MobileNavLink>
+        <MobileNavLink href={settingsRoutes[0].href} icon={<CgProfile className="h-6 w-6 ml-4"/>}>
+          <SheetClose>
+            Profile
+          </SheetClose>
+        </MobileNavLink>
+        <MobileNavLink href={settingsRoutes[1].href} icon={<House className="h-6 w-6 ml-4"/>}>
+          <SheetClose>
+            Household
+          </SheetClose>
+        </MobileNavLink>
         <div className="px-4 pt-4">
           <Button
             className="w-full h-10 mt-2"
@@ -192,7 +202,7 @@ function MobileMenu({avatar, username, navigation}: {
 function MobileNavLink({href, icon, children}: { href: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <Link href={href}
-          className="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 block px-4 py-2 rounded-md text-base font-medium">
+          className="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 block px-4 py-2 rounded-md text-base">
       <span className="flex items-center">
         {icon}
         <span className="ml-3">{children}</span>

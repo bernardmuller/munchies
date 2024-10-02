@@ -9,4 +9,5 @@ export const keys = {
   createItem: ["create-item"],
   checkItem: ["check-item"],
   createList: ["create-list"],
+  getGrocerylistById: (id: string) => ["get-grocerylist-by-id", id],
 };

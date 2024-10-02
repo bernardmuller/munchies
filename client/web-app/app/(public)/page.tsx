@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Check} from "lucide-react";
 
 export default function Component() {
   return (
@@ -38,7 +38,7 @@ export default function Component() {
               </ul>
             </nav>
             <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-              <a href="/login">Sign in</a>
+              <a href="/sign-in">Sign in</a>
             </Button>
           </div>
         </div>
@@ -47,9 +47,12 @@ export default function Component() {
       <main className="flex flex-col items-center">
         <section className="w-full relative">
           <div className="bg-secondary absolute top-0 left-0 right-0 h-2/3 z-0 overflow-hidden">
-            <div className="h-[30rem] w-[30rem] rounded-full bg-primary opacity-20 blur-[6rem] absolute left-[-14rem] top-[-14rem]" />
-            <div className="h-[50rem] w-[50rem] rounded-full bg-primary opacity-30 blur-[20rem] absolute left-[20%] bottom-[-30rem]" />
-            <div className="h-[30rem] w-[30rem] rounded-full bg-[#FFB572]/30 blur-[10rem] absolute left-[60%] top-[-18rem]" />
+            <div
+              className="h-[30rem] w-[30rem] rounded-full bg-primary opacity-20 blur-[6rem] absolute left-[-14rem] top-[-14rem]"/>
+            <div
+              className="h-[50rem] w-[50rem] rounded-full bg-primary opacity-30 blur-[20rem] absolute left-[20%] bottom-[-30rem]"/>
+            <div
+              className="h-[30rem] w-[30rem] rounded-full bg-[#FFB572]/30 blur-[10rem] absolute left-[60%] top-[-18rem]"/>
           </div>
           <div className="container mx-auto px-4 max-w-6xl relative z-10 pt-48">
             <div className="flex flex-col items-center gap-12">
@@ -66,11 +69,16 @@ export default function Component() {
                   Get Started
                 </Button>
               </div>
-              <div className="w-full bg-background rounded-lg shadow-xl overflow-hidden mt-20 border-[1px] border-white">
+              <div
+                className="w-full bg-background rounded-lg shadow-xl overflow-hidden mt-20 border-[1px] border-white">
                 <div className="aspect-[16/9] flex items-center justify-center relative">
-                  <div className="z-20 flex flex-col bg-[#141925]/10 items-center justify-center absolute top-0 left-0 right-0 bottom-0 h-full">
-                    <Button className="bg-primary text-primary-foreground hover:bg-primary/90 absolute w-64 h-14 text-lg shadow-xl">
-                      Get Started
+                  <div
+                    className="z-20 flex flex-col bg-[#141925]/10 items-center justify-center absolute top-0 left-0 right-0 bottom-0 h-full">
+                    <Button
+                      className="bg-primary text-primary-foreground hover:bg-primary/90 absolute w-64 h-14 text-lg shadow-xl">
+                      <a href="/sign-up">
+                        Get Started
+                      </a>
                     </Button>
                   </div>
                   <img
@@ -142,20 +150,22 @@ export default function Component() {
                 </p>
                 <ul className="mb-6 flex-grow">
                   <li className="flex items-center mb-2">
-                    <Check className="mr-2 h-5 w-5 text-primary" />
+                    <Check className="mr-2 h-5 w-5 text-primary"/>
                     <span>Basic meal planning</span>
                   </li>
                   <li className="flex items-center mb-2">
-                    <Check className="mr-2 h-5 w-5 text-primary" />
+                    <Check className="mr-2 h-5 w-5 text-primary"/>
                     <span>Simple grocery lists</span>
                   </li>
                   <li className="flex items-center mb-2">
-                    <Check className="mr-2 h-5 w-5 text-primary" />
+                    <Check className="mr-2 h-5 w-5 text-primary"/>
                     <span>Up to 10 meals/month</span>
                   </li>
                 </ul>
                 <Button className="bg-primary text-primary-foreground hover:bg-primary/90 mt-auto">
-                  Get Started
+                  <a href="/sign-up">
+                    Get Started
+                  </a>
                 </Button>
               </div>
               <div className="bg-background text-foreground p-6 rounded-lg shadow flex-1 flex flex-col">
@@ -170,19 +180,19 @@ export default function Component() {
                 </p>
                 <ul className="mb-6 flex-grow">
                   <li className="flex items-center mb-2">
-                    <Check className="mr-2 h-5 w-5 text-primary" />
+                    <Check className="mr-2 h-5 w-5 text-primary"/>
                     <span>Advanced meal planning</span>
                   </li>
                   <li className="flex items-center mb-2">
-                    <Check className="mr-2 h-5 w-5 text-primary" />
+                    <Check className="mr-2 h-5 w-5 text-primary"/>
                     <span>Smart grocery lists</span>
                   </li>
                   <li className="flex items-center mb-2">
-                    <Check className="mr-2 h-5 w-5 text-primary" />
+                    <Check className="mr-2 h-5 w-5 text-primary"/>
                     <span>Unlimited meals</span>
                   </li>
                   <li className="flex items-center mb-2">
-                    <Check className="mr-2 h-5 w-5 text-primary" />
+                    <Check className="mr-2 h-5 w-5 text-primary"/>
                     <span>Nutritional information</span>
                   </li>
                 </ul>
@@ -205,7 +215,9 @@ export default function Component() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
               <Button className="bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto">
-                Sign Up
+                <a href="/sign-up">
+                  Sign up
+                </a>
               </Button>
             </div>
           </div>

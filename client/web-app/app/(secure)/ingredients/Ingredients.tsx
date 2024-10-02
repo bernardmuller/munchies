@@ -245,7 +245,7 @@ export default function Ingredients({
                   <EllipsisIcon className="rotate-90 dark:stroke-white"/>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="px-2 space-y-2" align="end">
+              <DropdownMenuContent className="px-2 space-y-2 py-2" align="end">
                 <div className="flex flex-col">
                   <Button
                     className="w-full justify-start text-sm"
@@ -259,18 +259,20 @@ export default function Ingredients({
                     <PlusIcon className="h-4 w-4"/>
                     Add to grocery list
                   </Button>
-                  <Button
-                    className="w-full justify-start"
-                    variant="ghost"
-                    onClick={() =>
-                      createHouseholdGroceryItem.mutate({
-                        ingredientId: cell.row.original.id,
-                      })
-                    }
-                  >
-                    <PlusIcon className="h-4 w-4"/>
-                    Add to household list
-                  </Button>
+                  {householdGrocerylistId && (
+                    <Button
+                      className="w-full justify-start"
+                      variant="ghost"
+                      onClick={() =>
+                        createHouseholdGroceryItem.mutate({
+                          ingredientId: cell.row.original.id,
+                        })
+                      }
+                    >
+                      <PlusIcon className="h-4 w-4"/>
+                      Add to household list
+                    </Button>
+                  )}
                 </div>
                 <Button
                   className="flex gap-1 hover:bg-gray-50 w-full justify-start px-2"
@@ -294,7 +296,7 @@ export default function Ingredients({
 
   return (
     <>
-      <div className="flex flex-col  gap-4  w-full min-h-[50vh]">
+      <div className="flex flex-col gap-4 w-full min-h-[50vh] py-4 md:pt-0 px-2 md:px-0 bg-white md:bg-background">
         <div className="flex justify-between">
           <div>
             <Input
@@ -364,9 +366,6 @@ export default function Ingredients({
             data={ingredientsData
               .filter((i) => {
                 if (filteredCategory !== null) {
-                  console.log(
-                    i.categoryId === filteredCategory,
-                  );
                   return i.categoryId === filteredCategory;
                 }
                 return true;

@@ -6,11 +6,12 @@ const groceryItemSchema = z.object({
   item_id: z.string(),
   check: z.boolean(),
   name: z.string(),
+  ingredient_id: z.string(),
 });
 
 const groceryListSchema = z.object({
   id: z.string(),
-  householdId: z.string(),
+  householdId: z.string().nullable(),
   mealplanID: z.string().nullable(),
   createdBy: z.string(),
   items: z.array(groceryItemSchema),

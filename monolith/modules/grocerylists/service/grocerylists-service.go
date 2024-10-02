@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"github.com/bernardmuller/munchies/store/postgres"
 	"github.com/google/uuid"
 	"log"
@@ -46,10 +45,6 @@ func (s *GrocerylistsService) CreateGrocerylist(ctx context.Context, createParam
 		Createdby:   createParams.UserId,
 	}
 
-	fmt.Println("---------------------------------------------")
-	fmt.Println(params)
-	fmt.Println("---------------------------------------------")
-
 	newGrocerylist, createErr := s.DB.CreateGrocerylist(ctx, params)
 	if createErr != nil {
 		log.Println(createErr)
@@ -78,6 +73,14 @@ func (s *GrocerylistsService) GetGrocerylistById(id string) (postgres.Grocerylis
 	gl, err := s.DB.GetGrocerylistById(context.Background(), uuid.MustParse(id))
 	if err != nil {
 		return postgres.Grocerylist{}, err
+	}
+	return gl, nil
+}
+
+func (s *GrocerylistsService) GetGrocerylistWithItemsById(id string) (postgres.GetGrocerylistWithItemsByIdRow, error) {
+	gl, err := s.DB.GetGrocerylistWithItemsById(context.Background(), uuid.MustParse(id))
+	if err != nil {
+		return postgres.GetGrocerylistWithItemsByIdRow{}, err
 	}
 	return gl, nil
 }

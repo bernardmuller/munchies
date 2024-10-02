@@ -1,8 +1,8 @@
 const settingsRoutes = [
-  // {
-  //   title: "My Profile",
-  //   href: "/settings/profile",
-  // },
+  {
+    title: "My Profile",
+    href: "/settings/profile",
+  },
   {
     title: "My Household",
     href: "/settings/household",

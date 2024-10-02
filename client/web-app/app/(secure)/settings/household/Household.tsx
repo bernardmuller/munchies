@@ -54,7 +54,7 @@ export default function HouseholdDashboard({household}: Props) {
 
   if (!householdData || !householdData?.id) {
     return (
-      <div className=" mx-auto p-4 max-w-md">
+      <div className=" mx-auto max-w-md">
         <h2 className="text-2xl font-bold text-center mb-1">
           Welcome to My Household
         </h2>
@@ -87,7 +87,7 @@ export default function HouseholdDashboard({household}: Props) {
   }
 
   return (
-    <div className="">
+    <div className="bg-white p-4 md:p-0 rounded-lg md:rounded-0 mx-2 md:mx-0">
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold">My Household</h2>

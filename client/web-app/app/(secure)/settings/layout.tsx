@@ -28,8 +28,8 @@ interface SettingsLayoutProps {
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
   return (
     <>
-      <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0 min-h-[50vh] px-2">
-        <aside className="-mx-4 lg:w-1/5">
+      <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0 min-h-[50vh]">
+        <aside className="lg:w-1/5">
           <Nav items={sidebarNavItems} />
         </aside>
         <div className="flex-1">{children}</div>

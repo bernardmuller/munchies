@@ -64,3 +64,11 @@ func (s *ItemsService) UnCheckItem(c echo.Context, itemId uuid.UUID) (postgres.I
 	}
 	return item, nil
 }
+
+func (s *ItemsService) DeleteItem(c echo.Context, itemId uuid.UUID) error {
+	err := s.DB.DeleteItem(c.Request().Context(), itemId)
+	if err != nil {
+		return err
+	}
+	return nil
+}

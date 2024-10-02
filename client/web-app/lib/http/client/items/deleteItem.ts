@@ -2,25 +2,17 @@ import apiRoutes from "../../routes";
 import { httpRequest } from "../../httpRequest";
 import { z } from "zod";
 
-const createItemSchema = z.object({
-  ingredientId: z.string(),
-});
-
-export type CreateItem = z.infer<typeof createItemSchema>;
-
-export async function createItem({
-  grocerylistId,
-  data,
+export async function deleteItem({
+  id,
   accessToken,
 }: {
-  grocerylistId: string;
-  data: CreateItem;
+  id: string;
   accessToken: string;
 }) {
-  return await httpRequest<void, CreateItem>(
-    apiRoutes.createGrocerylistItem(grocerylistId),
-    "POST",
-    data,
+  return await httpRequest<void, void>(
+    apiRoutes.deleteItem(id),
+    "DELETE",
+    undefined,
     {
       accessToken: accessToken,
     },

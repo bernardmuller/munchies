@@ -6,32 +6,28 @@ import {useToast} from "@/components/ui/use-toast";
 import {GroceryItem, GroceryList} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
 import {Ingredient} from "@/lib/http/client/ingredients/getAllIngredients";
 import ingredients from "@/app/(secure)/mealplans/new/Ingredients";
+import {deleteItem} from "@/lib/http/client/items/deleteItem";
 
-export default function useCreateItem(grocerylistId: string) {
+export default function useDeleteItem(grocerylistId: string) {
   const queryClient = useQueryClient();
   const { getToken } = useAuth();
   const {toast} = useToast();
   return useMutation({
-    mutationKey: keys.createItem as string[],
-    mutationFn: async (data: CreateItem) => {
-      if(!grocerylistId) return;
+    mutationKey: ["delete-item"],
+    mutationFn: async (id: string) => {
       const token = await getToken().then((t) => t?.toString());
-      return createItem({grocerylistId, data, accessToken: token! });
+      return deleteItem({id, accessToken: token! });
     },
-    onMutate: async (item: Ingredient) => {
+    onMutate: async (id: string) => {
       await queryClient.cancelQueries(keys.latestGrocerylistByUserId);
       await queryClient.cancelQueries(keys.latestGrocerylistByHouseholdId);
-      await queryClient.cancelQueries(keys.getGrocerylistById(grocerylistId));
-      const prev = queryClient.getQueryData(keys.getGrocerylistById(grocerylistId)) as GroceryList;
+      await queryClient.cancelQueries(keys.getGrocerylistById(id));
+      const prev = queryClient.getQueryData(keys.getGrocerylistById(id)) as GroceryList;
 
       if (prev && prev.items) {
         queryClient.setQueryData(keys.latestGrocerylistByHouseholdId, {
           ...prev,
-          items: prev.items.concat({
-            item_id: item.id,
-            check: false,
-            name: item.name,
-          }),
+          items: prev.items.filter(item => item.item_id !== id)
         });
       }
 
@@ -41,11 +37,6 @@ export default function useCreateItem(grocerylistId: string) {
       queryClient.invalidateQueries(keys.latestGrocerylistByUserId);
       queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId);
       queryClient.invalidateQueries(keys.getGrocerylistById(grocerylistId));
-      // toast({
-      //   variant: "success",
-      //   title: "Success",
-      //   description: "Item added to grocery list.",
-      // });
     },
   });
 }

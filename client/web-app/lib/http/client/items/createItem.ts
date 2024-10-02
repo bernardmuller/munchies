@@ -1,6 +1,7 @@
 import apiRoutes from "../../routes";
 import { httpRequest } from "../../httpRequest";
 import { z } from "zod";
+import {Ingredient} from "@/lib/http/client/ingredients/getAllIngredients";
 
 const createItemSchema = z.object({
   ingredientId: z.string(),
@@ -14,13 +15,15 @@ export async function createItem({
   accessToken,
 }: {
   grocerylistId: string;
-  data: CreateItem;
+  data: Ingredient;
   accessToken: string;
 }) {
   return await httpRequest<void, CreateItem>(
     apiRoutes.createGrocerylistItem(grocerylistId),
     "POST",
-    data,
+    {
+      ingredientId: data.id
+    } as CreateItem,
     {
       accessToken: accessToken,
     },

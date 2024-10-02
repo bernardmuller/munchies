@@ -3,6 +3,7 @@
 import {SignUp} from "@clerk/nextjs";
 import React from "react";
 import {FaGithub} from "react-icons/fa";
+import {Skeleton} from "@/components/ui/skeleton";
 
 export default function Page() {
   return (
@@ -16,7 +17,43 @@ export default function Page() {
               <h4 className="text-md text-gray-400">Sign up</h4>
             </div>
           </div>
-          <SignUp/>
+          <div className="relative rounded-lg bg-white shadow-xl min-h-[535px] min-w-[400px]">
+            <div className="absolute w-full max-w-md mx-auto p-6 space-y-6">
+              <div className="space-y-2">
+                <Skeleton className="h-8 w-2/3 mx-auto"/>
+                <Skeleton className="h-4 w-5/6 mx-auto"/>
+              </div>
+
+              <div className="flex gap-2 px-3 pt-1">
+                <Skeleton className="h-8 w-full rounded-lg"/>
+                <Skeleton className="h-8 w-full rounded-lg"/>
+              </div>
+
+              <div className="flex items-center justify-center">
+                <Skeleton className="h-4 w-8"/>
+              </div>
+
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-full"/>
+                <Skeleton className="h-10 w-full rounded-lg"/>
+              </div>
+
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-1/3"/>
+                <Skeleton className="h-10 w-full rounded-lg"/>
+              </div>
+
+              <Skeleton className="h-10 w-full rounded-lg"/>
+
+              <div className="space-y-8 pt-2">
+                <Skeleton className="h-4 w-2/3 mx-auto"/>
+                <Skeleton className="h-4 w-1/3 mx-auto"/>
+              </div>
+            </div>
+            <div className="z-50">
+              <SignUp/>
+            </div>
+          </div>
         </div>
       </main>
       <div className="w-full flex flex-col justify-center items-center py-3 gap-2">

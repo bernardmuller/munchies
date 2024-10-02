@@ -2,19 +2,20 @@ import { useQuery } from "@tanstack/react-query";
 import { keys } from "@/lib/http/keys";
 import { useAuth } from "@clerk/nextjs";
 import {getLatestGrocerylistByUserId} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
+import {getGrocerylistById} from "@/lib/http/client/grocerylists/getGrocerylistById";
 
 type Props = {
   initialData: any;
-  userId: string;
+  id: string;
 };
 
-export default function useLatestGrocerylistByUserId({ initialData, userId }: Props) {
+export default function useGrocerylistById({ initialData, id }: Props) {
   const { getToken } = useAuth();
-  const token = getToken({ template: "1_HOUR" }).then((t) => t?.toString());
+  const token = getToken().then((t) => t?.toString());
   return useQuery({
-    queryKey: keys.latestGrocerylistByUserId,
+    queryKey: keys.getGrocerylistById(id),
     queryFn: async () => {
-      const response = await getLatestGrocerylistByUserId((await token) as string);
+      const response = await getGrocerylistById((await token) as string, id);
       if (!response.data) return initialData;
       return response.data;
     },

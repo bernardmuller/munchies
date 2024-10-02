@@ -58,6 +58,7 @@ func (h *GrocerylistsHandler) RegisterRouter(router *echo.Echo) {
 	router.GET("/grocerylists/household", h.GetLatestGrocerylistByHouseholdId)
 	router.POST("/grocerylists/:id/add", h.AddItemToGrocerylist)
 	router.POST("/grocerylists", h.CreateNewGrocerylist)
+	router.GET("/grocerylists/:id", h.GetGrocerylistWithItemsById)
 }
 
 func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Context) error {
@@ -241,8 +242,8 @@ func (h *GrocerylistsHandler) CreateNewGrocerylist(c echo.Context) error {
 	// ----------------------------------------//
 
 	var ReqBody struct {
-		household bool `json:"household"`
-		menu      bool `json:"menu"`
+		Household bool `json:"household"`
+		Menu      bool `json:"menu"`
 	}
 
 	err := json.NewDecoder(c.Request().Body).Decode(&ReqBody)
@@ -258,7 +259,7 @@ func (h *GrocerylistsHandler) CreateNewGrocerylist(c echo.Context) error {
 		})
 	}
 
-	if ReqBody.household && user.HouseholdID.UUID.String() == "00000000-0000-0000-0000-000000000000" {
+	if ReqBody.Household && user.HouseholdID.UUID.String() == "00000000-0000-0000-0000-000000000000" {
 		return c.JSON(http.StatusForbidden, &ErrorResponse{
 			Error:   "Forbidden",
 			Message: "User is not part of a household.",
@@ -266,14 +267,14 @@ func (h *GrocerylistsHandler) CreateNewGrocerylist(c echo.Context) error {
 	}
 
 	var householdId uuid.UUID
-	if ReqBody.household {
+	if ReqBody.Household == true {
 		householdId = user.HouseholdID.UUID
 	} else {
 		householdId = uuid.Nil
 	}
 
 	var menuId uuid.UUID
-	if ReqBody.menu {
+	if ReqBody.Menu {
 		// TODO: This will need to be changed to a real menu id
 		menuId = uuid.Nil
 	} else {
@@ -297,5 +298,23 @@ func (h *GrocerylistsHandler) CreateNewGrocerylist(c echo.Context) error {
 	return c.JSON(http.StatusOK, Response{
 		Status: "success",
 		Data:   gl.ID.String(),
+	})
+}
+
+func (h *GrocerylistsHandler) GetGrocerylistWithItemsById(c echo.Context) error {
+	id := c.Param("id")
+	gl, err := h.grocerylistsService.GetGrocerylistWithItemsById(id)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, ErrorResponse{
+			Error:   "Not Found",
+			Message: fmt.Sprintf("Grocerylist with ID: %s could not be found.", id),
+		})
+	}
+
+	return c.JSON(http.StatusOK, Grocerylist{
+		GrocerylistID: gl.ID.String(),
+		HouseholdID:   gl.HouseholdID,
+		MenuID:        gl.MenuID,
+		Items:         gl.Items,
 	})
 }
