@@ -31,7 +31,7 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  categoryId: z.string().nonempty({message: "Category is required."}),
+  categoryId: z.string(),
 });
 
 function NewIngredientForm({
@@ -253,6 +253,9 @@ export default function Ingredients({
                     onClick={() =>
                       createGroceryItem.mutate({
                         ingredientId: cell.row.original.id,
+                        name: cell.row.original.name,
+                        categoryId: cell.row.original.categoryId,
+                        id: cell.row.original.id,
                       })
                     }
                   >
@@ -266,6 +269,9 @@ export default function Ingredients({
                       onClick={() =>
                         createHouseholdGroceryItem.mutate({
                           ingredientId: cell.row.original.id,
+                          name: cell.row.original.name,
+                          categoryId: cell.row.original.categoryId,
+                          id: cell.row.original.id,
                         })
                       }
                     >
@@ -296,7 +302,7 @@ export default function Ingredients({
 
   return (
     <>
-      <div className="flex flex-col gap-4 w-full min-h-[50vh] py-4 md:pt-0 px-2 md:px-0 bg-white md:bg-background">
+      <div className="flex flex-col gap-4 w-full min-h-[50vh] py-4 md:pt-0 px-2 md:px-0 bg-white">
         <div className="flex justify-between">
           <div>
             <Input
