@@ -15,14 +15,14 @@ export async function createItem({
   accessToken,
 }: {
   grocerylistId: string;
-  data: Ingredient;
+  data: CreateItem;
   accessToken: string;
 }) {
   return await httpRequest<void, CreateItem>(
     apiRoutes.createGrocerylistItem(grocerylistId),
     "POST",
     {
-      ingredientId: data.id
+      ingredientId: data.ingredientId,
     } as CreateItem,
     {
       accessToken: accessToken,
