@@ -32,13 +32,7 @@ export default function OnboardingPage() {
     console.log(res);
 
     if (res.Status === "success") {
-      // save JWT
-      // figure out how to send it to server
-      // validate it on the server with middleware
-      // create new jwt on server
-      // use that to auth users
-
-      router.push("/home");
+      router.push("/lists");
     }
   };
 

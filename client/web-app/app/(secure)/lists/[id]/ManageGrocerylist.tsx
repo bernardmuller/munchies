@@ -64,12 +64,12 @@ export default function ManageGrocerylist({
   const {toast} = useToast()
 
   const groceryItemsWithQuantity = useMemo(() => {
-    const itemCounts = data.items.reduce((acc, item) => {
+    const itemCounts = data.items.reduce((acc: Record<string, number>, item: GroceryItem) => {
       acc[item.name] = (acc[item.name] || 0) + 1
       return acc
     }, {} as Record<string, number>)
 
-    return data.items.reduce((acc, item) => {
+    return data.items.reduce((acc:GroceryItemWithQuantity[], item: GroceryItem) => {
       if (!acc.some(i => i.name === item.name)) {
         acc.push({...item, quantity: itemCounts[item.name]})
       }

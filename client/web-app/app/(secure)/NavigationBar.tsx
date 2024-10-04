@@ -20,8 +20,8 @@ import {CgProfile} from "react-icons/cg";
 import {User} from "@/lib/http/client/users/getCurrentLoggedInUser";
 
 const navigation = [
-  {name: "Grocery Lists", href: "/grocerylists"},
-  {name: "Ingredients", href: "/ingredients"},
+  {name: "Shopping Lists", href: "/lists"},
+  {name: "Items", href: "/items"},
 ]
 
 export default function Navbar({currentUser}: { currentUser: User}) {
@@ -36,14 +36,14 @@ export default function Navbar({currentUser}: { currentUser: User}) {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <Link href="/grocerylists" className="flex items-center">
+              <Link href="/lists" className="flex items-center">
                 <h1 className="text-white text-2xl font-extrabold">M</h1>
                 <h1 className="text-white text-2xl font-extrabold">unchies</h1>
               </Link>
             </div>
             <div className="hidden md:block ml-10">
               <div className="flex items-baseline space-x-4">
-                {navigation.filter(i => i.href !== "/grocerylists").map((item) => (
+                {navigation.map((item) => (
                   <NavLink key={item.name} href={item.href} active={pathname === item.href}>
                     {item.name}
                   </NavLink>

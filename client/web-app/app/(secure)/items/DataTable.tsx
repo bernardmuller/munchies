@@ -113,14 +113,12 @@ export function DataTable<TData, TValue>({
         </span>
         <div className="flex items-center space-x-2">
           <Button
-            variant="icon"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
             <ArrowLeftIcon />
           </Button>
           <Button
-            variant="icon"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >

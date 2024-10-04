@@ -260,7 +260,7 @@ export default function Ingredients({
                     }
                   >
                     <PlusIcon className="h-4 w-4"/>
-                    Add to grocery list
+                    Add to my list
                   </Button>
                   {householdGrocerylistId && (
                     <Button
@@ -306,7 +306,7 @@ export default function Ingredients({
         <div className="flex justify-between">
           <div>
             <Input
-              placeholder="Search ingredients"
+              placeholder="Search items..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -314,13 +314,15 @@ export default function Ingredients({
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Button variant="icon">
+                <Button>
                   <Filter/>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="px-2" align="end">
                 {categories.map((c) => (
-                  <DropdownMenuItem className="p-0">
+                  <DropdownMenuItem
+                    key={c.id}
+                    className="p-0">
                     <Button
                       className="flex gap-1 hover:bg-gray-50 w-full"
                       variant="ghost"
@@ -335,7 +337,6 @@ export default function Ingredients({
               </DropdownMenuContent>
             </DropdownMenu>
             <Button
-              variant="icon"
               onClick={() => {
                 setSearchTerm("");
                 setFilteredCategory(null);
@@ -347,11 +348,11 @@ export default function Ingredients({
             <Dialog open={open} onOpenChange={setOpen}>
               <Button onClick={() => setOpen(true)}>
                 <PlusIcon/>
-                <span className="hidden md:block">New Ingredient</span>
+                <span className="hidden md:block">New Item</span>
               </Button>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>New Ingredient</DialogTitle>
+                  <DialogTitle>New Item</DialogTitle>
                 </DialogHeader>
                 <NewIngredientForm
                   categories={categories}

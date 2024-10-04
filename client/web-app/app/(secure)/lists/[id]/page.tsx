@@ -1,6 +1,6 @@
 import {auth} from "@clerk/nextjs/server";
 import {redirect} from "next/navigation";
-import ManageGrocerylist from "@/app/(secure)/grocerylists/[id]/ManageGrocerylist";
+import ManageGrocerylist from "@/app/(secure)/lists/[id]/ManageGrocerylist";
 import {getGrocerylistById} from "@/lib/http/client/grocerylists/getGrocerylistById";
 import {GroceryList} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
 import {getAllIngredients, Ingredient} from "@/lib/http/client/ingredients/getAllIngredients";

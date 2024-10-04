@@ -26,8 +26,6 @@ export default async function GrocerylistsPage() {
     redirect("/something-went-wrong");
   }
 
-  console.log(currentUser);
-
   if (!userGrocerylistResponse?.data) return null;
   return (
     <div className="w-full min-h-[50vh] ">

@@ -1,11 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { keys } from "@/lib/http/keys";
 import { useAuth } from "@clerk/nextjs";
-import {CreateItem, createItem} from "@/lib/http/client/items/createItem";
 import {useToast} from "@/components/ui/use-toast";
-import {GroceryItem, GroceryList} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
-import {Ingredient} from "@/lib/http/client/ingredients/getAllIngredients";
-import ingredients from "@/app/(secure)/mealplans/new/Ingredients";
+import {GroceryList} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
 import {deleteItem} from "@/lib/http/client/items/deleteItem";
 
 export default function useDeleteItem(grocerylistId: string) {

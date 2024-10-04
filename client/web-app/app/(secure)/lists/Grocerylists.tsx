@@ -77,7 +77,7 @@ function GroceryList({id, items, onCheckOrUncheckItem}: GroceryListProps) {
                 No items in list.
               </span>
               <Button
-                onClick={() => router.push(`/grocerylists/${id}`)}
+                onClick={() => router.push(`/lists/${id}`)}
                 className="mt-2"
                 variant="outline"
               >
@@ -138,7 +138,7 @@ export function ListMetaData({list}: { list: GroceryList }) {
         <h3 className="text-md md:text-lg font-semibold">My Shopping List</h3>
         <Button
           variant="outline"
-          onClick={() => router.push(`/grocerylists/${list.id}`)}
+          onClick={() => router.push(`/lists/${list.id}`)}
         >
           <Pencil className="mr-2 h-4 w-4"/>
           Edit
@@ -159,7 +159,7 @@ export function HouseholdListMetaData({list}: { list: GroceryList }) {
         <h3 className="text-md md:text-lg font-semibold">My Household Shopping List</h3>
         <Button
           variant="outline"
-          onClick={() => router.push(`/grocerylists/${list.id}`)}
+          onClick={() => router.push(`/lists/${list.id}`)}
         >
           <Pencil className="mr-2 h-4 w-4"/>
           Edit
@@ -204,12 +204,12 @@ function CreateListDialog() {
 
     const routes = {
       shopping: {
-        me: `/grocerylists/${res.data.data}`,
-        household: `/grocerylists/${res.data.data}`
+        me: `/lists/${res.data.data}`,
+        household: `/lists/${res.data.data}`
       },
       mealplan: {
-        me: '/grocerylist/mealplan/new',
-        household: '/grocerylist/mealplan-household/new'
+        me: '/lists/mealplan/new',
+        household: `/list/mealplan/new?householdId=id`
       }
     }
 
@@ -334,7 +334,7 @@ export default function GroceryListPage({
   const checkOrUncheckHouseholdItem = useCheckOrUncheckHouseholdItem()
 
   const checkOrUncheckItemsWithSameName = (id: string) => {
-    const mutItem = myGrocerylist.items.find(i => i.item_id === id)
+    const mutItem = myGrocerylist.items.find((i: GroceryItem) => i.item_id === id)
     for (const item of myGrocerylist.items) {
       if (item.item_id !== id && item.name === mutItem?.name) {
         checkOrUncheckItem.mutateAsync(item.item_id)
@@ -343,7 +343,7 @@ export default function GroceryListPage({
   }
 
   const checkOrUncheckHouseholdItemsWithSameName = (id: string) => {
-    const mutItem = myHouseholdGrocerylist.items.find(i => i.item_id === id)
+    const mutItem = myHouseholdGrocerylist.items.find((i: GroceryItem) => i.item_id === id)
     for (const item of myHouseholdGrocerylist.items) {
       if (item.item_id !== id && item.name === mutItem?.name) {
         checkOrUncheckItem.mutateAsync(item.item_id)
@@ -390,7 +390,7 @@ export default function GroceryListPage({
       <Tabs defaultValue="my" className="w-full">
         <div className="w-full flex justify-between md:px-3">
           <TabsList className="grid w-full md:w-1/2 grid-cols-2">
-            <TabsTrigger value="my">Shopping List</TabsTrigger>
+            <TabsTrigger value="my">My Shopping List</TabsTrigger>
             {grocerylists.myHouseholdGrocerylist?.items && (
               <TabsTrigger value="household">Household Shopping List</TabsTrigger>
             )}
