@@ -9,8 +9,8 @@ docker-compose-up:
 docker-compose-down:
 	@docker-compose -f docker/docker-compose.yml down
 
-docker-build-plants-service:
-	@docker build -t plants-service -f docker/plants-service/Dockerfile --build-arg POSTGRES_URI={POSTGRES_URI} .
+docker-build-backend-service:
+	@docker build -t munchies-backend -f docker/monolith/Dockerfile --build-arg POSTGRES_URI={POSTGRES_URI} GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID} GOOGLE_CLIENT_SECRET={GOOGLE_CLIENT_SECRET} SESSION_SECRET={SESSION_SECRET} JWT_SECRET={JWT_SECRET} ENV={ENV} ./monolith
 
 docker-build-web-service:
 	@docker build -t web-service -f docker/web/Dockerfile ./client/web --no-cache
@@ -20,7 +20,7 @@ docker-build-web-app:
 
 docker-build-all-services:
 	@echo "Building all services..."
-	@make docker-build-plants-service & make docker-build-web-service
+	@make docker-build-backend-service & make docker-build-web-service
 
 docker-run:
 	@make docker-build-all-services
@@ -38,12 +38,6 @@ run-plants-service:
 run-all-services:
 	@echo "Running all services..."
 	@make run-plants-service & make run-web-service
-
-gen-plants:
-	@protoc \
-		--proto_path=services "services/plants-service/plantspb/plants.proto" \
-		--go_out=services --go_opt=paths=source_relative \
-  		--go-grpc_out=services --go-grpc_opt=paths=source_relative
 
 db_migrate_up:
 	@echo "Migrating up..."

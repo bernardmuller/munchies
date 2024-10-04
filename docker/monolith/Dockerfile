@@ -3,17 +3,25 @@ FROM golang:1.22.0-bookworm
 WORKDIR /app
 
 ARG POSTGRES_URI
+ARG GOOGLE_CLIENT_ID
+ARG GOOGLE_CLIENT_SECRET
+ARG SESSION_SECRET
+ARG JWT_SECRET
 
 ENV POSTGRES_URI=$POSTGRES_URI
+ENV GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+ENV GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET
+ENV SESSION_SECRET=$SESSION_SECRET
+ENV JWT_SECRET=$JWT_SECRET
+ENV ENV=production
 
 COPY ../../go.mod ../../go.sum ./
 RUN go mod download
 
 COPY . ./
 
-RUN cd services/munchies-monolith && CGO_ENABLED=0 GOOS=linux go build -o /plants-service
+RUN cd monolith && CGO_ENABLED=0 GOOS=linux go build -o /monolith
 
 EXPOSE 8001
-EXPOSE 9001
 
-CMD ["/plants-service"]
+CMD ["/monolith"]
