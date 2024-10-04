@@ -9,7 +9,7 @@ type RegisterUserInputs = {
   userId: string;
 };
 
-export async function registerUser({ userId }: RegisterUserInputs) {
+async function registerUser({ userId }: RegisterUserInputs) {
   return await axios({
     method: "POST",
     url: `http://localhost:8001/users/import`,
