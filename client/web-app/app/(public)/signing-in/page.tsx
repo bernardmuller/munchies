@@ -9,18 +9,7 @@ type RegisterUserInputs = {
   userId: string;
 };
 
-export async function registerUser({userId}: RegisterUserInputs) {
-  return await axios({
-    method: "POST",
-    url: `http://localhost:8001/users/import`,
-    // headers: await requireHeaders(),
-    data: {
-      userId,
-    },
-  }).then((response) => response.data);
-}
-
-export default function OnboardingPage() {
+export default function SigningInPage() {
   const {getToken, userId} = useAuth();
   const router = useRouter();
 
