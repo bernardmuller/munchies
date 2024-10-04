@@ -98,7 +98,7 @@ export default function ManageGrocerylist({
       return
     }
 
-    await createItem.mutateAsync(ingredient)
+    await createItem.mutateAsync({...ingredient, ingredientId: ingredient.id});
   }
 
   const removeItem = async (itemId: string) => {

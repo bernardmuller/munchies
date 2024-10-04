@@ -16,6 +16,8 @@ export default function useLeaveHousehold() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(keys.currentUserHouseholdDetails);
+      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId);
+      queryClient.invalidateQueries(keys.latestGrocerylistByUserId);
     },
   });
 }

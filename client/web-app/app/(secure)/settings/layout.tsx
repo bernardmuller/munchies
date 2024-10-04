@@ -1,15 +1,19 @@
 "use client";
 
 import { Nav } from "./nav";
+import {usePathname} from "next/navigation";
+import {House, User} from "lucide-react";
 
 const sidebarNavItems = [
-  // {
-  //   title: "My Profile",
-  //   href: "/settings/profile",
-  // },
+  {
+    title: "My Profile",
+    href: "/settings/profile",
+    icon: <User className="h-5 w-5"/>,
+  },
   {
     title: "My Household",
     href: "/settings/household",
+    icon: <House className="h-5 w-5"/>,
   },
   // {
   //   title: "Ingredients",

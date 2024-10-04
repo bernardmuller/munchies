@@ -56,7 +56,7 @@ export default function HouseholdDashboard({household}: Props) {
     return (
       <div className=" mx-auto max-w-md">
         <h2 className="text-2xl font-bold text-center mb-1">
-          Welcome to My Household
+         My Household
         </h2>
         <h4 className="text-md text-center mb-4 self-center px-4 text-gray-500">
           Get started by creating a household or join an existing one.

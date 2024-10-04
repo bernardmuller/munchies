@@ -3,6 +3,7 @@ import {auth} from "@clerk/nextjs/server";
 import {redirect} from "next/navigation";
 import {getLatestGrocerylistByUserId} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
 import {getLatestGrocerylistByHouseholdId} from "@/lib/http/client/grocerylists/getLatestGrocerylistByHouseholdId";
+import {getCurrentLoggedInUser} from "@/lib/http/client/users/getCurrentLoggedInUser";
 
 export default async function GrocerylistsPage() {
   const {getToken} = auth();
@@ -16,6 +17,7 @@ export default async function GrocerylistsPage() {
 
   const userGrocerylistResponse = await getLatestGrocerylistByUserId(token!);
   const householdGrocerylistResponse = await getLatestGrocerylistByHouseholdId(token!);
+  const currentUser = await getCurrentLoggedInUser(token!);
 
   if (
     !userGrocerylistResponse.ok && userGrocerylistResponse.status >= 500 ||
@@ -23,6 +25,8 @@ export default async function GrocerylistsPage() {
   ) {
     redirect("/something-went-wrong");
   }
+
+  console.log(currentUser);
 
   if (!userGrocerylistResponse?.data) return null;
   return (

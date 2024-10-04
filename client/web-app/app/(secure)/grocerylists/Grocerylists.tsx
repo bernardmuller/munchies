@@ -205,7 +205,7 @@ function CreateListDialog() {
     const routes = {
       shopping: {
         me: `/grocerylists/${res.data.data}`,
-        household: `/grocerylist/${res.data.data}`
+        household: `/grocerylists/${res.data.data}`
       },
       mealplan: {
         me: '/grocerylist/mealplan/new',
@@ -237,7 +237,7 @@ function CreateListDialog() {
           <span className="hidden md:inline">Create List</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
           <DialogTitle className="text-center mb-4">Create a New List</DialogTitle>
           {!creating && (
@@ -366,8 +366,10 @@ export default function GroceryListPage({
   if (!grocerylists.myHouseholdGrocerylist) {
     return (
       <div className="space-y-4">
-        <CreateListDialog/>
-        <h2 className="text-lg font-semibold mb-2">My list</h2>
+        <div className="w-full flex justify-end md:px-3">
+          {/*<h2 className="text-lg font-semibold mb-2">My list</h2>*/}
+          <CreateListDialog/>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="px-3">
             <ListMetaData list={grocerylists.myGrocerylist}/>

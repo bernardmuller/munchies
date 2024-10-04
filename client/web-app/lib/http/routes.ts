@@ -41,6 +41,9 @@ const apiRoutes = {
   deleteItem: (id: string) => {
     return `${process.env.NEXT_PUBLIC_API_BASE_URL}/items/${id}`;
   },
+  getCurrentLoggedInUser: () => {
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/current`;
+  },
 };
 
 export default apiRoutes;

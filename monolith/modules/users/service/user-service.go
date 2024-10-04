@@ -60,8 +60,11 @@ func (s *UsersService) GetAllUsers(ctx context.Context) ([]postgres.User, error)
 
 }
 
-func (s *UsersService) GetUserById(ctx context.Context, id uuid.UUID) (postgres.User, error) {
-	user, _ := s.DB.GetUserById(ctx, id)
+func (s *UsersService) GetUserById(ctx context.Context, id uuid.UUID) (postgres.GetUserByIdRow, error) {
+	user, err := s.DB.GetUserById(ctx, id)
+	if err != nil {
+		return postgres.GetUserByIdRow{}, err
+	}
 	return user, nil
 }
 

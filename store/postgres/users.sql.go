@@ -8,6 +8,7 @@ package postgres
 import (
 	"context"
 	"database/sql"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -145,25 +146,61 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 }
 
 const getUserById = `-- name: GetUserById :one
-SELECT id, clerk_id, email, firstname, lastname, role_id, image, status, createdat, updatedat, household_id FROM users 
-WHERE id = $1
+SELECT
+    u.id,
+    u.clerk_id,
+    u.firstname,
+    u.lastname,
+    u.email,
+    u.role_id,
+    u.image,
+    u.status,
+    u.createdat,
+    u.updatedat,
+    u.household_id,
+    COUNT(DISTINCT i.id) AS number_of_items,
+    COUNT(DISTINCT gl.id) AS number_of_lists
+FROM users u
+LEFT JOIN items i ON u.id = i.createdby
+LEFT JOIN grocerylists gl ON u.id = gl.createdby
+WHERE u.id = $1
+GROUP BY u.id
+ORDER BY u.createdat
 `
 
-func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (User, error) {
+type GetUserByIdRow struct {
+	ID            uuid.UUID
+	ClerkID       string
+	Firstname     sql.NullString
+	Lastname      sql.NullString
+	Email         string
+	RoleID        uuid.UUID
+	Image         sql.NullString
+	Status        sql.NullString
+	Createdat     time.Time
+	Updatedat     time.Time
+	HouseholdID   uuid.NullUUID
+	NumberOfItems int64
+	NumberOfLists int64
+}
+
+func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (GetUserByIdRow, error) {
 	row := q.db.QueryRowContext(ctx, getUserById, id)
-	var i User
+	var i GetUserByIdRow
 	err := row.Scan(
 		&i.ID,
 		&i.ClerkID,
-		&i.Email,
 		&i.Firstname,
 		&i.Lastname,
+		&i.Email,
 		&i.RoleID,
 		&i.Image,
 		&i.Status,
 		&i.Createdat,
 		&i.Updatedat,
 		&i.HouseholdID,
+		&i.NumberOfItems,
+		&i.NumberOfLists,
 	)
 	return i, err
 }

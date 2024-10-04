@@ -9,6 +9,7 @@ module.exports = withPWA({
 			"images.unsplash.com",
 			"res.cloudinary.com",
 			"ui-avatars.com",
+			"img.clerk.com"
 		],
 	},
 });

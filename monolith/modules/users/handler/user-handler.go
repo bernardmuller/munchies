@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	rs "github.com/bernardmuller/munchies/monolith/modules/roles_permissions/service"
@@ -25,8 +26,8 @@ type UserResponse struct {
 }
 
 type ErrorResponse struct {
-	Status int`json:"status"`
-	Error  string `json:"error"`
+	Error   string `json:"error"`
+	Message string `json:"message"`
 }
 
 func NewUsersHandler(
@@ -43,6 +44,7 @@ func (h *UsersHandler) RegisterRouter(router *echo.Echo) {
 	router.POST("/users", h.CreateUser)
 	router.GET("/users", h.GetUsers)
 	router.POST("/users/import", h.ImportUser)
+	router.GET("/users/current", h.GetCurrentLoggedInUserByID)
 }
 
 func (h *UsersHandler) CreateUser(c echo.Context) error {
@@ -138,25 +140,25 @@ func (h *UsersHandler) ImportUser(c echo.Context) error {
 	}
 
 	userRoles, roleErr := h.rolesPermissionsService.GetAllRoles(c)
-  if roleErr != nil {
+	if roleErr != nil {
 		return c.JSON(http.StatusOK, &ErrorResponse{
-			Status: http.StatusInternalServerError,
-			Error:   "Failed to assign user to role",
+			Error:   "Internal Server Error",
+			Message: "Failed to assign user to role",
 		})
 	}
 
 	newDBUser := service.User{
-		ID:        uuid.New(),
-		Email:     *usr.PrimaryEmailAddressID,
-		ClerkID:   usr.ID,
-		RoleID:    userRoles[0].ID,
+		ID:      uuid.New(),
+		Email:   *usr.PrimaryEmailAddressID,
+		ClerkID: usr.ID,
+		RoleID:  userRoles[0].ID,
 	}
 
-  if len(*usr.FirstName) > 0 {
+	if len(*usr.FirstName) > 0 {
 		newDBUser.Firstname = *usr.FirstName
 	}
 
-  if len(*usr.LastName) > 0 {
+	if len(*usr.LastName) > 0 {
 		newDBUser.Lastname = *usr.LastName
 	}
 
@@ -164,8 +166,8 @@ func (h *UsersHandler) ImportUser(c echo.Context) error {
 	if err != nil {
 		log.Print(err.Error())
 		return c.JSON(http.StatusInternalServerError, ErrorResponse{
-			Status: http.StatusInternalServerError,
-			Error:  "Failed to create new user",
+			Error:   "Internal Server Error",
+			Message: "Failed to create new user",
 		})
 	}
 
@@ -178,4 +180,61 @@ func (h *UsersHandler) ImportUser(c echo.Context) error {
 
 func (h *UsersHandler) AuthenticateUserWithClerkJWT(c echo.Context) error {
 	return nil
+}
+
+type User struct {
+	ID            uuid.UUID `json:"id"`
+	ClerkID       string    `json:"clerkId"`
+	Email         string    `json:"email"`
+	Firstname     *string   `json:"firstName"`
+	Lastname      *string   `json:"lastName"`
+	RoleID        uuid.UUID `json:"roleId"`
+	Image         *string   `json:"image"`
+	Status        string    `json:"status"`
+	NumberOfLists int64     `json:"numberOfLists"`
+	NumberOfItems int64     `json:"numberOfItems"`
+}
+
+func (h *UsersHandler) GetCurrentLoggedInUserByID(c echo.Context) error {
+	// TODO: extract to internal util function //
+	userId := c.Request().Context().Value("userId").(uuid.UUID)
+	if userId == uuid.Nil {
+		return c.JSON(http.StatusUnauthorized, &ErrorResponse{
+			Error:   "Unauthorized: User ID not found",
+			Message: "No User Id found in the Authorization JWT.",
+		})
+	}
+	// ----------------------------------------//
+
+	user, getErr := h.usersService.GetUserById(c.Request().Context(), userId)
+	if getErr != nil {
+		return c.JSON(http.StatusInternalServerError, &ErrorResponse{
+			Error:   "Internal Server Error",
+			Message: fmt.Sprintf("Error getting user: %s", getErr.Error()),
+		})
+	}
+
+	clerk.SetKey("sk_test_QHX2uBzr3J6aCQAEkgoB6MT5arX4TOXeWxakadF806")
+	usr, err := clerk_users.Get(c.Request().Context(), user.ClerkID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, &ErrorResponse{
+			Error:   "Internal Server Error",
+			Message: fmt.Sprintf("Error getting Clerk user: %s", err.Error()),
+		})
+	}
+
+	activeEmail := usr.EmailAddresses[0].EmailAddress
+
+	return c.JSON(http.StatusOK, User{
+		ID:            user.ID,
+		ClerkID:       usr.ID,
+		Email:         activeEmail,
+		Firstname:     usr.FirstName,
+		Lastname:      usr.LastName,
+		RoleID:        user.RoleID,
+		Image:         usr.ImageURL,
+		Status:        user.Status.String,
+		NumberOfLists: user.NumberOfLists,
+		NumberOfItems: user.NumberOfItems,
+	})
 }

@@ -8,8 +8,26 @@ VALUES ($1, $2, $3, $4, $5, $6, $7, $8, now())
 RETURNING *;
 
 -- name: GetUserById :one
-SELECT * FROM users 
-WHERE id = $1;
+SELECT
+    u.id,
+    u.clerk_id,
+    u.firstname,
+    u.lastname,
+    u.email,
+    u.role_id,
+    u.image,
+    u.status,
+    u.createdat,
+    u.updatedat,
+    u.household_id,
+    COUNT(DISTINCT i.id) AS number_of_items,
+    COUNT(DISTINCT gl.id) AS number_of_lists
+FROM users u
+LEFT JOIN items i ON u.id = i.createdby
+LEFT JOIN grocerylists gl ON u.id = gl.createdby
+WHERE u.id = $1
+GROUP BY u.id
+ORDER BY u.createdat;
 
 -- name: GetAllUsers :many
 SELECT * FROM users;
