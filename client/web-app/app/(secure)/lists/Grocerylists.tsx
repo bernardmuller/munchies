@@ -291,14 +291,16 @@ function CreateListDialog() {
                   <User className="mr-2 h-6 w-6"/>
                   For Me
                 </Button>
-                <Button
-                  onClick={() => handleCreateList('household')}
-                  className={buttonClass}
-                  variant="outline"
-                >
-                  <House className="mr-2 h-6 w-6"/>
-                  For Household
-                </Button>
+                {currentUser?.householdId && (
+                  <Button
+                    onClick={() => handleCreateList('household')}
+                    className={buttonClass}
+                    variant="outline"
+                  >
+                    <House className="mr-2 h-6 w-6"/>
+                    For Household
+                  </Button>
+                )}
               </div>
             )}
             {step === 'scope' ? (

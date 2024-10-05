@@ -12,6 +12,7 @@ export type User = {
     roleId: string;
     image: string;
     status: string;
+    householdId: string;
     numberOfLists: number;
     numberOfItems: number;
 }
