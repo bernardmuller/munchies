@@ -5,10 +5,11 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-
 	"github.com/bernardmuller/munchies/store/postgres"
 	"github.com/clerkinc/clerk-sdk-go/clerk"
 	"github.com/google/uuid"
+	"log"
+	"os"
 )
 
 type User struct {
@@ -74,7 +75,12 @@ func (s *UsersService) GetUserByClerkId(ctx context.Context, id string) (postgre
 }
 
 func (s *UsersService) AuthenticateUser(ctx context.Context, token string) (uuid.UUID, error) {
-	client, err := clerk.NewClient("sk_test_QHX2uBzr3J6aCQAEkgoB6MT5arX4TOXeWxakadF806")
+	secret := os.Getenv("CLERK_SECRET")
+	if secret == "" {
+		log.Println("CLERK_SECRET not set in environment.")
+		return uuid.Nil, errors.New("CLERK_SECRET not set in environment.")
+	}
+	client, err := clerk.NewClient(secret)
 	if err != nil {
 		return uuid.Nil, errors.New("Unable to create new clerk client.")
 	}

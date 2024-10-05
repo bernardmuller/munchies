@@ -9,7 +9,7 @@ export default function useLeaveHousehold() {
   return useMutation({
     mutationKey: ["leave-household"],
     mutationFn: async () => {
-      const token = await getToken({ template: "1_HOUR" }).then((t) =>
+      const token = await getToken().then((t) =>
         t?.toString(),
       );
       return leaveHousehold({ accessToken: token! });

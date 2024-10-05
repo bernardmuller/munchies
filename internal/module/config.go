@@ -143,6 +143,8 @@ func authenticationMiddleware(userService *us.UsersService) echo.MiddlewareFunc 
 					})
 				}
 
+				fmt.Println(userId)
+
 				ctx := context.WithValue(c.Request().Context(), "userId", userId)
 				c.SetRequest(c.Request().WithContext(ctx))
 			}
@@ -175,7 +177,13 @@ func adaptHTTPMiddleware(httpMiddleware func(http.Handler) http.Handler) echo.Mi
 func (m *Module) Start() error {
 	router := CreateRouter()
 
-	client, err := clerk.NewClient("sk_test_QHX2uBzr3J6aCQAEkgoB6MT5arX4TOXeWxakadF806")
+	secret := os.Getenv("CLERK_SECRET")
+	if secret == "" {
+		log.Println("CLERK_SECRET not set in environment.")
+		return errors.New("CLERK_SECRET not set in environment.")
+	}
+
+	client, err := clerk.NewClient(secret)
 	if err != nil {
 		return errors.New("Unable to create new clerk client.")
 	}

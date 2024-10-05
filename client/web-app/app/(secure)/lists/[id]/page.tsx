@@ -7,7 +7,7 @@ import {getAllIngredients, Ingredient} from "@/lib/http/client/ingredients/getAl
 
 export default async function GrocerylistsPage({ params }: { params: { id: string } }) {
   const {getToken} = auth();
-  const token = await getToken({template: "1_HOUR"}).then((t) =>
+  const token = await getToken().then((t) =>
     t?.toString(),
   ).catch(() => redirect(`/sign-in`));
 

@@ -11,13 +11,14 @@ type Props = {
 
 export default function useGetCurrentLoggedInUser() {
   const { getToken } = useAuth();
-  const token = getToken().then((t) => t?.toString());
+  const token = getToken({template: "1_HOUR"}).then((t) => t?.toString());
+
   return useQuery({
     queryKey: ["current-logged-in-user"],
     queryFn: async () => {
+      console.log(await token);
       const response = await getCurrentLoggedInUser((await token) as string);
       // if (!response.data) return initialData;
-      console.log(response.data);
       return response.data;
     },
     // initialData,

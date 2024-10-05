@@ -7,7 +7,7 @@ import {getCurrentLoggedInUser} from "@/lib/http/client/users/getCurrentLoggedIn
 
 export default async function GrocerylistsPage() {
   const {getToken} = auth();
-  const token = await getToken({template: "1_HOUR"}).then((t) =>
+  const token = await getToken().then((t) =>
     t?.toString(),
   ).catch(() => redirect(`/sign-in`));
 

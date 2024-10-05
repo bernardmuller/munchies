@@ -314,7 +314,9 @@ export default function Ingredients({
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Button>
+                <Button
+                   variant="ghost"
+                >
                   <Filter/>
                 </Button>
               </DropdownMenuTrigger>
@@ -341,6 +343,7 @@ export default function Ingredients({
                 setSearchTerm("");
                 setFilteredCategory(null);
               }}
+              variant="ghost"
               disabled={!filteredCategory}
             >
               <FilterXIcon/>

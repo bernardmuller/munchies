@@ -2,8 +2,10 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
+	"os"
 
 	rs "github.com/bernardmuller/munchies/monolith/modules/roles_permissions/service"
 	"github.com/bernardmuller/munchies/monolith/modules/users/service"
@@ -123,7 +125,11 @@ func (h *UsersHandler) ImportUser(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error decoding request body users")
 	}
 	// TODO: Extract this to a service method //
-	clerk.SetKey("sk_test_QHX2uBzr3J6aCQAEkgoB6MT5arX4TOXeWxakadF806")
+	secret := os.Getenv("CLERK_SECRET")
+	if secret == "" {
+		return errors.New("CLERK_SECRET not set in environment.")
+	}
+	clerk.SetKey(secret)
 
 	usr, err := clerk_users.Get(c.Request().Context(), user.UserId)
 	if err != nil {
@@ -198,6 +204,7 @@ type User struct {
 func (h *UsersHandler) GetCurrentLoggedInUserByID(c echo.Context) error {
 	// TODO: extract to internal util function //
 	userId := c.Request().Context().Value("userId").(uuid.UUID)
+	fmt.Println(c.Request().Context())
 	if userId == uuid.Nil {
 		return c.JSON(http.StatusUnauthorized, &ErrorResponse{
 			Error:   "Unauthorized: User ID not found",
@@ -214,7 +221,12 @@ func (h *UsersHandler) GetCurrentLoggedInUserByID(c echo.Context) error {
 		})
 	}
 
-	clerk.SetKey("sk_test_QHX2uBzr3J6aCQAEkgoB6MT5arX4TOXeWxakadF806")
+	secret := os.Getenv("CLERK_SECRET")
+	if secret == "" {
+		return errors.New("CLERK_SECRET not set in environment.")
+	}
+	clerk.SetKey(secret)
+
 	usr, err := clerk_users.Get(c.Request().Context(), user.ClerkID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, &ErrorResponse{
