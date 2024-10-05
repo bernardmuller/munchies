@@ -185,12 +185,12 @@ function MobileMenu({avatar, username, navigation, email}: {
         </div>
       </div>
       <div className="flex flex-col space-y-2">
-        <MobileNavLink href={"/grocerylists"} icon={<ClipboardList className="h-6 w-6"/>}>
+        <MobileNavLink href={"/lists"} icon={<ClipboardList className="h-6 w-6"/>}>
           <SheetClose>
             Lists
           </SheetClose>
         </MobileNavLink>
-        <MobileNavLink href={"/ingredients"} icon={<List className="h-6 w-6"/>}>
+        <MobileNavLink href={"/items"} icon={<List className="h-6 w-6"/>}>
           <SheetClose>
             Ingredients
           </SheetClose>
