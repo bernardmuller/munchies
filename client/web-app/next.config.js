@@ -1,9 +1,5 @@
 /** @type {import('next').NextConfig} */
-const withPWA = require("next-pwa")({
-	dest: "public",
-});
-
-module.exports = withPWA({
+const nextConfig = {
 	images: {
 		domains: [
 			"images.unsplash.com",
@@ -12,4 +8,6 @@ module.exports = withPWA({
 			"img.clerk.com"
 		],
 	},
-});
+}
+
+module.exports = nextConfig
