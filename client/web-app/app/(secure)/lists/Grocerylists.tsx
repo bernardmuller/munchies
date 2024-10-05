@@ -24,6 +24,7 @@ import {useRouter} from "next/navigation";
 import useCreateList from "@/lib/http/hooks/grocerylists/useCreateList";
 import {useToast} from "@/components/ui/use-toast";
 import {Card, CardContent} from "@/components/ui/card";
+import useGetCurrentLoggedInUser from "@/lib/http/hooks/users/useGetCurrentLoggedInUser";
 
 type GrocerylistsPageProps = {
   grocerylists: {
@@ -57,7 +58,7 @@ function GroceryList({id, items, onCheckOrUncheckItem}: GroceryListProps) {
       }
       return acc
     }, [] as GroceryItemWithQuantity[])
-  }, [groceryItems])
+  }, [groceryItems, items])
 
   useEffect(() => {
     if (items && Array.isArray(items)) {
@@ -70,7 +71,7 @@ function GroceryList({id, items, onCheckOrUncheckItem}: GroceryListProps) {
       <ScrollArea className="bg-slate-100 md:bg-white px-3 py-3 rounded-b-sm h-fit md:rounded-lg">
         <h3 className="text-lg pb-3 ml md:hidden">Items:</h3>
         <ul className="space-y-2">
-          {!groceryItemsWithQuantity.length && (
+          {!groceryItemsWithQuantity?.length && (
             <div
               className="flex flex-col gap-2 justify-center items-center bg-white rounded-lg p-3 md:p-4 md:rounded-xl">
               <span className="text-center text-muted-foreground">
@@ -85,7 +86,7 @@ function GroceryList({id, items, onCheckOrUncheckItem}: GroceryListProps) {
               </Button>
             </div>
           )}
-          {groceryItemsWithQuantity.map((item) => (
+          {groceryItemsWithQuantity && groceryItemsWithQuantity.map((item) => (
             <Card key={item.item_id}
               // className="flex items-center space-x-4 bg-white p-3 px-5 rounded-lg transition-colors hover:bg-secondary/30 border-2 "
             >
@@ -180,6 +181,7 @@ function CreateListDialog() {
   const [listType, setListType] = useState<'shopping' | 'mealplan' | null>(null)
   const createList = useCreateList()
   const {toast} = useToast()
+  const {data:currentUser} = useGetCurrentLoggedInUser()
 
   const handleCreateList = async (scope: 'me' | 'household') => {
     if (!listType) return
@@ -372,11 +374,11 @@ export default function GroceryListPage({
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="px-3">
-            <ListMetaData list={grocerylists.myGrocerylist}/>
+            <ListMetaData list={myGrocerylist}/>
           </div>
           <GroceryList
-            id={grocerylists.myGrocerylist?.id}
-            items={grocerylists.myGrocerylist?.items}
+            id={myGrocerylist?.id}
+            items={myGrocerylist?.items}
             onCheckOrUncheckItem={handleCheckOrUncheckItem}
           />
         </div>
@@ -404,7 +406,7 @@ export default function GroceryListPage({
                 <ListMetaData list={myGrocerylist}/>
               </div>
               <GroceryList
-                id={grocerylists.myGrocerylist?.id}
+                id={myGrocerylist?.id}
                 items={myGrocerylist?.items}
                 onCheckOrUncheckItem={handleCheckOrUncheckItem}
               />
@@ -417,7 +419,7 @@ export default function GroceryListPage({
                   <HouseholdListMetaData list={myHouseholdGrocerylist}/>
                 </div>
                 <GroceryList
-                  id={grocerylists.myHouseholdGrocerylist?.id}
+                  id={myHouseholdGrocerylist?.id}
                   items={myHouseholdGrocerylist?.items}
                   onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}
                 />

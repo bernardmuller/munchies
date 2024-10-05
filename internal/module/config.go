@@ -143,8 +143,6 @@ func authenticationMiddleware(userService *us.UsersService) echo.MiddlewareFunc 
 					})
 				}
 
-				fmt.Println(userId)
-
 				ctx := context.WithValue(c.Request().Context(), "userId", userId)
 				c.SetRequest(c.Request().WithContext(ctx))
 			}

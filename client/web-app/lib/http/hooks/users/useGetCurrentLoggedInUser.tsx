@@ -16,7 +16,6 @@ export default function useGetCurrentLoggedInUser() {
   return useQuery({
     queryKey: ["current-logged-in-user"],
     queryFn: async () => {
-      console.log(await token);
       const response = await getCurrentLoggedInUser((await token) as string);
       // if (!response.data) return initialData;
       return response.data;

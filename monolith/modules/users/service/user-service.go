@@ -80,8 +80,8 @@ func (s *UsersService) AuthenticateUser(ctx context.Context, token string) (uuid
 		log.Println("CLERK_SECRET not set in environment.")
 		return uuid.Nil, errors.New("CLERK_SECRET not set in environment.")
 	}
-	client, err := clerk.NewClient(secret)
-	if err != nil {
+	client, sessErr := clerk.NewClient(secret)
+	if sessErr != nil {
 		return uuid.Nil, errors.New("Unable to create new clerk client.")
 	}
 
@@ -90,8 +90,8 @@ func (s *UsersService) AuthenticateUser(ctx context.Context, token string) (uuid
 		return uuid.Nil, err
 	}
 
-	user, err := s.GetUserByClerkId(ctx, sessClaims.Subject)
-	if err != nil {
+	user, userErr := s.GetUserByClerkId(ctx, sessClaims.Subject)
+	if userErr != nil {
 		return uuid.Nil, errors.New("Unable to find user by Clerk Id")
 	}
 

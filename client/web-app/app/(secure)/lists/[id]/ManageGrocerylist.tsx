@@ -160,7 +160,6 @@ export default function ManageGrocerylist({
                         variant="outline"
                         size="icon"
                         onClick={() => {
-                          console.log(item)
                           addItem(item.ingredient_id)}
                       }
                       >
