@@ -12,7 +12,7 @@ type RegisterUserInputs = {
 async function registerUser({ userId }: RegisterUserInputs) {
   return await axios({
     method: "POST",
-    url: `${process.env.NEXT_PUBLIC_API_BASE_URL}users/import`,
+    url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/import`,
     // headers: await requireHeaders(),
     data: {
       userId,
