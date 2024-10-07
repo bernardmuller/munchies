@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState} from 'react'
+import React, { useMemo, useState} from 'react'
 import {ChevronLeft, Minus, Plus, Search, X} from 'lucide-react'
 import {Input} from "@/components/ui/input"
 import {Button} from "@/components/ui/button"
@@ -14,10 +14,19 @@ import useDeleteItem from "@/lib/http/hooks/items/useDeleteItem";
 import {useRouter} from "next/navigation";
 import {useToast} from "@/components/ui/use-toast";
 import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
+import NewIngredientForm from "@/app/(secure)/_components/forms/NewIngredientForm";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {keys} from "@/lib/http/keys";
+import {useQueryClient} from "@tanstack/react-query";
+import useCategories from "@/lib/http/hooks/categories/useCategories";
+import {Category} from "@/lib/http/client/categories/getAllCategories";
+import useIngredients from "@/lib/http/hooks/ingredients/useIngredients";
 
 type Props = {
   grocerylist: GroceryList;
   ingredients: Ingredient[];
+  categories: Category[];
 };
 
 interface GroceryItemWithQuantity extends GroceryItem {
@@ -52,14 +61,19 @@ const SearchableSelect = ({ options, onSelect, placeholder}: {
 export default function ManageGrocerylist({
   grocerylist,
   ingredients,
+  categories,
 }: Props) {
+  const [open, setOpen] = React.useState(false);
   const {data} = useGrocerylistById({
     initialData: grocerylist,
     id: grocerylist.id,
   });
+  const {data: categoriesQueryData} = useCategories({initialData: categories});
+  const queryClient = useQueryClient();
   const createItem = useCreateItem(grocerylist.id);
   const deleteItem = useDeleteItem(grocerylist.id);
   const [searchTerm, setSearchTerm] = useState("")
+  const {data: ingredientsQueryData} = useIngredients({initialData: ingredients});
   const router = useRouter()
   const {toast} = useToast()
 
@@ -113,7 +127,36 @@ export default function ManageGrocerylist({
     }
   }
 
+  const handleCreate = (inputValue: string) => {
+    setOpen(true)
+    setSearchTerm(inputValue)
+  }
+
   return (
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        {/*<DialogTrigger asChild>*/}
+        {/*  <Button variant="outline" className="w-full">*/}
+        {/*    New Ingredient*/}
+        {/*  </Button>*/}
+        {/*</DialogTrigger>*/}
+        <DialogContent className="sm:max-w-[425px] bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-center mb-4">New Ingredient</DialogTitle>
+          </DialogHeader>
+          <NewIngredientForm
+            defaultValue={searchTerm}
+            categories={categories}
+            onClose={() => setOpen(false)}
+            onInvalidate={() => {
+              queryClient.invalidateQueries(
+                keys.ingredients,
+              );
+            }}
+          />
+        </DialogContent>
+        </Dialog>
+
     <div className="container mx-auto p-4">
       <Button
         variant="outline"
@@ -181,20 +224,36 @@ export default function ManageGrocerylist({
         </div>
 
         <div className="hidden md:block w-full md:w-1/2">
-          <h2 className="text-xl font-semibold mb-2">Available Ingredients</h2>
+          <h2 className="text-xl font-semibold mb-2">Available Items</h2>
           <div className="mb-4 relative pr-4">
-            <Input
-              type="text"
-              placeholder="Search ingredients..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+            <CreatableSelect
+              isClearable
+              options={ingredientsQueryData?.map((ingredient) => ({
+                value: ingredient.id,
+                label: ingredient.name,
+              }))}
+              placeholder="Search for an item..."
+              onCreateOption={handleCreate}
+              // @ts-ignore
+              onChange={(val: {
+                value: string;
+                label: string;
+              }) => {
+                if (val) {
+                  setSearchTerm(val.label.toString())
+                } else {
+                  setSearchTerm("")
+                }
+              }}
+              onInputChange={(inputValue: string) => setSearchTerm(inputValue)}
+              menuShouldScrollIntoView
+              className="my-react-select-container"
+              classNamePrefix="my-react-select"
             />
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"/>
           </div>
           <ScrollArea className="md:h-[calc(100vh-250px)] min-h-75vh]">
             <div className="space-y-2 pr-4">
-              {ingredients
+              {ingredientsQueryData
                 .filter((ingredient: Ingredient) => {
                   return ingredient.name
                     .toLowerCase()
@@ -219,5 +278,6 @@ export default function ManageGrocerylist({
         </div>
       </div>
     </div>
+    </>
   )
 }

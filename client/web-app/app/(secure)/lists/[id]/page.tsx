@@ -4,6 +4,7 @@ import ManageGrocerylist from "@/app/(secure)/lists/[id]/ManageGrocerylist";
 import {getGrocerylistById} from "@/lib/http/client/grocerylists/getGrocerylistById";
 import {GroceryList} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
 import {getAllIngredients, Ingredient} from "@/lib/http/client/ingredients/getAllIngredients";
+import {Category, getAllCategories} from "@/lib/http/client/categories/getAllCategories";
 
 export default async function GrocerylistsPage({ params }: { params: { id: string } }) {
   const {getToken} = auth();
@@ -17,6 +18,7 @@ export default async function GrocerylistsPage({ params }: { params: { id: strin
 
   const grocerylistResponse = await getGrocerylistById(token!, params.id);
   const ingredientsResponse = await getAllIngredients(token!);
+  const categoriesResponse = await getAllCategories(token!);
 
   if (
     !grocerylistResponse.ok && grocerylistResponse.status >= 500
@@ -31,6 +33,7 @@ export default async function GrocerylistsPage({ params }: { params: { id: strin
       <ManageGrocerylist
         grocerylist={grocerylistResponse?.data as GroceryList}
         ingredients={ingredientsResponse?.data as Ingredient[]}
+        categories={categoriesResponse?.data as Category[]}
       />
     </div>
   );
