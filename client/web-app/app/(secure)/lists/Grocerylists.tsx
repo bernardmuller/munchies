@@ -367,32 +367,11 @@ export default function GroceryListPage({
     checkOrUncheckHouseholdItemsWithSameName(id)
   }
 
-  if (!grocerylists.myHouseholdGrocerylist) {
-    return (
-      <div className="space-y-4">
-        <div className="w-full flex justify-end md:px-3">
-          {/*<h2 className="text-lg font-semibold mb-2">My list</h2>*/}
-          <CreateListDialog/>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="px-3">
-            <ListMetaData list={myGrocerylist}/>
-          </div>
-          <GroceryList
-            id={myGrocerylist?.id}
-            items={myGrocerylist?.items}
-            onCheckOrUncheckItem={handleCheckOrUncheckItem}
-          />
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="space-y-4">
 
       <Tabs defaultValue="my" className="w-full">
-        <div className="w-full flex justify-between md:px-3">
+        <div className="w-full flex justify-between md:px-3 md:mt-3">
           <TabsList className="grid w-full md:w-1/2 grid-cols-2">
             <TabsTrigger value="my">My Shopping List</TabsTrigger>
             {grocerylists.myHouseholdGrocerylist?.items && (
