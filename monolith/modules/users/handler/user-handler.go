@@ -191,6 +191,7 @@ func (h *UsersHandler) AuthenticateUserWithClerkJWT(c echo.Context) error {
 type User struct {
 	ID            uuid.UUID `json:"id"`
 	ClerkID       string    `json:"clerkId"`
+	HouseholdID   uuid.UUID `json:"householdId"`
 	Email         string    `json:"email"`
 	Firstname     *string   `json:"firstName"`
 	Lastname      *string   `json:"lastName"`
@@ -240,6 +241,7 @@ func (h *UsersHandler) GetCurrentLoggedInUserByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, User{
 		ID:            user.ID,
 		ClerkID:       usr.ID,
+		HouseholdID:   user.HouseholdID.UUID,
 		Email:         activeEmail,
 		Firstname:     usr.FirstName,
 		Lastname:      usr.LastName,

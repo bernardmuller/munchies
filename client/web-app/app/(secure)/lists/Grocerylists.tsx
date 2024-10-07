@@ -182,6 +182,7 @@ function CreateListDialog() {
   const createList = useCreateList()
   const {toast} = useToast()
   const {data:currentUser} = useGetCurrentLoggedInUser()
+  console.log(currentUser)
 
   const handleCreateList = async (scope: 'me' | 'household') => {
     if (!listType) return
