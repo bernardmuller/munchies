@@ -47,12 +47,12 @@ function GroceryList({id, items, onCheckOrUncheckItem}: GroceryListProps) {
   const router = useRouter()
   const [groceryItems, setGroceryItems] = useState<GroceryItem[]>(items)
   const groceryItemsWithQuantity = useMemo(() => {
-    const itemCounts = groceryItems.reduce((acc, item) => {
+    const itemCounts = groceryItems?.reduce((acc, item) => {
       acc[item.name] = (acc[item.name] || 0) + 1
       return acc
     }, {} as Record<string, number>)
 
-    return groceryItems.reduce((acc, item) => {
+    return groceryItems?.reduce((acc, item) => {
       if (!acc.some(i => i.name === item.name)) {
         acc.push({...item, quantity: itemCounts[item.name]})
       }
