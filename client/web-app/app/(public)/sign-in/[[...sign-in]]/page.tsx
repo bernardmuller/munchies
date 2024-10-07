@@ -17,8 +17,8 @@ export default function Page() {
               <h4 className="text-md text-gray-400">Sign in</h4>
             </div>
           </div>
-          <div className="relative rounded-lg bg-white shadow-xl min-h-[455px] min-w-[400px]">
-            <div className="absolute w-full max-w-md mx-auto p-6 space-y-6">
+          <div className="relative rounded-lg bg-white shadow-xl min-h-[455px] min-w-[335px] sm:min-w-[374px] md:min-w-[400px]">
+            <div className="absolute w-full mx-auto p-6 space-y-6">
               <div className="space-y-2">
                 <Skeleton className="h-8 w-2/3 mx-auto"/>
                 <Skeleton className="h-4 w-5/6 mx-auto"/>
@@ -45,13 +45,13 @@ export default function Page() {
                 <Skeleton className="h-4 w-1/3 mx-auto"/>
               </div>
             </div>
-            <div className="z-30">
+            <div className="w-full z-30 flex justify-center">
               <SignIn/>
             </div>
           </div>
         </div>
       </main>
-      <div className="w-full flex flex-col justify-center items-center py-3 gap-2">
+      <div className="w-full flex flex-col justify-center items-center py-3 gap-2 pt-64 md:pt-0">
         <a href="https://github.com/bernardmuller/munchies" target="_blank" rel="noreferrer">
           <FaGithub className="w-6 h-6"/>
         </a>
