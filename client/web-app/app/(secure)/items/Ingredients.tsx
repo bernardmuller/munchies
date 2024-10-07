@@ -230,6 +230,7 @@ export default function Ingredients({
                   <DialogTitle>New Item</DialogTitle>
                 </DialogHeader>
                 <NewIngredientForm
+                  defaultValue=""
                   categories={categories}
                   onClose={() => setOpen(false)}
                   onInvalidate={() => {
