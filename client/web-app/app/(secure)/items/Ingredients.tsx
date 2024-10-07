@@ -370,7 +370,7 @@ export default function Ingredients({
             </Dialog>
           </div>
         </div>
-        {!isFetching && ingredientsData?.length && (
+        {ingredientsData?.length && (
           <DataTable
             columns={columns}
             data={ingredientsData
