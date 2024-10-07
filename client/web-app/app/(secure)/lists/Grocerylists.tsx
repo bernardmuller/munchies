@@ -146,8 +146,8 @@ export function ListMetaData({list}: { list: GroceryList }) {
         </Button>
       </div>
       <p className="text-sm">Created: {new Date().toLocaleDateString()}</p>
-      <p className="text-sm">Total Items: {list.items.length}</p>
-      <p className="text-sm">Checked Items: {list.items.filter(item => item.check).length}</p>
+      <p className="text-sm">Total Items: {list.items?.length ?? "0"}</p>
+      <p className="text-sm">Checked Items: {list.items?.filter(item => item.check)?.length ?? "0"}</p>
     </MetaDataWrapper>
   )
 }
@@ -167,8 +167,8 @@ export function HouseholdListMetaData({list}: { list: GroceryList }) {
         </Button>
       </div>
       <p className="text-sm">Created: {new Date().toLocaleDateString()}</p>
-      <p className="text-sm">Total Items: {list.items.length}</p>
-      <p className="text-sm">Checked Items: {list.items.filter(item => item.check).length}</p>
+      <p className="text-sm">Total Items: {list.items?.length ?? "0"}</p>
+      <p className="text-sm">Checked Items: {list.items?.filter(item => item.check)?.length ?? "0"}</p>
       <p className="text-sm">Household Members: {'N/A'}</p>
     </MetaDataWrapper>
   )
