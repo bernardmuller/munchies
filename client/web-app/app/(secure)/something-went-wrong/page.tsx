@@ -11,10 +11,10 @@ export default function SomethingWentWrong() {
         <h3 className="text-6xl font-bold">Oops</h3>
         <span>Something unexpected happened.</span>
         <div className="flex gap-2">
-          <Button onClick={() => router.push("/home")}>
+          <Button onClick={() => router.push("/lists")}>
             Go Home
           </Button>
-          <Button variant="secondary" onClick={() => router.back()}>
+          <Button variant="outline" onClick={() => router.back()}>
             Go Back
           </Button>
         </div>
