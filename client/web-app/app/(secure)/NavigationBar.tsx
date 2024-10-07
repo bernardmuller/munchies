@@ -192,7 +192,7 @@ function MobileMenu({avatar, username, navigation, email}: {
         </MobileNavLink>
         <MobileNavLink href={"/items"} icon={<List className="h-6 w-6"/>}>
           <SheetClose>
-            Ingredients
+            Items
           </SheetClose>
         </MobileNavLink>
         <MobileNavLink href={settingsRoutes[0].href} icon={<Settings className="h-6 w-6"/>}>
