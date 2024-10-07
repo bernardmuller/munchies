@@ -21,15 +21,12 @@ async function registerUser({ userId }: RegisterUserInputs) {
 }
 
 export default function OnboardingPage() {
-  const { getToken, userId } = useAuth();
+  const { userId } = useAuth();
   const router = useRouter();
 
-  getToken().then((r) => console.log(r));
   const registerUserOnBackend = async () => {
     if (!userId) return;
     const res = await registerUser({ userId });
-
-    console.log(res);
 
     if (res.Status === "success") {
       router.push("/lists");

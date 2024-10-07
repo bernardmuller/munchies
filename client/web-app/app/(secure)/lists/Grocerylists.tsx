@@ -68,7 +68,7 @@ function GroceryList({id, items, onCheckOrUncheckItem}: GroceryListProps) {
 
   return (
     <div className="bg-slate-100 md:bg-white">
-      <ScrollArea className="bg-slate-100 md:bg-white px-3 py-3 rounded-b-sm h-fit md:rounded-lg">
+      <ScrollArea className="bg-background md:bg-white px-3 py-3 rounded-b-sm h-fit md:rounded-lg">
         <h3 className="text-lg pb-3 ml md:hidden">Items:</h3>
         <ul className="space-y-2">
           {!groceryItemsWithQuantity?.length && (
@@ -182,7 +182,6 @@ function CreateListDialog() {
   const createList = useCreateList()
   const {toast} = useToast()
   const {data:currentUser} = useGetCurrentLoggedInUser()
-  console.log(currentUser)
 
   const handleCreateList = async (scope: 'me' | 'household') => {
     if (!listType) return

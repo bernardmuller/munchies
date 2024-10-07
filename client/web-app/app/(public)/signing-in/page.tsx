@@ -10,10 +10,9 @@ type RegisterUserInputs = {
 };
 
 export default function SigningInPage() {
-  const {getToken, userId} = useAuth();
+  const {userId} = useAuth();
   const router = useRouter();
 
-  getToken().then((r) => console.log(r));
   const registerUserOnBackend = async () => {
     if (!userId) return;
 
