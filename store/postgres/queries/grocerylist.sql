@@ -20,7 +20,8 @@ SELECT
               'item_id', i.id,
               'check', i.check,
               'name', ing.name,
-              'ingredient_id', ing.id
+              'ingredient_id', ing.id,
+              'category_id', ing.category_id
       ) ORDER BY ing.name ASC
               ) FILTER (WHERE i.id IS NOT NULL),
       '[]'::json
@@ -47,7 +48,8 @@ SELECT
         JSON_BUILD_OBJECT(
           'item_id', i.id,
           'check', i.check,
-          'name', ing.name
+          'name', ing.name,
+          'category_id', ing.category_id
       ) ORDER BY ing.name ASC
     ) FILTER (WHERE i.id IS NOT NULL),
     '[]'::json
@@ -81,7 +83,8 @@ SELECT
           JSON_BUILD_OBJECT(
               'item_id', i.id,
               'check', i.check,
-              'name', ing.name
+              'name', ing.name,
+              'category_id', ing.category_id
           ) ORDER BY ing.name ASC
       ) FILTER (WHERE i.id IS NOT NULL),
       '[]'::json

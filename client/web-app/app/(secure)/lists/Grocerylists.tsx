@@ -19,18 +19,22 @@ import useLatestGrocerylistByUserId from "@/lib/http/hooks/grocerylists/useLates
 import useLatestGrocerylistByHouseholdId from "@/lib/http/hooks/grocerylists/useLatestGrocerylistByHouseholdId"
 import useCheckOrUncheckItem from "@/lib/http/hooks/items/useCheckOrUncheckItem"
 import useCheckOrUncheckHouseholdItem from "@/lib/http/hooks/items/useCheckOrUncheckHouseholdItem"
-import {ClipboardList, House, Loader2, Pencil, User} from "lucide-react"
+import {ClipboardList, Filter, FilterXIcon, House, Loader2, Pencil, User} from "lucide-react"
 import {useRouter} from "next/navigation";
 import useCreateList from "@/lib/http/hooks/grocerylists/useCreateList";
 import {useToast} from "@/components/ui/use-toast";
 import {Card, CardContent} from "@/components/ui/card";
 import useGetCurrentLoggedInUser from "@/lib/http/hooks/users/useGetCurrentLoggedInUser";
+import {Input} from "@/components/ui/input";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+import {Category} from "@/lib/http/client/categories/getAllCategories";
 
 type GrocerylistsPageProps = {
   grocerylists: {
     myGrocerylist: GroceryList;
     myHouseholdGrocerylist: GroceryList;
   };
+  categories: Category[]
 };
 
 interface GroceryItemWithQuantity extends GroceryItem {
@@ -41,11 +45,15 @@ interface GroceryListProps {
   id: string,
   items: GroceryItem[],
   onCheckOrUncheckItem: (id: string) => void
+  categories: Category[]
 }
 
-function GroceryList({id, items, onCheckOrUncheckItem}: GroceryListProps) {
+function GroceryList({id, items, onCheckOrUncheckItem, categories}: GroceryListProps) {
   const router = useRouter()
+  const [searchTerm, setSearchTerm] = useState("")
   const [groceryItems, setGroceryItems] = useState<GroceryItem[]>(items)
+  const [filteredCategory, setFilteredCategory] = useState<string | null>(null)
+
   const groceryItemsWithQuantity = useMemo(() => {
     const itemCounts = groceryItems?.reduce((acc, item) => {
       acc[item.name] = (acc[item.name] || 0) + 1
@@ -66,11 +74,66 @@ function GroceryList({id, items, onCheckOrUncheckItem}: GroceryListProps) {
     }
   }, [items])
 
+  console.log(groceryItemsWithQuantity)
+
   return (
     <div className="bg-slate-100 md:bg-white">
       <ScrollArea className="bg-background md:bg-white px-3 py-3 rounded-b-sm h-fit md:rounded-lg">
-        <h3 className="text-lg pb-3 ml md:hidden">Items:</h3>
-        <ul className="space-y-2">
+        <div className="bg-white rounded-lg border-slate-200 border-[1px] p-3 mb-2">
+          {/*<h3 className="text-lg pb-3 ml md:hidden">Items:</h3>*/}
+          <div className="flex justify-between">
+            <div>
+              <Input
+                placeholder="Search items..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <div
+                className={`flex items-center pl-2 rounded-md gap-1 ${filteredCategory ? "border-[1px] border-slate-200" : ""}`}>
+                {categories.find(i => i.id === filteredCategory)?.name}
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Button
+                      variant="ghost"
+                    >
+                      <Filter/>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="px-2" align="end">
+                    {categories.map((c) => (
+                      <DropdownMenuItem
+                        key={c.id}
+                        className="p-0">
+                        <Button
+                          className="flex gap-1 hover:bg-gray-50 w-full"
+                          variant="ghost"
+                          onClick={() =>
+                            setFilteredCategory(c.id)
+                          }
+                        >
+                          {c.name}
+                        </Button>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <Button
+                onClick={() => {
+                  setSearchTerm("");
+                  setFilteredCategory(null);
+                }}
+                variant="ghost"
+                disabled={!filteredCategory}
+              >
+                <FilterXIcon/>
+              </Button>
+            </div>
+          </div>
+        </div>
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {!groceryItemsWithQuantity?.length && (
             <div
               className="flex flex-col gap-2 justify-center items-center bg-white rounded-lg p-3 md:p-4 md:rounded-xl">
@@ -86,7 +149,13 @@ function GroceryList({id, items, onCheckOrUncheckItem}: GroceryListProps) {
               </Button>
             </div>
           )}
-          {groceryItemsWithQuantity && groceryItemsWithQuantity.map((item) => (
+          {groceryItemsWithQuantity && groceryItemsWithQuantity
+            .filter((i) => {
+            if (filteredCategory !== null) {
+              return i.category_id === filteredCategory;
+            }
+            return true;
+          }).filter((item: GroceryItemWithQuantity) => item.name.toLowerCase().includes(searchTerm.toLowerCase())).map((item) => (
             <Card key={item.item_id}
               // className="flex items-center space-x-4 bg-white p-3 px-5 rounded-lg transition-colors hover:bg-secondary/30 border-2 "
             >
@@ -181,7 +250,7 @@ function CreateListDialog() {
   const [listType, setListType] = useState<'shopping' | 'mealplan' | null>(null)
   const createList = useCreateList()
   const {toast} = useToast()
-  const {data:currentUser} = useGetCurrentLoggedInUser()
+  const {data: currentUser} = useGetCurrentLoggedInUser()
 
   const handleCreateList = async (scope: 'me' | 'household') => {
     if (!listType) return
@@ -323,7 +392,8 @@ function CreateListDialog() {
 }
 
 export default function GroceryListPage({
-  grocerylists
+  grocerylists,
+  categories
 }: GrocerylistsPageProps) {
   const router = useRouter()
 
@@ -382,7 +452,7 @@ export default function GroceryListPage({
         </div>
         <div className="lg:pt-2">
           <TabsContent value="my">
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 md:gap-4">
+            <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">
               <div className="px-3">
                 <ListMetaData list={myGrocerylist}/>
               </div>
@@ -390,12 +460,13 @@ export default function GroceryListPage({
                 id={myGrocerylist?.id}
                 items={myGrocerylist?.items}
                 onCheckOrUncheckItem={handleCheckOrUncheckItem}
+                categories={categories}
               />
             </div>
           </TabsContent>
           {grocerylists.myHouseholdGrocerylist?.items && (
             <TabsContent value="household">
-              <div className="w-full grid grid-cols-1 md:grid-cols-2 md:gap-4">
+              <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">
                 <div className="px-3">
                   <HouseholdListMetaData list={myHouseholdGrocerylist}/>
                 </div>
@@ -403,6 +474,7 @@ export default function GroceryListPage({
                   id={myHouseholdGrocerylist?.id}
                   items={myHouseholdGrocerylist?.items}
                   onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}
+                  categories={categories}
                 />
               </div>
             </TabsContent>

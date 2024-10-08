@@ -7,6 +7,7 @@ const groceryItemSchema = z.object({
   check: z.boolean(),
   name: z.string(),
   ingredient_id: z.string(),
+  category_id: z.string(),
 });
 
 const groceryListSchema = z.object({
