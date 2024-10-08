@@ -37,7 +37,7 @@ export default async function GrocerylistsPage() {
           myGrocerylist: userGrocerylistResponse?.data!,
           myHouseholdGrocerylist: householdGrocerylistResponse?.data!,
         }}
-        categories={categoriesResponse.data}
+        categories={categoriesResponse.data ?? []}
       />
     </div>
   );

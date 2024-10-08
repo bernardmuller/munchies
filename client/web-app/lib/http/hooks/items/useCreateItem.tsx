@@ -40,6 +40,7 @@ export default function useCreateItem(grocerylistId: string) {
             check: false,
             name: item.name,
             ingredient_id: item.ingredientId,
+            category_id: item.categoryId,
           }),
         });
       }
