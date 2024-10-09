@@ -74,12 +74,10 @@ function GroceryList({id, items, onCheckOrUncheckItem, categories}: GroceryListP
     }
   }, [items])
 
-  console.log(groceryItemsWithQuantity)
-
   return (
     <div className="bg-slate-100 md:bg-white">
       <ScrollArea className="bg-background md:bg-white px-3 py-3 rounded-b-sm h-fit md:rounded-lg">
-        <div className="bg-white rounded-lg border-slate-200 border-[1px] p-3 mb-2">
+        <div className="bg-white rounded-lg border-slate-200 border-[1px] p-3 mb-3">
           {/*<h3 className="text-lg pb-3 ml md:hidden">Items:</h3>*/}
           <div className="flex justify-between">
             <div>
@@ -136,9 +134,9 @@ function GroceryList({id, items, onCheckOrUncheckItem, categories}: GroceryListP
         <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {!groceryItemsWithQuantity?.length && (
             <div
-              className="flex flex-col gap-2 justify-center items-center bg-white rounded-lg p-3 md:p-4 md:rounded-xl">
+              className="flex flex-col gap-2 justify-center items-center bg-white rounded-lg p-3 md:p-4 md:rounded-xl col-span-2">
               <span className="text-center text-muted-foreground">
-                No items in list.
+                You have no items in your current list.
               </span>
               <Button
                 onClick={() => router.push(`/lists/${id}`)}
@@ -192,7 +190,7 @@ function GroceryList({id, items, onCheckOrUncheckItem, categories}: GroceryListP
 
 const MetaDataWrapper = ({children}: { children: React.ReactNode }) => {
   return (
-    <Card className="w-full p-4 md:rounded-lg h-fit mt-3">
+    <Card className="w-full p-4 md:rounded-lg h-fit md:mt-3">
       <CardContent className="w-full md:p-0 rounded-lg">
         {children}
       </CardContent>
@@ -402,7 +400,7 @@ export default function GroceryListPage({
     userId: grocerylists.myGrocerylist?.createdBy
   })
   const {data: myHouseholdGrocerylist} = useLatestGrocerylistByHouseholdId({
-    initialData: grocerylists.myGrocerylist,
+    initialData: grocerylists.myHouseholdGrocerylist,
   })
   const checkOrUncheckItem = useCheckOrUncheckItem()
   const checkOrUncheckHouseholdItem = useCheckOrUncheckHouseholdItem()

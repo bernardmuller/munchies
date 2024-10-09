@@ -249,6 +249,25 @@ export default function ManageGrocerylist({
               menuShouldScrollIntoView
               className="my-react-select-container"
               classNamePrefix="my-react-select"
+              styles={{
+                input: (provided) => ({
+                  ...provided,
+                  fontSize: "16px",
+                }),
+                control: (provided) => ({
+                  ...provided,
+                  borderRadius: 8,
+                  height: 44,
+                }),
+                indicatorSeparator: (provided) => ({
+                  ...provided,
+                  display: "none",
+                }),
+                menu: (provided) => ({
+                  ...provided,
+                  borderRadius: 8,
+                }),
+              }}
             />
           </div>
           <ScrollArea className="md:h-[calc(100vh-250px)] min-h-75vh]">

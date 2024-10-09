@@ -33,7 +33,7 @@ export default function useCreateItem(grocerylistId: string) {
       const prev = queryClient.getQueryData(keys.getGrocerylistById(grocerylistId)) as GroceryList;
 
       if (prev && prev.items) {
-        queryClient.setQueryData(keys.latestGrocerylistByHouseholdId, {
+        queryClient.setQueryData(keys.getGrocerylistById(grocerylistId), {
           ...prev,
           items: prev.items.concat({
             item_id: Math.random().toString(),
