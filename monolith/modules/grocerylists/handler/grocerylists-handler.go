@@ -107,7 +107,7 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 			})
 		}
 
-		gl, err := h.grocerylistsService.GetLatestGrocerylistByUserId(c.Request().Context(), userId)
+		gl, err := h.grocerylistsService.GetLatestGrocerylistByUserId(c.Request().Context(), userIdUUID)
 		if err != nil {
 			return c.JSON(http.StatusNotFound, ErrorResponse{
 				Error:   "Not Found",
