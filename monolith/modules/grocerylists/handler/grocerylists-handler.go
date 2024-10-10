@@ -189,6 +189,13 @@ func (h *GrocerylistsHandler) GetLatestGrocerylistByHouseholdId(c echo.Context) 
 		})
 	}
 
+	if getGlErr != nil {
+		return c.JSON(http.StatusInternalServerError, ErrorResponse{
+			Error:   "Internal Server Error",
+			Message: getGlErr.Error(),
+		})
+	}
+
 	return c.JSON(http.StatusOK, Grocerylist{
 		GrocerylistID: gl.GrocerylistID.String(),
 		HouseholdID:   gl.HouseholdID,
