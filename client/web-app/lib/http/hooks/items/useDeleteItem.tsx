@@ -12,7 +12,7 @@ export default function useDeleteItem(grocerylistId: string) {
   return useMutation({
     mutationKey: ["delete-item"],
     mutationFn: async (id: string) => {
-      const token = await getToken().then((t) => t?.toString());
+      const token = await getToken({ template: "1_HOUR" }).then((t) => t?.toString());
       return deleteItem({id, accessToken: token! });
     },
     onMutate: async (id: string) => {

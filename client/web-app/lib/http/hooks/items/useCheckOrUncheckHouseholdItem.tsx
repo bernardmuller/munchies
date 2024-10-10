@@ -12,7 +12,7 @@ export default function useCheckOrUncheckHouseholdItem() {
   return useMutation({
     mutationKey: keys.checkItem,
     mutationFn: async (id: string) => {
-      const token = await getToken().then((t) => t?.toString());
+      const token = await getToken({ template: "1_HOUR" }).then((t) => t?.toString());
       return checkOrUncheckItem({itemId: id, accessToken: token! });
     },
     onMutate: async (id: string) => {

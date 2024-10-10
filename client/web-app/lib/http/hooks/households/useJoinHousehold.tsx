@@ -9,7 +9,7 @@ export default function useJoinHousehold() {
   return useMutation({
     mutationKey: ["join-household"],
     mutationFn: async ({ householdId }: { householdId: string }) => {
-      const token = await getToken().then((t) =>
+      const token = await getToken({ template: "1_HOUR" }).then((t) =>
         t?.toString(),
       );
       return joinHousehold({ householdId, accessToken: token! });

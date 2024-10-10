@@ -8,7 +8,7 @@ import {Category, getAllCategories} from "@/lib/http/client/categories/getAllCat
 
 export default async function GrocerylistsPage({ params }: { params: { id: string } }) {
   const {getToken} = auth();
-  const token = await getToken().then((t) =>
+  const token = await getToken({ template: "1_HOUR" }).then((t) =>
     t?.toString(),
   ).catch(() => redirect(`/sign-in`));
 

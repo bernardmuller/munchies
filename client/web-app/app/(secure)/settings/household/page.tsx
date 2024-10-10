@@ -5,7 +5,7 @@ import { getCurrentUserHouseholdDetails } from "@/lib/http/client/households/get
 
 export default async function HouseholdPage() {
   const { getToken } = auth();
-  const token = await getToken().then((t) =>
+  const token = await getToken({ template: "1_HOUR" }).then((t) =>
     t?.toString(),
   );
 

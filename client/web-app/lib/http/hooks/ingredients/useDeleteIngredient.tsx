@@ -9,7 +9,7 @@ export default function useDeleteIngredient() {
   return useMutation({
     mutationKey: keys.deleteIngredient,
     mutationFn: async (id: string) => {
-      const token = await getToken().then((t) => t?.toString());
+      const token = await getToken({ template: "1_HOUR" }).then((t) => t?.toString());
       return deleteIngredient({ id, accessToken: token! });
     },
     onSuccess: () => {
