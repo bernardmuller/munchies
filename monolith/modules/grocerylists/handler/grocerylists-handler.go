@@ -96,7 +96,7 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 		params := service.CreateListParams{
 			HouseholdId: uuid.Nil,
 			MenuId:      uuid.Nil,
-			UserId:      userId,
+			UserId:      userIdUUID,
 		}
 
 		_, err := h.grocerylistsService.CreateGrocerylist(c.Request().Context(), params)
