@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/bernardmuller/munchies/monolith/modules/grocerylists/service"
@@ -81,7 +82,7 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 	}
 
 	gl, err := h.grocerylistsService.GetLatestGrocerylistByUserId(c.Request().Context(), user.ID)
-	if err != nil && gl.HouseholdID.UUID == uuid.Nil {
+	if err != nil && err == sql.ErrNoRows {
 		log.Println(err.Error())
 
 		params := service.CreateListParams{
@@ -152,7 +153,7 @@ func (h *GrocerylistsHandler) GetLatestGrocerylistByHouseholdId(c echo.Context) 
 	}
 
 	gl, getGlErr := h.grocerylistsService.GetLatestGrocerylistByHouseholdId(c.Request().Context(), user.HouseholdID.UUID)
-	if getGlErr != nil || gl.HouseholdID.UUID == uuid.Nil {
+	if getGlErr != nil && getGlErr == sql.ErrNoRows {
 		log.Println("No grocery list found, creating new list")
 
 		// Create new grocery list
