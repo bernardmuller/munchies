@@ -64,39 +64,31 @@ func (h *GrocerylistsHandler) RegisterRouter(router *echo.Echo) {
 
 func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Context) error {
 	// Extract userId from context
-	userId := c.Request().Context().Value("userId")
-	if userId == nil {
+	userId := c.Request().Context().Value("userId").(uuid.UUID)
+	if userId == uuid.Nil {
 		return c.JSON(http.StatusUnauthorized, &ErrorResponse{
 			Error:   "Unauthorized: User ID not found",
-			Message: "No User Id found in the Authorization JWT.",
-		})
-	}
-
-	userIdUUID, ok := userId.(uuid.UUID)
-	if !ok || userIdUUID == uuid.Nil {
-		return c.JSON(http.StatusUnauthorized, &ErrorResponse{
-			Error:   "Unauthorized: Invalid User ID",
-			Message: "Invalid User Id found in the Authorization JWT.",
+			Message: "No User Id found in Context.",
 		})
 	}
 
 	// Fetch user
-	user, err := h.usersService.GetUserById(c.Request().Context(), userIdUUID)
-	if err != nil || user.HouseholdID.UUID == uuid.Nil {
-		return c.JSON(http.StatusNoContent, &ErrorResponse{
-			Error:   "No Content",
+	user, err := h.usersService.GetUserById(c.Request().Context(), userId)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, &ErrorResponse{
+			Error:   "Not Found",
 			Message: "User is not part of a household.",
 		})
 	}
 
-	gl, err := h.grocerylistsService.GetLatestGrocerylistByUserId(c.Request().Context(), userIdUUID)
+	gl, err := h.grocerylistsService.GetLatestGrocerylistByUserId(c.Request().Context(), user.ID)
 	if err != nil && err == sql.ErrNoRows {
 		log.Println(err.Error())
 
 		params := service.CreateListParams{
 			HouseholdId: uuid.Nil,
 			MenuId:      uuid.Nil,
-			UserId:      userIdUUID,
+			UserId:      user.ID,
 		}
 
 		_, err := h.grocerylistsService.CreateGrocerylist(c.Request().Context(), params)
@@ -107,7 +99,7 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 			})
 		}
 
-		gl, err := h.grocerylistsService.GetLatestGrocerylistByUserId(c.Request().Context(), userIdUUID)
+		gl, err := h.grocerylistsService.GetLatestGrocerylistByUserId(c.Request().Context(), user.ID)
 		if err != nil {
 			return c.JSON(http.StatusNotFound, ErrorResponse{
 				Error:   "Not Found",
@@ -136,42 +128,39 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 
 func (h *GrocerylistsHandler) GetLatestGrocerylistByHouseholdId(c echo.Context) error {
 	// Extract userId from context
-	userId := c.Request().Context().Value("userId")
-	if userId == nil {
+	userId := c.Request().Context().Value("userId").(uuid.UUID)
+	if userId == uuid.Nil {
 		return c.JSON(http.StatusUnauthorized, &ErrorResponse{
 			Error:   "Unauthorized: User ID not found",
-			Message: "No User Id found in the Authorization JWT.",
-		})
-	}
-
-	userIdUUID, ok := userId.(uuid.UUID)
-	if !ok || userIdUUID == uuid.Nil {
-		return c.JSON(http.StatusUnauthorized, &ErrorResponse{
-			Error:   "Unauthorized: Invalid User ID",
-			Message: "Invalid User Id found in the Authorization JWT.",
+			Message: "No User Id found in Context.",
 		})
 	}
 
 	// Fetch user
-	user, err := h.usersService.GetUserById(c.Request().Context(), userIdUUID)
-	if err != nil || user.HouseholdID.UUID == uuid.Nil {
-		return c.JSON(http.StatusNoContent, &ErrorResponse{
-			Error:   "No Content",
+	user, err := h.usersService.GetUserById(c.Request().Context(), userId)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, &ErrorResponse{
+			Error:   "Not Found",
 			Message: "User is not part of a household.",
 		})
 	}
 
-	// Get latest grocery list
+	if user.HouseholdID.UUID == uuid.Nil {
+		return c.JSON(http.StatusNotFound, &ErrorResponse{
+			Error:   "Bad Request",
+			Message: "User is not part of a household.",
+		})
+	}
+
 	gl, getGlErr := h.grocerylistsService.GetLatestGrocerylistByHouseholdId(c.Request().Context(), user.HouseholdID.UUID)
 	if getGlErr == sql.ErrNoRows {
-		// Log error
 		log.Println("No grocery list found, creating new list")
 
 		// Create new grocery list
 		params := service.CreateListParams{
 			HouseholdId: user.HouseholdID.UUID,
 			MenuId:      uuid.Nil,
-			UserId:      userIdUUID,
+			UserId:      userId,
 		}
 
 		_, err := h.grocerylistsService.CreateGrocerylist(c.Request().Context(), params)

@@ -95,31 +95,6 @@ type ErrorResponse struct {
 	Error  string `json:"error"`
 }
 
-// func authenticationMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
-// 	return func(c echo.Context) error {
-// 		if c.Request().URL.RequestURI() != "/users/authenticate" {
-// 			authorization := c.Request().Header.Get("Authorization")
-// 			bearerToken := strings.Split(authorization, " ")
-// 			if len(bearerToken) < 2 {
-// 				return c.JSON(http.StatusUnauthorized, &ErrorResponse{
-// 					Status: http.StatusUnauthorized,
-// 					Error:  "Unauthorized",
-// 				})
-// 			}
-// 			authToken := bearerToken[1]
-//
-// 			if authToken != "Test" {
-// 				return c.JSON(http.StatusUnauthorized, &ErrorResponse{
-// 					Status: http.StatusUnauthorized,
-// 					Error:  "Unauthorized",
-// 				})
-// 			}
-// 		}
-// 		err := next(c)
-// 		return err
-// 	}
-// }
-
 func authenticationMiddleware(userService *us.UsersService) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -134,7 +109,6 @@ func authenticationMiddleware(userService *us.UsersService) echo.MiddlewareFunc 
 				}
 				authToken := bearerToken[1]
 
-				// Use the user service to authenticate the user with the third-party service
 				userId, err := userService.AuthenticateUser(c.Request().Context(), authToken)
 				if err != nil {
 					return c.JSON(http.StatusUnauthorized, &ErrorResponse{
