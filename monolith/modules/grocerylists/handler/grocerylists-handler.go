@@ -130,14 +130,14 @@ func (h *GrocerylistsHandler) GetLatestGrocerylistByHouseholdId(c echo.Context) 
 
 	user, err := h.usersService.GetUserById(c.Request().Context(), userId)
 	if err != nil || user.HouseholdID.UUID.String() == "00000000-0000-0000-0000-000000000000" {
-		return c.JSON(http.StatusForbidden, &ErrorResponse{
-			Error:   "Forbidden",
+		return c.JSON(http.StatusNoContent, &ErrorResponse{
+			Error:   "No Content",
 			Message: "User is not part of a household.",
 		})
 	}
 
-	gl, err := h.grocerylistsService.GetLatestGrocerylistByHouseholdId(c.Request().Context(), user.HouseholdID.UUID)
-	if err != nil && err == sql.ErrNoRows {
+	gl, getGlErr := h.grocerylistsService.GetLatestGrocerylistByHouseholdId(c.Request().Context(), user.HouseholdID.UUID)
+	if getGlErr != nil || getGlErr == sql.ErrNoRows {
 		log.Println(err.Error())
 
 		params := service.CreateListParams{
@@ -154,8 +154,8 @@ func (h *GrocerylistsHandler) GetLatestGrocerylistByHouseholdId(c echo.Context) 
 			})
 		}
 
-		gl, err := h.grocerylistsService.GetLatestGrocerylistByHouseholdId(c.Request().Context(), user.HouseholdID.UUID)
-		if err != nil {
+		gl, glErr := h.grocerylistsService.GetLatestGrocerylistByHouseholdId(c.Request().Context(), user.HouseholdID.UUID)
+		if glErr != nil {
 			return c.JSON(http.StatusNotFound, ErrorResponse{
 				Error:   "Not Found",
 				Message: "Could not find grocerylist after creation.",
