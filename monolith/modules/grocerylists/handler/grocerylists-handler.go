@@ -35,6 +35,7 @@ type Grocerylist struct {
 	MenuID        interface{} `json:"mealplanID"`
 	Items         interface{} `json:"items"`
 	CreatedBy     string      `json:"createdBy"`
+	Createdat     string      `json:"createdAt"`
 }
 
 type GrocerylistsHandler struct {
@@ -102,6 +103,7 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 			MenuID:        gl.MenuID,
 			Items:         gl.Items,
 			CreatedBy:     gl.Createdby.String(),
+			Createdat:     gl.Createdat.String(),
 		})
 	}
 
@@ -111,6 +113,7 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 		MenuID:        gl.MenuID,
 		Items:         gl.Items,
 		CreatedBy:     gl.Createdby.String(),
+		Createdat:     gl.Createdat.String(),
 	})
 }
 
@@ -164,6 +167,7 @@ func (h *GrocerylistsHandler) GetLatestGrocerylistByHouseholdId(c echo.Context) 
 			HouseholdID:   gl.HouseholdID,
 			MenuID:        gl.MenuID,
 			Items:         gl.Items,
+			Createdat:     gl.Createdat.String(),
 		})
 	}
 
@@ -172,6 +176,7 @@ func (h *GrocerylistsHandler) GetLatestGrocerylistByHouseholdId(c echo.Context) 
 		HouseholdID:   gl.HouseholdID,
 		MenuID:        gl.MenuID,
 		Items:         gl.Items,
+		Createdat:     gl.Createdat.String(),
 	})
 }
 
@@ -316,5 +321,6 @@ func (h *GrocerylistsHandler) GetGrocerylistWithItemsById(c echo.Context) error 
 		HouseholdID:   gl.HouseholdID,
 		MenuID:        gl.MenuID,
 		Items:         gl.Items,
+		Createdat:     gl.Createdat.String(),
 	})
 }

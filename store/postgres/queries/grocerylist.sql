@@ -14,6 +14,7 @@ SELECT
   gl.id,
   gl.household_id,
   gl.menu_id,
+  gl.createdat,
   COALESCE(
       JSON_AGG(
       JSON_BUILD_OBJECT(
@@ -43,6 +44,7 @@ SELECT
   gl.household_id,
   gl.menu_id,
   gl.createdby,
+  gl.createdat,
   COALESCE(
     JSON_AGG(
         JSON_BUILD_OBJECT(
@@ -78,6 +80,7 @@ SELECT
   gl.household_id,
   gl.menu_id,
   gl.createdby,
+  gl.createdat,
   COALESCE(
       JSON_AGG(
           JSON_BUILD_OBJECT(

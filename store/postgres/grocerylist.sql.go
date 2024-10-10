@@ -8,6 +8,7 @@ package postgres
 import (
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -68,6 +69,7 @@ SELECT
   gl.household_id,
   gl.menu_id,
   gl.createdby,
+  gl.createdat,
   COALESCE(
       JSON_AGG(
           JSON_BUILD_OBJECT(
@@ -99,6 +101,7 @@ type GetGrocerylistWithItemsByHouseholdIdRow struct {
 	HouseholdID   uuid.NullUUID
 	MenuID        uuid.NullUUID
 	Createdby     uuid.UUID
+	Createdat     time.Time
 	Items         json.RawMessage
 }
 
@@ -110,6 +113,7 @@ func (q *Queries) GetGrocerylistWithItemsByHouseholdId(ctx context.Context, hous
 		&i.HouseholdID,
 		&i.MenuID,
 		&i.Createdby,
+		&i.Createdat,
 		&i.Items,
 	)
 	return i, err
@@ -120,6 +124,7 @@ SELECT
   gl.id,
   gl.household_id,
   gl.menu_id,
+  gl.createdat,
   COALESCE(
       JSON_AGG(
       JSON_BUILD_OBJECT(
@@ -148,6 +153,7 @@ type GetGrocerylistWithItemsByIdRow struct {
 	ID          uuid.UUID
 	HouseholdID uuid.NullUUID
 	MenuID      uuid.NullUUID
+	Createdat   time.Time
 	Items       json.RawMessage
 }
 
@@ -158,6 +164,7 @@ func (q *Queries) GetGrocerylistWithItemsById(ctx context.Context, id uuid.UUID)
 		&i.ID,
 		&i.HouseholdID,
 		&i.MenuID,
+		&i.Createdat,
 		&i.Items,
 	)
 	return i, err
@@ -169,6 +176,7 @@ SELECT
   gl.household_id,
   gl.menu_id,
   gl.createdby,
+  gl.createdat,
   COALESCE(
     JSON_AGG(
         JSON_BUILD_OBJECT(
@@ -204,6 +212,7 @@ type GetGrocerylistWithItemsByUserIdRow struct {
 	HouseholdID   uuid.NullUUID
 	MenuID        uuid.NullUUID
 	Createdby     uuid.UUID
+	Createdat     time.Time
 	Items         json.RawMessage
 }
 
@@ -215,6 +224,7 @@ func (q *Queries) GetGrocerylistWithItemsByUserId(ctx context.Context, createdby
 		&i.HouseholdID,
 		&i.MenuID,
 		&i.Createdby,
+		&i.Createdat,
 		&i.Items,
 	)
 	return i, err

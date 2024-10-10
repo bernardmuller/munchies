@@ -19,7 +19,7 @@ import useLatestGrocerylistByUserId from "@/lib/http/hooks/grocerylists/useLates
 import useLatestGrocerylistByHouseholdId from "@/lib/http/hooks/grocerylists/useLatestGrocerylistByHouseholdId"
 import useCheckOrUncheckItem from "@/lib/http/hooks/items/useCheckOrUncheckItem"
 import useCheckOrUncheckHouseholdItem from "@/lib/http/hooks/items/useCheckOrUncheckHouseholdItem"
-import {ClipboardList, Filter, FilterXIcon, House, Loader2, Pencil, User} from "lucide-react"
+import {Calendar, ClipboardList, Filter, FilterXIcon, House, Loader2, Pencil, User} from "lucide-react"
 import {useRouter} from "next/navigation";
 import useCreateList from "@/lib/http/hooks/grocerylists/useCreateList";
 import {useToast} from "@/components/ui/use-toast";
@@ -28,6 +28,7 @@ import useGetCurrentLoggedInUser from "@/lib/http/hooks/users/useGetCurrentLogge
 import {Input} from "@/components/ui/input";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {Category} from "@/lib/http/client/categories/getAllCategories";
+import {format} from "date-fns";
 
 type GrocerylistsPageProps = {
   grocerylists: {
@@ -212,7 +213,7 @@ export function ListMetaData({list}: { list: GroceryList }) {
           Edit
         </Button>
       </div>
-      <p className="text-sm">Created: {new Date().toLocaleDateString()}</p>
+      <p className="text-sm">Created: {format(new Date(list.createdAt), "dd MMMM yyyy")}</p>
       <p className="text-sm">Total Items: {list.items?.length ?? "0"}</p>
       <p className="text-sm">Checked Items: {list.items?.filter(item => item.check)?.length ?? "0"}</p>
     </MetaDataWrapper>
@@ -233,10 +234,10 @@ export function HouseholdListMetaData({list}: { list: GroceryList }) {
           Edit
         </Button>
       </div>
-      <p className="text-sm">Created: {new Date().toLocaleDateString()}</p>
+      <p className="text-sm">Created: {format(new Date(list.createdAt), "dd MMMM yyyy")}</p>
       <p className="text-sm">Total Items: {list.items?.length ?? "0"}</p>
       <p className="text-sm">Checked Items: {list.items?.filter(item => item.check)?.length ?? "0"}</p>
-      <p className="text-sm">Household Members: {'N/A'}</p>
+      {/*<p className="text-sm">Household Members: {'N/A'}</p>*/}
     </MetaDataWrapper>
   )
 }
@@ -336,17 +337,18 @@ function CreateListDialog() {
                   <ClipboardList className="mr-2 h-6 w-6"/>
                   Shopping List
                 </Button>
-                {/*<Button*/}
-                {/*  onClick={() => {*/}
-                {/*    setListType('mealplan')*/}
-                {/*    setStep('scope')*/}
-                {/*  }}*/}
-                {/*  className={buttonClass}*/}
-                {/*  variant="outline"*/}
-                {/*>*/}
-                {/*  <Utensils className="mr-2 h-6 w-6" />*/}
-                {/*  Mealplan List*/}
-                {/*</Button>*/}
+                <Button
+                  onClick={() => {
+                    setListType('mealplan')
+                    setStep('scope')
+                  }}
+                  className={buttonClass}
+                  variant="outline"
+                  disabled={process.env.NEXT_PUBLIC_FLAG_FEATURE_MEALPLANS !== "true"}
+                >
+                  <Calendar className="mr-2 h-6 w-6" />
+                  Mealplan List {process.env.NEXT_PUBLIC_FLAG_FEATURE_MEALPLANS !== "true" && "(Coming Soon)"}
+                </Button>
               </div>
             ) : (
               <div className="flex flex-col gap-4">

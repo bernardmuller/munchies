@@ -16,6 +16,7 @@ const groceryListSchema = z.object({
   mealplanID: z.string().nullable(),
   createdBy: z.string(),
   items: z.array(groceryItemSchema),
+  createdAt: z.string()
 });
 
 export type GroceryItem = z.infer<typeof groceryItemSchema>;

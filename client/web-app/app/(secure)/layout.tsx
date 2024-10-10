@@ -42,7 +42,7 @@ const App = ({children}: any) => {
                 <div className="w-full flex justify-between px-2 md:px-3 md:mt-3">
                   <MobileTabs defaultValue={activeTab}>
                     <MobileTabsList>
-                      {tabs.map((tab) => (
+                      {(pathname.includes("/lists") || pathname.includes("items"))  && tabs.map((tab) => (
                         <MobileTabsTrigger key={tab.id} value={tab.id}>
                           <Link href={`${tab.id}`} className="flex items-center">
                             <span className="mr-2">{tab.icon}</span>

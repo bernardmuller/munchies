@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import {usePathname, useRouter} from 'next/navigation'
-import {ClipboardList, House, List, Menu, Settings, User as UserIcon} from 'lucide-react'
+import {Calendar, ClipboardList, Drumstick, House, List, Menu, Settings, User as UserIcon} from 'lucide-react'
 import {Button} from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -18,13 +18,16 @@ import settingsRoutes from "./settings/settingsRoutes"
 import React from "react";
 import {CgProfile} from "react-icons/cg";
 import {User} from "@/lib/http/client/users/getCurrentLoggedInUser";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from "@/components/ui/tooltip"
 
 const navigation = [
-  {name: "Shopping Lists", href: "/lists"},
-  {name: "Items", href: "/items"},
+  {name: "Shopping Lists", href: "/lists", comingSoon: false},
+  {name: "Items", href: "/items", comingSoon: false},
+  {name: "Meal Plans", href: "/plans", comingSoon: process.env.NEXT_PUBLIC_FLAG_FEATURE_MEALPLANS !== "true"},
+  {name: "Meals", href: "/meals", comingSoon: process.env.NEXT_PUBLIC_FLAG_FEATURE_MEALPLANS !== "true"},
 ]
 
-export default function Navbar({currentUser}: { currentUser: User}) {
+export default function Navbar({currentUser}: { currentUser: User }) {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -44,7 +47,8 @@ export default function Navbar({currentUser}: { currentUser: User}) {
             <div className="hidden md:block ml-10">
               <div className="flex items-baseline space-x-4">
                 {navigation.map((item) => (
-                  <NavLink key={item.name} href={item.href} active={pathname === item.href}>
+                  <NavLink key={item.name} href={item.href} active={pathname === item.href}
+                           comingSoon={item.comingSoon}>
                     {item.name}
                   </NavLink>
                 ))}
@@ -84,18 +88,38 @@ export default function Navbar({currentUser}: { currentUser: User}) {
   )
 }
 
-function NavLink({href, active, children}: { href: string; active: boolean; children: React.ReactNode }) {
+function NavLink({href, active, children, comingSoon}: {
+  href: string;
+  active: boolean;
+  children: React.ReactNode;
+  comingSoon: boolean
+}) {
+  if (!comingSoon) return <Link href={href} className={`px-3 py-2 rounded-md text-sm font-medium ${
+    active
+      ? "bg-secondary dark:bg-background text-white"
+      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+  }`}>
+    {children}
+  </Link>
   return (
-    <Link
-      href={href}
-      className={`px-3 py-2 rounded-md text-sm font-medium ${
-        active
-          ? "bg-secondary dark:bg-background text-white"
-          : "text-gray-300 hover:bg-gray-700 hover:text-white"
-      }`}
-    >
-      {children}
-    </Link>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger>
+          <Link
+            href={"#"}
+            className={`relative px-3 py-2 rounded-md text-sm font-medium ${
+              active ? "bg-secondary dark:bg-background text-white"
+                : comingSoon ? "text-gray-500 hover:bg-gray-700 hover:text-gray-500"
+                  : "text-gray-300 hover:bg-gray-700 hover:text-white"
+            }`}
+          >
+            {children}
+          </Link></TooltipTrigger>
+        <TooltipContent>
+          Coming Soon
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 
@@ -131,7 +155,6 @@ function ProfileMenu({avatar, username, email}: { avatar: string; username: stri
               {email}
             </p>
           </div>
-
         </div>
         <DropdownMenuSeparator className="my-2"/>
         <DropdownMenuItem asChild>
@@ -195,6 +218,25 @@ function MobileMenu({avatar, username, navigation, email}: {
             Items
           </SheetClose>
         </MobileNavLink>
+        <MobileNavLink
+          href={"/plans"}
+          icon={<Calendar className="h-6 w-6"/>}
+          comingSoon={process.env.NEXT_PUBLIC_FLAG_FEATURE_MEALPLANS !== "true"}
+        >
+          <SheetClose>
+            Meal plans
+          </SheetClose>
+        </MobileNavLink>
+        <MobileNavLink
+          href={"/meals"}
+          icon={<Drumstick
+            className="h-6 w-6"/>}
+          comingSoon={process.env.NEXT_PUBLIC_FLAG_FEATURE_MEALPLANS !== "true"}
+        >
+          <SheetClose>
+            Meals
+          </SheetClose>
+        </MobileNavLink>
         <MobileNavLink href={settingsRoutes[0].href} icon={<Settings className="h-6 w-6"/>}>
           <SheetClose>
             Settings
@@ -223,13 +265,21 @@ function MobileMenu({avatar, username, navigation, email}: {
   )
 }
 
-function MobileNavLink({href, icon, children}: { href: string; icon: React.ReactNode; children: React.ReactNode }) {
+function MobileNavLink({href, icon, children, comingSoon}: {
+  href: string;
+  icon: React.ReactNode;
+  children: React.ReactNode,
+  comingSoon?: boolean
+}) {
   return (
-    <Link href={href}
+    <Link href={comingSoon ? "#" : href}
           className="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 block px-4 py-2 rounded-md text-base">
       <span className="flex items-center">
         {icon}
-        <span className="ml-3">{children}</span>
+        <span className={`ml-3 ${comingSoon ? "text-muted-foreground" : ""}`}>{children}</span>
+        {comingSoon && (
+          <span className="ml-3 text-xs text-muted-foreground">(Coming Soon)</span>
+        )}
       </span>
     </Link>
   )
