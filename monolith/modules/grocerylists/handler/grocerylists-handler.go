@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/bernardmuller/munchies/monolith/modules/grocerylists/service"
@@ -73,8 +72,8 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 	}
 
 	// Fetch user
-	user, err := h.usersService.GetUserById(c.Request().Context(), userId)
-	if err != nil {
+	user, userErr := h.usersService.GetUserById(c.Request().Context(), userId)
+	if userErr != nil {
 		return c.JSON(http.StatusNotFound, &ErrorResponse{
 			Error:   "Not Found",
 			Message: "User is not part of a household.",
@@ -82,7 +81,7 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 	}
 
 	gl, err := h.grocerylistsService.GetLatestGrocerylistByUserId(c.Request().Context(), user.ID)
-	if err != nil && err == sql.ErrNoRows {
+	if err != nil && gl.HouseholdID.UUID == uuid.Nil {
 		log.Println(err.Error())
 
 		params := service.CreateListParams{
@@ -153,7 +152,7 @@ func (h *GrocerylistsHandler) GetLatestGrocerylistByHouseholdId(c echo.Context) 
 	}
 
 	gl, getGlErr := h.grocerylistsService.GetLatestGrocerylistByHouseholdId(c.Request().Context(), user.HouseholdID.UUID)
-	if getGlErr == sql.ErrNoRows {
+	if getGlErr != nil || gl.HouseholdID.UUID == uuid.Nil {
 		log.Println("No grocery list found, creating new list")
 
 		// Create new grocery list

@@ -11,7 +11,7 @@ type Props = {
 
 export default function useGrocerylistById({ initialData, id }: Props) {
   const { getToken } = useAuth();
-  const token = getToken({ template: "1_HOUR" }).then((t) => t?.toString());
+  const token = getToken().then((t) => t?.toString());
   return useQuery({
     queryKey: keys.getGrocerylistById(id),
     queryFn: async () => {

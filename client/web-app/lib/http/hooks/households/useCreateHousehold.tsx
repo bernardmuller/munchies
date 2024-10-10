@@ -9,7 +9,7 @@ export default function useCreateHousehold() {
   return useMutation({
     mutationKey: ["create-household"],
     mutationFn: async () => {
-      const token = await getToken({ template: "1_HOUR" }).then((t) => t?.toString());
+      const token = await getToken().then((t) => t?.toString());
       return createHousehold({ accessToken: token! });
     },
     onSuccess: () => {

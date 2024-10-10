@@ -10,7 +10,7 @@ export default function useCreateIngredient() {
   return useMutation({
     mutationKey: keys.createIngredient,
     mutationFn: async (data: Ingredient) => {
-      const token = await getToken({ template: "1_HOUR" }).then((t) => t?.toString());
+      const token = await getToken().then((t) => t?.toString());
       return createIngredient({ data, accessToken: token! });
     },
     onSuccess: () => {

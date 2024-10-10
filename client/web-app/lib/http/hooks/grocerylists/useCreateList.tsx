@@ -9,7 +9,7 @@ export default function useCreateList() {
   return useMutation({
     mutationKey: keys.createList,
     mutationFn: async (data: CreateList) => {
-      const token = await getToken({ template: "1_HOUR" }).then((t) => t?.toString());
+      const token = await getToken().then((t) => t?.toString());
       return createList({ data, accessToken: token! });
     },
     onSuccess: () => {
