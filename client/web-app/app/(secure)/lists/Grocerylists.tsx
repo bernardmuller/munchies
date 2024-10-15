@@ -294,7 +294,7 @@ function CreateListDialog() {
   return (
     <Dialog onOpenChange={(open) => !open && resetDialog()}>
       <DialogTrigger asChild>
-        <div
+        <Button
           className="fixed bottom-6 right-6 md:static md:w-auto md:h-auto md:rounded-md
                      w-16 h-16 rounded-full bg-primary text-primary-foreground shadow-lg md:shadow-none
                      hover:bg-primary/90 transition-all duration-200 ease-in-out
@@ -303,7 +303,7 @@ function CreateListDialog() {
           {/*<Plus className="h-8 w-8 md:h-4 md:w-4 md:mr-2 text-white" strokeWidth={3} />*/}
           <span className="text-3xl md:hidden">+</span>
           <span className="hidden md:inline">Create List</span>
-        </div>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
