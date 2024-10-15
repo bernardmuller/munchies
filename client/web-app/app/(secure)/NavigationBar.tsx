@@ -19,6 +19,9 @@ import React from "react";
 import {CgProfile} from "react-icons/cg";
 import {User} from "@/lib/http/client/users/getCurrentLoggedInUser";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from "@/components/ui/tooltip"
+import {BiExit} from "react-icons/bi";
+import {IoExit} from "react-icons/io5";
+import {RxExit} from "react-icons/rx";
 
 const navigation = [
   {name: "Shopping Lists", href: "/lists", comingSoon: false},
@@ -127,7 +130,7 @@ function ProfileMenu({avatar, username, email}: { avatar: string; username: stri
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
+        {/*<Button variant="ghost" size="icon" className="rounded-full">*/}
           <div
             className="h-10 w-10 bg-gradient-to-r from-blue-400 to-primary rounded-full flex justify-center items-center">
             <Image
@@ -138,7 +141,7 @@ function ProfileMenu({avatar, username, email}: { avatar: string; username: stri
               height={40}
             />
           </div>
-        </Button>
+        {/*</Button>*/}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56 p-2">
         <div className="flex gap-2 items-center">
@@ -170,12 +173,13 @@ function ProfileMenu({avatar, username, email}: { avatar: string; username: stri
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator className="my-2"/>
-        <Button
+        <DropdownMenuItem
           className="w-full h-8"
-          variant="destructive"
+          // variant="destructive"
         >
+          <RxExit className="mr-2 h-4 w-4"/>
           <SignOutButton/>
-        </Button>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

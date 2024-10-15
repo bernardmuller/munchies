@@ -94,26 +94,24 @@ function GroceryList({id, items, onCheckOrUncheckItem, categories}: GroceryListP
                 {categories.find(i => i.id === filteredCategory)?.name}
                 <DropdownMenu>
                   <DropdownMenuTrigger>
-                    <Button
-                      variant="ghost"
+                    <div
                     >
                       <Filter/>
-                    </Button>
+                    </div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="px-2" align="end">
                     {categories.map((c) => (
                       <DropdownMenuItem
                         key={c.id}
                         className="p-0">
-                        <Button
+                        <div
                           className="flex gap-1 hover:bg-gray-50 w-full"
-                          variant="ghost"
                           onClick={() =>
                             setFilteredCategory(c.id)
                           }
                         >
                           {c.name}
-                        </Button>
+                        </div>
                       </DropdownMenuItem>
                     ))}
                   </DropdownMenuContent>
@@ -296,7 +294,7 @@ function CreateListDialog() {
   return (
     <Dialog onOpenChange={(open) => !open && resetDialog()}>
       <DialogTrigger asChild>
-        <Button
+        <div
           className="fixed bottom-6 right-6 md:static md:w-auto md:h-auto md:rounded-md
                      w-16 h-16 rounded-full bg-primary text-primary-foreground shadow-lg md:shadow-none
                      hover:bg-primary/90 transition-all duration-200 ease-in-out
@@ -305,7 +303,7 @@ function CreateListDialog() {
           {/*<Plus className="h-8 w-8 md:h-4 md:w-4 md:mr-2 text-white" strokeWidth={3} />*/}
           <span className="text-3xl md:hidden">+</span>
           <span className="hidden md:inline">Create List</span>
-        </Button>
+        </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>

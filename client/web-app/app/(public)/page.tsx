@@ -23,25 +23,25 @@ function FeatureCard({title, description, comingSoon = false}: FeatureCardProps)
 }
 
 export default function Component() {
-  const pageTitle = "Munchies - Simplify Your Grocery Shopping"
-  const pageDescription = "Plan meals effortlessly and generate smart shopping lists with Munchies. Save time, reduce waste, and eat better."
+  // const pageTitle = "Munchies - Simplify Your Grocery Shopping"
+  // const pageDescription = "Plan meals effortlessly and generate smart shopping lists with Munchies. Save time, reduce waste, and eat better."
 
   return (
     <>
-      <Head>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={pageDescription} />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="/og-image.jpg" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={pageTitle} />
-        <meta name="twitter:description" content={pageDescription} />
-        <meta name="twitter:image" content="/twitter-image.jpg" />
-        <link rel="canonical" href="https://munchies.bernardmuller.co.za" />
-      </Head>
+      {/*<Head>*/}
+      {/*  <title>{pageTitle}</title>*/}
+      {/*  <meta name="description" content={pageDescription} />*/}
+      {/*  <meta name="viewport" content="width=device-width, initial-scale=1" />*/}
+      {/*  <meta property="og:title" content={pageTitle} />*/}
+      {/*  <meta property="og:description" content={pageDescription} />*/}
+      {/*  <meta property="og:type" content="website" />*/}
+      {/*  <meta property="og:image" content="/og-image.jpg" />*/}
+      {/*  <meta name="twitter:card" content="summary_large_image" />*/}
+      {/*  <meta name="twitter:title" content={pageTitle} />*/}
+      {/*  <meta name="twitter:description" content={pageDescription} />*/}
+      {/*  <meta name="twitter:image" content="/twitter-image.jpg" />*/}
+      {/*  <link rel="canonical" href="https://munchies.bernardmuller.co.za" />*/}
+      {/*</Head>*/}
       <div className="bg-background text-foreground">
         <header className="w-full bg-transparent absolute top-0 text-white py-4 z-40">
           <div className="mx-auto px-4 max-w-6xl flex justify-between items-center">

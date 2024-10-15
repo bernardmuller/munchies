@@ -2,16 +2,11 @@
 
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
-import {ArrowUpDown, EllipsisIcon, Filter, FilterXIcon, Loader2, PlusIcon, Trash,} from "lucide-react";
+import {ArrowUpDown, EllipsisIcon, Filter, FilterXIcon, PlusIcon, Trash,} from "lucide-react";
 import {DataTable} from "./DataTable";
 import React from "react";
 import {Dialog, DialogContent, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
-import useCreateIngredient from "@/lib/http/hooks/ingredients/useCreateIngredient";
 import {useToast} from "@/components/ui/use-toast";
-import {zodResolver} from "@hookform/resolvers/zod";
-import Select from "react-select";
 import {Category} from "@/lib/http/client/categories/getAllCategories";
 import useIngredients from "@/lib/http/hooks/ingredients/useIngredients";
 import {useQueryClient} from "@tanstack/react-query";
@@ -113,31 +108,28 @@ export default function Ingredients({
           <div className="w-full flex justify-end">
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Button variant="ghost" className="h-8">
+                <div className="h-8">
                   <EllipsisIcon className="rotate-90 dark:stroke-white"/>
-                </Button>
+                </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="px-2 space-y-2 py-2" align="end">
                 <div className="flex flex-col">
-                  <Button
-                    className="w-full justify-start text-sm"
-                    variant="ghost"
-                    onClick={() =>
-                      createGroceryItem.mutate({
-                        ingredientId: cell.row.original.id,
-                        name: cell.row.original.name,
-                        categoryId: cell.row.original.categoryId,
-                        id: cell.row.original.id,
-                      })
-                    }
+                  <DropdownMenuItem className="h-8"
+                      onClick={() =>
+                        createGroceryItem.mutate({
+                          ingredientId: cell.row.original.id,
+                          name: cell.row.original.name,
+                          categoryId: cell.row.original.categoryId,
+                          id: cell.row.original.id,
+                        })
+                      }
                   >
-                    <PlusIcon className="h-4 w-4"/>
-                    Add to my list
-                  </Button>
+                      <PlusIcon className="h-4 w-4 mr-2"/>
+                      Add to my list
+                  </DropdownMenuItem>
                   {householdGrocerylistId && (
-                    <Button
-                      className="w-full justify-start"
-                      variant="ghost"
+                    <DropdownMenuItem
+                      className="w-full justify-start h-8"
                       onClick={() =>
                         createHouseholdGroceryItem.mutate({
                           ingredientId: cell.row.original.id,
@@ -147,14 +139,13 @@ export default function Ingredients({
                         })
                       }
                     >
-                      <PlusIcon className="h-4 w-4"/>
+                      <PlusIcon className="h-4 w-4 mr-2"/>
                       Add to household list
-                    </Button>
+                    </DropdownMenuItem>
                   )}
                 </div>
-                <Button
-                  className="flex gap-1 hover:bg-gray-50 w-full justify-start px-2"
-                  variant="destructive"
+                <DropdownMenuItem
+                  className="flex gap-1 hover:bg-gray-50 w-full justify-start px-2 bg-red-400 hover:bg-red-500"
                   onClick={() =>
                     handleDeleteIngredient(
                       cell.row.original.id,
@@ -163,7 +154,7 @@ export default function Ingredients({
                 >
                   <Trash className="h-4 w-4"/>
                   <span>Delete</span>
-                </Button>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -186,26 +177,24 @@ export default function Ingredients({
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Button
-                   variant="ghost"
+                <div
                 >
                   <Filter/>
-                </Button>
+                </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="px-2" align="end">
                 {categories.map((c) => (
                   <DropdownMenuItem
                     key={c.id}
                     className="p-0">
-                    <Button
+                    <div
                       className="flex gap-1 hover:bg-gray-50 w-full"
-                      variant="ghost"
                       onClick={() =>
                         setFilteredCategory(c.id)
                       }
                     >
                       {c.name}
-                    </Button>
+                    </div>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>

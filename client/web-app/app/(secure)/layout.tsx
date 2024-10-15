@@ -22,7 +22,6 @@ const tabs = [
 const App = ({children}: any) => {
   const {data: currentUser} = useGetCurrentLoggedInUser()
   const pathname = usePathname()
-  console.log(pathname)
   const activeTab = tabs.find(t => t.id === pathname)?.id
   if (!currentUser) return null;
   return (
@@ -80,8 +79,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-    <body data-theme="munchies">
     <QueryClientProvider client={new QueryClient()}>
       <ReactQueryDevtools initialIsOpen={false}/>
       <ThemeProvider
@@ -89,11 +86,8 @@ export default function RootLayout({
         defaultTheme="light"
       >
         <App>{children}</App>
-
         <Toaster/>
       </ThemeProvider>
     </QueryClientProvider>
-    </body>
-    </html>
   );
 }
