@@ -511,7 +511,7 @@ export default function GroceryListPage({
           <TabsContent value="my">
             <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">
               <div className="px-3">
-                <ListMetaData list={myGrocerylist}/>
+                <ListMetaData list={myGrocerylist as GroceryList}/>
               </div>
               <GroceryList
                 id={myGrocerylist?.id}
@@ -525,7 +525,7 @@ export default function GroceryListPage({
             <TabsContent value="household">
               <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">
                 <div className="px-3">
-                  <HouseholdListMetaData list={myHouseholdGrocerylist}/>
+                  <HouseholdListMetaData list={myHouseholdGrocerylist as GroceryList}/>
                 </div>
                 <GroceryList
                   id={myHouseholdGrocerylist?.id}
