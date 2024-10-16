@@ -200,7 +200,6 @@ const MetaDataWrapper = ({children}: { children: React.ReactNode }) => {
 
 export function ListMetaData({list}: { list: GroceryList }) {
   const router = useRouter()
-  if(!list) return null
   return (
     <MetaDataWrapper>
       <div className="w-full flex justify-between items-center">
@@ -213,16 +212,21 @@ export function ListMetaData({list}: { list: GroceryList }) {
           Edit
         </Button>
       </div>
-      <p className="text-sm">Created: {format(new Date(list.createdAt), "dd MMMM yyyy")}</p>
-      <p className="text-sm">Total Items: {list.items?.length ?? "0"}</p>
-      <p className="text-sm">Checked Items: {list.items?.filter(item => item.check)?.length ?? "0"}</p>
+      {list.createdAt && (
+        <p className="text-sm">Created: {format(new Date(list.createdAt), "dd MMMM yyyy")}</p>
+      )}
+      {list.items?.length && (
+        <p className="text-sm">Total Items: {list.items?.length ?? "0"}</p>
+      )}
+      {list.items?.filter(item => item.check)?.length && (
+        <p className="text-sm">Checked Items: {list.items?.filter(item => item.check)?.length ?? "0"}</p>
+      )}
     </MetaDataWrapper>
   )
 }
 
 export function HouseholdListMetaData({list}: { list: GroceryList }) {
   const router = useRouter()
-  if(!list) return null
   return (
     <MetaDataWrapper>
       <div className="w-full flex justify-between items-center">
@@ -235,9 +239,15 @@ export function HouseholdListMetaData({list}: { list: GroceryList }) {
           Edit
         </Button>
       </div>
-      <p className="text-sm">Created: {format(new Date(list.createdAt), "dd MMMM yyyy")}</p>
-      <p className="text-sm">Total Items: {list.items?.length ?? "0"}</p>
-      <p className="text-sm">Checked Items: {list.items?.filter(item => item.check)?.length ?? "0"}</p>
+      {list.createdAt && (
+        <p className="text-sm">Created: {format(new Date(list.createdAt), "dd MMMM yyyy")}</p>
+      )}
+      {list.items?.length && (
+        <p className="text-sm">Total Items: {list.items?.length ?? "0"}</p>
+      )}
+      {list.items?.filter(item => item.check)?.length && (
+        <p className="text-sm">Checked Items: {list.items?.filter(item => item.check)?.length ?? "0"}</p>
+      )}
       {/*<p className="text-sm">Household Members: {'N/A'}</p>*/}
     </MetaDataWrapper>
   )
