@@ -135,6 +135,7 @@
   .my-react-select-container .my-react-select__input-container,
   .my-react-select-container .my-react-select__placeholder,
   .my-react-select-container .my-react-select__single-value {
-    @apply text-slate-900 dark:text-slate-400 font-light;
+    @apply text-slate-900 dark:text-slate-400 font-light text-[16px];
   }
+
 }
