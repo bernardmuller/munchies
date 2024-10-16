@@ -2,7 +2,7 @@
 
 import React, {useEffect, useMemo, useState} from "react"
 import type {GroceryItem, GroceryList} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId"
-// import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {Checkbox} from "@/components/ui/checkbox"
 import {ScrollArea} from "@/components/ui/scroll-area"
 import {Button} from "@/components/ui/button"
@@ -23,12 +23,13 @@ import {Calendar, ClipboardList, Filter, FilterXIcon, House, Loader2, Pencil, Us
 import {useRouter} from "next/navigation";
 import useCreateList from "@/lib/http/hooks/grocerylists/useCreateList";
 import {useToast} from "@/components/ui/use-toast";
-import {Card, CardContent} from "@/components/ui/card";
+import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import useGetCurrentLoggedInUser from "@/lib/http/hooks/users/useGetCurrentLoggedInUser";
 import {Input} from "@/components/ui/input";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {Category} from "@/lib/http/client/categories/getAllCategories";
 import {format} from "date-fns";
+import {Skeleton} from "@/components/ui/skeleton";
 
 type GrocerylistsPageProps = {
   grocerylists: {
@@ -148,39 +149,39 @@ export function GroceryList({id, items, onCheckOrUncheckItem, categories}: Groce
           )}
           {groceryItemsWithQuantity && groceryItemsWithQuantity
             .filter((i) => {
-            if (filteredCategory !== null) {
-              return i.category_id === filteredCategory;
-            }
-            return true;
-          }).filter((item: GroceryItemWithQuantity) => item.name.toLowerCase().includes(searchTerm.toLowerCase())).map((item) => (
-            <Card key={item.item_id}
-              // className="flex items-center space-x-4 bg-white p-3 px-5 rounded-lg transition-colors hover:bg-secondary/30 border-2 "
-            >
-              <CardContent className="flex items-center justify-between p-4 gap-2">
-                <div className="flex items-center justify-center w-8 h-8">
-                  <Checkbox
-                    id={item.item_id}
-                    checked={item.check}
-                    onCheckedChange={() => onCheckOrUncheckItem(item.item_id)}
-                    className="w-6 h-6 border-2 border-primary"
-                  />
-                </div>
-                <label
-                  htmlFor={item.item_id}
-                  className={`flex-grow text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${
-                    item.check ? 'line-through text-muted-foreground' : ''
-                  }`}
-                >
-                  {item.name}
-                </label>
-                {item.quantity > 1 && (
-                  <span className="text-md font-semibold text-muted-foreground">
+              if (filteredCategory !== null) {
+                return i.category_id === filteredCategory;
+              }
+              return true;
+            }).filter((item: GroceryItemWithQuantity) => item.name.toLowerCase().includes(searchTerm.toLowerCase())).map((item) => (
+              <Card key={item.item_id}
+                // className="flex items-center space-x-4 bg-white p-3 px-5 rounded-lg transition-colors hover:bg-secondary/30 border-2 "
+              >
+                <CardContent className="flex items-center justify-between p-4 gap-2">
+                  <div className="flex items-center justify-center w-8 h-8">
+                    <Checkbox
+                      id={item.item_id}
+                      checked={item.check}
+                      onCheckedChange={() => onCheckOrUncheckItem(item.item_id)}
+                      className="w-6 h-6 border-2 border-primary"
+                    />
+                  </div>
+                  <label
+                    htmlFor={item.item_id}
+                    className={`flex-grow text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${
+                      item.check ? 'line-through text-muted-foreground' : ''
+                    }`}
+                  >
+                    {item.name}
+                  </label>
+                  {item.quantity > 1 && (
+                    <span className="text-md font-semibold text-muted-foreground">
                 x{item.quantity}
               </span>
-                )}
-              </CardContent>
-            </Card>
-          ))}
+                  )}
+                </CardContent>
+              </Card>
+            ))}
         </ul>
       </ScrollArea>
     </div>
@@ -247,7 +248,7 @@ function CreateListDialog() {
   const [listType, setListType] = useState<'shopping' | 'mealplan' | null>(null)
   const createList = useCreateList()
   const {toast} = useToast()
-  const {data: currentUser} = useGetCurrentLoggedInUser()
+  const {data: currentUser} = useGetCurrentLoggedInUser({initialData: null})
 
   const handleCreateList = async (scope: 'me' | 'household') => {
     if (!listType) return
@@ -344,7 +345,7 @@ function CreateListDialog() {
                   variant="outline"
                   disabled={process.env.NEXT_PUBLIC_FLAG_FEATURE_MEALPLANS !== "true"}
                 >
-                  <Calendar className="mr-2 h-6 w-6" />
+                  <Calendar className="mr-2 h-6 w-6"/>
                   Mealplan List {process.env.NEXT_PUBLIC_FLAG_FEATURE_MEALPLANS !== "true" && "(Coming Soon)"}
                 </Button>
               </div>
@@ -395,11 +396,11 @@ export default function GroceryListPage({
 }: GrocerylistsPageProps) {
   const router = useRouter()
 
-  const {data: myGrocerylist} = useLatestGrocerylistByUserId({
+  const {data: myGrocerylist, isLoading: isMyGrocerylistLoading} = useLatestGrocerylistByUserId({
     initialData: grocerylists.myGrocerylist,
     userId: grocerylists.myGrocerylist?.createdBy
   })
-  const {data: myHouseholdGrocerylist} = useLatestGrocerylistByHouseholdId({
+  const {data: myHouseholdGrocerylist, isLoading: isMyHouseholdGrocerylistLoading} = useLatestGrocerylistByHouseholdId({
     initialData: grocerylists.myHouseholdGrocerylist,
   })
   const checkOrUncheckItem = useCheckOrUncheckItem()
@@ -435,50 +436,94 @@ export default function GroceryListPage({
     checkOrUncheckHouseholdItemsWithSameName(id)
   }
 
+  if ((isMyGrocerylistLoading || isMyHouseholdGrocerylistLoading) ||
+    (!myGrocerylist.items?.length || !myHouseholdGrocerylist?.items?.length)
+  ) {
+    return <div className="container mx-auto p-4 space-y-4">
+      <div className="flex justify-between items-center">
+        <div className="space-x-2">
+          <Skeleton className="h-10 w-32 inline-block"/>
+          <Skeleton className="h-10 w-40 inline-block"/>
+        </div>
+        <Skeleton className="h-10 w-24"/>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-6 w-40 mb-2"/>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-48"/>
+            <Skeleton className="h-4 w-32"/>
+            <Skeleton className="h-4 w-40"/>
+          </div>
+        </CardHeader>
+      </Card>
+
+      <Skeleton className="h-10 w-full"/>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {[...Array(5)].map((_, index) => (
+          <Card key={index}>
+            <CardContent className="p-4">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center space-x-2">
+                  <Skeleton className="h-4 w-4 rounded-sm"/>
+                  <Skeleton className="h-4 w-24"/>
+                </div>
+                <Skeleton className="h-4 w-8"/>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  }
+
   return (
     <div className="space-y-4">
-Testing
-      {/*<Tabs defaultValue="my" className="w-full">*/}
-      {/*  <div className="w-full flex justify-between md:px-3 md:mt-3">*/}
-      {/*    <TabsList className="grid w-full md:w-1/2 grid-cols-2">*/}
-      {/*      <TabsTrigger value="my">My Shopping List</TabsTrigger>*/}
-      {/*      {grocerylists.myHouseholdGrocerylist?.items && (*/}
-      {/*        <TabsTrigger value="household">Household Shopping List</TabsTrigger>*/}
-      {/*      )}*/}
-      {/*    </TabsList>*/}
-      {/*    <CreateListDialog/>*/}
-      {/*  </div>*/}
-      {/*  <div className="lg:pt-2">*/}
-      {/*    <TabsContent value="my">*/}
-      {/*      <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">*/}
-      {/*        <div className="px-3">*/}
-      {/*          <ListMetaData list={myGrocerylist}/>*/}
-      {/*        </div>*/}
-      {/*        <GroceryList*/}
-      {/*          id={myGrocerylist?.id}*/}
-      {/*          items={myGrocerylist?.items}*/}
-      {/*          onCheckOrUncheckItem={handleCheckOrUncheckItem}*/}
-      {/*          categories={categories}*/}
-      {/*        />*/}
-      {/*      </div>*/}
-      {/*    </TabsContent>*/}
-      {/*    {grocerylists.myHouseholdGrocerylist?.items && (*/}
-      {/*      <TabsContent value="household">*/}
-      {/*        <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">*/}
-      {/*          <div className="px-3">*/}
-      {/*            <HouseholdListMetaData list={myHouseholdGrocerylist}/>*/}
-      {/*          </div>*/}
-      {/*          <GroceryList*/}
-      {/*            id={myHouseholdGrocerylist?.id}*/}
-      {/*            items={myHouseholdGrocerylist?.items}*/}
-      {/*            onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}*/}
-      {/*            categories={categories}*/}
-      {/*          />*/}
-      {/*        </div>*/}
-      {/*      </TabsContent>*/}
-      {/*    )}*/}
-      {/*  </div>*/}
-      {/*</Tabs>*/}
+      <Tabs defaultValue="my" className="w-full">
+        <div className="w-full flex justify-between md:px-3 md:mt-3">
+          <TabsList className="grid w-full md:w-1/2 grid-cols-2">
+            <TabsTrigger value="my">My Shopping List</TabsTrigger>
+            {grocerylists.myHouseholdGrocerylist?.items && (
+              <TabsTrigger value="household">Household Shopping List</TabsTrigger>
+            )}
+          </TabsList>
+          <CreateListDialog/>
+        </div>
+        <div className="lg:pt-2">
+          <TabsContent value="my">
+            <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">
+              <div className="px-3">
+                <ListMetaData list={myGrocerylist}/>
+              </div>
+              {myGrocerylist && (
+                <GroceryList
+                  id={myGrocerylist?.id}
+                  items={myGrocerylist?.items}
+                  onCheckOrUncheckItem={handleCheckOrUncheckItem}
+                  categories={categories}
+                />
+              )}
+            </div>
+          </TabsContent>
+          {myHouseholdGrocerylist && (
+            <TabsContent value="household">
+              <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">
+                <div className="px-3">
+                  <HouseholdListMetaData list={myHouseholdGrocerylist}/>
+                </div>
+                <GroceryList
+                  id={myHouseholdGrocerylist?.id}
+                  items={myHouseholdGrocerylist?.items}
+                  onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}
+                  categories={categories}
+                />
+              </div>
+            </TabsContent>
+          )}
+        </div>
+      </Tabs>
     </div>
   )
 }

@@ -19,8 +19,6 @@ import React from "react";
 import {CgProfile} from "react-icons/cg";
 import {User} from "@/lib/http/client/users/getCurrentLoggedInUser";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from "@/components/ui/tooltip"
-import {BiExit} from "react-icons/bi";
-import {IoExit} from "react-icons/io5";
 import {RxExit} from "react-icons/rx";
 
 const navigation = [

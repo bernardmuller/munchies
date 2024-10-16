@@ -73,7 +73,15 @@ func (h *GrocerylistsHandler) GetLatestOrCreateNewGrocerylistByUserId(c echo.Con
 	}
 
 	gl, err := h.grocerylistsService.GetLatestGrocerylistByUserId(c.Request().Context(), userId)
-	if err != nil && err == sql.ErrNoRows {
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, ErrorResponse{
+			Error:   "Internal Server Error",
+			Message: err.Error(),
+		})
+	}
+
+	if err == sql.ErrNoRows {
 		log.Println(err.Error())
 
 		params := service.CreateListParams{

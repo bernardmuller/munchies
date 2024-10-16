@@ -33,6 +33,7 @@ export default async function GrocerylistsPage() {
     <div className="w-full min-h-[50vh] ">
       {/*<h2 className="mb-6 text-xl font-semibold">Shopping Lists</h2>*/}
       <Grocerylists
+        currentUser={currentUser}
         grocerylists={{
           myGrocerylist: userGrocerylistResponse?.data!,
           myHouseholdGrocerylist: householdGrocerylistResponse?.data!,
