@@ -248,7 +248,7 @@ function CreateListDialog() {
   const [listType, setListType] = useState<'shopping' | 'mealplan' | null>(null)
   const createList = useCreateList()
   const {toast} = useToast()
-  const {data: currentUser} = useGetCurrentLoggedInUser({initialData: null})
+  const {data: currentUser} = useGetCurrentLoggedInUser()
 
   const handleCreateList = async (scope: 'me' | 'household') => {
     if (!listType) return
