@@ -204,13 +204,15 @@ export function ListMetaData({list}: { list: GroceryList }) {
     <MetaDataWrapper>
       <div className="w-full flex justify-between items-center">
         <h3 className="text-md md:text-lg font-semibold">My Shopping List</h3>
-        <Button
-          variant="outline"
-          onClick={() => router.push(`/lists/${list.id}`)}
-        >
-          <Pencil className="mr-2 h-4 w-4"/>
-          Edit
-        </Button>
+        {list.id && (
+          <Button
+            variant="outline"
+            onClick={() => router.push(`/lists/${list.id}`)}
+          >
+            <Pencil className="mr-2 h-4 w-4"/>
+            Edit
+          </Button>
+        )}
       </div>
       {list.createdAt && (
         <p className="text-sm">Created: {format(new Date(list.createdAt), "dd MMMM yyyy")}</p>
@@ -231,13 +233,15 @@ export function HouseholdListMetaData({list}: { list: GroceryList }) {
     <MetaDataWrapper>
       <div className="w-full flex justify-between items-center">
         <h3 className="text-md md:text-lg font-semibold">My Household Shopping List</h3>
-        <Button
-          variant="outline"
-          onClick={() => router.push(`/lists/${list.id}`)}
-        >
-          <Pencil className="mr-2 h-4 w-4"/>
-          Edit
-        </Button>
+        {list.id && (
+          <Button
+            variant="outline"
+            onClick={() => router.push(`/lists/${list?.id}`)}
+          >
+            <Pencil className="mr-2 h-4 w-4"/>
+            Edit
+          </Button>
+        )}
       </div>
       {list.createdAt && (
         <p className="text-sm">Created: {format(new Date(list.createdAt), "dd MMMM yyyy")}</p>
@@ -507,14 +511,14 @@ export default function GroceryListPage({
           <TabsContent value="my">
             <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">
               <div className="px-3">
-                  <ListMetaData list={myGrocerylist}/>
+                <ListMetaData list={myGrocerylist}/>
               </div>
-                <GroceryList
-                  id={myGrocerylist?.id}
-                  items={myGrocerylist?.items}
-                  onCheckOrUncheckItem={handleCheckOrUncheckItem}
-                  categories={categories}
-                />
+              <GroceryList
+                id={myGrocerylist?.id}
+                items={myGrocerylist?.items}
+                onCheckOrUncheckItem={handleCheckOrUncheckItem}
+                categories={categories}
+              />
             </div>
           </TabsContent>
           {myHouseholdGrocerylist && (
@@ -523,12 +527,12 @@ export default function GroceryListPage({
                 <div className="px-3">
                   <HouseholdListMetaData list={myHouseholdGrocerylist}/>
                 </div>
-                  <GroceryList
-                    id={myHouseholdGrocerylist?.id}
-                    items={myHouseholdGrocerylist?.items}
-                    onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}
-                    categories={categories}
-                  />
+                <GroceryList
+                  id={myHouseholdGrocerylist?.id}
+                  items={myHouseholdGrocerylist?.items}
+                  onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}
+                  categories={categories}
+                />
               </div>
             </TabsContent>
           )}
