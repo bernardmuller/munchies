@@ -30,6 +30,7 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 import {Category} from "@/lib/http/client/categories/getAllCategories";
 import {format} from "date-fns";
 import {Skeleton} from "@/components/ui/skeleton";
+import dayjs from "dayjs";
 
 type GrocerylistsPageProps = {
   grocerylists: {
@@ -215,12 +216,12 @@ export function ListMetaData({list}: { list: GroceryList }) {
         )}
       </div>
       {list.createdAt && (
-        <p className="text-sm">Created: {format(new Date(list.createdAt), "dd MMMM yyyy")}</p>
+        <p className="text-sm">Created: {dayjs(list.createdAt).format('DD MMMM YYYY')}</p>
       )}
       {list.items?.length && (
         <p className="text-sm">Total Items: {list.items?.length ?? "0"}</p>
       )}
-      {list.items?.filter(item => item.check)?.length && (
+      {list.items?.length && (
         <p className="text-sm">Checked Items: {list.items?.filter(item => item.check)?.length ?? "0"}</p>
       )}
     </MetaDataWrapper>
@@ -244,12 +245,12 @@ export function HouseholdListMetaData({list}: { list: GroceryList }) {
         )}
       </div>
       {list.createdAt && (
-        <p className="text-sm">Created: {format(new Date(list.createdAt), "dd MMMM yyyy")}</p>
+        <p className="text-sm">Created: {dayjs(list.createdAt).format('DD MMMM YYYY')}</p>
       )}
       {list.items?.length && (
         <p className="text-sm">Total Items: {list.items?.length ?? "0"}</p>
       )}
-      {list.items?.filter(item => item.check)?.length && (
+      {list.items?.length && (
         <p className="text-sm">Checked Items: {list.items?.filter(item => item.check)?.length ?? "0"}</p>
       )}
       {/*<p className="text-sm">Household Members: {'N/A'}</p>*/}
@@ -513,7 +514,7 @@ export default function GroceryListPage({
           <TabsContent value="my">
             <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">
               <div className="px-3">
-                {/*<ListMetaData list={myGrocerylist as GroceryList}/>*/}
+                <ListMetaData list={myGrocerylist as GroceryList}/>
               </div>
               <GroceryList
                 id={myGrocerylist?.id}
@@ -527,7 +528,7 @@ export default function GroceryListPage({
             <TabsContent value="household">
               <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">
                 <div className="px-3">
-                  {/*<HouseholdListMetaData list={myHouseholdGrocerylist as GroceryList}/>*/}
+                  <HouseholdListMetaData list={myHouseholdGrocerylist as GroceryList}/>
                 </div>
                 <GroceryList
                   id={myHouseholdGrocerylist?.id}
