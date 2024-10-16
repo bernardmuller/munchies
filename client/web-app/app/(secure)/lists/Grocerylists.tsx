@@ -200,6 +200,7 @@ const MetaDataWrapper = ({children}: { children: React.ReactNode }) => {
 
 export function ListMetaData({list}: { list: GroceryList }) {
   const router = useRouter()
+  if(!list) return null
   return (
     <MetaDataWrapper>
       <div className="w-full flex justify-between items-center">
@@ -221,6 +222,7 @@ export function ListMetaData({list}: { list: GroceryList }) {
 
 export function HouseholdListMetaData({list}: { list: GroceryList }) {
   const router = useRouter()
+  if(!list) return null
   return (
     <MetaDataWrapper>
       <div className="w-full flex justify-between items-center">
@@ -495,18 +497,14 @@ export default function GroceryListPage({
           <TabsContent value="my">
             <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">
               <div className="px-3">
-                {/*{myGrocerylist && (*/}
-                {/*  <ListMetaData list={myGrocerylist}/>*/}
-                {/*)}*/}
+                  <ListMetaData list={myGrocerylist}/>
               </div>
-              {myGrocerylist && (
                 <GroceryList
                   id={myGrocerylist?.id}
                   items={myGrocerylist?.items}
                   onCheckOrUncheckItem={handleCheckOrUncheckItem}
                   categories={categories}
                 />
-              )}
             </div>
           </TabsContent>
           {myHouseholdGrocerylist && (
@@ -515,12 +513,12 @@ export default function GroceryListPage({
                 <div className="px-3">
                   <HouseholdListMetaData list={myHouseholdGrocerylist}/>
                 </div>
-                <GroceryList
-                  id={myHouseholdGrocerylist?.id}
-                  items={myHouseholdGrocerylist?.items}
-                  onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}
-                  categories={categories}
-                />
+                  <GroceryList
+                    id={myHouseholdGrocerylist?.id}
+                    items={myHouseholdGrocerylist?.items}
+                    onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}
+                    categories={categories}
+                  />
               </div>
             </TabsContent>
           )}
