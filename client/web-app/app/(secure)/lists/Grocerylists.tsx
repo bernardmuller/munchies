@@ -28,7 +28,6 @@ import useGetCurrentLoggedInUser from "@/lib/http/hooks/users/useGetCurrentLogge
 import {Input} from "@/components/ui/input";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {Category} from "@/lib/http/client/categories/getAllCategories";
-import {format} from "date-fns";
 import {Skeleton} from "@/components/ui/skeleton";
 import dayjs from "dayjs";
 
