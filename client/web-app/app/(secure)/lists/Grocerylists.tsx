@@ -104,7 +104,7 @@ export function GroceryList({id, items, onCheckOrUncheckItem, categories}: Groce
                     {categories.map((c) => (
                       <DropdownMenuItem
                         key={c.id}
-                        className="p-0">
+                        className="p-2">
                         <div
                           className="flex gap-1 hover:bg-gray-50 w-full"
                           onClick={() =>
