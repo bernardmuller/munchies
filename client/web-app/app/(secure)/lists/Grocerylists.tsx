@@ -495,6 +495,8 @@ export default function GroceryListPage({
     </div>
   }
 
+  if(!myGrocerylist || !myHouseholdGrocerylist) return null;
+
   return (
     <div className="space-y-4">
       <Tabs defaultValue="my" className="w-full">
