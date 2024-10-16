@@ -2,7 +2,7 @@
 
 import React, {useEffect, useMemo, useState} from "react"
 import type {GroceryItem, GroceryList} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId"
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
+// import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {Checkbox} from "@/components/ui/checkbox"
 import {ScrollArea} from "@/components/ui/scroll-area"
 import {Button} from "@/components/ui/button"
@@ -49,7 +49,7 @@ interface GroceryListProps {
   categories: Category[]
 }
 
-function GroceryList({id, items, onCheckOrUncheckItem, categories}: GroceryListProps) {
+export function GroceryList({id, items, onCheckOrUncheckItem, categories}: GroceryListProps) {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
   const [groceryItems, setGroceryItems] = useState<GroceryItem[]>(items)
@@ -437,48 +437,48 @@ export default function GroceryListPage({
 
   return (
     <div className="space-y-4">
-
-      <Tabs defaultValue="my" className="w-full">
-        <div className="w-full flex justify-between md:px-3 md:mt-3">
-          <TabsList className="grid w-full md:w-1/2 grid-cols-2">
-            <TabsTrigger value="my">My Shopping List</TabsTrigger>
-            {grocerylists.myHouseholdGrocerylist?.items && (
-              <TabsTrigger value="household">Household Shopping List</TabsTrigger>
-            )}
-          </TabsList>
-          <CreateListDialog/>
-        </div>
-        <div className="lg:pt-2">
-          <TabsContent value="my">
-            <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">
-              <div className="px-3">
-                <ListMetaData list={myGrocerylist}/>
-              </div>
-              <GroceryList
-                id={myGrocerylist?.id}
-                items={myGrocerylist?.items}
-                onCheckOrUncheckItem={handleCheckOrUncheckItem}
-                categories={categories}
-              />
-            </div>
-          </TabsContent>
-          {grocerylists.myHouseholdGrocerylist?.items && (
-            <TabsContent value="household">
-              <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">
-                <div className="px-3">
-                  <HouseholdListMetaData list={myHouseholdGrocerylist}/>
-                </div>
-                <GroceryList
-                  id={myHouseholdGrocerylist?.id}
-                  items={myHouseholdGrocerylist?.items}
-                  onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}
-                  categories={categories}
-                />
-              </div>
-            </TabsContent>
-          )}
-        </div>
-      </Tabs>
+Testing
+      {/*<Tabs defaultValue="my" className="w-full">*/}
+      {/*  <div className="w-full flex justify-between md:px-3 md:mt-3">*/}
+      {/*    <TabsList className="grid w-full md:w-1/2 grid-cols-2">*/}
+      {/*      <TabsTrigger value="my">My Shopping List</TabsTrigger>*/}
+      {/*      {grocerylists.myHouseholdGrocerylist?.items && (*/}
+      {/*        <TabsTrigger value="household">Household Shopping List</TabsTrigger>*/}
+      {/*      )}*/}
+      {/*    </TabsList>*/}
+      {/*    <CreateListDialog/>*/}
+      {/*  </div>*/}
+      {/*  <div className="lg:pt-2">*/}
+      {/*    <TabsContent value="my">*/}
+      {/*      <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">*/}
+      {/*        <div className="px-3">*/}
+      {/*          <ListMetaData list={myGrocerylist}/>*/}
+      {/*        </div>*/}
+      {/*        <GroceryList*/}
+      {/*          id={myGrocerylist?.id}*/}
+      {/*          items={myGrocerylist?.items}*/}
+      {/*          onCheckOrUncheckItem={handleCheckOrUncheckItem}*/}
+      {/*          categories={categories}*/}
+      {/*        />*/}
+      {/*      </div>*/}
+      {/*    </TabsContent>*/}
+      {/*    {grocerylists.myHouseholdGrocerylist?.items && (*/}
+      {/*      <TabsContent value="household">*/}
+      {/*        <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">*/}
+      {/*          <div className="px-3">*/}
+      {/*            <HouseholdListMetaData list={myHouseholdGrocerylist}/>*/}
+      {/*          </div>*/}
+      {/*          <GroceryList*/}
+      {/*            id={myHouseholdGrocerylist?.id}*/}
+      {/*            items={myHouseholdGrocerylist?.items}*/}
+      {/*            onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}*/}
+      {/*            categories={categories}*/}
+      {/*          />*/}
+      {/*        </div>*/}
+      {/*      </TabsContent>*/}
+      {/*    )}*/}
+      {/*  </div>*/}
+      {/*</Tabs>*/}
     </div>
   )
 }
