@@ -485,7 +485,7 @@ export default function GroceryListPage({
         <div className="w-full flex justify-between md:px-3 md:mt-3">
           <TabsList className="grid w-full md:w-1/2 grid-cols-2">
             <TabsTrigger value="my">My Shopping List</TabsTrigger>
-            {grocerylists.myHouseholdGrocerylist?.items && (
+            {myHouseholdGrocerylist?.items?.length > 0 && (
               <TabsTrigger value="household">Household Shopping List</TabsTrigger>
             )}
           </TabsList>
@@ -495,7 +495,9 @@ export default function GroceryListPage({
           <TabsContent value="my">
             <div className="w-full grid grid-cols-1 md:grid-cols-1 md:gap-4">
               <div className="px-3">
-                <ListMetaData list={myGrocerylist}/>
+                {/*{myGrocerylist && (*/}
+                {/*  <ListMetaData list={myGrocerylist}/>*/}
+                {/*)}*/}
               </div>
               {myGrocerylist && (
                 <GroceryList
