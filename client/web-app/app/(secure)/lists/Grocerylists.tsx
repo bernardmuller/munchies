@@ -29,7 +29,6 @@ import {Input} from "@/components/ui/input";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {Category} from "@/lib/http/client/categories/getAllCategories";
 import {Skeleton} from "@/components/ui/skeleton";
-import dayjs from "dayjs";
 
 type GrocerylistsPageProps = {
   grocerylists: {
@@ -214,9 +213,6 @@ export function ListMetaData({list}: { list: GroceryList }) {
           </Button>
         )}
       </div>
-      {list.createdAt && (
-        <p className="text-sm">Created: {dayjs(list.createdAt).format('DD MMMM YYYY')}</p>
-      )}
       {list.items?.length && (
         <p className="text-sm">Total Items: {list.items?.length ?? "0"}</p>
       )}
@@ -243,9 +239,6 @@ export function HouseholdListMetaData({list}: { list: GroceryList }) {
           </Button>
         )}
       </div>
-      {list.createdAt && (
-        <p className="text-sm">Created: {dayjs(list.createdAt).format('DD MMMM YYYY')}</p>
-      )}
       {list.items?.length && (
         <p className="text-sm">Total Items: {list.items?.length ?? "0"}</p>
       )}
