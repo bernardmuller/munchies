@@ -445,8 +445,7 @@ export default function GroceryListPage({
     checkOrUncheckHouseholdItemsWithSameName(id)
   }
 
-  if ((isMyGrocerylistLoading || isMyHouseholdGrocerylistLoading) ||
-    (!myGrocerylist.items?.length || !myHouseholdGrocerylist?.items?.length)
+  if ((isMyGrocerylistLoading || isMyHouseholdGrocerylistLoading)
   ) {
     return <div className="container mx-auto p-4 space-y-4">
       <div className="flex justify-between items-center">
