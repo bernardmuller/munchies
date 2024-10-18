@@ -33,10 +33,11 @@ interface GroceryItemWithQuantity extends GroceryItem {
   quantity: number
 }
 
-const SearchableSelect = ({ options, onSelect, placeholder}: {
+const SearchableSelect = ({ options, onSelect, placeholder, onFocus}: {
   options: Ingredient[];
   onSelect: (ingredient: Ingredient) => void;
   placeholder: string;
+  onFocus: () => void
 }) => {
   return (
     <Select
@@ -52,6 +53,7 @@ const SearchableSelect = ({ options, onSelect, placeholder}: {
           onSelect(selected)
         }
       }}
+      onFocus={onFocus}
       className="my-react-select-container"
       classNamePrefix="my-react-select"
     />
@@ -132,6 +134,17 @@ export default function ManageGrocerylist({
     setSearchTerm(inputValue)
   }
 
+  const scrollToSection = () => {
+    const section = document.querySelector('.page');
+    if (section) {
+      window.scrollTo({
+        // @ts-ignore
+        top: section.offsetTop,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -171,11 +184,12 @@ export default function ManageGrocerylist({
         <div className="w-full md:w-1/2">
           <h2 className="text-xl font-semibold mb-2">Current Grocery List</h2>
 
-          <div className="md:hidden mb-4">
+          <div className="md:hidden mb-4 page">
             <SearchableSelect
               options={ingredients}
               onSelect={(i: Ingredient) => addItem(i.id)}
               placeholder="Search and add ingredients..."
+              onFocus={scrollToSection}
             />
           </div>
 
