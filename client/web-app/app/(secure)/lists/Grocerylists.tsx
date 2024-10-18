@@ -447,9 +447,8 @@ export default function GroceryListPage({
     checkOrUncheckHouseholdItemsWithSameName(id)
   }
 
-  if ((isMyGrocerylistLoading || isMyHouseholdGrocerylistLoading)
-  ) {
-    return <div className="container mx-auto p-4 space-y-4">
+  if (!myGrocerylist && !myHouseholdGrocerylist) {
+    return (<div className="container mx-auto p-4 space-y-4">
       <div className="flex justify-between items-center">
         <div className="space-x-2">
           <Skeleton className="h-10 w-32 inline-block"/>
@@ -486,10 +485,8 @@ export default function GroceryListPage({
           </Card>
         ))}
       </div>
-    </div>
+    </div>)
   }
-
-  if (!myGrocerylist && !myHouseholdGrocerylist) return <>no data</>;
 
   return (
     <div className="space-y-4">
