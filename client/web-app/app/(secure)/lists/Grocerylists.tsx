@@ -497,7 +497,7 @@ export default function GroceryListPage({
         <div className="w-full flex justify-between md:px-3 md:mt-3">
           <TabsList className="grid w-full md:w-1/2 grid-cols-2">
             <TabsTrigger value="my">My Shopping List</TabsTrigger>
-            {myHouseholdGrocerylist?.items?.length > 0 && (
+            {myHouseholdGrocerylist && (
               <TabsTrigger value="household">Household Shopping List</TabsTrigger>
             )}
           </TabsList>
