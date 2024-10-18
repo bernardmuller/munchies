@@ -78,58 +78,60 @@ export function GroceryList({id, items, onCheckOrUncheckItem, categories}: Groce
   return (
     <div className="bg-slate-100 md:bg-white">
       <ScrollArea className="bg-background md:bg-white px-3 py-3 rounded-b-sm h-fit md:rounded-lg">
-        <div className="bg-white rounded-lg border-slate-200 border-[1px] p-3 mb-3">
-          {/*<h3 className="text-lg pb-3 ml md:hidden">Items:</h3>*/}
-          <div className="flex justify-between">
-            <div>
-              <Input
-                placeholder="Search items..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <div
-                className={`flex items-center pl-2 rounded-md gap-1 ${filteredCategory ? "border-[1px] border-slate-200" : ""}`}>
-                {categories.find(i => i.id === filteredCategory)?.name}
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <div
-                    >
-                      <Filter/>
-                    </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="px-2" align="end">
-                    {categories.map((c) => (
-                      <DropdownMenuItem
-                        key={c.id}
-                        className="p-2">
-                        <div
-                          className="flex gap-1 hover:bg-gray-50 w-full"
-                          onClick={() =>
-                            setFilteredCategory(c.id)
-                          }
-                        >
-                          {c.name}
-                        </div>
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
+        {groceryItemsWithQuantity.length ? (
+          <div className="bg-white rounded-lg border-slate-200 border-[1px] p-3 mb-3">
+            {/*<h3 className="text-lg pb-3 ml md:hidden">Items:</h3>*/}
+            <div className="flex justify-between">
+              <div>
+                <Input
+                  placeholder="Search items..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
               </div>
-              <Button
-                onClick={() => {
-                  setSearchTerm("");
-                  setFilteredCategory(null);
-                }}
-                variant="ghost"
-                disabled={!filteredCategory}
-              >
-                <FilterXIcon/>
-              </Button>
+              <div className="flex items-center gap-2">
+                <div
+                  className={`flex items-center pl-2 rounded-md gap-1 ${filteredCategory ? "border-[1px] border-slate-200" : ""}`}>
+                  {categories.find(i => i.id === filteredCategory)?.name}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <div
+                      >
+                        <Filter/>
+                      </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="px-2" align="end">
+                      {categories.map((c) => (
+                        <DropdownMenuItem
+                          key={c.id}
+                          className="p-2">
+                          <div
+                            className="flex gap-1 hover:bg-gray-50 w-full"
+                            onClick={() =>
+                              setFilteredCategory(c.id)
+                            }
+                          >
+                            {c.name}
+                          </div>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                <Button
+                  onClick={() => {
+                    setSearchTerm("");
+                    setFilteredCategory(null);
+                  }}
+                  variant="ghost"
+                  disabled={!filteredCategory}
+                >
+                  <FilterXIcon/>
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
+        ) : null}
         <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {!groceryItemsWithQuantity?.length && (
             <div
@@ -213,12 +215,12 @@ export function ListMetaData({list}: { list: GroceryList }) {
           </Button>
         )}
       </div>
-      {list.items?.length && (
+      {list.items?.length ? (
         <p className="text-sm">Total Items: {list.items?.length ?? "0"}</p>
-      )}
-      {list.items?.length && (
+      ) : null}
+      {list.items?.length ? (
         <p className="text-sm">Checked Items: {list.items?.filter(item => item.check)?.length ?? "0"}</p>
-      )}
+      ) : null}
     </MetaDataWrapper>
   )
 }
@@ -239,12 +241,12 @@ export function HouseholdListMetaData({list}: { list: GroceryList }) {
           </Button>
         )}
       </div>
-      {list.items?.length && (
+      {list.items?.length ? (
         <p className="text-sm">Total Items: {list.items?.length ?? "0"}</p>
-      )}
-      {list.items?.length && (
+      ) : null}
+      {list.items?.length ? (
         <p className="text-sm">Checked Items: {list.items?.filter(item => item.check)?.length ?? "0"}</p>
-      )}
+      ) : null}
       {/*<p className="text-sm">Household Members: {'N/A'}</p>*/}
     </MetaDataWrapper>
   )
@@ -487,7 +489,7 @@ export default function GroceryListPage({
     </div>
   }
 
-  if(!myGrocerylist && !myHouseholdGrocerylist) return <>no data</>;
+  if (!myGrocerylist && !myHouseholdGrocerylist) return <>no data</>;
 
   return (
     <div className="space-y-4">
