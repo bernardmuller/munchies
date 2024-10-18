@@ -167,7 +167,7 @@ export default function ManageGrocerylist({
         Back
       </Button>
 
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col md:flex-row gap-4 min-h-[100vh]">
         <div className="w-full md:w-1/2">
           <h2 className="text-xl font-semibold mb-2">Current Grocery List</h2>
 
@@ -179,7 +179,7 @@ export default function ManageGrocerylist({
             />
           </div>
 
-          <ScrollArea className="min-h-75vh]">
+          <ScrollArea className="min-h-[75vh]">
             <div className="space-y-2">
               {!groceryItemsWithQuantity.length && (
                 <span className="text-center text-muted-foreground">
