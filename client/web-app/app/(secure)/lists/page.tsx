@@ -8,7 +8,7 @@ import {getAllCategories} from "@/lib/http/client/categories/getAllCategories";
 
 export default async function GrocerylistsPage() {
   const {getToken} = auth();
-  const token = await getToken().then((t) =>
+  const token = await getToken({ template: process.env.NEXT_PUBLIC_CLERK_JWT_TEMPLATE ?? "default" }).then((t) =>
     t?.toString(),
   ).catch(() => redirect(`/sign-in`));
 
@@ -22,8 +22,7 @@ export default async function GrocerylistsPage() {
   const categoriesResponse = await getAllCategories(token!)
 
   if (
-    !userGrocerylistResponse.ok && userGrocerylistResponse.status >= 500 ||
-    !householdGrocerylistResponse.ok && householdGrocerylistResponse.status >= 500
+    !userGrocerylistResponse.ok && userGrocerylistResponse.status < 200 || userGrocerylistResponse.status >= 300
   ) {
     redirect("/something-went-wrong");
   }

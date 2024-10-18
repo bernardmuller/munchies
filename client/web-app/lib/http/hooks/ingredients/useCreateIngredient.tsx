@@ -10,7 +10,7 @@ export default function useCreateIngredient() {
   return useMutation({
     mutationKey: keys.createIngredient,
     mutationFn: async (data: Ingredient) => {
-      const token = await getToken().then((t) => t?.toString());
+      const token = await getToken({ template: process.env.NEXT_PUBLIC_CLERK_JWT_TEMPLATE ?? "default" }).then((t) => t?.toString());
       return createIngredient({ data, accessToken: token! });
     },
     onSuccess: () => {

@@ -19,7 +19,7 @@ export default function useCreateItem(grocerylistId: string) {
     mutationKey: keys.createItem as string[],
     mutationFn: async (data: CreateItem) => {
       if(!grocerylistId) return;
-      const token = await getToken().then((t) => t?.toString());
+      const token = await getToken({ template: process.env.NEXT_PUBLIC_CLERK_JWT_TEMPLATE ?? "default" }).then((t) => t?.toString());
       return createItem({
         data,
         grocerylistId,

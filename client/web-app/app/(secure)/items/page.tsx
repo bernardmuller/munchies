@@ -8,7 +8,7 @@ import {getLatestGrocerylistByHouseholdId} from "@/lib/http/client/grocerylists/
 
 export default async function IngredientsPage() {
   const { getToken } = auth();
-  const token = await getToken().then((t) =>
+  const token = await getToken({ template: process.env.NEXT_PUBLIC_CLERK_JWT_TEMPLATE ?? "default" }).then((t) =>
     t?.toString(),
   ).catch(() => redirect(`/sign-in`));
 

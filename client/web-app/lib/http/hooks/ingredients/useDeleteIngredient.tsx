@@ -9,7 +9,7 @@ export default function useDeleteIngredient() {
   return useMutation({
     mutationKey: keys.deleteIngredient,
     mutationFn: async (id: string) => {
-      const token = await getToken().then((t) => t?.toString());
+      const token = await getToken({ template: process.env.NEXT_PUBLIC_CLERK_JWT_TEMPLATE ?? "default" }).then((t) => t?.toString());
       return deleteIngredient({ id, accessToken: token! });
     },
     onSuccess: () => {

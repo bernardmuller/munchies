@@ -10,7 +10,7 @@ type Props = {
 
 export default function useCategories({ initialData }: Props) {
   const { getToken } = useAuth();
-  const token = getToken().then((t) => t?.toString());
+  const token = getToken({ template: process.env.NEXT_PUBLIC_CLERK_JWT_TEMPLATE ?? "default" }).then((t) => t?.toString());
   return useQuery({
     queryKey: keys.categories,
     queryFn: async () => {
