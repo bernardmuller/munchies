@@ -487,7 +487,7 @@ export default function GroceryListPage({
     </div>
   }
 
-  if(!myGrocerylist || !myHouseholdGrocerylist) return <>no data</>;
+  if(!myGrocerylist && !myHouseholdGrocerylist) return <>no data</>;
 
   return (
     <div className="space-y-4">
