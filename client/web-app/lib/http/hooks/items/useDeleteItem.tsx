@@ -21,7 +21,7 @@ export default function useDeleteItem(grocerylistId: string) {
       await queryClient.cancelQueries(keys.getGrocerylistById(grocerylistId));
       const prev = await queryClient.getQueryData(keys.getGrocerylistById(grocerylistId)) as GroceryList;
 
-      queryClient.setQueryData(keys.getGrocerylistById(id), {
+      queryClient.setQueryData(keys.getGrocerylistById(grocerylistId), {
         ...prev,
         items: prev.items.filter(item => item.item_id !== id)
       });
