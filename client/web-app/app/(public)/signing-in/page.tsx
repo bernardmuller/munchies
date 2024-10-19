@@ -13,7 +13,7 @@ export default function SigningInPage() {
   const {userId} = useAuth();
   const router = useRouter();
 
-  const registerUserOnBackend = async () => {
+  const signUserInAndSaveDetails = async () => {
     if (!userId) return;
 
     router.push("/lists");
@@ -21,7 +21,7 @@ export default function SigningInPage() {
 
   useEffect(() => {
     // if (!userId) return;
-    registerUserOnBackend();
+    signUserInAndSaveDetails();
   }, [userId]);
 
   return (

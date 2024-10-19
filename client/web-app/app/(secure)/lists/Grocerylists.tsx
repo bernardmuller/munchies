@@ -29,6 +29,7 @@ import {Input} from "@/components/ui/input";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {Category} from "@/lib/http/client/categories/getAllCategories";
 import {Skeleton} from "@/components/ui/skeleton";
+import {getItem} from "@/lib/data-store";
 
 type GrocerylistsPageProps = {
   grocerylists: {
@@ -405,7 +406,10 @@ export default function GroceryListPage({
   grocerylists,
   categories
 }: GrocerylistsPageProps) {
+
   const router = useRouter()
+
+  console.log(getItem("currentUser"))
 
   const {data: myGrocerylist, isLoading: isMyGrocerylistLoading} = useLatestGrocerylistByUserId({
     initialData: grocerylists.myGrocerylist,
