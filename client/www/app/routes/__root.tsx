@@ -4,7 +4,7 @@ import {
   Link,
   Outlet,
   ScrollRestoration,
-  createRootRoute,
+  createRootRoute, redirect,
 } from '@tanstack/react-router'
 import {
   ClerkProvider,
