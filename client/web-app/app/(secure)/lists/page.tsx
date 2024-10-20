@@ -1,43 +1,12 @@
-import Grocerylists from "./Grocerylists";
-import {auth} from "@clerk/nextjs/server";
-import {redirect} from "next/navigation";
-import {getLatestGrocerylistByUserId} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
-import {getLatestGrocerylistByHouseholdId} from "@/lib/http/client/grocerylists/getLatestGrocerylistByHouseholdId";
-import {getCurrentLoggedInUser} from "@/lib/http/client/users/getCurrentLoggedInUser";
-import {getAllCategories} from "@/lib/http/client/categories/getAllCategories";
+import {Suspense} from "react";
+import {ListsSection} from "@/app/(secure)/lists/ListsPage";
 
-export default async function GrocerylistsPage() {
-  const {getToken} = auth();
-  const token = await getToken({ template: process.env.NEXT_PUBLIC_CLERK_JWT_TEMPLATE ?? "default" }).then((t) =>
-    t?.toString(),
-  ).catch(() => redirect(`/sign-in`));
-
-  if (!token) {
-    redirect(`/sign-in`);
-  }
-
-  const userGrocerylistResponse = await getLatestGrocerylistByUserId(token!);
-  const householdGrocerylistResponse = await getLatestGrocerylistByHouseholdId(token!);
-  const currentUser = await getCurrentLoggedInUser(token!);
-  const categoriesResponse = await getAllCategories(token!)
-
-  if (
-    !userGrocerylistResponse.ok && userGrocerylistResponse.status < 200 || userGrocerylistResponse.status >= 300
-  ) {
-    redirect("/something-went-wrong");
-  }
-
-  if (!userGrocerylistResponse?.data) return null;
+export default function GrocerylistsPage() {
   return (
-    <div className="w-full min-h-[50vh] ">
-      {/*<h2 className="mb-6 text-xl font-semibold">Shopping Lists</h2>*/}
-      <Grocerylists
-        grocerylists={{
-          myGrocerylist: userGrocerylistResponse?.data!,
-          myHouseholdGrocerylist: householdGrocerylistResponse?.data!,
-        }}
-        categories={categoriesResponse.data ?? []}
-      />
+    <div className="w-full min-h-[50vh]">
+      <Suspense fallback={<div>Loading...</div>}>
+        <ListsSection />
+      </Suspense>
     </div>
   );
 }
