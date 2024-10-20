@@ -11,6 +11,8 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SignUpImport } from './routes/sign-up'
+import { Route as SignInImport } from './routes/sign-in'
 import { Route as AuthedImport } from './routes/_authed'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthedPostsImport } from './routes/_authed/posts'
@@ -19,6 +21,18 @@ import { Route as AuthedProfileSplatImport } from './routes/_authed/profile.$'
 import { Route as AuthedPostsPostIdImport } from './routes/_authed/posts.$postId'
 
 // Create/Update Routes
+
+const SignUpRoute = SignUpImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SignInRoute = SignInImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthedRoute = AuthedImport.update({
   id: '/_authed',
@@ -71,6 +85,20 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AuthedImport
+      parentRoute: typeof rootRoute
+    }
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInImport
+      parentRoute: typeof rootRoute
+    }
+    '/sign-up': {
+      id: '/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof SignUpImport
       parentRoute: typeof rootRoute
     }
     '/_authed/posts': {
@@ -136,6 +164,8 @@ const AuthedRouteWithChildren =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthedRouteWithChildren
+  '/sign-in': typeof SignInRoute
+  '/sign-up': typeof SignUpRoute
   '/posts': typeof AuthedPostsRouteWithChildren
   '/posts/$postId': typeof AuthedPostsPostIdRoute
   '/profile/$': typeof AuthedProfileSplatRoute
@@ -145,6 +175,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AuthedRouteWithChildren
+  '/sign-in': typeof SignInRoute
+  '/sign-up': typeof SignUpRoute
   '/posts/$postId': typeof AuthedPostsPostIdRoute
   '/profile/$': typeof AuthedProfileSplatRoute
   '/posts': typeof AuthedPostsIndexRoute
@@ -154,6 +186,8 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/_authed': typeof AuthedRouteWithChildren
+  '/sign-in': typeof SignInRoute
+  '/sign-up': typeof SignUpRoute
   '/_authed/posts': typeof AuthedPostsRouteWithChildren
   '/_authed/posts/$postId': typeof AuthedPostsPostIdRoute
   '/_authed/profile/$': typeof AuthedProfileSplatRoute
@@ -162,13 +196,30 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/posts' | '/posts/$postId' | '/profile/$' | '/posts/'
+  fullPaths:
+    | '/'
+    | ''
+    | '/sign-in'
+    | '/sign-up'
+    | '/posts'
+    | '/posts/$postId'
+    | '/profile/$'
+    | '/posts/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/posts/$postId' | '/profile/$' | '/posts'
+  to:
+    | '/'
+    | ''
+    | '/sign-in'
+    | '/sign-up'
+    | '/posts/$postId'
+    | '/profile/$'
+    | '/posts'
   id:
     | '__root__'
     | '/'
     | '/_authed'
+    | '/sign-in'
+    | '/sign-up'
     | '/_authed/posts'
     | '/_authed/posts/$postId'
     | '/_authed/profile/$'
@@ -179,11 +230,15 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthedRoute: typeof AuthedRouteWithChildren
+  SignInRoute: typeof SignInRoute
+  SignUpRoute: typeof SignUpRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthedRoute: AuthedRouteWithChildren,
+  SignInRoute: SignInRoute,
+  SignUpRoute: SignUpRoute,
 }
 
 export const routeTree = rootRoute
@@ -199,7 +254,9 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/_authed"
+        "/_authed",
+        "/sign-in",
+        "/sign-up"
       ]
     },
     "/": {
@@ -211,6 +268,12 @@ export const routeTree = rootRoute
         "/_authed/posts",
         "/_authed/profile/$"
       ]
+    },
+    "/sign-in": {
+      "filePath": "sign-in.tsx"
+    },
+    "/sign-up": {
+      "filePath": "sign-up.tsx"
     },
     "/_authed/posts": {
       "filePath": "_authed/posts.tsx",

@@ -3,7 +3,7 @@ import {
   Link,
   Outlet,
   ScrollRestoration,
-  createRootRoute,
+  createRootRoute, redirect,
 } from '@tanstack/react-router'
 import {
   ClerkProvider,
@@ -23,9 +23,9 @@ import {
 } from '@tanstack/start'
 import * as React from 'react'
 import { getAuth } from '@clerk/tanstack-start/server'
-import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary.js'
-import { NotFound } from '~/components/NotFound.js'
-import appCss from '~/styles/app.css?url'
+import { DefaultCatchBoundary } from '@/components/DefaultCatchBoundary.js'
+import { NotFound } from '@/components/NotFound.js'
+import appCss from '@/styles/app.css?url'
 
 // Import your publishable key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -77,9 +77,7 @@ export const Route = createRootRoute({
   beforeLoad: async () => {
     const { user } = await fetchClerkAuth()
 
-    return {
-      user,
-    }
+    return { user }
   },
   errorComponent: (props) => {
     return (
@@ -109,33 +107,33 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Meta />
       </Head>
       <Body>
-        <div className="p-2 flex gap-2 text-lg">
-          <Link
-            to="/"
-            activeProps={{
-              className: 'font-bold',
-            }}
-            activeOptions={{ exact: true }}
-          >
-            Home
-          </Link>{' '}
-          <Link
-            to="/posts"
-            activeProps={{
-              className: 'font-bold',
-            }}
-          >
-            Posts
-          </Link>
-          <div className="ml-auto">
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-            <SignedOut>
-              <SignInButton mode="modal" />
-            </SignedOut>
-          </div>
-        </div>
+        {/*<div className="p-2 flex gap-2 text-lg">*/}
+        {/*  <Link*/}
+        {/*    to="/"*/}
+        {/*    activeProps={{*/}
+        {/*      className: 'font-bold',*/}
+        {/*    }}*/}
+        {/*    activeOptions={{ exact: true }}*/}
+        {/*  >*/}
+        {/*    Home*/}
+        {/*  </Link>{' '}*/}
+        {/*  <Link*/}
+        {/*    to="/posts"*/}
+        {/*    activeProps={{*/}
+        {/*      className: 'font-bold',*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    Posts*/}
+        {/*  </Link>*/}
+        {/*  <div className="ml-auto">*/}
+        {/*    <SignedIn>*/}
+        {/*      <UserButton />*/}
+        {/*    </SignedIn>*/}
+        {/*    <SignedOut>*/}
+        {/*      <SignInButton mode="modal" />*/}
+        {/*    </SignedOut>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
         <hr />
         {children}
         <ScrollRestoration />
