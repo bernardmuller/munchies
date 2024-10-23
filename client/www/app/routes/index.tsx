@@ -80,7 +80,7 @@ function Home() {
                     Simplify Your Grocery Shopping
                   </h2>
                   <p className="text-xl mb-6 text-gray-400">
-                    {process.env.NEXT_PUBLIC_FLAG_FEATURE_MEALPLANS !== "true" ? "Manage shopping lists effortlessly and soon generate smart shopping lists with Munchies. Save time, reduce waste, and eat better—new features coming soon!"
+                    {import.meta.env.VITE_FLAG_FEATURE_MEALPLANS !== "true" ? "Manage shopping lists effortlessly and soon generate smart shopping lists with Munchies. Save time, reduce waste, and eat better—new features coming soon!"
                       : "Generate smart shopping lists based on your meal plans. Save time, reduce waste, and eat better with Munchies."}
                   </p>
                   <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
@@ -134,12 +134,12 @@ function Home() {
                 <FeatureCard
                   title="Meal Planning"
                   description="Plan your meals for the week with our intuitive interface."
-                  comingSoon={process.env.NEXT_PUBLIC_FLAG_FEATURE_MEALPLANS !== "true"}
+                  comingSoon={import.meta.env.VITE_FLAG_FEATURE_MEALPLANS !== "true"}
                 />
                 <FeatureCard
                   title="Smart Lists"
                   description="Automatically generate grocery lists based on your meal plans."
-                  comingSoon={process.env.NEXT_PUBLIC_FLAG_FEATURE_MEALPLANS !== "true"}
+                  comingSoon={import.meta.env.VITE_FLAG_FEATURE_MEALPLANS !== "true"}
                 />
 
               </div>
