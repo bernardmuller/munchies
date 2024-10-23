@@ -12,7 +12,7 @@ export default function useDeleteItem(grocerylistId: string) {
   return useMutation({
     mutationKey: ["delete-item"],
     mutationFn: async (id: string) => {
-      const token = await getToken({template: process.env.NEXT_PUBLIC_CLERK_JWT_TEMPLATE ?? "default"}).then((t) => t?.toString());
+      const token = await getToken({template: import.meta.env.VITE_CLERK_JWT_TEMPLATE ?? "default"}).then((t) => t?.toString());
       return deleteItem({id, accessToken: token!});
     },
     onMutate: async (id: string) => {

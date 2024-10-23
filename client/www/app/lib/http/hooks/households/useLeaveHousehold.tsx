@@ -9,7 +9,7 @@ export default function useLeaveHousehold() {
   return useMutation({
     mutationKey: ["leave-household"],
     mutationFn: async () => {
-      const token = await getToken({ template: process.env.NEXT_PUBLIC_CLERK_JWT_TEMPLATE ?? "default" }).then((t) =>
+      const token = await getToken({ template: import.meta.env.VITE_CLERK_JWT_TEMPLATE ?? "default" }).then((t) =>
         t?.toString(),
       );
       return leaveHousehold({ accessToken: token! });

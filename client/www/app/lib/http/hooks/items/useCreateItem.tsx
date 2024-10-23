@@ -1,9 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { keys } from "@/app/lib/http/keys";
-import { useAuth } from "@clerk/nextjs";
-import {CreateItem, createItem} from "@/app/lib/http/client/items/createItem";
-import {useToast} from "@/app/components/ui/use-toast";
-import { GroceryList} from "@/app/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
+import {InvalidateQueryFilters, QueryFilters, useMutation, useQueryClient} from "@tanstack/react-query";
+import { keys } from "@/lib/http/keys";
+import { useAuth } from "@clerk/tanstack-start";
+import {CreateItem, createItem} from "@/lib/http/client/items/createItem";
+import {useToast} from "@/components/ui/use-toast";
+import { GroceryList} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
 
 interface CreateItemWithIngredientDetails extends CreateItem {
   id: string;
@@ -19,7 +19,7 @@ export default function useCreateItem(grocerylistId: string) {
     mutationKey: keys.createItem as string[],
     mutationFn: async (data: CreateItem) => {
       if(!grocerylistId) return;
-      const token = await getToken({ template: process.env.NEXT_PUBLIC_CLERK_JWT_TEMPLATE ?? "default" }).then((t) => t?.toString());
+      const token = await getToken({ template: import.meta.env.VITE_CLERK_JWT_TEMPLATE ?? "default" }).then((t) => t?.toString());
       return createItem({
         data,
         grocerylistId,
@@ -27,9 +27,9 @@ export default function useCreateItem(grocerylistId: string) {
       });
     },
     onMutate: async (item: CreateItemWithIngredientDetails) => {
-      await queryClient.cancelQueries(keys.latestGrocerylistByUserId);
-      await queryClient.cancelQueries(keys.latestGrocerylistByHouseholdId);
-      await queryClient.cancelQueries(keys.getGrocerylistById(grocerylistId));
+      await queryClient.cancelQueries(keys.latestGrocerylistByUserId as QueryFilters);
+      await queryClient.cancelQueries(keys.latestGrocerylistByHouseholdId as QueryFilters);
+      await queryClient.cancelQueries(keys.getGrocerylistById(grocerylistId as string) as QueryFilters);
       const prev = queryClient.getQueryData(keys.getGrocerylistById(grocerylistId)) as GroceryList;
 
       if (prev && prev.items) {
@@ -48,9 +48,9 @@ export default function useCreateItem(grocerylistId: string) {
       return { prev };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(keys.latestGrocerylistByUserId);
-      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId);
-      queryClient.invalidateQueries(keys.getGrocerylistById(grocerylistId));
+      queryClient.invalidateQueries(keys.latestGrocerylistByUserId as InvalidateQueryFilters);
+      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId as InvalidateQueryFilters);
+      queryClient.invalidateQueries(keys.getGrocerylistById(grocerylistId) as InvalidateQueryFilters);
     },
   });
 }

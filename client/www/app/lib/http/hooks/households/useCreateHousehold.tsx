@@ -9,7 +9,7 @@ export default function useCreateHousehold() {
   return useMutation({
     mutationKey: ["create-household"],
     mutationFn: async () => {
-      const token = await getToken({ template: process.env.NEXT_PUBLIC_CLERK_JWT_TEMPLATE ?? "default" }).then((t) => t?.toString());
+      const token = await getToken({ template: import.meta.env.VITE_CLERK_JWT_TEMPLATE ?? "default" }).then((t) => t?.toString());
       return createHousehold({ accessToken: token! });
     },
     onSuccess: () => {

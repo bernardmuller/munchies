@@ -1,48 +1,48 @@
 const apiRoutes = {
   getAllCategories: () => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`;
+    return `${import.meta.env.VITE_API_BASE_URL}/categories`;
   },
   ingredients: () => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/ingredients`;
+    return `${import.meta.env.VITE_API_BASE_URL}/ingredients`;
   },
   deleteIngredient: (id: string) => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/ingredients/${id}`;
+    return `${import.meta.env.VITE_API_BASE_URL}/ingredients/${id}`;
   },
   getCurrentUserHouseholdDetails: () => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/households/current`;
+    return `${import.meta.env.VITE_API_BASE_URL}/households/current`;
   },
   households: () => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/households`;
+    return `${import.meta.env.VITE_API_BASE_URL}/households`;
   },
   joinHousehold: () => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/households/join`;
+    return `${import.meta.env.VITE_API_BASE_URL}/households/join`;
   },
   leaveHousehold: () => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/households/leave`;
+    return `${import.meta.env.VITE_API_BASE_URL}/households/leave`;
   },
   latestGrocerylistByUserId: () => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/grocerylists/user`;
+    return `${import.meta.env.VITE_API_BASE_URL}/grocerylists/user`;
   },
   latestGrocerylistByHouseholdId: () => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/grocerylists/household`;
+    return `${import.meta.env.VITE_API_BASE_URL}/grocerylists/household`;
   },
   createGrocerylistItem: (id: string) => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/grocerylists/${id}/add`;
+    return `${import.meta.env.VITE_API_BASE_URL}/grocerylists/${id}/add`;
   },
   checkItem: (id: string) => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/items/${id}/check`;
+    return `${import.meta.env.VITE_API_BASE_URL}/items/${id}/check`;
   },
   createList: () => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/grocerylists`;
+    return `${import.meta.env.VITE_API_BASE_URL}/grocerylists`;
   },
   getGrocerylistById: (id: string) => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/grocerylists/${id}`;
+    return `${import.meta.env.VITE_API_BASE_URL}/grocerylists/${id}`;
   },
   deleteItem: (id: string) => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/items/${id}`;
+    return `${import.meta.env.VITE_API_BASE_URL}/items/${id}`;
   },
   getCurrentLoggedInUser: () => {
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/current`;
+    return `${import.meta.env.VITE_API_BASE_URL}/users/current`;
   },
 };
 

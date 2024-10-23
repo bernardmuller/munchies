@@ -41,6 +41,7 @@ export const httpRequest = async <T, D>(
     accessToken: string;
   },
 ): Promise<APIResponse<T>> => {
+
   try {
     const customHeaders = getHeaders({
       accessToken: options?.accessToken,
