@@ -12,7 +12,7 @@ import (
 // To run this script, you will need to set the DB_URL_ONE and DB_URL_TWO
 // then run the script with `go run move-items-to-new-db.go`
 
-const DB_URL = "postgresql://postgres:RtNCiGBNpOtSyIaHbJLlBhcWSfPOqbFC@junction.proxy.rlwy.net:35158/railway"
+const DB_URL = ""
 
 func main() {
 	db, err := postgres.ConnectDB(DB_URL)
