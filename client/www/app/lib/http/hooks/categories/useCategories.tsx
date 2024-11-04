@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllCategories } from "@/app/lib/http/client/categories/getAllCategories";
-import type { Category } from "@/app/lib/http/client/categories/getAllCategories";
-import { keys } from "@/app/lib/http/keys";
-import { useAuth } from "@clerk/nextjs";
+import { getAllCategories } from "@/lib/http/client/categories/getAllCategories";
+import type { Category } from "@/lib/http/client/categories/getAllCategories";
+import { keys } from "@/lib/http/keys";
+import { useAuth } from "@clerk/tanstack-start";
 
 type Props = {
-  initialData: Category[];
+  initialData: Category[] | null;
 };
 
 export default function useCategories({ initialData }: Props) {

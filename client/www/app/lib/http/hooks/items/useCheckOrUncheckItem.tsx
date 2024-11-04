@@ -1,9 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { keys } from "@/app/lib/http/keys";
-import { useAuth } from "@clerk/nextjs";
-import {useToast} from "@/app/components/ui/use-toast";
-import {checkOrUncheckItem} from "@/app/lib/http/client/items/checkOrUncheckItem";
-import {GroceryList} from "@/app/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
+import {InvalidateQueryFilters, QueryFilters, useMutation, useQueryClient} from "@tanstack/react-query";
+import { keys } from "@/lib/http/keys";
+import { useAuth } from "@clerk/tanstack-start";
+import {useToast} from "@/components/ui/use-toast";
+import {checkOrUncheckItem} from "@/lib/http/client/items/checkOrUncheckItem";
+import {GroceryList} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
 
 export default function useCheckOrUncheckItem() {
   const queryClient = useQueryClient();
@@ -16,7 +16,7 @@ export default function useCheckOrUncheckItem() {
       return checkOrUncheckItem({itemId: id, accessToken: token! });
     },
     onMutate: async (id: string) => {
-      await queryClient.cancelQueries(keys.latestGrocerylistByUserId);
+      await queryClient.cancelQueries(keys.latestGrocerylistByUserId as QueryFilters);
       const prev = queryClient.getQueryData(keys.latestGrocerylistByUserId) as GroceryList;
 
       if (prev && prev.items) {
@@ -34,8 +34,8 @@ export default function useCheckOrUncheckItem() {
       return { prev };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(keys.latestGrocerylistByUserId);
-      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId);
+      queryClient.invalidateQueries(keys.latestGrocerylistByUserId as InvalidateQueryFilters);
+      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId as InvalidateQueryFilters);
     },
   });
 }

@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { keys } from "@/app/lib/http/keys";
+import {InvalidateQueryFilters, useMutation, useQueryClient} from "@tanstack/react-query";
+import { keys } from "@/lib/http/keys";
 import { createHousehold } from "../../client/households/createHousehold";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@clerk/tanstack-start";
 
 export default function useCreateHousehold() {
   const queryClient = useQueryClient();
@@ -13,7 +13,7 @@ export default function useCreateHousehold() {
       return createHousehold({ accessToken: token! });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(keys.currentUserHouseholdDetails);
+      queryClient.invalidateQueries(keys.currentUserHouseholdDetails as InvalidateQueryFilters);
     },
   });
 }

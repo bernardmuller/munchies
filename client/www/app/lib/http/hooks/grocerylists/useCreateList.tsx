@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { keys } from "@/app/lib/http/keys";
-import { useAuth } from "@clerk/nextjs";
-import {createList, CreateList} from "@/app/lib/http/client/grocerylists/createList";
+import { keys } from "@/lib/http/keys";
+import { useAuth } from "@clerk/tanstack-start";
+import {createList, CreateList} from "@/lib/http/client/grocerylists/createList";
 
 export default function useCreateList() {
   const queryClient = useQueryClient();

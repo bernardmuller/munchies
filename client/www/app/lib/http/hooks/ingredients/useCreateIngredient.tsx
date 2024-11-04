@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createIngredient } from "@/app/lib/http/client/ingredients/createIngredient";
-import { keys } from "@/app/lib/http/keys";
-import { useAuth } from "@clerk/nextjs";
+import {InvalidateQueryFilters, useMutation, useQueryClient} from "@tanstack/react-query";
+import { createIngredient } from "@/lib/http/client/ingredients/createIngredient";
+import { keys } from "@/lib/http/keys";
+import { useAuth } from "@clerk/tanstack-start";
 import { Ingredient } from "../../client/ingredients/createIngredient";
 
 export default function useCreateIngredient() {
@@ -14,7 +14,7 @@ export default function useCreateIngredient() {
       return createIngredient({ data, accessToken: token! });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(keys.ingredients);
+      queryClient.invalidateQueries(keys.ingredients as InvalidateQueryFilters);
     },
   });
 }

@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { getCurrentUserHouseholdDetails } from "@/app/lib/http/client/households/getCurrentUserHouseholdDetails";
-import type { Household } from "@/app/lib/http/client/households/getCurrentUserHouseholdDetails";
-import { keys } from "@/app/lib/http/keys";
-import { useAuth } from "@clerk/nextjs";
+import { getCurrentUserHouseholdDetails } from "@/lib/http/client/households/getCurrentUserHouseholdDetails";
+import type { Household } from "@/lib/http/client/households/getCurrentUserHouseholdDetails";
+import { keys } from "@/lib/http/keys";
+import { useAuth } from "@clerk/tanstack-start";
 
 type Props = {
-  initialData: Household;
+  initialData: Household | null;
 };
 
 export default function useCurrentUserHouseholdDetails({ initialData }: Props) {

@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { keys } from "@/app/lib/http/keys";
-import { useAuth } from "@clerk/nextjs";
+import {InvalidateQueryFilters, useMutation, useQueryClient} from "@tanstack/react-query";
+import { keys } from "@/lib/http/keys";
+import { useAuth } from "@clerk/tanstack-start";
 import { leaveHousehold } from "../../client/households/leaveHousehold";
 
 export default function useLeaveHousehold() {
@@ -15,9 +15,9 @@ export default function useLeaveHousehold() {
       return leaveHousehold({ accessToken: token! });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(keys.currentUserHouseholdDetails);
-      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId);
-      queryClient.invalidateQueries(keys.latestGrocerylistByUserId);
+      queryClient.invalidateQueries(keys.currentUserHouseholdDetails as InvalidateQueryFilters);
+      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId as InvalidateQueryFilters);
+      queryClient.invalidateQueries(keys.latestGrocerylistByUserId as InvalidateQueryFilters);
     },
   });
 }

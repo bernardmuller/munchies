@@ -1,7 +1,7 @@
 import apiRoutes from "../../routes";
 import { httpRequest } from "../../httpRequest";
 import { z } from "zod";
-import {Ingredient} from "@/app/lib/http/client/ingredients/getAllIngredients";
+import {Ingredient} from "@/lib/http/client/ingredients/getAllIngredients";
 
 const createItemSchema = z.object({
   ingredientId: z.string(),

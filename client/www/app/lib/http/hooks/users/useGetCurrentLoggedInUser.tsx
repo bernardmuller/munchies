@@ -1,5 +1,4 @@
 import {useQuery} from "@tanstack/react-query";
-// import { keys } from "@/app/lib/http/keys";
 import {useAuth} from "@clerk/tanstack-start";
 import {getCurrentLoggedInUser, User} from "@/lib/http/client/users/getCurrentLoggedInUser";
 import {getItem, setItem} from "@/lib/data-store";

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { keys } from "@/app/lib/http/keys";
-import { useAuth } from "@clerk/nextjs";
-import {getLatestGrocerylistByHouseholdId} from "@/app/lib/http/client/grocerylists/getLatestGrocerylistByHouseholdId";
+import { keys } from "@/lib/http/keys";
+import { useAuth } from "@clerk/tanstack-start";
+import {getLatestGrocerylistByHouseholdId} from "@/lib/http/client/grocerylists/getLatestGrocerylistByHouseholdId";
 
 type Props = {
   initialData: any;

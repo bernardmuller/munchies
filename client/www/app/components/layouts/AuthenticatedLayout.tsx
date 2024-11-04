@@ -57,7 +57,7 @@ export default function AuthenticatedLayout({
             </div>
           </div>
           <div
-            className="bg-background md:bg-white dark:bg-background md:rounded-lg md:shadow-lg overflow-hidden mb-80">
+            className="bg-background md:bg-white md:rounded-lg md:shadow-lg overflow-hidden mb-80">
             <div className="px-0 py-0 md:px-4 md:py-5 sm:p-6">
               {children}
             </div>

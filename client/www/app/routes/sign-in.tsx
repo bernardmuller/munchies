@@ -13,7 +13,7 @@ function SignInPage() {
 
   useEffect(() => {
     if (isSignedIn) {
-      window.location.href = "/posts"
+      window.location.href = "/lists"
     }
   }, [isSignedIn])
 

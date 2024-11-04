@@ -34,8 +34,6 @@ export default function Navbar({currentUser}: { currentUser: User }) {
   const router = useRouterState();
   const pathname = router.location.pathname;
 
-  console.log("here", router.location.pathname);
-
   if (!currentUser) return null;
 
   return (

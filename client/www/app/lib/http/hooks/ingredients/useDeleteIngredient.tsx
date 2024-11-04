@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { keys } from "@/app/lib/http/keys";
+import {InvalidateQueryFilters, useMutation, useQueryClient} from "@tanstack/react-query";
+import { keys } from "@/lib/http/keys";
 import { deleteIngredient } from "../../client/ingredients/deleteIngredient";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@clerk/tanstack-start";
 
 export default function useDeleteIngredient() {
   const queryClient = useQueryClient();
@@ -13,7 +13,7 @@ export default function useDeleteIngredient() {
       return deleteIngredient({ id, accessToken: token! });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(keys.ingredients);
+      queryClient.invalidateQueries(keys.ingredients as InvalidateQueryFilters);
     },
   });
 }

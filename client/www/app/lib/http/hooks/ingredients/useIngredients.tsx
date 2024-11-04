@@ -2,12 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getAllIngredients,
   type Ingredient,
-} from "@/app/lib/http/client/ingredients/getAllIngredients";
-import { keys } from "@/app/lib/http/keys";
-import { useAuth } from "@clerk/nextjs";
+} from "@/lib/http/client/ingredients/getAllIngredients";
+import { keys } from "@/lib/http/keys";
+import { useAuth } from "@clerk/tanstack-start";
 
 type Props = {
-  initialData: Ingredient[];
+  initialData: Ingredient[] | null;
 };
 
 export default function useIngredients({ initialData }: Props) {

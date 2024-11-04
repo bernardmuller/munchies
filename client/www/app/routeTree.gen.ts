@@ -15,10 +15,13 @@ import { Route as SignUpImport } from './routes/sign-up'
 import { Route as SignInImport } from './routes/sign-in'
 import { Route as AuthedImport } from './routes/_authed'
 import { Route as IndexImport } from './routes/index'
-import { Route as AuthedPostsImport } from './routes/_authed/posts'
-import { Route as AuthedPostsIndexImport } from './routes/_authed/posts.index'
-import { Route as AuthedProfileSplatImport } from './routes/_authed/profile.$'
-import { Route as AuthedPostsPostIdImport } from './routes/_authed/posts.$postId'
+import { Route as AuthedSettingsImport } from './routes/_authed/settings'
+import { Route as AuthedSettingsIndexImport } from './routes/_authed/settings/index'
+import { Route as AuthedListsIndexImport } from './routes/_authed/lists/index'
+import { Route as AuthedItemsIndexImport } from './routes/_authed/items/index'
+import { Route as AuthedSettingsProfileImport } from './routes/_authed/settings/profile'
+import { Route as AuthedSettingsHouseholdImport } from './routes/_authed/settings/household'
+import { Route as AuthedListsListIdImport } from './routes/_authed/lists/$listId'
 
 // Create/Update Routes
 
@@ -45,28 +48,46 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthedPostsRoute = AuthedPostsImport.update({
-  id: '/posts',
-  path: '/posts',
+const AuthedSettingsRoute = AuthedSettingsImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AuthedRoute,
 } as any)
 
-const AuthedPostsIndexRoute = AuthedPostsIndexImport.update({
+const AuthedSettingsIndexRoute = AuthedSettingsIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AuthedPostsRoute,
+  getParentRoute: () => AuthedSettingsRoute,
 } as any)
 
-const AuthedProfileSplatRoute = AuthedProfileSplatImport.update({
-  id: '/profile/$',
-  path: '/profile/$',
+const AuthedListsIndexRoute = AuthedListsIndexImport.update({
+  id: '/lists/',
+  path: '/lists/',
   getParentRoute: () => AuthedRoute,
 } as any)
 
-const AuthedPostsPostIdRoute = AuthedPostsPostIdImport.update({
-  id: '/$postId',
-  path: '/$postId',
-  getParentRoute: () => AuthedPostsRoute,
+const AuthedItemsIndexRoute = AuthedItemsIndexImport.update({
+  id: '/items/',
+  path: '/items/',
+  getParentRoute: () => AuthedRoute,
+} as any)
+
+const AuthedSettingsProfileRoute = AuthedSettingsProfileImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthedSettingsRoute,
+} as any)
+
+const AuthedSettingsHouseholdRoute = AuthedSettingsHouseholdImport.update({
+  id: '/household',
+  path: '/household',
+  getParentRoute: () => AuthedSettingsRoute,
+} as any)
+
+const AuthedListsListIdRoute = AuthedListsListIdImport.update({
+  id: '/lists/$listId',
+  path: '/lists/$listId',
+  getParentRoute: () => AuthedRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -101,61 +122,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignUpImport
       parentRoute: typeof rootRoute
     }
-    '/_authed/posts': {
-      id: '/_authed/posts'
-      path: '/posts'
-      fullPath: '/posts'
-      preLoaderRoute: typeof AuthedPostsImport
+    '/_authed/settings': {
+      id: '/_authed/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthedSettingsImport
       parentRoute: typeof AuthedImport
     }
-    '/_authed/posts/$postId': {
-      id: '/_authed/posts/$postId'
-      path: '/$postId'
-      fullPath: '/posts/$postId'
-      preLoaderRoute: typeof AuthedPostsPostIdImport
-      parentRoute: typeof AuthedPostsImport
-    }
-    '/_authed/profile/$': {
-      id: '/_authed/profile/$'
-      path: '/profile/$'
-      fullPath: '/profile/$'
-      preLoaderRoute: typeof AuthedProfileSplatImport
+    '/_authed/lists/$listId': {
+      id: '/_authed/lists/$listId'
+      path: '/lists/$listId'
+      fullPath: '/lists/$listId'
+      preLoaderRoute: typeof AuthedListsListIdImport
       parentRoute: typeof AuthedImport
     }
-    '/_authed/posts/': {
-      id: '/_authed/posts/'
+    '/_authed/settings/household': {
+      id: '/_authed/settings/household'
+      path: '/household'
+      fullPath: '/settings/household'
+      preLoaderRoute: typeof AuthedSettingsHouseholdImport
+      parentRoute: typeof AuthedSettingsImport
+    }
+    '/_authed/settings/profile': {
+      id: '/_authed/settings/profile'
+      path: '/profile'
+      fullPath: '/settings/profile'
+      preLoaderRoute: typeof AuthedSettingsProfileImport
+      parentRoute: typeof AuthedSettingsImport
+    }
+    '/_authed/items/': {
+      id: '/_authed/items/'
+      path: '/items'
+      fullPath: '/items'
+      preLoaderRoute: typeof AuthedItemsIndexImport
+      parentRoute: typeof AuthedImport
+    }
+    '/_authed/lists/': {
+      id: '/_authed/lists/'
+      path: '/lists'
+      fullPath: '/lists'
+      preLoaderRoute: typeof AuthedListsIndexImport
+      parentRoute: typeof AuthedImport
+    }
+    '/_authed/settings/': {
+      id: '/_authed/settings/'
       path: '/'
-      fullPath: '/posts/'
-      preLoaderRoute: typeof AuthedPostsIndexImport
-      parentRoute: typeof AuthedPostsImport
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AuthedSettingsIndexImport
+      parentRoute: typeof AuthedSettingsImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface AuthedPostsRouteChildren {
-  AuthedPostsPostIdRoute: typeof AuthedPostsPostIdRoute
-  AuthedPostsIndexRoute: typeof AuthedPostsIndexRoute
+interface AuthedSettingsRouteChildren {
+  AuthedSettingsHouseholdRoute: typeof AuthedSettingsHouseholdRoute
+  AuthedSettingsProfileRoute: typeof AuthedSettingsProfileRoute
+  AuthedSettingsIndexRoute: typeof AuthedSettingsIndexRoute
 }
 
-const AuthedPostsRouteChildren: AuthedPostsRouteChildren = {
-  AuthedPostsPostIdRoute: AuthedPostsPostIdRoute,
-  AuthedPostsIndexRoute: AuthedPostsIndexRoute,
+const AuthedSettingsRouteChildren: AuthedSettingsRouteChildren = {
+  AuthedSettingsHouseholdRoute: AuthedSettingsHouseholdRoute,
+  AuthedSettingsProfileRoute: AuthedSettingsProfileRoute,
+  AuthedSettingsIndexRoute: AuthedSettingsIndexRoute,
 }
 
-const AuthedPostsRouteWithChildren = AuthedPostsRoute._addFileChildren(
-  AuthedPostsRouteChildren,
+const AuthedSettingsRouteWithChildren = AuthedSettingsRoute._addFileChildren(
+  AuthedSettingsRouteChildren,
 )
 
 interface AuthedRouteChildren {
-  AuthedPostsRoute: typeof AuthedPostsRouteWithChildren
-  AuthedProfileSplatRoute: typeof AuthedProfileSplatRoute
+  AuthedSettingsRoute: typeof AuthedSettingsRouteWithChildren
+  AuthedListsListIdRoute: typeof AuthedListsListIdRoute
+  AuthedItemsIndexRoute: typeof AuthedItemsIndexRoute
+  AuthedListsIndexRoute: typeof AuthedListsIndexRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
-  AuthedPostsRoute: AuthedPostsRouteWithChildren,
-  AuthedProfileSplatRoute: AuthedProfileSplatRoute,
+  AuthedSettingsRoute: AuthedSettingsRouteWithChildren,
+  AuthedListsListIdRoute: AuthedListsListIdRoute,
+  AuthedItemsIndexRoute: AuthedItemsIndexRoute,
+  AuthedListsIndexRoute: AuthedListsIndexRoute,
 }
 
 const AuthedRouteWithChildren =
@@ -166,10 +214,13 @@ export interface FileRoutesByFullPath {
   '': typeof AuthedRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
-  '/posts': typeof AuthedPostsRouteWithChildren
-  '/posts/$postId': typeof AuthedPostsPostIdRoute
-  '/profile/$': typeof AuthedProfileSplatRoute
-  '/posts/': typeof AuthedPostsIndexRoute
+  '/settings': typeof AuthedSettingsRouteWithChildren
+  '/lists/$listId': typeof AuthedListsListIdRoute
+  '/settings/household': typeof AuthedSettingsHouseholdRoute
+  '/settings/profile': typeof AuthedSettingsProfileRoute
+  '/items': typeof AuthedItemsIndexRoute
+  '/lists': typeof AuthedListsIndexRoute
+  '/settings/': typeof AuthedSettingsIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -177,9 +228,12 @@ export interface FileRoutesByTo {
   '': typeof AuthedRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
-  '/posts/$postId': typeof AuthedPostsPostIdRoute
-  '/profile/$': typeof AuthedProfileSplatRoute
-  '/posts': typeof AuthedPostsIndexRoute
+  '/lists/$listId': typeof AuthedListsListIdRoute
+  '/settings/household': typeof AuthedSettingsHouseholdRoute
+  '/settings/profile': typeof AuthedSettingsProfileRoute
+  '/items': typeof AuthedItemsIndexRoute
+  '/lists': typeof AuthedListsIndexRoute
+  '/settings': typeof AuthedSettingsIndexRoute
 }
 
 export interface FileRoutesById {
@@ -188,10 +242,13 @@ export interface FileRoutesById {
   '/_authed': typeof AuthedRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
-  '/_authed/posts': typeof AuthedPostsRouteWithChildren
-  '/_authed/posts/$postId': typeof AuthedPostsPostIdRoute
-  '/_authed/profile/$': typeof AuthedProfileSplatRoute
-  '/_authed/posts/': typeof AuthedPostsIndexRoute
+  '/_authed/settings': typeof AuthedSettingsRouteWithChildren
+  '/_authed/lists/$listId': typeof AuthedListsListIdRoute
+  '/_authed/settings/household': typeof AuthedSettingsHouseholdRoute
+  '/_authed/settings/profile': typeof AuthedSettingsProfileRoute
+  '/_authed/items/': typeof AuthedItemsIndexRoute
+  '/_authed/lists/': typeof AuthedListsIndexRoute
+  '/_authed/settings/': typeof AuthedSettingsIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -201,29 +258,38 @@ export interface FileRouteTypes {
     | ''
     | '/sign-in'
     | '/sign-up'
-    | '/posts'
-    | '/posts/$postId'
-    | '/profile/$'
-    | '/posts/'
+    | '/settings'
+    | '/lists/$listId'
+    | '/settings/household'
+    | '/settings/profile'
+    | '/items'
+    | '/lists'
+    | '/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | ''
     | '/sign-in'
     | '/sign-up'
-    | '/posts/$postId'
-    | '/profile/$'
-    | '/posts'
+    | '/lists/$listId'
+    | '/settings/household'
+    | '/settings/profile'
+    | '/items'
+    | '/lists'
+    | '/settings'
   id:
     | '__root__'
     | '/'
     | '/_authed'
     | '/sign-in'
     | '/sign-up'
-    | '/_authed/posts'
-    | '/_authed/posts/$postId'
-    | '/_authed/profile/$'
-    | '/_authed/posts/'
+    | '/_authed/settings'
+    | '/_authed/lists/$listId'
+    | '/_authed/settings/household'
+    | '/_authed/settings/profile'
+    | '/_authed/items/'
+    | '/_authed/lists/'
+    | '/_authed/settings/'
   fileRoutesById: FileRoutesById
 }
 
@@ -265,8 +331,10 @@ export const routeTree = rootRoute
     "/_authed": {
       "filePath": "_authed.tsx",
       "children": [
-        "/_authed/posts",
-        "/_authed/profile/$"
+        "/_authed/settings",
+        "/_authed/lists/$listId",
+        "/_authed/items/",
+        "/_authed/lists/"
       ]
     },
     "/sign-in": {
@@ -275,25 +343,38 @@ export const routeTree = rootRoute
     "/sign-up": {
       "filePath": "sign-up.tsx"
     },
-    "/_authed/posts": {
-      "filePath": "_authed/posts.tsx",
+    "/_authed/settings": {
+      "filePath": "_authed/settings.tsx",
       "parent": "/_authed",
       "children": [
-        "/_authed/posts/$postId",
-        "/_authed/posts/"
+        "/_authed/settings/household",
+        "/_authed/settings/profile",
+        "/_authed/settings/"
       ]
     },
-    "/_authed/posts/$postId": {
-      "filePath": "_authed/posts.$postId.tsx",
-      "parent": "/_authed/posts"
-    },
-    "/_authed/profile/$": {
-      "filePath": "_authed/profile.$.tsx",
+    "/_authed/lists/$listId": {
+      "filePath": "_authed/lists/$listId.tsx",
       "parent": "/_authed"
     },
-    "/_authed/posts/": {
-      "filePath": "_authed/posts.index.tsx",
-      "parent": "/_authed/posts"
+    "/_authed/settings/household": {
+      "filePath": "_authed/settings/household.tsx",
+      "parent": "/_authed/settings"
+    },
+    "/_authed/settings/profile": {
+      "filePath": "_authed/settings/profile.tsx",
+      "parent": "/_authed/settings"
+    },
+    "/_authed/items/": {
+      "filePath": "_authed/items/index.tsx",
+      "parent": "/_authed"
+    },
+    "/_authed/lists/": {
+      "filePath": "_authed/lists/index.tsx",
+      "parent": "/_authed"
+    },
+    "/_authed/settings/": {
+      "filePath": "_authed/settings/index.tsx",
+      "parent": "/_authed/settings"
     }
   }
 }
