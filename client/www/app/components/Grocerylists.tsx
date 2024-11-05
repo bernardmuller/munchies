@@ -429,7 +429,6 @@ function CreateListDialog() {
 }
 
 export default function GroceryListPage() {
-  const navigate = useNavigate()
   const {data: myGrocerylist, isFetching: isMyGrocerylistLoading} = useLatestGrocerylistByUserId({
     initialData: null,
   })

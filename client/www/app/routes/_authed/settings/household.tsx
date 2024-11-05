@@ -56,9 +56,9 @@ function HouseholdDashboard() {
     setTimeout(() => setHasCopied(false), 2000);
   };
 
-  if (isLoading || isFetching || isRefetching || leaveHoushold.isPending) {
-    return <div>Loading...</div>;
-  }
+  // if (isLoading || isFetching || isRefetching || leaveHoushold.isPending) {
+  //   return <div>Loading...</div>;
+  // }
 
   if (!householdData || !householdData?.id) {
     return (

@@ -4,6 +4,7 @@ import useIngredients from "@/lib/http/hooks/ingredients/useIngredients";
 import useLatestGrocerylistByUserId from "@/lib/http/hooks/grocerylists/useLatestGrocerylistByUserId";
 import useLatestGrocerylistByHouseholdId from "@/lib/http/hooks/grocerylists/useLatestGrocerylistByHouseholdId";
 import {useEffect, useState} from "react";
+import useCurrentUserHouseholdDetails from "@/lib/http/hooks/households/useCurrentUserHouseholdDetails";
 
 export default function useAppData () {
   const [isLoading, setIsLoading] = useState(true)
@@ -38,24 +39,53 @@ export default function useAppData () {
   } = useLatestGrocerylistByHouseholdId({
     initialData: null,
   })
+  const {
+    data: household,
+    isLoading: isHouseholdLoading,
+    isFetching: isHouseholdFetching
+  } = useCurrentUserHouseholdDetails({
+    initialData: null,
+  })
 
   useEffect(() => {
-    if (!isCurrentUserLoading && !isCategoriesLoading && !isIngredientsLoading && !isMyGrocerylistLoading && !isMyHouseholdGrocerylistLoading) {
+    if (
+      (!isCurrentUserLoading && currentUser) ||
+      !isCategoriesLoading ||
+      (!isIngredientsLoading && !ingredients) ||
+      (!isMyGrocerylistLoading && !mylist) ||
+      (!isMyHouseholdGrocerylistLoading && !myHousholdList) ||
+      (!isHouseholdLoading)
+    ) {
       setIsLoading(false)
     }
-  }, [isCurrentUserLoading, isCategoriesLoading, isIngredientsLoading, isMyGrocerylistLoading, isMyHouseholdGrocerylistLoading])
+  }, [
+    isCurrentUserLoading,
+    isCategoriesLoading,
+    isIngredientsLoading,
+    isMyGrocerylistLoading,
+    isMyHouseholdGrocerylistLoading,
+    isHouseholdLoading
+  ])
 
   useEffect(() => {
     if (
       (!isCurrentUserFetching && !currentUser) ||
-      (!isCategoriesFetching && !categories) ||
+      (!isCategoriesFetching) ||
       (!isIngredientsFetching && !ingredients) ||
       (!isMyGrocerylistFetching && !mylist) ||
-      (!isMyHouseholdGrocerylistFetching && !myHousholdList)
+      (!isMyHouseholdGrocerylistFetching) ||
+      (!isHouseholdFetching)
     ) {
       setIsFetching(false)
     }
-  }, [isCurrentUserFetching, isCategoriesFetching, isIngredientsFetching, isMyGrocerylistFetching, isMyHouseholdGrocerylistFetching])
+  }, [
+    isCurrentUserFetching,
+    isCategoriesFetching,
+    isIngredientsFetching,
+    isMyGrocerylistFetching,
+    isMyHouseholdGrocerylistFetching,
+    isHouseholdFetching
+  ])
 
   return {
     currentUser,
@@ -63,6 +93,7 @@ export default function useAppData () {
     ingredients,
     mylist,
     myHousholdList,
+    household,
     isLoading,
     isFetching
   }

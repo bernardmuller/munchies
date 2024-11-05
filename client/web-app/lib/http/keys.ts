@@ -10,4 +10,5 @@ export const keys = {
   checkItem: ["check-item"],
   createList: ["create-list"],
   getGrocerylistById: (id: string) => ["get-grocerylist-by-id", id],
+  currentUser: ["current-logged-in-user"]
 };

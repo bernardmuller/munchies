@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {InvalidateQueryFilters, useMutation, useQueryClient} from "@tanstack/react-query";
 import { keys } from "@/lib/http/keys";
 import { useAuth } from "@clerk/tanstack-start";
 import {createList, CreateList} from "@/lib/http/client/grocerylists/createList";
@@ -13,8 +13,8 @@ export default function useCreateList() {
       return createList({ data, accessToken: token! });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(keys.latestGrocerylistByUserId);
-      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId);
+      queryClient.invalidateQueries(keys.latestGrocerylistByUserId as InvalidateQueryFilters);
+      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId as InvalidateQueryFilters);
     },
   });
 }
