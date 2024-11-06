@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { keys } from "@/lib/http/keys";
 import { useAuth } from "@clerk/tanstack-start";
 import {getLatestGrocerylistByHouseholdId} from "@/lib/http/client/grocerylists/getLatestGrocerylistByHouseholdId";
+import {ONE_DAY_IN_MS} from "@/lib/constants";
 
 type Props = {
   initialData: any;
@@ -19,5 +20,6 @@ export default function useLatestGrocerylistByHouseholdId({ initialData }: Props
     },
     initialData,
     enabled: !!token,
+    staleTime: ONE_DAY_IN_MS
   });
 }

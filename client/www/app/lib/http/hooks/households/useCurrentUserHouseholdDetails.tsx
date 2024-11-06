@@ -3,6 +3,7 @@ import { getCurrentUserHouseholdDetails } from "@/lib/http/client/households/get
 import type { Household } from "@/lib/http/client/households/getCurrentUserHouseholdDetails";
 import { keys } from "@/lib/http/keys";
 import { useAuth } from "@clerk/tanstack-start";
+import {ONE_DAY_IN_MS} from "@/lib/constants";
 
 type Props = {
   initialData: Household | null;
@@ -22,5 +23,6 @@ export default function useCurrentUserHouseholdDetails({ initialData }: Props) {
     },
     initialData,
     enabled: !!token,
+    staleTime: ONE_DAY_IN_MS
   });
 }

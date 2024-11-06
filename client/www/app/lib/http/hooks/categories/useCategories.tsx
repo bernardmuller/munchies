@@ -20,5 +20,6 @@ export default function useCategories({ initialData }: Props) {
     },
     initialData,
     enabled: !!token,
+    staleTime: 86400000
   });
 }

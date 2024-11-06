@@ -5,6 +5,7 @@ import {
 } from "@/lib/http/client/ingredients/getAllIngredients";
 import { keys } from "@/lib/http/keys";
 import { useAuth } from "@clerk/tanstack-start";
+import {ONE_DAY_IN_MS} from "@/lib/constants";
 
 type Props = {
   initialData: Ingredient[] | null;
@@ -22,5 +23,6 @@ export default function useIngredients({ initialData }: Props) {
     },
     initialData,
     enabled: !!token,
+    staleTime: ONE_DAY_IN_MS
   });
 }

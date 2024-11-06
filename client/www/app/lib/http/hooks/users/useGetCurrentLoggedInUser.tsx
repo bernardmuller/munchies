@@ -2,6 +2,7 @@ import {QueryFilters, useQuery, useQueryClient} from "@tanstack/react-query";
 import {keys} from "@/lib/http/keys";
 import {useAuth} from "@clerk/tanstack-start";
 import {getCurrentLoggedInUser} from "@/lib/http/client/users/getCurrentLoggedInUser";
+import {ONE_DAY_IN_MS} from "@/lib/constants";
 
 export default function useGetCurrentLoggedInUser() {
   const {getToken} = useAuth();
@@ -15,6 +16,7 @@ export default function useGetCurrentLoggedInUser() {
       return response.data;
     },
     enabled: !!token,
+    staleTime: ONE_DAY_IN_MS
   });
 
   const prefetch = async () => {
