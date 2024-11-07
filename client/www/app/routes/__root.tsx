@@ -1,4 +1,5 @@
-/// <reference types="vite/client" />
+// @ts-ignore
+// / <reference types="vite/client" />
 import {
   Link,
   Outlet,
