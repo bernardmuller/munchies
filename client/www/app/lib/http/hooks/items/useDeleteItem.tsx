@@ -1,4 +1,4 @@
-import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {InvalidateQueryFilters, QueryFilters, useMutation, useQueryClient} from "@tanstack/react-query";
 import {keys} from "@/lib/http/keys";
 import {useAuth} from "@clerk/tanstack-start";
 import {useToast} from "@/components/ui/use-toast";
@@ -16,9 +16,11 @@ export default function useDeleteItem(grocerylistId: string) {
       return deleteItem({id, accessToken: token!});
     },
     onMutate: async (id: string) => {
-      await queryClient.cancelQueries(keys.latestGrocerylistByUserId);
-      await queryClient.cancelQueries(keys.latestGrocerylistByHouseholdId);
-      await queryClient.cancelQueries(keys.getGrocerylistById(grocerylistId));
+      await queryClient.cancelQueries([
+        ...keys.latestGrocerylistByUserId,
+        ...keys.latestGrocerylistByHouseholdId,
+        ...keys.getGrocerylistById(grocerylistId)
+      ] as QueryFilters);
       const prev = await queryClient.getQueryData(keys.getGrocerylistById(grocerylistId)) as GroceryList;
 
       queryClient.setQueryData(keys.getGrocerylistById(grocerylistId), {
@@ -29,9 +31,11 @@ export default function useDeleteItem(grocerylistId: string) {
       return {prev};
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(keys.latestGrocerylistByUserId);
-      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId);
-      queryClient.invalidateQueries(keys.getGrocerylistById(grocerylistId));
+      queryClient.invalidateQueries([
+        ...keys.latestGrocerylistByUserId,
+        ...keys.latestGrocerylistByHouseholdId,
+        ...keys.getGrocerylistById(grocerylistId)
+      ] as InvalidateQueryFilters);
     },
   });
 }

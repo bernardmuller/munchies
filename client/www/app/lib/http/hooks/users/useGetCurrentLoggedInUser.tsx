@@ -6,13 +6,14 @@ import {ONE_DAY_IN_MS} from "@/lib/constants";
 
 export default function useGetCurrentLoggedInUser() {
   const {getToken} = useAuth();
-  const token = getToken({template: "1_HOUR"}).then((t) => t?.toString());
+  const token = getToken({ template: import.meta.env.VITE_CLERK_JWT_TEMPLATE ?? "default" }).then((t) => t?.toString());
   const queryClient = useQueryClient();
 
   const query = useQuery({
     queryKey: keys.currentUser,
     queryFn: async () => {
       const response = await getCurrentLoggedInUser((await token) as string);
+      if(!response.data) return null;
       return response.data;
     },
     enabled: !!token,
@@ -26,6 +27,7 @@ export default function useGetCurrentLoggedInUser() {
       queryKey: keys.currentUser,
       queryFn: async () => {
         const response = await getCurrentLoggedInUser((await token) as string);
+        if(!response.data) return null;
         return response.data;
       },
     })

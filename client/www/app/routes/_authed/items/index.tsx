@@ -17,7 +17,6 @@ import {DataTable} from "@/components/DataTable";
 import useCategories from "@/lib/http/hooks/categories/useCategories";
 import useLatestGrocerylistByHouseholdId from "@/lib/http/hooks/grocerylists/useLatestGrocerylistByHouseholdId";
 import useLatestGrocerylistByUserId from "@/lib/http/hooks/grocerylists/useLatestGrocerylistByUserId";
-import useAppData from "@/lib/http/hooks/app-data/useAppData";
 
 export const Route = createFileRoute('/_authed/items/')({
   component: () => {
@@ -25,33 +24,17 @@ export const Route = createFileRoute('/_authed/items/')({
   },
 })
 
-type IngredientsProps = {
-  // grocerylistId: string;
-  // householdGrocerylistId: string;
-  // ingredients: any[];
-  // categories: Category[];
-};
-
-function Ingredients({
-  // grocerylistId,
-  // householdGrocerylistId,
-  // ingredients: data,
-  // categories,
-}: IngredientsProps) {
+function Ingredients() {
   const deleteIngredient = useDeleteIngredient();
   const {toast} = useToast();
-  const {data: ingredientsData, isFetching} = useIngredients({
-    initialData: [],
-  });
+  const {data: ingredientsData, isFetching} = useIngredients();
   const {data: householdGrocerylist} = useLatestGrocerylistByHouseholdId({
     initialData: null,
   })
   const {data: grocerylist} = useLatestGrocerylistByUserId({
     initialData: [],
   })
-  const {data: categories} = useCategories({
-    initialData: [],
-  })
+  const {data: categories} = useCategories()
   const createGroceryItem = useCreateItem(grocerylist?.id);
   const createHouseholdGroceryItem = useCreateItem(householdGrocerylist?.id);
   const [open, setOpen] = React.useState(false);
@@ -182,7 +165,7 @@ function Ingredients({
   ];
 
   if (isFetching && !ingredientsData) {
-    return <div>Loading...</div>
+    return <div className="flex justify-center items-center">Loading...</div>
   }
 
   return (
@@ -205,7 +188,7 @@ function Ingredients({
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="px-2" align="end">
-                {categories.map((c) => (
+                {categories?.map((c) => (
                   <DropdownMenuItem
                     key={c.id}
                     className="p-2">
@@ -242,7 +225,7 @@ function Ingredients({
                 </DialogHeader>
                 <NewIngredientForm
                   defaultValue=""
-                  categories={categories}
+                  categories={categories!}
                   onClose={() => setOpen(false)}
                   onInvalidate={() => {
                     queryClient.invalidateQueries(

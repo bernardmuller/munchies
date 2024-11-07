@@ -29,13 +29,8 @@ export const Route = createFileRoute('/_authed/settings/household')({
 
 function HouseholdDashboard() {
   const {
-    data: householdData,
-    isLoading,
-    isFetching,
-    isRefetching,
-  } = useCurrentUserHouseholdDetails({
-    initialData: null,
-  });
+    data: householdData
+  } = useCurrentUserHouseholdDetails();
   const createHoushold = useCreateHousehold();
   const joinHoushold = useJoinHousehold();
   const leaveHoushold = useLeaveHousehold();

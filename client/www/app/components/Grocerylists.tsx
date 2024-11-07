@@ -27,6 +27,7 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 import {Category} from "@/lib/http/client/categories/getAllCategories";
 import {Skeleton} from "@/components/ui/skeleton";
 import {useNavigate} from "@tanstack/react-router";
+import useCategories from "@/lib/http/hooks/categories/useCategories";
 
 type GrocerylistsPageProps = {
   // grocerylists: {
@@ -83,7 +84,7 @@ export function GroceryList({
   return (
     <div className="bg-slate-100 md:bg-white">
       <ScrollArea className="bg-background md:bg-white px-3 py-3 rounded-b-sm h-fit md:rounded-lg">
-        {groceryItemsWithQuantity.length ? (
+        {groceryItemsWithQuantity?.length ? (
           <div className="bg-white rounded-lg border-slate-200 border-[1px] p-3 mb-3">
             {/*<h3 className="text-lg pb-3 ml md:hidden">Items:</h3>*/}
             <div className="flex justify-between">
@@ -146,8 +147,6 @@ export function GroceryList({
               </span>
               <Button
                 onClick={() => {
-                  console.log("here")
-                  console.log(id)
                   if (!id) return
                   navigate({to: `/lists/${id}`})
                 }}
@@ -231,7 +230,7 @@ export function ListMetaData({list}: { list: GroceryList }) {
     <MetaDataWrapper>
       <div className="w-full flex justify-between items-center">
         <h3 className="text-md md:text-lg font-semibold">My Shopping List</h3>
-        {list.id && (
+        {list?.id && (
           <Button
             variant="outline"
             onClick={() => navigate({to: `/lists/${list.id}`})}
@@ -257,7 +256,7 @@ export function HouseholdListMetaData({list}: { list: GroceryList }) {
     <MetaDataWrapper>
       <div className="w-full flex justify-between items-center">
         <h3 className="text-md md:text-lg font-semibold">My Household Shopping List</h3>
-        {list.id && (
+        {list?.id && (
           <Button
             variant="outline"
             onClick={() => navigate({to: `/lists/${list.id}`})}
@@ -436,6 +435,8 @@ export default function GroceryListPage() {
   const {data: myHouseholdGrocerylist, isLoading: isMyHouseholdGrocerylistLoading} = useLatestGrocerylistByHouseholdId({
     initialData: null,
   })
+
+  const {data: categories} = useCategories()
   const checkOrUncheckItem = useCheckOrUncheckItem()
   const checkOrUncheckHouseholdItem = useCheckOrUncheckHouseholdItem()
 
@@ -469,7 +470,7 @@ export default function GroceryListPage() {
     checkOrUncheckHouseholdItemsWithSameName(id)
   }
 
-  if ((isMyGrocerylistLoading && !myGrocerylist) || (isMyHouseholdGrocerylistLoading && !myHouseholdGrocerylist)) {
+  if ((isMyGrocerylistLoading && !myGrocerylist)) {
     return (<div className="container mx-auto p-4 space-y-4">
       <div className="flex justify-between items-center">
         <div className="space-x-2">
@@ -532,7 +533,7 @@ export default function GroceryListPage() {
                 id={myGrocerylist?.id}
                 items={myGrocerylist?.items}
                 onCheckOrUncheckItem={handleCheckOrUncheckItem}
-                categories={[]}
+                categories={categories ?? []}
                 isLoading={isMyGrocerylistLoading}
               />
             </div>
@@ -547,7 +548,7 @@ export default function GroceryListPage() {
                   id={myHouseholdGrocerylist?.id}
                   items={myHouseholdGrocerylist?.items}
                   onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}
-                  categories={[]}
+                  categories={categories ?? []}
                   isLoading={isMyHouseholdGrocerylistLoading}
                 />
               </div>

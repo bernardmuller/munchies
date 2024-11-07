@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import useGetCurrentLoggedInUser from '@/lib/http/hooks/users/useGetCurrentLoggedInUser'
 import useAppData from "@/lib/http/hooks/app-data/useAppData";
+import {User} from "@/lib/http/client/users/getCurrentLoggedInUser";
 
 export const Route = createFileRoute('/_authed/settings/profile')({
   component: () => {
@@ -18,7 +19,7 @@ function Profile() {
   if (!currentUser.data && currentUser.isFetching) {
     return <div>Loading...</div>
   }
-  const { firstName, lastName, email, image, lists, items } = currentUser.data
+  const { firstName, lastName, email, image, numberOfLists, numberOfItems } = currentUser.data as User
 
   return (
     <div className="min-h-[50vh] text-center ">
@@ -53,10 +54,10 @@ function Profile() {
         </div>
         <div className="flex space-x-4">
           <span>
-            <strong>{lists ?? 0}</strong> lists
+            <strong>{numberOfLists ?? 0}</strong> lists
           </span>
           <span>
-            <strong>{items ?? 0}</strong> items
+            <strong>{numberOfItems ?? 0}</strong> items
           </span>
           {/*<span><strong>13</strong> meals</span>*/}
         </div>

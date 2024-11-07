@@ -13,8 +13,10 @@ export default function useCreateList() {
       return createList({ data, accessToken: token! });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(keys.latestGrocerylistByUserId as InvalidateQueryFilters);
-      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId as InvalidateQueryFilters);
+      queryClient.invalidateQueries([
+        ...keys.latestGrocerylistByUserId,
+        ...keys.latestGrocerylistByHouseholdId,
+      ] as InvalidateQueryFilters);
     },
   });
 }

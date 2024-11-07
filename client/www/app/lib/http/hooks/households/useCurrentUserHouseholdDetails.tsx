@@ -5,11 +5,7 @@ import { keys } from "@/lib/http/keys";
 import { useAuth } from "@clerk/tanstack-start";
 import {ONE_DAY_IN_MS} from "@/lib/constants";
 
-type Props = {
-  initialData: Household | null;
-};
-
-export default function useCurrentUserHouseholdDetails({ initialData }: Props) {
+export default function useCurrentUserHouseholdDetails() {
   const { getToken } = useAuth();
   const token = getToken({ template: import.meta.env.VITE_CLERK_JWT_TEMPLATE ?? "default" }).then((t) => t?.toString());
   return useQuery({
@@ -18,10 +14,9 @@ export default function useCurrentUserHouseholdDetails({ initialData }: Props) {
       const response = await getCurrentUserHouseholdDetails(
         (await token) as string,
       );
-      if (!response.data) return initialData;
+      if (!response.data) return null;
       return response.data;
     },
-    initialData,
     enabled: !!token,
     staleTime: ONE_DAY_IN_MS
   });

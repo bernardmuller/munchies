@@ -131,8 +131,8 @@ export default function NewIngredientForm({
           <div className="w-full h-full lg:flex-[0.4] lg:pl-4 sm:pt-7 lg:pt-0"></div>
         </div>
         <div className="w-full flex gap-2 justify-end">
-          <Button disabled={createIngredient.isLoading} type="submit">
-            {createIngredient.isLoading && (
+          <Button disabled={createIngredient.isPending} type="submit">
+            {createIngredient.isPending && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
             )}
             Submit

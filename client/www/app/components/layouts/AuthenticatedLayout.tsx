@@ -3,19 +3,67 @@
 // import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 // import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {FaGithub} from "react-icons/fa";
-import React, {Suspense} from "react";
-// import useGetCurrentLoggedInUser from "@/lib/http/hooks/users/useGetCurrentLoggedInUser";
-// import {MobileTabs, MobileTabsList, MobileTabsTrigger} from "@/components/ui/mobile-tabs";
-import {Clipboard, List, Newspaper, TrendingUp} from "lucide-react";
+import React from "react";
+import {Clipboard, List} from "lucide-react";
 import {User} from "@/lib/http/client/users/getCurrentLoggedInUser";
 import Navbar from "@/components/NavigationBar";
-// import {usePathname} from "next/navigation";
-// import Link from "next/link";
+import { Apple, Beer, Cake, Coffee, IceCream, Pizza } from 'lucide-react'
 
 const tabs = [
   { id: "/lists", label: "Lists", icon: <Clipboard className="w-4 h-4" /> },
   { id: "/items", label: "Items", icon: <List className="w-4 h-4" /> },
 ]
+
+const foodIcons = [Apple, Beer, Cake, Coffee, IceCream, Pizza]
+
+interface FoodIconBackgroundProps {
+  gridSize?: number
+  iconSize?: number
+  iconColor?: string
+}
+
+function FoodIconBackground({
+  gridSize = 10,
+  iconSize = 24,
+  iconColor = '#d1d5db'
+}: FoodIconBackgroundProps = {}) {
+  const getRandomIcon = () => {
+    const RandomIcon = foodIcons[Math.floor(Math.random() * foodIcons.length)]
+    return <RandomIcon size={iconSize} color={iconColor} />
+  }
+
+  return (
+    <div
+      className="fixed inset-0 -z-10 overflow-hidden"
+      style={{backgroundColor: '#eff1f6'}}
+      aria-hidden="true"
+    >
+      <div
+        className="absolute inset-0"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(auto-fill, ${iconSize * 2}px)`,
+          gridTemplateRows: `repeat(auto-fill, ${iconSize * 2}px)`,
+        }}
+      >
+        {Array.from({length: gridSize * gridSize}).map((_, index) => (
+          <React.Fragment key={index}>
+            <div
+              className="flex items-center justify-center"
+              style={{
+                transform: 'rotate(-45deg)',
+                gridColumn: `${index % 2 === 0 ? 'auto' : '2'} / span 1`,
+                gridRow: `${index % 2 === 0 ? 'auto' : '2'} / span 1`,
+              }}
+            >
+              {getRandomIcon()}
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 
 export default function AuthenticatedLayout({
@@ -30,7 +78,8 @@ export default function AuthenticatedLayout({
       <Navbar
         currentUser={user}
       />
-      <main className="bg-background">
+      <main className="">
+        {/*<FoodIconBackground/>*/}
         <div className="absolute top-0 left-0 right-0 h-[300px] bg-header" aria-hidden="true"/>
         <div className="relative z-10 max-w-7xl mx-auto md:px-4 lg:px-8 min-h-full">
           <div className="h-20 md:h-20 flex items-center">

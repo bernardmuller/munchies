@@ -152,7 +152,7 @@ function NavLink({
         onMouseEnter={async () => {
           if (!httpKey || !queryFn) return
           await queryClient.prefetchQuery({
-            queryKey: [httpKey],
+            queryKey: httpKey,
             queryFn: queryFn
           })
         }}

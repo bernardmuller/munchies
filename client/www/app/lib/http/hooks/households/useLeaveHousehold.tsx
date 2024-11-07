@@ -15,9 +15,11 @@ export default function useLeaveHousehold() {
       return leaveHousehold({ accessToken: token! });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(keys.currentUserHouseholdDetails as InvalidateQueryFilters);
-      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId as InvalidateQueryFilters);
-      queryClient.invalidateQueries(keys.latestGrocerylistByUserId as InvalidateQueryFilters);
+      queryClient.invalidateQueries([
+        ...keys.currentUserHouseholdDetails,
+        ...keys.latestGrocerylistByUserId,
+        ...keys.latestGrocerylistByHouseholdId,
+      ] as InvalidateQueryFilters);
     },
   });
 }

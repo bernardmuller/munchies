@@ -1,14 +1,12 @@
 import {InvalidateQueryFilters, QueryFilters, useMutation, useQueryClient} from "@tanstack/react-query";
 import { keys } from "@/lib/http/keys";
 import { useAuth } from "@clerk/tanstack-start";
-import {useToast} from "@/components/ui/use-toast";
 import {checkOrUncheckItem} from "@/lib/http/client/items/checkOrUncheckItem";
 import {GroceryList} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
 
 export default function useCheckOrUncheckItem() {
   const queryClient = useQueryClient();
   const { getToken } = useAuth();
-  const {toast} = useToast();
   return useMutation({
     mutationKey: keys.checkItem,
     mutationFn: async (id: string) => {
@@ -34,8 +32,10 @@ export default function useCheckOrUncheckItem() {
       return { prev };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(keys.latestGrocerylistByUserId as InvalidateQueryFilters);
-      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId as InvalidateQueryFilters);
+      queryClient.invalidateQueries([
+        ...keys.latestGrocerylistByUserId,
+        ...keys.latestGrocerylistByHouseholdId,
+      ] as InvalidateQueryFilters);
     },
   });
 }

@@ -26,8 +26,8 @@ export const Route = createFileRoute('/_authed')({
 })
 
 function AuthenticatedComponent() {
-  const {isFetching, currentUser} = useAppData()
-  if (isFetching) {
+  const {isFetching, isAbsent, currentUser} = useAppData()
+  if (isFetching && isAbsent && !currentUser) {
     return <div className="w-full h-full flex flex-col items-center justify-center bg-header text-gray-100">
       <Loader2
         className="w-16 h-16 animate-spin"
@@ -36,7 +36,7 @@ function AuthenticatedComponent() {
     </div>
   }
   return (
-    <AuthenticatedLayout user={currentUser}>
+    <AuthenticatedLayout user={currentUser!}>
       <Outlet/>
     </AuthenticatedLayout>
   )

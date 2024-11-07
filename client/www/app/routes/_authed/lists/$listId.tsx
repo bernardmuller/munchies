@@ -1,6 +1,6 @@
-import {createFileRoute, useRouter} from '@tanstack/react-router'
-import React, { useMemo, useState} from 'react'
-import {ChevronLeft, Minus, Plus, X} from 'lucide-react'
+import {createFileRoute, useNavigate} from '@tanstack/react-router'
+import React, {useMemo, useState} from 'react'
+import {ChevronLeft, Minus, Plus, Trash} from 'lucide-react'
 import {Button} from "@/components/ui/button"
 import {Card, CardContent} from "@/components/ui/card"
 import {ScrollArea} from "@/components/ui/scroll-area"
@@ -18,7 +18,7 @@ import {InvalidateQueryFilters, useQueryClient} from "@tanstack/react-query";
 import useCategories from "@/lib/http/hooks/categories/useCategories";
 import useIngredients from "@/lib/http/hooks/ingredients/useIngredients";
 import NewIngredientForm from "@/components/NewIngredientForm";
-import {useNavigate} from "@tanstack/react-router";
+import {Skeleton} from "@/components/ui/skeleton";
 
 export const Route = createFileRoute('/_authed/lists/$listId')({
   component: () => {
@@ -30,7 +30,7 @@ interface GroceryItemWithQuantity extends GroceryItem {
   quantity: number
 }
 
-const SearchableSelect = ({ options, onSelect, placeholder, onFocus}: {
+const SearchableSelect = ({options, onSelect, placeholder, onFocus}: {
   options: Ingredient[];
   onSelect: (ingredient: Ingredient) => void;
   placeholder: string;
@@ -58,22 +58,19 @@ const SearchableSelect = ({ options, onSelect, placeholder, onFocus}: {
 }
 
 function ManageGrocerylist() {
-  const { listId } = Route.useParams()
-  const navigate = useNavigate({ from: '/lists/$listId' })
+  const {listId} = Route.useParams()
+  const navigate = useNavigate({from: '/lists/$listId'})
   const [open, setOpen] = React.useState(false);
-  const {data} = useGrocerylistById({
-    initialData: null,
+  const {data, isFetching: isFetchingGrocerylist} = useGrocerylistById({
     id: listId,
   });
 
-  const {data: categories} = useCategories({initialData: null});
-  const {data: ingredients} = useIngredients({initialData: null});
-
+  const {data: categories} = useCategories();
   const queryClient = useQueryClient();
   const createItem = useCreateItem(listId);
   const deleteItem = useDeleteItem(listId);
   const [searchTerm, setSearchTerm] = useState("")
-  const {data: ingredientsQueryData} = useIngredients({initialData: ingredients});
+  const {data: ingredients, isFetching: isFetchingIngredients} = useIngredients();
   const {toast} = useToast()
 
   const groceryItemsWithQuantity = useMemo(() => {
@@ -83,7 +80,7 @@ function ManageGrocerylist() {
       return acc
     }, {} as Record<string, number>)
 
-    return data.items.reduce((acc:GroceryItemWithQuantity[], item: GroceryItem) => {
+    return data.items.reduce((acc: GroceryItemWithQuantity[], item: GroceryItem) => {
       if (!acc.some(i => i.name === item.name)) {
         acc.push({...item, quantity: itemCounts[item.name]})
       }
@@ -92,7 +89,7 @@ function ManageGrocerylist() {
   }, [data])
 
   const addItem = async (ingredientId: string) => {
-    if(!ingredientId) {
+    if (!ingredientId) {
       toast({
         variant: "destructive",
         title: "Error",
@@ -103,7 +100,7 @@ function ManageGrocerylist() {
 
     const ingredient = ingredients?.find((i: Ingredient) => i.id === ingredientId)
 
-    if(!ingredient) {
+    if (!ingredient) {
       toast({
         variant: "destructive",
         title: "Error",
@@ -120,6 +117,7 @@ function ManageGrocerylist() {
   }
 
   const removeAllItem = (ingredientId: string) => {
+    if(!data) return
     for (const item of data.items) {
       if (item.ingredient_id === ingredientId) {
         deleteItem.mutate(item.item_id);
@@ -171,7 +169,7 @@ function ManageGrocerylist() {
       <div className="container mx-auto p-4">
         <Button
           variant="outline"
-          onClick={() => navigate({ to: '/lists' })}
+          onClick={() => navigate({to: '/lists'})}
           className="mb-4"
         >
           <ChevronLeft className="mr-2 h-4 w-4"/>
@@ -193,39 +191,61 @@ function ManageGrocerylist() {
 
             <ScrollArea className="min-h-[75vh]">
               <div className="space-y-2">
-                {!groceryItemsWithQuantity.length && (
+                {!groceryItemsWithQuantity.length && !isFetchingIngredients && (
                   <span className="text-center text-muted-foreground">
-                  No items in list.
-                </span>
+                    No items in list.
+                  </span>
                 )}
+                {(isFetchingGrocerylist && !groceryItemsWithQuantity.length) ? (
+                  <>
+                    {[...Array(3)].map((_, index) => (
+                      <Card key={index}>
+                        <CardContent className="p-6 px-7">
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center space-x-2">
+                              <Skeleton className="h-6 w-6 rounded-sm"/>
+                              <Skeleton className="h-6 w-24"/>
+                            </div>
+                            <Skeleton className="h-6 w-12"/>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </>
+                ) : null}
+
                 {groceryItemsWithQuantity.map((item: GroceryItemWithQuantity) => (
                   <Card key={item.item_id}>
                     <CardContent className="flex items-center justify-between p-4">
                       <span className="flex-grow">{item.name}</span>
                       <div className="flex items-center space-x-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => removeItem(item.item_id)}
-                        >
-                          <Minus className="h-4 w-4"/>
-                        </Button>
+                        {item.quantity > 1 ? (
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => removeItem(item.item_id)}
+                          >
+                            <Minus className="h-4 w-4"/>
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => removeAllItem(item.ingredient_id)}
+                          >
+                            <Trash className="h-4 w-4"/>
+                          </Button>
+                        )}
                         <span className="w-8 text-center">{item.quantity || 0}</span>
                         <Button
                           variant="outline"
                           size="icon"
                           onClick={() => {
-                            addItem(item.ingredient_id)}
+                            addItem(item.ingredient_id)
+                          }
                           }
                         >
                           <Plus className="h-4 w-4"/>
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="icon"
-                          onClick={() => removeAllItem(item.ingredient_id)}
-                        >
-                          <X className="h-4 w-4"/>
                         </Button>
                       </div>
                     </CardContent>
@@ -240,7 +260,7 @@ function ManageGrocerylist() {
             <div className="mb-4 relative pr-4">
               <CreatableSelect
                 isClearable
-                options={ingredientsQueryData?.map((ingredient) => ({
+                options={ingredients?.map((ingredient) => ({
                   value: ingredient.id,
                   label: ingredient.name,
                 }))}

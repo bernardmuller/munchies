@@ -14,7 +14,6 @@ interface CreateItemWithIngredientDetails extends CreateItem {
 export default function useCreateItem(grocerylistId: string) {
   const queryClient = useQueryClient();
   const { getToken } = useAuth();
-  const {toast} = useToast();
   return useMutation({
     mutationKey: keys.createItem as string[],
     mutationFn: async (data: CreateItem) => {
@@ -27,11 +26,13 @@ export default function useCreateItem(grocerylistId: string) {
       });
     },
     onMutate: async (item: CreateItemWithIngredientDetails) => {
-      await queryClient.cancelQueries(keys.latestGrocerylistByUserId as QueryFilters);
-      await queryClient.cancelQueries(keys.latestGrocerylistByHouseholdId as QueryFilters);
-      await queryClient.cancelQueries(keys.getGrocerylistById(grocerylistId as string) as QueryFilters);
-      const prev = queryClient.getQueryData(keys.getGrocerylistById(grocerylistId)) as GroceryList;
+      await queryClient.cancelQueries([
+        ...keys.latestGrocerylistByUserId,
+        ...keys.latestGrocerylistByHouseholdId,
+        ...keys.getGrocerylistById(grocerylistId)
+      ] as QueryFilters);
 
+      const prev = queryClient.getQueryData(keys.getGrocerylistById(grocerylistId)) as GroceryList;
       if (prev && prev.items) {
         queryClient.setQueryData(keys.getGrocerylistById(grocerylistId), {
           ...prev,
@@ -48,9 +49,11 @@ export default function useCreateItem(grocerylistId: string) {
       return { prev };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(keys.latestGrocerylistByUserId as InvalidateQueryFilters);
-      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId as InvalidateQueryFilters);
-      queryClient.invalidateQueries(keys.getGrocerylistById(grocerylistId) as InvalidateQueryFilters);
+      queryClient.invalidateQueries([
+        ...keys.latestGrocerylistByUserId,
+        ...keys.latestGrocerylistByHouseholdId,
+       ...keys.getGrocerylistById(grocerylistId)
+      ] as InvalidateQueryFilters);
     },
   });
 }
