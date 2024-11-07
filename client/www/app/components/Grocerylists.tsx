@@ -1,5 +1,3 @@
-"use client";
-
 import React, {useEffect, useMemo, useState} from "react"
 import type {GroceryItem, GroceryList} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
@@ -20,7 +18,6 @@ import useLatestGrocerylistByHouseholdId from "@/lib/http/hooks/grocerylists/use
 import useCheckOrUncheckItem from "@/lib/http/hooks/items/useCheckOrUncheckItem"
 import useCheckOrUncheckHouseholdItem from "@/lib/http/hooks/items/useCheckOrUncheckHouseholdItem"
 import {Calendar, ClipboardList, Filter, FilterXIcon, House, Loader2, Pencil, User} from "lucide-react"
-import {useRouter} from "next/navigation";
 import useCreateList from "@/lib/http/hooks/grocerylists/useCreateList";
 import {useToast} from "@/components/ui/use-toast";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
@@ -29,14 +26,15 @@ import {Input} from "@/components/ui/input";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {Category} from "@/lib/http/client/categories/getAllCategories";
 import {Skeleton} from "@/components/ui/skeleton";
-import {getItem} from "@/lib/data-store";
+import {useNavigate} from "@tanstack/react-router";
+import useCategories from "@/lib/http/hooks/categories/useCategories";
 
 type GrocerylistsPageProps = {
-  grocerylists: {
-    myGrocerylist: GroceryList;
-    myHouseholdGrocerylist: GroceryList;
-  };
-  categories: Category[]
+  // grocerylists: {
+  //   myGrocerylist: GroceryList;
+  //   myHouseholdGrocerylist: GroceryList;
+  // };
+  // categories: Category[]
 };
 
 interface GroceryItemWithQuantity extends GroceryItem {
@@ -48,13 +46,20 @@ interface GroceryListProps {
   items: GroceryItem[],
   onCheckOrUncheckItem: (id: string) => void
   categories: Category[]
+  isLoading: boolean
 }
 
-export function GroceryList({id, items, onCheckOrUncheckItem, categories}: GroceryListProps) {
-  const router = useRouter()
+export function GroceryList({
+  id,
+  items,
+  onCheckOrUncheckItem,
+  categories,
+  isLoading
+}: GroceryListProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [groceryItems, setGroceryItems] = useState<GroceryItem[]>(items)
   const [filteredCategory, setFilteredCategory] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const groceryItemsWithQuantity = useMemo(() => {
     const itemCounts = groceryItems?.reduce((acc, item) => {
@@ -79,7 +84,7 @@ export function GroceryList({id, items, onCheckOrUncheckItem, categories}: Groce
   return (
     <div className="bg-slate-100 md:bg-white">
       <ScrollArea className="bg-background md:bg-white px-3 py-3 rounded-b-sm h-fit md:rounded-lg">
-        {groceryItemsWithQuantity.length ? (
+        {groceryItemsWithQuantity?.length ? (
           <div className="bg-white rounded-lg border-slate-200 border-[1px] p-3 mb-3">
             {/*<h3 className="text-lg pb-3 ml md:hidden">Items:</h3>*/}
             <div className="flex justify-between">
@@ -141,7 +146,10 @@ export function GroceryList({id, items, onCheckOrUncheckItem, categories}: Groce
                 You have no items in your current list.
               </span>
               <Button
-                onClick={() => router.push(`/lists/${id}`)}
+                onClick={() => {
+                  if (!id) return
+                  navigate({to: `/lists/${id}`})
+                }}
                 className="mt-2"
                 variant="outline"
               >
@@ -157,7 +165,6 @@ export function GroceryList({id, items, onCheckOrUncheckItem, categories}: Groce
               return true;
             }).filter((item: GroceryItemWithQuantity) => item.name.toLowerCase().includes(searchTerm.toLowerCase())).map((item) => (
               <Card key={item.item_id}
-                // className="flex items-center space-x-4 bg-white p-3 px-5 rounded-lg transition-colors hover:bg-secondary/30 border-2 "
               >
                 <CardContent className="flex items-center justify-between p-4 gap-2">
                   <div className="flex items-center justify-center w-8 h-8">
@@ -184,6 +191,23 @@ export function GroceryList({id, items, onCheckOrUncheckItem, categories}: Groce
                 </CardContent>
               </Card>
             ))}
+          {isLoading ? (
+            <>
+              {[...Array(3)].map((_, index) => (
+                <Card key={index}>
+                  <CardContent className="p-6 px-7">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center space-x-2">
+                        <Skeleton className="h-6 w-6 rounded-sm"/>
+                        <Skeleton className="h-6 w-24"/>
+                      </div>
+                      <Skeleton className="h-6 w-12"/>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </>
+          ) : null}
         </ul>
       </ScrollArea>
     </div>
@@ -201,15 +225,15 @@ const MetaDataWrapper = ({children}: { children: React.ReactNode }) => {
 }
 
 export function ListMetaData({list}: { list: GroceryList }) {
-  const router = useRouter()
+  const navigate = useNavigate()
   return (
     <MetaDataWrapper>
       <div className="w-full flex justify-between items-center">
         <h3 className="text-md md:text-lg font-semibold">My Shopping List</h3>
-        {list.id && (
+        {list?.id && (
           <Button
             variant="outline"
-            onClick={() => router.push(`/lists/${list.id}`)}
+            onClick={() => navigate({to: `/lists/${list.id}`})}
           >
             <Pencil className="mr-2 h-4 w-4"/>
             Edit
@@ -227,15 +251,15 @@ export function ListMetaData({list}: { list: GroceryList }) {
 }
 
 export function HouseholdListMetaData({list}: { list: GroceryList }) {
-  const router = useRouter()
+  const navigate = useNavigate()
   return (
     <MetaDataWrapper>
       <div className="w-full flex justify-between items-center">
         <h3 className="text-md md:text-lg font-semibold">My Household Shopping List</h3>
-        {list.id && (
+        {list?.id && (
           <Button
             variant="outline"
-            onClick={() => router.push(`/lists/${list?.id}`)}
+            onClick={() => navigate({to: `/lists/${list.id}`})}
           >
             <Pencil className="mr-2 h-4 w-4"/>
             Edit
@@ -254,7 +278,7 @@ export function HouseholdListMetaData({list}: { list: GroceryList }) {
 }
 
 function CreateListDialog() {
-  const router = useRouter()
+  const navigate = useNavigate()
   const [creating, setCreating] = useState(false)
   const [step, setStep] = useState<'type' | 'scope'>('type')
   const [listType, setListType] = useState<'shopping' | 'mealplan' | null>(null)
@@ -294,7 +318,8 @@ function CreateListDialog() {
       }
     }
 
-    router.push(routes[listType][scope])
+    navigate({to: `${routes[listType][scope]}`})
+
   }
 
   const resetDialog = () => {
@@ -402,22 +427,16 @@ function CreateListDialog() {
   )
 }
 
-export default function GroceryListPage({
-  grocerylists,
-  categories
-}: GrocerylistsPageProps) {
-
-  const router = useRouter()
-
-  console.log(getItem("currentUser"))
-
-  const {data: myGrocerylist, isLoading: isMyGrocerylistLoading} = useLatestGrocerylistByUserId({
-    initialData: grocerylists.myGrocerylist,
-    userId: grocerylists.myGrocerylist?.createdBy
+export default function GroceryListPage() {
+  const {data: myGrocerylist, isFetching: isMyGrocerylistLoading} = useLatestGrocerylistByUserId({
+    initialData: null,
   })
+
   const {data: myHouseholdGrocerylist, isLoading: isMyHouseholdGrocerylistLoading} = useLatestGrocerylistByHouseholdId({
-    initialData: grocerylists.myHouseholdGrocerylist,
+    initialData: null,
   })
+
+  const {data: categories} = useCategories()
   const checkOrUncheckItem = useCheckOrUncheckItem()
   const checkOrUncheckHouseholdItem = useCheckOrUncheckHouseholdItem()
 
@@ -451,7 +470,7 @@ export default function GroceryListPage({
     checkOrUncheckHouseholdItemsWithSameName(id)
   }
 
-  if (!myGrocerylist && !myHouseholdGrocerylist) {
+  if ((isMyGrocerylistLoading && !myGrocerylist)) {
     return (<div className="container mx-auto p-4 space-y-4">
       <div className="flex justify-between items-center">
         <div className="space-x-2">
@@ -514,7 +533,8 @@ export default function GroceryListPage({
                 id={myGrocerylist?.id}
                 items={myGrocerylist?.items}
                 onCheckOrUncheckItem={handleCheckOrUncheckItem}
-                categories={categories}
+                categories={categories ?? []}
+                isLoading={isMyGrocerylistLoading}
               />
             </div>
           </TabsContent>
@@ -528,7 +548,8 @@ export default function GroceryListPage({
                   id={myHouseholdGrocerylist?.id}
                   items={myHouseholdGrocerylist?.items}
                   onCheckOrUncheckItem={handleCheckOrUncheckHouseholdItem}
-                  categories={categories}
+                  categories={categories ?? []}
+                  isLoading={isMyHouseholdGrocerylistLoading}
                 />
               </div>
             </TabsContent>

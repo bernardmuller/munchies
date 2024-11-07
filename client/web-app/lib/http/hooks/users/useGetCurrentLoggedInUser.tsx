@@ -1,26 +1,29 @@
-import { useQuery } from "@tanstack/react-query";
-import { keys } from "@/lib/http/keys";
-import { useAuth } from "@clerk/nextjs";
-import {getLatestGrocerylistByUserId} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
-import {getGrocerylistById} from "@/lib/http/client/grocerylists/getGrocerylistById";
-import {getCurrentLoggedInUser, User} from "@/lib/http/client/users/getCurrentLoggedInUser";
-
-type Props = {
-  initialData: User | null;
-};
+import {useQuery, useQueryClient} from "@tanstack/react-query";
+import {keys} from "@/lib/http/keys";
+import {useAuth} from "@clerk/nextjs";
+import {getCurrentLoggedInUser} from "@/lib/http/client/users/getCurrentLoggedInUser";
 
 export default function useGetCurrentLoggedInUser() {
-  const { getToken } = useAuth();
+  const {getToken} = useAuth();
   const token = getToken({template: "1_HOUR"}).then((t) => t?.toString());
+  const queryClient = useQueryClient();
 
-  return useQuery({
-    queryKey: ["current-logged-in-user"],
+  const query = useQuery({
+    queryKey: keys.currentUser,
     queryFn: async () => {
       const response = await getCurrentLoggedInUser((await token) as string);
-      // if (!response.data) return initialData;
       return response.data;
     },
-    // initialData,
     enabled: !!token,
   });
+
+  const prefetch = queryClient.prefetchQuery({
+    queryKey: keys.currentUser,
+    queryFn: async () => {
+      const response = await getCurrentLoggedInUser((await token) as string);
+      return response.data;
+    },
+  });
+
+  return {...query, prefetch};
 }
