@@ -1,0 +1,1 @@
+import{h as i,a as n}from"./getAllCategories-f73zdoR0.js";import{z as t}from"zod";t.object({id:t.string(),name:t.string(),categoryId:t.string()});async function a(e){return await i(n.ingredients(),"GET",void 0,{accessToken:e})}export{a as g};

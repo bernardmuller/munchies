@@ -4,14 +4,10 @@ import {
   Link,
   Outlet,
   ScrollRestoration,
-  createRootRoute, redirect,
+  createRootRoute,
 } from '@tanstack/react-router'
 import {
   ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
 } from '@clerk/tanstack-start'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import {
