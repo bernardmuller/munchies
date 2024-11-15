@@ -1,6 +1,10 @@
 import {InvalidateQueryFilters, QueryFilters, useMutation, useQueryClient} from "@tanstack/react-query";
 import { keys } from "@/lib/http/keys";
 import { useAuth } from "@clerk/tanstack-start";
+<<<<<<< HEAD
+=======
+import {useToast} from "@/components/ui/use-toast";
+>>>>>>> a53984d (feat: add http endpoint consumer hooks)
 import {checkOrUncheckItem} from "@/lib/http/client/items/checkOrUncheckItem";
 import {GroceryList} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
 
@@ -32,10 +36,15 @@ export default function useCheckOrUncheckHouseholdItem() {
       return { prev };
     },
     onSuccess: () => {
+<<<<<<< HEAD
       queryClient.invalidateQueries([
         ...keys.latestGrocerylistByUserId,
         ...keys.latestGrocerylistByHouseholdId,
       ] as InvalidateQueryFilters);
+=======
+      queryClient.invalidateQueries(keys.latestGrocerylistByUserId as InvalidateQueryFilters);
+      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId as InvalidateQueryFilters);
+>>>>>>> a53984d (feat: add http endpoint consumer hooks)
     },
   });
 }
