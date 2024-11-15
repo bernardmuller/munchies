@@ -1,0 +1,1 @@
+import{z as t,l as n,q as s}from"./getAllCategories-BHeGl718.js";t.object({id:t.string(),name:t.string(),categoryId:t.string()});async function r(e){return await n(s.ingredients(),"GET",void 0,{accessToken:e})}export{r as g};
