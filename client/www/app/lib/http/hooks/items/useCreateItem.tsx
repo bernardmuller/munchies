@@ -26,18 +26,11 @@ export default function useCreateItem(grocerylistId: string) {
       });
     },
     onMutate: async (item: CreateItemWithIngredientDetails) => {
-<<<<<<< HEAD
       await queryClient.cancelQueries([
         ...keys.latestGrocerylistByUserId,
         ...keys.latestGrocerylistByHouseholdId,
         ...keys.getGrocerylistById(grocerylistId)
       ] as QueryFilters);
-=======
-      await queryClient.cancelQueries(keys.latestGrocerylistByUserId as QueryFilters);
-      await queryClient.cancelQueries(keys.latestGrocerylistByHouseholdId as QueryFilters);
-      await queryClient.cancelQueries(keys.getGrocerylistById(grocerylistId as string) as QueryFilters);
-      const prev = queryClient.getQueryData(keys.getGrocerylistById(grocerylistId)) as GroceryList;
->>>>>>> a53984d (feat: add http endpoint consumer hooks)
 
       const prev = queryClient.getQueryData(keys.getGrocerylistById(grocerylistId)) as GroceryList;
       if (prev && prev.items) {
@@ -56,17 +49,11 @@ export default function useCreateItem(grocerylistId: string) {
       return { prev };
     },
     onSuccess: () => {
-<<<<<<< HEAD
       queryClient.invalidateQueries([
         ...keys.latestGrocerylistByUserId,
         ...keys.latestGrocerylistByHouseholdId,
        ...keys.getGrocerylistById(grocerylistId)
       ] as InvalidateQueryFilters);
-=======
-      queryClient.invalidateQueries(keys.latestGrocerylistByUserId as InvalidateQueryFilters);
-      queryClient.invalidateQueries(keys.latestGrocerylistByHouseholdId as InvalidateQueryFilters);
-      queryClient.invalidateQueries(keys.getGrocerylistById(grocerylistId) as InvalidateQueryFilters);
->>>>>>> a53984d (feat: add http endpoint consumer hooks)
     },
   });
 }

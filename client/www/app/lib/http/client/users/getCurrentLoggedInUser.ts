@@ -1,11 +1,5 @@
 import apiRoutes from "../../routes";
 import { httpRequest } from "../../httpRequest";
-// import { z } from 'zod';
-<<<<<<< HEAD
-// import {GroceryList} from "@/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
-=======
-// import {GroceryList} from "@/app/lib/http/client/grocerylists/getLatestGrocerylistByUserId";
->>>>>>> a53984d (feat: add http endpoint consumer hooks)
 
 export type User = {
     id: string;
