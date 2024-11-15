@@ -11,8 +11,8 @@ type Props = {
 
 export default function useGetCurrentLoggedInUser() {
   const {getToken} = useAuth();
+  const token = getToken({ template: import.meta.env.VITE_CLERK_JWT_TEMPLATE ?? "default" }).then((t) => t?.toString());
   const queryClient = useQueryClient();
-  const token = getToken({template: "1_HOUR"}).then((t) => t?.toString());
   const query = useQuery({
     queryKey: keys.currentUser,
     queryFn: async () => {

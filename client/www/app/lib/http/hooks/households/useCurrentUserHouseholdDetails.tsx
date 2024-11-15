@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCurrentUserHouseholdDetails } from "@/lib/http/client/households/getCurrentUserHouseholdDetails";
+import type { Household } from "@/lib/http/client/households/getCurrentUserHouseholdDetails";
 import { keys } from "@/lib/http/keys";
 import { useAuth } from "@clerk/tanstack-start";
 import {ONE_DAY_IN_MS} from "@/lib/constants";

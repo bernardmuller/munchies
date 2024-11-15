@@ -11,8 +11,8 @@ const categoriesQueryfn = async (token: string) => {
 }
 
 export default function useCategories() {
-  const {getToken} = useAuth();
-  const token = getToken({template: import.meta.env.VITE_CLERK_JWT_TEMPLATE ?? "default"}).then((t) => t?.toString());
+  const { getToken } = useAuth();
+  const token = getToken({ template: import.meta.env.VITE_CLERK_JWT_TEMPLATE ?? "default" }).then((t) => t?.toString());
   const query = useQuery({
     queryKey: keys.categories,
     queryFn: async () => categoriesQueryfn((await token)!),
